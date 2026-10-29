@@ -1,0 +1,2470 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SORA | HR - Smart HR. Stronger People.</title>
+  <link rel="icon" type="image/svg+xml" href="public/sora-hr-icon.svg">
+  
+  <!-- Google Fonts: Fraunces + Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Fraunces', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              black: '#09090c',
+              dark: '#101014',
+              surface: '#17171d',
+              card: '#1d1d25',
+              border: '#2b2b36',
+              amber: '#f59e0b',
+              amberLight: '#fbbf24',
+              amberDark: '#d97706',
+              glow: 'rgba(245, 158, 11, 0.25)',
+              cream: '#fdfbf7',
+              muted: '#a3a3b2'
+            }
+          },
+          boxShadow: {
+            'amber-glow': '0 0 50px -10px rgba(245, 158, 11, 0.35)',
+            'amber-glow-lg': '0 0 100px -15px rgba(245, 158, 11, 0.45)',
+            'inner-glow': 'inset 0 0 25px rgba(245, 158, 11, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- html2pdf.js for 1-click Client PDF Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    /* Absolute crisp font smoothing across all platforms and subpixel displays */
+    *, *::before, *::after {
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      text-rendering: optimizeLegibility !important;
+    }
+
+    body {
+      background-color: #09090c;
+      color: #f3f4f6;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .font-hero {
+      font-family: 'Fraunces', Georgia, serif !important;
+      font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 0;
+    }
+
+    .hero-orb {
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.30) 0%, rgba(217, 119, 6, 0.12) 40%, rgba(9, 9, 12, 0) 70%);
+      filter: blur(2px);
+    }
+
+    .login-slider-glow {
+      background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.10) 45%, rgba(9, 9, 12, 0) 75%);
+    }
+
+    /* Crisp sidebar typography with zero text-shadow or outline artifacts */
+    .sidebar-btn {
+      user-select: none;
+      -webkit-user-select: none;
+      text-shadow: none !important;
+      outline: none !important;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09090c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2b2b36;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f59e0b;
+    }
+
+    /* Dedicated Print Styling for High-Res Invoices */
+    @media print {
+      /* Force parent portal containers to display */
+      body, html, main, #view-portal, #adminPage-quotation-invoice {
+        display: block !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      /* Hide all UI elements, sidebars, headers, footers and navigation */
+      aside, header, footer, #publicHeader, #adminHeader, #mainFooter, .no-print, #adminWizardStep1, #adminWizardStep2, #adminPage-dashboard, #adminPage-admin-list, #adminPage-pricing-master, #adminPage-cms {
+        display: none !important;
+      }
+
+      body * {
+        visibility: hidden;
+      }
+
+      #printableInvoiceArea, #printableInvoiceArea * {
+        visibility: visible;
+      }
+
+      #printableInvoiceArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 24px !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-black">
+
+  <!-- ========================================== -->
+  <!-- 1. PUBLIC HEADER (Visible ONLY in static public mode) -->
+  <!-- ========================================== -->
+  <header id="publicHeader" class="sticky top-0 z-40 bg-[#09090c]/90 backdrop-blur-md border-b border-white/5 transition-all duration-300">
+    <div class="w-full px-6 sm:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="javascript:void(0)" onclick="navigateTo('home')" class="flex items-center gap-3 group">
+        <div class="relative flex items-center">
+          <div class="w-10 h-10 rounded-xl bg-brand-surface border border-brand-amber/30 flex items-center justify-center shadow-md group-hover:border-brand-amber transition-all">
+            <svg class="w-6 h-6 text-brand-amber" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="16" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="68 25"/>
+              <path d="M24 36 C 24 28, 32 28, 32 32 C 32 36, 40 36, 40 28" stroke="#FFF7ED" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="24" cy="36" r="3" fill="#F59E0B"/>
+              <circle cx="40" cy="28" r="3" fill="#FCD34D"/>
+            </svg>
+          </div>
+          <div class="ml-3 flex items-center">
+            <span class="text-2xl font-extrabold tracking-wider text-white">SORA</span>
+            <span class="text-2xl font-black text-brand-amber mx-1.5 leading-none">|</span>
+            <span class="text-2xl font-extrabold tracking-wider text-white">HR</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Items -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-300">
+        <a href="javascript:void(0)" onclick="navigateTo('home', 'servicesSection')" class="hover:text-brand-amber transition-colors">Services</a>
+        <a href="javascript:void(0)" onclick="navigateTo('page-about')" class="hover:text-brand-amber transition-colors">About</a>
+        <a href="javascript:void(0)" onclick="navigateTo('home', 'comingSoonSection')" class="hover:text-brand-amber transition-colors flex items-center gap-1.5">
+          <span>Coming Soon</span>
+          <span class="text-[10px] bg-brand-amber/20 text-brand-amber px-2 py-0.5 rounded-full font-bold uppercase tracking-wider border border-brand-amber/30">Next-Gen</span>
+        </a>
+        <a href="javascript:void(0)" onclick="navigateTo('page-contact')" class="hover:text-brand-amber transition-colors">Contact Us</a>
+      </nav>
+
+      <!-- Right Action CTAs -->
+      <div class="flex items-center gap-3">
+        <button onclick="navigateTo('login')" class="inline-flex items-center justify-center px-7 py-2.5 rounded-full bg-brand-amber text-neutral-950 font-bold text-sm tracking-wide shadow-md shadow-brand-amber/20 hover:bg-brand-amberLight hover:shadow-brand-amber/40 transform hover:-translate-y-0.5 transition-all duration-200">
+          Sign In
+        </button>
+
+        <button onclick="toggleMobileNav()" class="md:hidden p-2 text-neutral-400 hover:text-white">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobileNavDrawer" class="hidden md:hidden px-4 pt-2 pb-6 bg-brand-dark/95 border-b border-brand-border space-y-3">
+      <a href="javascript:void(0)" onclick="navigateTo('home', 'servicesSection'); toggleMobileNav();" class="block py-2 text-neutral-300 hover:text-brand-amber font-medium">Services</a>
+      <a href="javascript:void(0)" onclick="navigateTo('page-about'); toggleMobileNav();" class="block py-2 text-neutral-300 hover:text-brand-amber font-medium">About Us</a>
+      <a href="javascript:void(0)" onclick="navigateTo('home', 'comingSoonSection'); toggleMobileNav();" class="block py-2 text-neutral-300 hover:text-brand-amber font-medium">Coming Soon</a>
+      <a href="javascript:void(0)" onclick="navigateTo('page-contact'); toggleMobileNav();" class="block py-2 text-neutral-300 hover:text-brand-amber font-medium">Contact Us</a>
+      <div class="pt-2 border-t border-white/10">
+        <button onclick="navigateTo('login'); toggleMobileNav();" class="w-full py-2.5 rounded-full bg-brand-amber text-neutral-950 font-bold text-sm text-center">Sign In</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 2. LOGGED-IN ADMIN HEADER (Full-Width, Edge-to-Edge) -->
+  <!-- START: SORA | HR (Flush left) -->
+  <!-- END: Aarav Sharma SUPER ADMIN (Flush right) -->
+  <!-- ========================================== -->
+  <header id="adminHeader" class="hidden sticky top-0 z-40 bg-[#09090c]/95 backdrop-blur-md border-b border-brand-border/60 transition-all duration-300">
+    <div class="w-full px-6 sm:px-8 h-20 flex items-center justify-between">
+      
+      <!-- START: SORA | HR Brand Logo (Pushed to left edge) -->
+      <a href="javascript:void(0)" onclick="showAdminPage('portal-dashboard')" class="flex items-center gap-3 group">
+        <div class="w-9 h-9 rounded-xl bg-brand-surface border border-brand-amber/30 flex items-center justify-center shadow-md">
+          <svg class="w-5 h-5 text-brand-amber" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="16" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="68 25"/>
+            <path d="M24 36 C 24 28, 32 28, 32 32 C 32 36, 40 36, 40 28" stroke="#FFF7ED" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="24" cy="36" r="3" fill="#F59E0B"/>
+            <circle cx="40" cy="28" r="3" fill="#FCD34D"/>
+          </svg>
+        </div>
+        <div class="flex items-center">
+          <span class="text-xl font-extrabold tracking-wider text-white">SORA</span>
+          <span class="text-xl font-black text-brand-amber mx-1 leading-none">|</span>
+          <span class="text-xl font-extrabold tracking-wider text-white">HR</span>
+        </div>
+      </a>
+
+      <!-- END: Aarav Sharma SUPER ADMIN (Pushed to right edge) -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-brand-amber/20 border border-brand-amber text-brand-amber font-bold text-xs flex items-center justify-center shadow-md">
+          AS
+        </div>
+        <div class="flex flex-col text-left">
+          <span id="superAdminNameDisplay" class="text-sm font-bold text-white leading-tight">Aarav Sharma</span>
+          <span class="text-[10px] font-black tracking-widest text-brand-amber uppercase">SUPER ADMIN</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- MAIN APP ROUTER / CONTAINERS -->
+  <!-- ========================================== -->
+  <main class="flex-grow flex flex-col">
+
+    <!-- ---------------------------------------------------- -->
+    <!-- VIEW A: PUBLIC HOMEPAGE (Exact theme from user image) -->
+    <!-- ---------------------------------------------------- -->
+    <div id="view-home" class="page-container flex-grow">
+      
+      <!-- HERO SECTION -->
+      <section class="relative min-h-[85vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden pt-8 pb-16">
+        <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+          <div class="w-[320px] h-[320px] sm:w-[500px] sm:h-[500px] lg:w-[650px] lg:h-[650px] rounded-full hero-orb opacity-90 animate-pulse" style="animation-duration: 6s;"></div>
+          <div class="absolute w-[240px] h-[240px] sm:w-[380px] sm:h-[380px] lg:w-[480px] lg:h-[480px] rounded-full bg-[#09090c]/70 blur-xl"></div>
+        </div>
+
+        <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-surface/90 border border-brand-amber/30 text-xs sm:text-sm font-medium text-amber-200 mb-8 backdrop-blur-sm shadow-lg shadow-brand-amber/10">
+            <span class="w-2 h-2 rounded-full bg-brand-amber animate-ping"></span>
+            <span>Next-Gen Enterprise Human Resource Management</span>
+          </div>
+
+          <h1 class="font-hero text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.1] mb-6 drop-shadow-md">
+            <span class="text-white">Smart HR. </span>
+            <span class="text-brand-amber drop-shadow-[0_0_25px_rgba(245,158,11,0.4)]">Stronger</span><br class="hidden sm:inline" />
+            <span class="text-white"> People.</span>
+          </h1>
+
+          <p class="font-hero italic text-lg sm:text-2xl md:text-3xl text-neutral-300 max-w-2xl mx-auto font-light leading-relaxed mb-10 text-opacity-90">
+            &ldquo;Hiring se leke retention tak &mdash; smart HR solutions jo aapke logon ko mazboot banate hain.&rdquo;
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+            <button onclick="navigateTo('page-contact')" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-base tracking-wide shadow-xl shadow-brand-amber/25 transform hover:-translate-y-0.5 hover:shadow-brand-amber/40 transition-all duration-200 flex items-center justify-center gap-2">
+              <i data-lucide="calendar" class="w-5 h-5 text-neutral-950"></i>
+              <span>Book a Demo</span>
+            </button>
+
+            <button onclick="scrollToSection('servicesSection')" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-brand-dark/80 hover:bg-white/5 border border-brand-amber/40 hover:border-brand-amber text-neutral-200 hover:text-white font-semibold text-base tracking-wide transition-all duration-200 flex items-center justify-center gap-2">
+              <span>Our Services</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 text-brand-amber"></i>
+            </button>
+          </div>
+
+          <div class="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-10 border-t border-white/10 pt-8 w-full max-w-3xl">
+            <div>
+              <div class="text-2xl sm:text-3xl font-extrabold text-white">99.8%</div>
+              <div class="text-xs text-neutral-400 mt-1 uppercase tracking-wider">Payroll Accuracy</div>
+            </div>
+            <div>
+              <div class="text-2xl sm:text-3xl font-extrabold text-brand-amber">45 Min</div>
+              <div class="text-xs text-neutral-400 mt-1 uppercase tracking-wider">Onboarding Time</div>
+            </div>
+            <div>
+              <div class="text-2xl sm:text-3xl font-extrabold text-white">50k+</div>
+              <div class="text-xs text-neutral-400 mt-1 uppercase tracking-wider">Employees Managed</div>
+            </div>
+            <div>
+              <div class="text-2xl sm:text-3xl font-extrabold text-brand-amber">100%</div>
+              <div class="text-xs text-neutral-400 mt-1 uppercase tracking-wider">Statutory Compliant</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMING SOON SECTION -->
+      <section id="comingSoonSection" class="py-20 relative bg-[#0d0d11] border-y border-brand-border/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div class="text-center max-w-3xl mx-auto mb-14">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-amber/10 text-brand-amber border border-brand-amber/30 text-xs font-bold uppercase tracking-wider mb-3">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>Next Version Release &bull; Q4 2026</span>
+            </div>
+            <h2 class="font-hero text-3xl sm:text-5xl font-bold text-white mb-4">
+              Coming Soon to <span class="text-brand-amber">SORA HR</span>
+            </h2>
+            <p class="text-neutral-400 text-base sm:text-lg">
+              Hum leke aa rahe hain industry ke sabse powerful AI-driven HRMS modules:
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-brand-surface/80 rounded-2xl p-6 border border-brand-border hover:border-brand-amber/50 transition-all duration-300 relative group overflow-hidden">
+              <div class="w-12 h-12 rounded-xl bg-brand-amber/10 border border-brand-amber/30 flex items-center justify-center text-brand-amber mb-4">
+                <i data-lucide="bot" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">AI Candidate Matcher</h3>
+              <p class="text-sm text-neutral-400 leading-relaxed mb-4">
+                Automatic resume parsing, skill scoring &amp; AI video screening interviews to hire top 1% talent 5x faster.
+              </p>
+              <div class="text-xs font-semibold text-brand-amber flex items-center gap-1.5">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i> Launching in 18 days
+              </div>
+            </div>
+
+            <div class="bg-brand-surface/80 rounded-2xl p-6 border border-brand-border hover:border-brand-amber/50 transition-all duration-300 relative group overflow-hidden">
+              <div class="w-12 h-12 rounded-xl bg-brand-amber/10 border border-brand-amber/30 flex items-center justify-center text-brand-amber mb-4">
+                <i data-lucide="map-pin" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Geofence &amp; Face Clock-In</h3>
+              <p class="text-sm text-neutral-400 leading-relaxed mb-4">
+                Touchless mobile attendance with GPS geofencing perimeter and AI liveness facial verification.
+              </p>
+              <div class="text-xs font-semibold text-brand-amber flex items-center gap-1.5">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i> Launching next month
+              </div>
+            </div>
+
+            <div class="bg-brand-surface/80 rounded-2xl p-6 border border-brand-border hover:border-brand-amber/50 transition-all duration-300 relative group overflow-hidden">
+              <div class="w-12 h-12 rounded-xl bg-brand-amber/10 border border-brand-amber/30 flex items-center justify-center text-brand-amber mb-4">
+                <i data-lucide="coins" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">1-Click Auto Payroll</h3>
+              <p class="text-sm text-neutral-400 leading-relaxed mb-4">
+                Automated multi-currency payouts, PF/ESI filing, TDS calculations, and WhatsApp payslip delivery.
+              </p>
+              <div class="text-xs font-semibold text-brand-amber flex items-center gap-1.5">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i> Launching Q4
+              </div>
+            </div>
+
+            <div class="bg-brand-surface/80 rounded-2xl p-6 border border-brand-border hover:border-brand-amber/50 transition-all duration-300 relative group overflow-hidden">
+              <div class="w-12 h-12 rounded-xl bg-brand-amber/10 border border-brand-amber/30 flex items-center justify-center text-brand-amber mb-4">
+                <i data-lucide="trending-up" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Attrition Predictor AI</h3>
+              <p class="text-sm text-neutral-400 leading-relaxed mb-4">
+                Smart sentiment analysis and burnout indicators to retain critical employees before they resign.
+              </p>
+              <div class="text-xs font-semibold text-brand-amber flex items-center gap-1.5">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i> Coming soon
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVICES SECTION -->
+      <section id="servicesSection" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="font-hero text-3xl sm:text-5xl font-bold text-white mb-4">
+              Everything Your Organization Needs to <span class="text-brand-amber">Thrive</span>
+            </h2>
+            <p class="text-neutral-400 text-base sm:text-lg">
+              Click any module to view its dedicated feature walkthrough:
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div onclick="navigateTo('page-hrms-core')" class="bg-brand-surface rounded-2xl p-8 border border-brand-border hover:border-brand-amber/40 transition-all hover:shadow-lg hover:shadow-brand-amber/10 group cursor-pointer">
+              <div class="w-14 h-14 rounded-2xl bg-brand-amber/10 border border-brand-amber/30 flex items-center justify-center text-brand-amber mb-6 group-hover:scale-105 transition-transform">
+                <i data-lucide="users" class="w-7 h-7"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3 flex items-center justify-between">
+                <span>Core HR &amp; Directory</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 text-brand-amber group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+              </h3>
+              <p class="text-neutral-400 text-sm leading-relaxed mb-6">
+                Centralized employee records, dynamic org hierarchies, digital document vaults, and automated custom onboarding workflows.
+              </p>
+              <div class="text-xs font-semibold text-brand-amber flex items-center gap-1">
+                <span>Explore Core HR Page &rarr;</span>
+              </div>
+            </div>
+
+            <div onclick="navigateTo('page-hrms-payroll')" class="bg-brand-surface rounded-2xl p-8 border border-brand-amber/30 transition-all shadow-amber-glow relative group cursor-pointer">
+              <div class="w-14 h-14 rounded-2xl bg-brand-amber text-neutral-950 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform font-bold">
+                <i data-lucide="receipt" class="w-7 h-7"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3 flex items-center justify-between">
+                <span>Payroll &amp; Tax Engine</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 text-neutral-950 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+              </h3>
+              <p class="text-neutral-400 text-sm leading-relaxed mb-6">
+                Error-free salary processing with 100% statutory adherence (PF, ESI, PT, TDS). Direct bank disbursals in seconds.
+              </p>
+              <div class="text-xs font-semibold text-brand-amber flex items-center gap-1">
+                <span>Explore Payroll Page &rarr;</span>
+              </div>
+            </div>
+
+            <div onclick="navigateTo('page-hrms-ats')" class="bg-brand-surface rounded-2xl p-8 border border-brand-border hover:border-brand-amber/40 transition-all hover:shadow-lg hover:shadow-brand-amber/10 group cursor-pointer">
+              <div class="w-14 h-14 rounded-2xl bg-brand-amber/10 border border-brand-amber/30 flex items-center justify-center text-brand-amber mb-6 group-hover:scale-105 transition-transform">
+                <i data-lucide="briefcase" class="w-7 h-7"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3 flex items-center justify-between">
+                <span>Recruitment &amp; ATS</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 text-brand-amber group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+              </h3>
+              <p class="text-neutral-400 text-sm leading-relaxed mb-6">
+                End-to-end applicant tracking, multi-job board publishing, interviewer scorecards, and branded career pages.
+              </p>
+              <div class="text-xs font-semibold text-brand-amber flex items-center gap-1">
+                <span>Explore ATS Page &rarr;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ---------------------------------------------------- -->
+    <!-- VIEW B: TRUE 100% FULL-PAGE SPLIT LOGIN SCREEN -->
+    <!-- ---------------------------------------------------- -->
+    <div id="view-login" class="hidden page-container min-h-screen w-full flex flex-col lg:flex-row bg-[#08080b]">
+      
+      <!-- LEFT HALF: FULL HEIGHT SLIDER -->
+      <div class="w-full lg:w-1/2 min-h-[420px] lg:min-h-screen relative bg-[#0d0d12] p-8 sm:p-14 lg:p-16 flex flex-col justify-between overflow-hidden border-b lg:border-b-0 lg:border-r border-brand-border/60">
+        <div class="absolute inset-0 login-slider-glow pointer-events-none"></div>
+
+        <div class="relative z-10 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-brand-surface border border-brand-amber/40 flex items-center justify-center shadow-lg">
+              <svg class="w-6 h-6 text-brand-amber" viewBox="0 0 64 64" fill="none">
+                <circle cx="32" cy="32" r="16" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="68 25"/>
+                <path d="M24 36 C 24 28, 32 28, 32 32 C 32 36, 40 36, 40 28" stroke="#FFF7ED" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="24" cy="36" r="3" fill="#F59E0B"/>
+                <circle cx="40" cy="28" r="3" fill="#FCD34D"/>
+              </svg>
+            </div>
+            <div class="flex items-center">
+              <span class="text-2xl font-extrabold tracking-wider text-white">SORA</span>
+              <span class="text-2xl font-black text-brand-amber mx-1.5 leading-none">|</span>
+              <span class="text-2xl font-extrabold tracking-wider text-white">HR</span>
+            </div>
+          </div>
+
+          <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-amber/10 border border-brand-amber/30 text-[11px] font-semibold text-amber-300">
+            <span class="w-2 h-2 rounded-full bg-brand-amber animate-pulse"></span>
+            Enterprise Cloud v2.4
+          </div>
+        </div>
+
+        <div class="relative z-10 my-auto py-10 max-w-lg">
+          <div id="loginSlide1" class="login-slide transition-all duration-500">
+            <div class="w-14 h-14 rounded-2xl bg-brand-amber/20 border border-brand-amber text-brand-amber flex items-center justify-center mb-6 shadow-amber-glow">
+              <i data-lucide="sparkles" class="w-7 h-7"></i>
+            </div>
+            <h2 class="font-hero text-3xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+              Smart HR.<br><span class="text-brand-amber">Stronger People.</span>
+            </h2>
+            <p class="text-neutral-300 text-sm sm:text-base leading-relaxed font-light">
+              &ldquo;Hiring se leke retention tak &mdash; smart HR solutions jo aapke logon ko mazboot banate hain.&rdquo;
+            </p>
+          </div>
+
+          <div id="loginSlide2" class="login-slide hidden transition-all duration-500">
+            <div class="w-14 h-14 rounded-2xl bg-brand-amber/20 border border-brand-amber text-brand-amber flex items-center justify-center mb-6 shadow-amber-glow">
+              <i data-lucide="shield-check" class="w-7 h-7"></i>
+            </div>
+            <h2 class="font-hero text-3xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+              Zero Error<br><span class="text-brand-amber">Automated Payroll.</span>
+            </h2>
+            <p class="text-neutral-300 text-sm sm:text-base leading-relaxed font-light">
+              100% adherence to PF, ESI, TDS, and statutory guidelines with 1-click automated bank salary transfers.
+            </p>
+          </div>
+
+          <div id="loginSlide3" class="login-slide hidden transition-all duration-500">
+            <div class="w-14 h-14 rounded-2xl bg-brand-amber/20 border border-brand-amber text-brand-amber flex items-center justify-center mb-6 shadow-amber-glow">
+              <i data-lucide="fingerprint" class="w-7 h-7"></i>
+            </div>
+            <h2 class="font-hero text-3xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+              Biometric &amp;<br><span class="text-brand-amber">Geofence Clock-In.</span>
+            </h2>
+            <p class="text-neutral-300 text-sm sm:text-base leading-relaxed font-light">
+              Touchless mobile attendance with AI facial recognition and GPS geofence boundary verification.
+            </p>
+          </div>
+        </div>
+
+        <div class="relative z-10 flex items-center justify-between pt-6 border-t border-white/10">
+          <div class="flex items-center gap-2">
+            <button onclick="setLoginSlide(1)" id="slideDot1" class="w-8 h-2 rounded-full bg-brand-amber transition-all"></button>
+            <button onclick="setLoginSlide(2)" id="slideDot2" class="w-2.5 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"></button>
+            <button onclick="setLoginSlide(3)" id="slideDot3" class="w-2.5 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"></button>
+          </div>
+          <div class="text-xs text-neutral-400 font-mono">
+            SOC2 &bull; ISO 27001 &bull; 256-bit AES
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT HALF: AUTH -->
+      <div class="w-full lg:w-1/2 min-h-screen p-6 sm:p-12 lg:p-16 flex flex-col justify-between bg-[#0a0a0e]">
+        <div class="flex items-center justify-end">
+          <button onclick="navigateTo('home')" class="inline-flex items-center gap-2 text-xs font-semibold text-neutral-400 hover:text-white px-4 py-2 rounded-full border border-brand-border/60 hover:border-brand-amber/50 hover:bg-white/5 transition-all">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-brand-amber"></i>
+            <span>Back to Public Site</span>
+          </button>
+        </div>
+
+        <div class="max-w-md w-full mx-auto my-auto py-8">
+          <div class="mb-8 text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-amber/10 text-brand-amber text-[10px] font-bold uppercase tracking-wider mb-3 border border-brand-amber/20">
+              Admin &bull; Enterprise Access
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Sign In</h1>
+            <p class="text-xs sm:text-sm text-neutral-400 mt-1">Authenticate into your SORA HR organizational dashboard.</p>
+          </div>
+
+          <div class="flex items-center p-1.5 bg-brand-surface rounded-2xl border border-brand-border mb-6 text-xs font-bold">
+            <button id="authTabOtp" onclick="switchLoginMode('otp')" class="flex-1 py-2.5 rounded-xl bg-brand-amber text-neutral-950 font-extrabold shadow transition-all flex items-center justify-center gap-2">
+              <i data-lucide="smartphone" class="w-4 h-4"></i>
+              <span>Login with OTP</span>
+            </button>
+            <button id="authTab2fa" onclick="switchLoginMode('2fa')" class="flex-1 py-2.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span>Login with 2FA</span>
+            </button>
+          </div>
+
+          <!-- OPTION 1: LOGIN WITH OTP -->
+          <div id="authModeOtp" class="space-y-4">
+            <div id="otpInputStep" class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Registered Work Email or Mobile</label>
+                <div class="relative">
+                  <i data-lucide="mail" class="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                  <input type="text" id="loginOtpTarget" value="superadmin@sorahr.com" placeholder="name@sorahr.com or +91..." class="w-full pl-11 pr-4 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber transition-colors">
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between text-xs text-neutral-400">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked class="rounded border-brand-border text-brand-amber focus:ring-0">
+                  <span>Send OTP via WhatsApp / SMS</span>
+                </label>
+              </div>
+
+              <button onclick="sendOtpCode()" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-lg shadow-brand-amber/25 flex items-center justify-center gap-2">
+                <span>Get 6-Digit OTP</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <div id="otpVerifyStep" class="hidden space-y-4">
+              <div class="text-center p-3.5 rounded-2xl bg-brand-surface border border-brand-border/60">
+                <span class="text-xs text-neutral-400">Enter verification code sent to:</span>
+                <div id="otpTargetLabel" class="text-xs font-bold text-amber-300 font-mono mt-0.5">superadmin@sorahr.com</div>
+              </div>
+
+              <div class="flex justify-center gap-2 sm:gap-3 my-4">
+                <input type="text" maxlength="1" class="otp-box w-11 sm:w-12 h-14 text-center text-2xl font-bold bg-brand-surface border border-brand-border rounded-2xl text-brand-amber focus:outline-none focus:border-brand-amber" value="8">
+                <input type="text" maxlength="1" class="otp-box w-11 sm:w-12 h-14 text-center text-2xl font-bold bg-brand-surface border border-brand-border rounded-2xl text-brand-amber focus:outline-none focus:border-brand-amber" value="4">
+                <input type="text" maxlength="1" class="otp-box w-11 sm:w-12 h-14 text-center text-2xl font-bold bg-brand-surface border border-brand-border rounded-2xl text-brand-amber focus:outline-none focus:border-brand-amber" value="2">
+                <input type="text" maxlength="1" class="otp-box w-11 sm:w-12 h-14 text-center text-2xl font-bold bg-brand-surface border border-brand-border rounded-2xl text-brand-amber focus:outline-none focus:border-brand-amber" value="9">
+                <input type="text" maxlength="1" class="otp-box w-11 sm:w-12 h-14 text-center text-2xl font-bold bg-brand-surface border border-brand-border rounded-2xl text-brand-amber focus:outline-none focus:border-brand-amber" value="1">
+                <input type="text" maxlength="1" class="otp-box w-11 sm:w-12 h-14 text-center text-2xl font-bold bg-brand-surface border border-brand-border rounded-2xl text-brand-amber focus:outline-none focus:border-brand-amber" value="7">
+              </div>
+
+              <div class="flex items-center justify-between text-xs text-neutral-400 px-1">
+                <span>Resend in <strong class="text-brand-amber font-mono">00:30</strong></span>
+                <button onclick="showToast('OTP Resent', 'A fresh 6-digit code was sent to your phone/email.')" class="text-brand-amber hover:underline font-semibold">Resend Code</button>
+              </div>
+
+              <button onclick="performSuccessfulLogin('Aarav Sharma', 'OTP')" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-lg shadow-brand-amber/25 flex items-center justify-center gap-2">
+                <i data-lucide="check" class="w-4 h-4"></i>
+                <span>Verify OTP &amp; Launch Portal</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- OPTION 2: LOGIN WITH 2FA -->
+          <div id="authMode2fa" class="hidden space-y-4">
+            <div id="twoFaCredStep" class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Username or Official Email *</label>
+                <div class="relative">
+                  <i data-lucide="user" class="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                  <input type="text" id="twoFaUsername" value="aarav.superadmin" placeholder="e.g. aarav.superadmin or email" class="w-full pl-11 pr-4 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Master Password *</label>
+                <div class="relative">
+                  <i data-lucide="lock" class="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                  <input type="password" id="twoFaPassword" value="SoraEnterprise2026@" placeholder="••••••••••••" class="w-full pl-11 pr-4 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber">
+                </div>
+              </div>
+
+              <button onclick="proceedTo2faTokenPrompt()" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-lg shadow-brand-amber/25 flex items-center justify-center gap-2">
+                <span>Continue to 2FA Prompt</span>
+                <i data-lucide="shield" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <div id="twoFaTokenStep" class="hidden space-y-4 text-center">
+              <div class="w-12 h-12 mx-auto rounded-full bg-brand-amber/15 border border-brand-amber/30 flex items-center justify-center text-brand-amber mb-2">
+                <i data-lucide="key" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white">Enter 6-Digit Authenticator Token</div>
+                <p class="text-xs text-neutral-400 mt-1">Open Google Authenticator or Microsoft Authenticator</p>
+              </div>
+
+              <div class="max-w-xs mx-auto">
+                <input type="text" id="totpAuthCode" maxlength="6" value="629140" placeholder="000 000" class="w-full text-center text-2xl tracking-[0.3em] font-mono py-2.5 rounded-2xl bg-brand-surface border border-brand-amber/50 text-brand-amber focus:outline-none focus:border-brand-amber">
+              </div>
+
+              <button onclick="performSuccessfulLogin('Aarav Sharma', '2FA')" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-lg shadow-brand-amber/25 flex items-center justify-center gap-2">
+                <i data-lucide="check" class="w-4 h-4"></i>
+                <span>Authenticate 2FA &amp; Open Portal</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- FORGOT PASSWORD -->
+          <div class="mt-8 pt-5 border-t border-brand-border/60 text-center">
+            <button onclick="toggleForgotPasswordBox()" class="text-xs text-neutral-400 hover:text-brand-amber transition-colors font-medium">
+              Forgot your password? <span class="text-brand-amber underline">Reset with OTP</span>
+            </button>
+
+            <div id="forgotPasswordBox" class="hidden mt-4 p-4 rounded-2xl bg-brand-surface border border-brand-border text-left space-y-3">
+              <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                <i data-lucide="key-round" class="w-3.5 h-3.5 text-brand-amber"></i>
+                <span>Reset Password via OTP</span>
+              </div>
+              
+              <div id="forgotStep1">
+                <label class="block text-[11px] text-neutral-400 mb-1">Enter your registered email</label>
+                <input type="email" id="forgotEmailInput" value="aarav.sharma@sorahr.com" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                <button onclick="sendForgotOtp()" class="w-full mt-2 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs">Send Reset OTP</button>
+              </div>
+
+              <div id="forgotStep2" class="hidden space-y-2">
+                <label class="block text-[11px] text-neutral-400">Enter 6-digit OTP code received</label>
+                <input type="text" maxlength="6" value="712940" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white text-center font-mono tracking-widest text-brand-amber">
+                <label class="block text-[11px] text-neutral-400">New Strong Password</label>
+                <input type="password" value="NewPass@2026" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
+                <button onclick="finishPasswordReset()" class="w-full py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs">Update Password &amp; Login</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center text-[11px] text-neutral-500">
+          Protected by SORA HR Multi-Layered Defense &bull; &copy; 2026
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ---------------------------------------------------- -->
+    <!-- VIEW C: DEDICATED CONTENT PAGES -->
+    <!-- ---------------------------------------------------- -->
+    <div id="view-page-wrapper" class="hidden page-container py-12 px-6 sm:px-8 w-full flex-grow">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-8 flex items-center justify-between border-b border-brand-border/60 pb-4">
+          <button onclick="navigateTo('home')" class="inline-flex items-center gap-2 text-xs font-semibold text-neutral-400 hover:text-brand-amber transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Back to Home</span>
+          </button>
+          <div class="text-xs text-brand-amber font-mono" id="pageCategoryBadge">HRMS MODULE</div>
+        </div>
+
+        <div id="dynamicPageContent" class="bg-brand-surface rounded-3xl border border-brand-border p-8 sm:p-12 shadow-xl"></div>
+      </div>
+    </div>
+
+    <!-- ---------------------------------------------------- -->
+    <!-- VIEW D: ADMIN PORTAL -->
+    <!-- Edge-to-Edge full width, crisp typography -->
+    <!-- Sidebar: Dashboard, Admin Management, Website CMS, Module Master Pricing, Quotation & Invoice -->
+    <!-- ---------------------------------------------------- -->
+    <div id="view-portal" class="hidden page-container min-h-[calc(100vh-80px)] flex flex-col md:flex-row bg-[#0b0b0e] flex-grow w-full">
+      
+      <!-- ================= CLEAN CRISP SIDEBAR ================= -->
+      <aside class="w-full md:w-64 bg-[#101014] border-r border-brand-border/60 flex-shrink-0 flex flex-col justify-between">
+        
+        <div class="p-4 space-y-4">
+          
+          <nav class="space-y-1.5 text-xs sm:text-sm font-medium pt-2">
+            
+            <!-- 1. Dashboard Overview -->
+            <button onclick="showAdminPage('portal-dashboard')" id="sideNavDashboard" class="sidebar-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-brand-surface text-brand-amber border border-brand-amber/30 font-semibold text-left transition-all">
+              <i data-lucide="layout-dashboard" class="w-4 h-4 text-brand-amber"></i>
+              <span class="tracking-wide">Dashboard Overview</span>
+            </button>
+
+            <!-- 2. Admin Management (Table Page) -->
+            <button onclick="showAdminPage('portal-admin-list')" id="sideNavAdmins" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="shield-check" class="w-4 h-4 text-brand-amber"></i>
+                <span class="tracking-wide">Admin Management</span>
+              </div>
+              <span id="sidebarAdminCount" class="text-[10px] bg-brand-amber text-neutral-950 font-bold px-1.5 py-0.2 rounded-full">4</span>
+            </button>
+
+            <!-- 3. Website CMS (Collapsible Submenu) -->
+            <div>
+              <button onclick="toggleWebsiteSidebarMenu()" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="globe" class="w-4 h-4 text-brand-amber"></i>
+                  <span class="tracking-wide">Website CMS</span>
+                </div>
+                <i id="cmsChevron" data-lucide="chevron-down" class="w-4 h-4 text-neutral-500 transition-transform"></i>
+              </button>
+
+              <div id="sidebarCmsSubmenu" class="pl-9 pr-2 py-1 space-y-1 text-xs text-neutral-400">
+                <button onclick="showAdminPage('cms-banner')" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors">
+                  Banner Management
+                </button>
+                <button onclick="showAdminPage('cms-blog')" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors">
+                  Blog Management
+                </button>
+                <button onclick="showAdminPage('cms-about')" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors">
+                  About Us CMS
+                </button>
+                <button onclick="showAdminPage('cms-privacy')" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors">
+                  Privacy Policy CMS
+                </button>
+              </div>
+            </div>
+
+            <!-- 4. Module Master & Pricing (User requested: "ek menu do jisme jo module hai uske waise wo module ki price add kar sake") -->
+            <button onclick="showAdminPage('portal-pricing-master')" id="sideNavPricingMaster" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="sliders" class="w-4 h-4 text-brand-amber"></i>
+                <span class="tracking-wide">Module Pricing Master</span>
+              </div>
+              <span class="text-[10px] bg-brand-amber/15 text-brand-amber border border-brand-amber/30 px-1.5 py-0.5 rounded font-mono">Rates</span>
+            </button>
+
+            <!-- 5. Quotation & Invoicing (User requested: "jo jo module select kare uska quotation ban jaye, company details, GST % add karke invoice generate ho") -->
+            <button onclick="showAdminPage('portal-quotation-invoice')" id="sideNavQuotationInvoice" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="receipt" class="w-4 h-4 text-brand-amber"></i>
+                <span class="tracking-wide">Performa Quotation &amp; Invoice</span>
+              </div>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded font-mono">PDF</span>
+            </button>
+
+          </nav>
+
+        </div>
+
+        <!-- Sidebar Bottom: LOGOUT BUTTON -->
+        <div class="p-4 border-t border-brand-border/60 bg-brand-dark/40">
+          <button onclick="handleLogout()" class="sidebar-btn w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-rose-500/30 text-rose-300 hover:bg-rose-500/10 hover:border-rose-500/60 font-semibold text-xs transition-all shadow-sm">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+
+      </aside>
+
+      <!-- ================= PORTAL MAIN CONTENT ================= -->
+      <div class="flex-grow flex flex-col overflow-y-auto w-full">
+        
+        <!-- SUBHEADER BREADCRUMB BAR (No search or add admin here!) -->
+        <div class="h-14 px-6 sm:px-8 bg-brand-dark/60 border-b border-brand-border/40 flex items-center justify-between text-xs w-full">
+          <div class="flex items-center gap-2">
+            <span class="text-neutral-400">Super Admin Portal</span>
+            <span class="text-neutral-600">/</span>
+            <span id="portalCurrentBreadcrumb" class="text-brand-amber font-semibold">Dashboard Overview</span>
+          </div>
+        </div>
+
+        <!-- Container for Admin Pages (Edge-to-Edge full width) -->
+        <div class="p-6 sm:p-8 w-full space-y-8 flex-grow">
+          
+          <!-- ----------------------------------------- -->
+          <!-- ADMIN PAGE 1: DASHBOARD OVERVIEW -->
+          <!-- Purely "Coming Soon" (NO search, NO add admin button) -->
+          <!-- ----------------------------------------- -->
+          <div id="adminPage-dashboard" class="admin-page space-y-6">
+            
+            <div class="relative overflow-hidden rounded-3xl bg-brand-surface border border-brand-amber/30 p-8 sm:p-16 text-center shadow-amber-glow w-full">
+              <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                <div class="w-96 h-96 rounded-full bg-brand-amber/15 blur-3xl"></div>
+              </div>
+
+              <div class="relative z-10 max-w-2xl mx-auto space-y-6">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-amber/10 border border-brand-amber/30 text-xs font-bold text-brand-amber uppercase tracking-wider">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                  <span>SORA HR ENTERPRISE PLATFORM</span>
+                </div>
+
+                <h1 class="font-hero text-4xl sm:text-6xl font-bold text-white tracking-tight">
+                  Coming <span class="text-brand-amber">Soon</span>
+                </h1>
+
+                <p class="text-neutral-300 text-sm sm:text-base leading-relaxed font-light">
+                  SORA HR enterprise core modules are currently under active development. You can configure module prices in Module Master, build customized client quotations with dynamic GST %, generate PDF invoices, and manage administrators through the 2-step permission wizard.
+                </p>
+
+                <div class="pt-4 flex flex-wrap items-center justify-center gap-3">
+                  <button onclick="showAdminPage('portal-admin-list')" class="px-6 py-3 rounded-full bg-brand-amber text-neutral-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-brand-amber/25 hover:bg-brand-amberLight transition-all flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>Manage Admins &amp; RBAC</span>
+                  </button>
+                  <button onclick="showAdminPage('portal-pricing-master')" class="px-6 py-3 rounded-full bg-brand-dark border border-brand-border text-neutral-200 font-semibold text-xs uppercase tracking-wider hover:border-brand-amber/50 transition-all flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-4 h-4 text-brand-amber"></i>
+                    <span>Module Pricing Master</span>
+                  </button>
+                  <button onclick="showAdminPage('portal-quotation-invoice')" class="px-6 py-3 rounded-full bg-brand-dark border border-brand-border text-neutral-200 font-semibold text-xs uppercase tracking-wider hover:border-brand-amber/50 transition-all flex items-center gap-2">
+                    <i data-lucide="receipt" class="w-4 h-4 text-brand-amber"></i>
+                    <span>Quotation &amp; Invoicing</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ----------------------------------------- -->
+          <!-- ADMIN PAGE 2: ADMIN MANAGEMENT TABLE PAGE -->
+          <!-- Search box & + Add Admin button belong RIGHT HERE on this page! -->
+          <!-- ----------------------------------------- -->
+          <div id="adminPage-admin-list" class="admin-page hidden space-y-6 w-full">
+            
+            <!-- Page Header with Search & Add Admin -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 w-full">
+              <div>
+                <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                  <span>HR Administrators</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-amber/10 text-brand-amber border border-brand-amber/20">RBAC Active</span>
+                </h2>
+                <p class="text-xs text-neutral-400 mt-1">
+                  Comprehensive administrator list with department allocations and granular module access rights.
+                </p>
+              </div>
+
+              <!-- Search input & Add Admin button -->
+              <div class="flex items-center gap-3">
+                <div class="relative">
+                  <i data-lucide="search" class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                  <input type="text" id="adminTableSearch" oninput="filterAdminList()" placeholder="Search admin name, email..." class="pl-9 pr-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-brand-amber w-48 sm:w-64 transition-all">
+                </div>
+
+                <button onclick="startAdminCreationWizard()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs tracking-wide shadow-md shadow-brand-amber/20 transition-all flex-shrink-0">
+                  <i data-lucide="user-plus" class="w-4 h-4"></i>
+                  <span>+ Add Admin</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Full-Width Admin Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-xl w-full">
+              <div class="overflow-x-auto w-full">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border">
+                    <tr>
+                      <th class="py-3.5 px-4">Admin Profile</th>
+                      <th class="py-3.5 px-4">Employee ID</th>
+                      <th class="py-3.5 px-4">Department &amp; Role</th>
+                      <th class="py-3.5 px-4">Granted Module Permissions</th>
+                      <th class="py-3.5 px-4">Status</th>
+                      <th class="py-3.5 px-4">Last Active</th>
+                      <th class="py-3.5 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminListPageTbody" class="divide-y divide-brand-border/60 text-neutral-300">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="p-4 bg-[#121217] border-t border-brand-border flex items-center justify-between text-xs text-neutral-400">
+                <div id="adminListPageCount">Showing 4 of 4 registered HR administrators</div>
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 2FA Enforced for all admin accounts
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ----------------------------------------- -->
+          <!-- ADMIN PAGE 3: 2-STEP ADMIN CREATION WIZARD -->
+          <!-- User requested: "admin create pe na ek form aiye ga admin create ka next page me aiye ga permission ka then admin create honga" -->
+          <!-- ----------------------------------------- -->
+          <div id="adminPage-admin-create" class="admin-page hidden space-y-6 w-full">
+            
+            <div class="flex items-center justify-between border-b border-brand-border pb-4">
+              <div>
+                <button onclick="showAdminPage('portal-admin-list')" class="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-brand-amber transition-colors mb-2">
+                  <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to Admin List
+                </button>
+                <h2 class="text-2xl font-bold text-white">Create New HR Administrator</h2>
+                <p class="text-xs text-neutral-400 mt-1">2-Step Administrator Enrollment &amp; Role Authorization Wizard</p>
+              </div>
+
+              <!-- Wizard Progress Badges -->
+              <div class="flex items-center gap-2 text-xs font-bold">
+                <div id="stepBadge1" class="px-3 py-1 rounded-full bg-brand-amber text-neutral-950 flex items-center gap-1.5 shadow">
+                  <span>1. Employee Details</span>
+                </div>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-neutral-500"></i>
+                <div id="stepBadge2" class="px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-neutral-400 flex items-center gap-1.5">
+                  <span>2. Module Permissions</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 1 CONTAINER: ADMIN CREATION FORM -->
+            <div id="adminWizardStep1" class="space-y-8 bg-brand-surface p-6 sm:p-8 rounded-2xl border border-brand-border w-full">
+              
+              <div class="space-y-4">
+                <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                  <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                  <span>Step 1: Employee Identity &amp; Profile Details</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Full Name *</label>
+                    <input type="text" id="wizardName" required placeholder="e.g. Priya Nair" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Employee Code / ID *</label>
+                    <input type="text" id="wizardEmpId" required placeholder="EMP-SORA-204" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber font-mono">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Official Work Email *</label>
+                    <input type="email" id="wizardEmail" required placeholder="priya.nair@sorahr.com" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Contact Phone</label>
+                    <input type="tel" id="wizardPhone" placeholder="+91 98765 12345" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-4 pt-4 border-t border-brand-border/60">
+                <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                  <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+                  <span>Department &amp; Organizational Role</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Department *</label>
+                    <select id="wizardDept" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                      <option value="Core Human Resources">Core Human Resources</option>
+                      <option value="Talent Acquisition (ATS)">Talent Acquisition (ATS)</option>
+                      <option value="Payroll &amp; Compensation">Payroll &amp; Compensation</option>
+                      <option value="HR Operations &amp; Attendance">HR Operations &amp; Attendance</option>
+                      <option value="Statutory &amp; Compliance">Statutory &amp; Compliance</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Designation Title</label>
+                    <input type="text" id="wizardDesignation" placeholder="e.g. Lead HR Business Partner" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Role Level *</label>
+                    <select id="wizardRole" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                      <option value="HR Administrator">HR Administrator</option>
+                      <option value="Super Administrator">Super Administrator</option>
+                      <option value="Payroll Officer">Payroll Officer</option>
+                      <option value="Talent Recruiter">Talent Recruiter</option>
+                      <option value="Auditor (Read-Only)">Auditor (Read-Only)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 1 Actions -->
+              <div class="pt-4 border-t border-brand-border flex items-center justify-end gap-3">
+                <button type="button" onclick="showAdminPage('portal-admin-list')" class="px-5 py-2.5 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5 transition-colors">
+                  Cancel
+                </button>
+                <button type="button" onclick="goToWizardStep2()" class="px-7 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs tracking-wide shadow-md shadow-brand-amber/20 transition-all flex items-center gap-2">
+                  <span>Next: Configure Permissions</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- STEP 2 CONTAINER: GRANULAR PERMISSION MATRIX -->
+            <div id="adminWizardStep2" class="hidden space-y-6 bg-brand-surface p-6 sm:p-8 rounded-2xl border border-brand-border w-full">
+              
+              <!-- Candidate Summary Bar -->
+              <div class="p-4 rounded-xl bg-brand-dark border border-brand-border/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-brand-amber/20 text-brand-amber border border-brand-amber font-bold text-xs flex items-center justify-center">
+                    <span id="step2Avatar">PN</span>
+                  </div>
+                  <div>
+                    <div class="text-sm font-bold text-white" id="step2SummaryName">Priya Nair</div>
+                    <div class="text-[11px] text-neutral-400" id="step2SummaryMeta">EMP-SORA-204 &bull; Core Human Resources</div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3 text-xs">
+                  <button type="button" onclick="toggleAllMatrixPerms(true)" class="text-brand-amber hover:underline font-semibold">Select All</button>
+                  <span class="text-neutral-600">&bull;</span>
+                  <button type="button" onclick="toggleAllMatrixPerms(false)" class="text-neutral-400 hover:underline">Clear All</button>
+                </div>
+              </div>
+
+              <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+                <span>Step 2: Assign Granular Module Permissions (View &bull; Add &bull; Update &bull; Delete)</span>
+              </div>
+
+              <!-- Matrix Table -->
+              <div class="overflow-x-auto rounded-xl border border-brand-border bg-brand-dark">
+                <table class="w-full text-xs text-left">
+                  <thead class="bg-[#14141a] text-neutral-400 uppercase text-[10px] font-bold border-b border-brand-border">
+                    <tr>
+                      <th class="py-3 px-4">HRMS Module</th>
+                      <th class="py-3 px-3 text-center">
+                        <label class="cursor-pointer flex items-center justify-center gap-1.5">
+                          <input type="checkbox" onchange="toggleColumnPerms('view', this.checked)" class="rounded border-brand-border text-brand-amber focus:ring-0">
+                          <span>View</span>
+                        </label>
+                      </th>
+                      <th class="py-3 px-3 text-center">
+                        <label class="cursor-pointer flex items-center justify-center gap-1.5">
+                          <input type="checkbox" onchange="toggleColumnPerms('add', this.checked)" class="rounded border-brand-border text-brand-amber focus:ring-0">
+                          <span>Add</span>
+                        </label>
+                      </th>
+                      <th class="py-3 px-3 text-center">
+                        <label class="cursor-pointer flex items-center justify-center gap-1.5">
+                          <input type="checkbox" onchange="toggleColumnPerms('update', this.checked)" class="rounded border-brand-border text-brand-amber focus:ring-0">
+                          <span>Update</span>
+                        </label>
+                      </th>
+                      <th class="py-3 px-3 text-center">
+                        <label class="cursor-pointer flex items-center justify-center gap-1.5">
+                          <input type="checkbox" onchange="toggleColumnPerms('delete', this.checked)" class="rounded border-brand-border text-brand-amber focus:ring-0">
+                          <span>Delete</span>
+                        </label>
+                      </th>
+                      <th class="py-3 px-4 text-center">Row All</th>
+                    </tr>
+                  </thead>
+                  <tbody id="permissionMatrixTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                    <!-- Populated dynamically with 8 modules -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Step 2 Actions -->
+              <div class="pt-4 border-t border-brand-border flex items-center justify-between">
+                <button type="button" onclick="goToWizardStep1()" class="px-5 py-2.5 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5 transition-colors flex items-center gap-2">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                  <span>Back to Step 1</span>
+                </button>
+
+                <button type="button" onclick="finalizeAdminCreation()" class="px-7 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs tracking-wide shadow-md shadow-brand-amber/20 transition-all flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                  <span>Complete &amp; Create Administrator</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ----------------------------------------- -->
+          <!-- ADMIN PAGE 4: MODULE PRICING MASTER -->
+          <!-- User requested: "ek menu do jisme jo module hai uske waise wo module ki price add kar sake" -->
+          <!-- ----------------------------------------- -->
+          <div id="adminPage-pricing-master" class="admin-page hidden space-y-6 w-full">
+            
+            <div class="border-b border-brand-border pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                  <span>Module Pricing Master</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-amber/10 text-brand-amber border border-brand-amber/20">Base Rate Config</span>
+                </h2>
+                <p class="text-xs text-neutral-400 mt-1">Configure and update monthly base pricing for all HRMS modules. These rates automatically feed the Quotation &amp; Invoice builder.</p>
+              </div>
+
+              <button onclick="showAdminPage('portal-quotation-invoice')" class="px-5 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow transition-all">
+                <i data-lucide="receipt" class="w-4 h-4"></i>
+                <span>Open Quotation &amp; Invoice Builder &rarr;</span>
+              </button>
+            </div>
+
+            <!-- Module Master Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-xl w-full">
+              <div class="overflow-x-auto w-full">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border">
+                    <tr>
+                      <th class="py-3.5 px-4">Module Code &amp; Title</th>
+                      <th class="py-3.5 px-4">Feature Description</th>
+                      <th class="py-3.5 px-4">Monthly Base Price (&#8377;)</th>
+                      <th class="py-3.5 px-4">Annual Projected (&#8377;)</th>
+                      <th class="py-3.5 px-4">Status</th>
+                      <th class="py-3.5 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="modulePricingMasterTbody" class="divide-y divide-brand-border/60 text-neutral-300">
+                    <!-- Populated dynamically with editable price inputs -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Quick Add Custom Module Card -->
+            <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div class="font-bold text-white text-sm">Need to add a bespoke module or custom integration?</div>
+                <div class="text-xs text-neutral-400 mt-0.5">Custom modules will instantly appear in the quotation module selector.</div>
+              </div>
+              <button onclick="promptAddCustomModule()" class="px-4 py-2 rounded-xl bg-brand-dark border border-brand-border hover:border-brand-amber/60 text-xs font-semibold text-white flex items-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4 text-brand-amber"></i>
+                <span>Add Custom Module</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- ----------------------------------------- -->
+          <!-- ADMIN PAGE 5: QUOTATION & INVOICE GENERATOR -->
+          <!-- User requested: "jo jo mudel select kar waise uska qutation ban jaiye or sath me usme jo samne wali companuy hai uski details lele or kitna persent GST laga na hai wo add kar ke ek invocie generate kar de or wo download kare to pdf me sahi se hongi chiaye or pritn bhi sahi se honi chiaye ye" -->
+          <!-- ----------------------------------------- -->
+          <div id="adminPage-quotation-invoice" class="admin-page hidden space-y-6 w-full">
+            
+            <div class="border-b border-brand-border pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                  <span>Quotation &amp; Invoice Generator</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Client Billing Engine</span>
+                </h2>
+                <p class="text-xs text-neutral-400 mt-1">Select client modules, enter company identity details, specify custom GST %, and produce downloadable PDF tax invoices.</p>
+              </div>
+
+              <!-- Action buttons to download PDF / print -->
+              <div class="flex items-center gap-2">
+                <button onclick="downloadInvoicePDF()" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-neutral-950 font-bold text-xs flex items-center gap-2 shadow transition-all">
+                  <i data-lucide="download" class="w-4 h-4"></i>
+                  <span>Download Invoice PDF</span>
+                </button>
+                <button onclick="window.print()" class="px-4 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow transition-all">
+                  <i data-lucide="printer" class="w-4 h-4"></i>
+                  <span>Print Invoice</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 2-COLUMN BUILDER: Configurator on Left, Live Document on Right -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              
+              <!-- LEFT COLUMN: QUOTATION CONTROLS (5 Cols) -->
+              <div class="lg:col-span-5 space-y-6">
+                
+                <!-- 1. Client Company Details -->
+                <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border space-y-3">
+                  <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                    <i data-lucide="building" class="w-4 h-4"></i>
+                    <span>Client Company Details</span>
+                  </div>
+
+                  <div>
+                    <label class="block text-[11px] text-neutral-400 font-semibold mb-1">Company / Entity Name *</label>
+                    <input type="text" id="quoteCompanyName" oninput="syncInvoiceData()" value="Apex Global Technologies Pvt Ltd" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-[11px] text-neutral-400 font-semibold mb-1">Client GSTIN / Tax ID</label>
+                      <input type="text" id="quoteGstin" oninput="syncInvoiceData()" value="27AAACA9823P1ZQ" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white font-mono uppercase focus:outline-none focus:border-brand-amber">
+                    </div>
+                    <div>
+                      <label class="block text-[11px] text-neutral-400 font-semibold mb-1">State &amp; Code</label>
+                      <input type="text" id="quoteState" oninput="syncInvoiceData()" value="Maharashtra (27)" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-[11px] text-neutral-400 font-semibold mb-1">Billing Street Address</label>
+                    <input type="text" id="quoteAddress" oninput="syncInvoiceData()" value="Level 4, Cyber City, BKC, Mumbai 400051" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                  </div>
+                </div>
+
+                <!-- 2. Select Modules from Master -->
+                <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                      <i data-lucide="layers" class="w-4 h-4"></i>
+                      <span>Select SORA HR Modules</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                      <button onclick="toggleAllInvoiceModules(true)" class="text-brand-amber hover:underline font-semibold">All</button>
+                      <span class="text-neutral-600">&bull;</span>
+                      <button onclick="toggleAllInvoiceModules(false)" class="text-neutral-400 hover:underline">Clear</button>
+                    </div>
+                  </div>
+
+                  <div id="invoiceModuleCheckboxes" class="space-y-2.5 max-h-64 overflow-y-auto pr-1 text-xs">
+                    <!-- Populated dynamically from module master -->
+                  </div>
+                </div>
+
+                <!-- 3. Scale, Custom GST % & Discount Settings -->
+                <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border space-y-4">
+                  <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                    <i data-lucide="percent" class="w-4 h-4"></i>
+                    <span>Tiers &amp; Custom GST Percentage</span>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-[11px] text-neutral-400 font-semibold mb-1">Employee Headcount</label>
+                      <select id="quoteHeadcountTier" onchange="syncInvoiceData()" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                        <option value="1.0">1 - 50 Employees (1.0x)</option>
+                        <option value="1.6" selected>51 - 200 Employees (1.6x)</option>
+                        <option value="2.4">201 - 500 Employees (2.4x)</option>
+                        <option value="3.5">500+ Enterprise (3.5x)</option>
+                      </select>
+                    </div>
+
+                    <!-- USER REQUESTED CUSTOM GST % INPUT -->
+                    <div>
+                      <label class="block text-[11px] text-neutral-400 font-semibold mb-1">Custom GST % *</label>
+                      <div class="relative">
+                        <input type="number" id="quoteGstPercent" oninput="syncInvoiceData()" value="18" min="0" max="100" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-amber/50 text-xs font-bold text-brand-amber focus:outline-none focus:border-brand-amber font-mono">
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 font-bold text-xs">%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-[11px] text-neutral-400 font-semibold mb-1">Annual Discount %</label>
+                      <div class="relative">
+                        <input type="number" id="quoteDiscountPercent" oninput="syncInvoiceData()" value="20" min="0" max="100" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white font-mono">
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 font-bold text-xs">%</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-[11px] text-neutral-400 font-semibold mb-1">Invoice Number</label>
+                      <input type="text" id="quoteInvNumber" oninput="syncInvoiceData()" value="INV-SORA-2026-9821" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white font-mono uppercase">
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- RIGHT COLUMN: LIVE TAX INVOICE PREVIEW (7 Cols) -->
+              <!-- Formatted for direct PDF Export & Printing -->
+              <div class="lg:col-span-7">
+                
+                <div id="printableInvoiceArea" class="bg-white text-slate-900 rounded-3xl p-8 sm:p-10 shadow-2xl space-y-6 border border-slate-200">
+                  
+                  <!-- Top Document Header -->
+                  <div class="flex flex-col sm:flex-row justify-between items-start gap-6 border-b border-slate-200 pb-6">
+                    <div>
+                      <div class="flex items-center gap-3 mb-2">
+                        <div class="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center">
+                          <svg class="w-5 h-5 text-amber-600" viewBox="0 0 64 64" fill="none">
+                            <circle cx="32" cy="32" r="16" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="68 25"/>
+                            <path d="M24 36 C 24 28, 32 28, 32 32 C 32 36, 40 36, 40 28" stroke="#0F172A" stroke-width="4" stroke-linecap="round"/>
+                            <circle cx="24" cy="36" r="3.5" fill="#F59E0B"/>
+                            <circle cx="40" cy="28" r="3.5" fill="#D97706"/>
+                          </svg>
+                        </div>
+                        <div class="flex items-center">
+                          <span class="text-2xl font-black tracking-wider text-slate-900">SORA</span>
+                          <span class="text-2xl font-black text-amber-500 mx-1.5 leading-none">|</span>
+                          <span class="text-2xl font-black tracking-wider text-slate-900">HR</span>
+                        </div>
+                      </div>
+                      <div class="text-[11px] text-slate-500 leading-relaxed">
+                        <strong>SORA Human Resource Technologies Private Limited</strong><br>
+                        Level 9, Tech Boulevard, BKC, Mumbai 400051<br>
+                        GSTIN: 27AABCS9821Q1ZU &bull; Email: billing@sorahr.com
+                      </div>
+                    </div>
+
+                    <div class="text-left sm:text-right">
+                      <div class="text-xl font-black text-slate-900 tracking-tight">TAX INVOICE</div>
+                      <div class="text-xs font-mono font-bold text-amber-600 mt-1" id="invDisplayNumber">INV-SORA-2026-9821</div>
+                      <div class="text-[11px] text-slate-500 mt-1">Issue Date: 30 Oct, 2026</div>
+                      <div class="text-[11px] text-slate-500">Payment Terms: <strong>Immediate / Annual</strong></div>
+                    </div>
+                  </div>
+
+                  <!-- Client Billing Box -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-b border-slate-200 pb-5 text-xs">
+                    <div>
+                      <div class="font-bold text-slate-400 uppercase text-[10px] mb-1">Billed To Client:</div>
+                      <div class="text-sm font-bold text-slate-900" id="invDisplayClient">Apex Global Technologies Pvt Ltd</div>
+                      <div class="text-slate-600 mt-1 text-[11px]">
+                        Address: <span id="invDisplayAddress">Level 4, Cyber City, BKC, Mumbai 400051</span><br>
+                        GSTIN: <span id="invDisplayGstin" class="font-mono font-bold text-slate-800">27AAACA9823P1ZQ</span><br>
+                        State: <span id="invDisplayState">Maharashtra (27)</span>
+                      </div>
+                    </div>
+                    <div class="sm:text-right">
+                      <div class="font-bold text-slate-400 uppercase text-[10px] mb-1">Subscription Details:</div>
+                      <div class="text-sm font-bold text-amber-600">SORA Cloud HRMS Suite</div>
+                      <div class="text-slate-600 mt-1 text-[11px]">
+                        Headcount Tier: <strong id="invDisplayTier">51 - 200 Employees</strong><br>
+                        Duration: <strong>12 Months Annual Contract</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Itemized Table of Modules -->
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left">
+                      <thead class="border-b border-slate-300 text-slate-600 font-bold uppercase text-[10px]">
+                        <tr>
+                          <th class="py-2.5">Selected HRMS Module</th>
+                          <th class="py-2.5 text-center">Period</th>
+                          <th class="py-2.5 text-right">Base / Mo</th>
+                          <th class="py-2.5 text-right">Annual Subtotal</th>
+                        </tr>
+                      </thead>
+                      <tbody id="invoiceTableItemsBody" class="divide-y divide-slate-100 text-slate-800">
+                        <!-- Populated dynamically -->
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Totals & Dynamic GST Calculation -->
+                  <div class="border-t border-slate-200 pt-4 flex flex-col sm:flex-row justify-between gap-6">
+                    <div class="text-[11px] text-slate-500 max-w-xs space-y-1">
+                      <div class="font-bold text-slate-800">Bank Transfer Account:</div>
+                      <div>Bank: HDFC Bank Ltd (Current A/C)</div>
+                      <div>A/C Name: SORA HR Technologies Pvt Ltd</div>
+                      <div>A/C: 50200084729104 &bull; IFSC: HDFC0000240</div>
+                    </div>
+
+                    <div class="w-full sm:w-64 space-y-2 text-xs">
+                      <div class="flex justify-between text-slate-600">
+                        <span>Gross Base Total:</span>
+                        <span id="invDisplayGross" class="font-semibold text-slate-800">&#8377; 1,77,600</span>
+                      </div>
+                      <div class="flex justify-between text-emerald-600 font-semibold">
+                        <span>Discount (<span id="invDisplayDiscPct">20</span>%):</span>
+                        <span id="invDisplayDiscount">- &#8377; 35,520</span>
+                      </div>
+                      <div class="flex justify-between text-slate-600">
+                        <span>Taxable Amount:</span>
+                        <span id="invDisplayTaxable" class="font-semibold text-slate-800">&#8377; 1,42,080</span>
+                      </div>
+                      <div class="flex justify-between text-slate-700 font-bold">
+                        <span>GST Applied (<span id="invDisplayGstPct">18</span>%):</span>
+                        <span id="invDisplayGstAmount" class="font-mono text-slate-900">&#8377; 25,574</span>
+                      </div>
+                      <div class="flex justify-between text-base font-black text-slate-900 border-t border-slate-300 pt-2">
+                        <span>Net Grand Total:</span>
+                        <span id="invDisplayGrandTotal" class="text-amber-600 font-mono">&#8377; 1,67,654</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Signature Footer -->
+                  <div class="border-t border-slate-200 pt-4 flex items-center justify-between text-[10px] text-slate-400">
+                    <div>Computer-generated digital tax invoice &bull; SORA HR Enterprise Billing Engine</div>
+                    <div class="text-right">
+                      <div class="font-bold text-slate-700">Authorized Signatory</div>
+                      <div class="text-slate-500">SORA HR Technologies</div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ----------------------------------------- -->
+          <!-- ADMIN PAGE 6: WEBSITE CMS PAGES -->
+          <!-- ----------------------------------------- -->
+          <div id="adminPage-cms" class="admin-page hidden space-y-6 w-full">
+            <div class="border-b border-brand-border pb-4">
+              <h2 id="cmsPageTitle" class="text-2xl font-bold text-white">Website CMS</h2>
+              <p id="cmsPageSubtitle" class="text-xs text-neutral-400 mt-1">Manage public site content and media.</p>
+            </div>
+            <div id="cmsPageDynamicContainer" class="bg-brand-surface p-6 rounded-2xl border border-brand-border space-y-4"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- FOOTER (Visible ONLY in static public mode) -->
+  <!-- ========================================== -->
+  <footer id="mainFooter" class="bg-[#07070a] border-t border-brand-border/40 py-12 text-xs text-neutral-400">
+    <div class="w-full px-6 sm:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        
+        <div class="space-y-4">
+          <div class="flex items-center">
+            <span class="text-xl font-extrabold tracking-wider text-white">SORA</span>
+            <span class="text-xl font-black text-brand-amber mx-1.5 leading-none">|</span>
+            <span class="text-xl font-extrabold tracking-wider text-white">HR</span>
+          </div>
+          <p class="text-neutral-400 max-w-sm leading-relaxed">
+            The next-generation enterprise human resource management system. Streamlining recruitment, attendance, payroll, and people growth.
+          </p>
+          <div class="text-[11px] text-brand-amber font-medium">
+            Smart HR. Stronger People.
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="text-white font-bold uppercase tracking-wider text-[11px]">HRMS Modules</div>
+          <ul class="space-y-2">
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-hrms-core')" class="hover:text-brand-amber transition-colors">Core HR Directory &rarr;</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-hrms-payroll')" class="hover:text-brand-amber transition-colors">Payroll &amp; Tax Engine &rarr;</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-hrms-ats')" class="hover:text-brand-amber transition-colors">Recruitment &amp; ATS &rarr;</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-hrms-attendance')" class="hover:text-brand-amber transition-colors">Attendance &amp; Geofence &rarr;</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <div class="text-white font-bold uppercase tracking-wider text-[11px]">Company &amp; Legal</div>
+          <ul class="space-y-2">
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-about')" class="hover:text-brand-amber transition-colors">About Us &rarr;</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-blog')" class="hover:text-brand-amber transition-colors">HR Insights &amp; Blog &rarr;</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-privacy')" class="hover:text-brand-amber transition-colors">Privacy Policy &rarr;</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-terms')" class="hover:text-brand-amber transition-colors">Terms of Service &rarr;</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-contact')" class="hover:text-brand-amber transition-colors">Contact Us &rarr;</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <div class="text-white font-bold uppercase tracking-wider text-[11px]">Portals &amp; Security</div>
+          <ul class="space-y-2">
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-employee-portal')" class="hover:text-brand-amber transition-colors">Employee Portal &rarr;</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-security')" class="hover:text-brand-amber transition-colors">Security &amp; Compliance &rarr;</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('page-2fa-policy')" class="hover:text-brand-amber transition-colors">2FA Security Policy &rarr;</a></li>
+            <li><a href="javascript:void(0)" onclick="navigateTo('login')" class="text-brand-amber hover:underline font-bold">Admin Sign In &rarr;</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-8 border-t border-brand-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-neutral-500">
+        <div>&copy; 2026 SORA HR Technologies Inc. All rights reserved. &bull; <em>Smart HR. Stronger People.</em></div>
+        <div class="flex items-center gap-4">
+          <span class="flex items-center gap-1.5 text-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Enterprise Cloud Operational
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- TOAST NOTIFICATION -->
+  <!-- ========================================== -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-brand-surface border border-brand-amber/40 shadow-amber-glow px-4 py-3 rounded-2xl flex items-center gap-3 text-xs text-white max-w-sm">
+      <div class="w-7 h-7 rounded-full bg-brand-amber text-neutral-950 flex items-center justify-center font-bold flex-shrink-0">
+        <i data-lucide="check" class="w-4 h-4"></i>
+      </div>
+      <div>
+        <div id="toastTitle" class="font-bold text-amber-200">Action Completed</div>
+        <div id="toastMessage" class="text-neutral-400 text-[11px]">Your changes have been saved.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- APPLICATION SCRIPTS & STATE LOGIC -->
+  <!-- ========================================== -->
+  <script>
+    lucide.createIcons();
+
+    // 8 Core HRMS Modules List for Permissions Matrix
+    const permissionModulesList = [
+      { id: 'core_hr', name: 'Core HR & Employee Directory', desc: 'Personnel directory, org tree & e-vault' },
+      { id: 'ats', name: 'Recruitment & Applicant Tracking (ATS)', desc: 'Job postings, applicant pipeline & offer letters' },
+      { id: 'attendance', name: 'Attendance & Leave Management', desc: 'Biometric device sync & mobile geofence' },
+      { id: 'payroll', name: 'Payroll & Compensation', desc: 'Salary structure, bank disbursals & payslips' },
+      { id: 'performance', name: 'Performance & Appraisals', desc: 'Quarterly OKRs, KPI reviews & peer ratings' },
+      { id: 'compliance', name: 'Statutory & Compliance (PF, ESI)', desc: 'TDS calculations, Form 16 & audit registers' },
+      { id: 'cms', name: 'Website CMS (Banners & Blogs)', desc: 'Hero banners, marketing blogs & legal pages' },
+      { id: 'billing', name: 'Quotation & Invoice Billing', desc: 'Module pricing, tax calculations & invoice export' }
+    ];
+
+    // Master Module Pricing List (Admin can edit/add prices!)
+    let moduleMasterList = [
+      { id: 'mod_core', name: 'Core HR & Employee Directory', code: 'MOD-CORE', price: 3500, selected: true, desc: 'Centralized directory, org hierarchy & document e-vault' },
+      { id: 'mod_payroll', name: 'Automated Payroll & Statutory', code: 'MOD-PAY', price: 4800, selected: true, desc: '1-click payslips, PF/ESI filing & direct bank transfers' },
+      { id: 'mod_ats', name: 'Recruitment & Applicant Tracking (ATS)', code: 'MOD-ATS', price: 3800, selected: true, desc: 'Job board sync, candidate scoring & offer letters' },
+      { id: 'mod_attendance', name: 'Geofence & Biometric Attendance', code: 'MOD-ATT', price: 2700, selected: true, desc: 'Mobile clock-in, shift planner & leave approvals' },
+      { id: 'mod_performance', name: 'Performance & 360 Appraisals', code: 'MOD-PERF', price: 2400, selected: false, desc: 'Quarterly OKRs, KPI reviews & peer feedback cycles' },
+      { id: 'mod_compliance', name: 'Statutory Compliance & TDS Vault', code: 'MOD-STAT', price: 2000, selected: false, desc: 'Labor law registers, Form 16 generator & audit logs' }
+    ];
+
+    const appData = {
+      isLoggedIn: false,
+      userRole: 'SUPER ADMIN',
+      userName: 'Aarav Sharma',
+      currentRoute: 'home',
+      currentAdminPage: 'portal-dashboard',
+      currentSlide: 1,
+      slideTimer: null,
+      tempWizardData: {},
+      admins: [
+        {
+          id: 'ADM-001',
+          empId: 'EMP-SORA-001',
+          name: 'Aarav Sharma',
+          email: 'aarav.sharma@sorahr.com',
+          role: 'Super Administrator',
+          department: 'Executive People Office',
+          modulePerms: [
+            { name: 'Core HR', view: true, add: true, update: true, delete: true },
+            { name: 'ATS', view: true, add: true, update: true, delete: true },
+            { name: 'Payroll', view: true, add: true, update: true, delete: true },
+            { name: 'Attendance', view: true, add: true, update: true, delete: true },
+            { name: 'Compliance', view: true, add: true, update: true, delete: true }
+          ],
+          status: 'Active',
+          lastActive: 'Just now',
+          avatarBg: 'bg-amber-500 text-black'
+        },
+        {
+          id: 'ADM-002',
+          empId: 'EMP-SORA-042',
+          name: 'Rohan Mehra',
+          email: 'rohan.mehra@sorahr.com',
+          role: 'Payroll Officer',
+          department: 'Payroll & Compensation',
+          modulePerms: [
+            { name: 'Payroll', view: true, add: true, update: true, delete: false },
+            { name: 'Compliance', view: true, add: true, update: true, delete: false },
+            { name: 'Core HR', view: true, add: false, update: false, delete: false }
+          ],
+          status: 'Active',
+          lastActive: '2 hours ago',
+          avatarBg: 'bg-blue-500 text-white'
+        },
+        {
+          id: 'ADM-003',
+          empId: 'EMP-SORA-089',
+          name: 'Ananya Verma',
+          email: 'ananya.verma@sorahr.com',
+          role: 'Talent Recruiter',
+          department: 'Talent Acquisition (ATS)',
+          modulePerms: [
+            { name: 'ATS', view: true, add: true, update: true, delete: false },
+            { name: 'Core HR', view: true, add: false, update: false, delete: false }
+          ],
+          status: 'Active',
+          lastActive: 'Yesterday',
+          avatarBg: 'bg-emerald-500 text-white'
+        },
+        {
+          id: 'ADM-004',
+          empId: 'EMP-SORA-115',
+          name: 'Vikram Joshi',
+          email: 'vikram.joshi@sorahr.com',
+          role: 'HR Administrator',
+          department: 'HR Operations & Attendance',
+          modulePerms: [
+            { name: 'Attendance', view: true, add: true, update: true, delete: false },
+            { name: 'Core HR', view: true, add: true, update: false, delete: false }
+          ],
+          status: 'Active',
+          lastActive: '3 days ago',
+          avatarBg: 'bg-purple-500 text-white'
+        }
+      ]
+    };
+
+    // ------------------------------------------
+    // MAIN APP ROUTER
+    // ------------------------------------------
+    function navigateTo(route, targetSectionId = null) {
+      appData.currentRoute = route;
+
+      document.querySelectorAll('.page-container').forEach(el => el.classList.add('hidden'));
+
+      const publicHeader = document.getElementById('publicHeader');
+      const adminHeader = document.getElementById('adminHeader');
+      const mainFooter = document.getElementById('mainFooter');
+
+      if (route === 'home' || route.startsWith('page-')) {
+        publicHeader.classList.remove('hidden');
+        adminHeader.classList.add('hidden');
+        mainFooter.classList.remove('hidden');
+      } else if (route === 'login') {
+        publicHeader.classList.add('hidden');
+        adminHeader.classList.add('hidden');
+        mainFooter.classList.add('hidden');
+      } else if (route.startsWith('portal')) {
+        publicHeader.classList.add('hidden');
+        adminHeader.classList.remove('hidden');
+        mainFooter.classList.add('hidden');
+      }
+
+      if (route === 'home') {
+        document.getElementById('view-home').classList.remove('hidden');
+        if (targetSectionId) {
+          setTimeout(() => {
+            scrollToSection(targetSectionId);
+          }, 50);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } else if (route === 'login') {
+        document.getElementById('view-login').classList.remove('hidden');
+        startLoginSlider();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (route.startsWith('portal')) {
+        document.getElementById('view-portal').classList.remove('hidden');
+        showAdminPage(route === 'portal' ? 'portal-dashboard' : route);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        document.getElementById('view-page-wrapper').classList.remove('hidden');
+        renderDedicatedContentPage(route);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      lucide.createIcons();
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleMobileNav() {
+      document.getElementById('mobileNavDrawer').classList.toggle('hidden');
+    }
+
+    // ------------------------------------------
+    // DEDICATED CONTENT PAGES RENDERER
+    // ------------------------------------------
+    function renderDedicatedContentPage(pageKey) {
+      const container = document.getElementById('dynamicPageContent');
+      const badge = document.getElementById('pageCategoryBadge');
+
+      const pages = {
+        'page-about': {
+          badge: 'ABOUT US',
+          title: 'About SORA HR Technologies',
+          subtitle: 'Empowering organizations with human-first enterprise software.',
+          content: '<p class="text-neutral-300 text-sm">We engineered SORA HR with consumer-grade aesthetics, intuitive workflows, and ironclad legal compliance.</p>'
+        },
+        'page-contact': {
+          badge: 'CONNECT',
+          title: 'Contact SORA HR',
+          subtitle: 'Our enterprise solutions team is here to assist your transition.',
+          content: '<p class="text-neutral-300 text-sm">Email: <span class="text-brand-amber">contact@sorahr.com</span> &bull; BKC, Mumbai 400051</p>'
+        },
+        'page-hrms-core': {
+          badge: 'HRMS MODULE',
+          title: 'Core HR & Employee Directory',
+          subtitle: 'Single source of truth for your organizational data, hierarchy & documents.',
+          content: '<p class="text-neutral-300 text-sm">Centralize employee records, org hierarchies, and e-signatures in one unified database.</p>'
+        },
+        'page-hrms-payroll': {
+          badge: 'HRMS MODULE',
+          title: 'Automated Payroll & Statutory Compliance',
+          subtitle: 'Accurate, on-time salary disbursals with 100% adherence to labor regulations.',
+          content: '<p class="text-neutral-300 text-sm">Automate multi-tier payrolls with automated PF, ESI, TDS calculations and bank disbursals.</p>'
+        },
+        'page-hrms-ats': {
+          badge: 'HRMS MODULE',
+          title: 'Recruitment & Applicant Tracking (ATS)',
+          subtitle: 'From sourcing to offer acceptance — streamline your talent pipeline.',
+          content: '<p class="text-neutral-300 text-sm">Attract and evaluate talent with AI scoring, interview scorecards, and digital offer letters.</p>'
+        },
+        'page-hrms-attendance': {
+          badge: 'HRMS MODULE',
+          title: 'Geofence & Biometric Attendance',
+          subtitle: 'Real-time clock-ins, shift scheduling, and automated leave balance sync.',
+          content: '<p class="text-neutral-300 text-sm">Biometric sync and GPS mobile geofencing clock-ins with facial liveness verification.</p>'
+        },
+        'page-blog': {
+          badge: 'THOUGHT LEADERSHIP',
+          title: 'SORA HR Insights & Blog',
+          subtitle: 'Expert analyses on workplace culture, compliance laws & talent retention.',
+          content: '<p class="text-neutral-300 text-sm">Read the latest strategies on reducing attrition and Indian labor code changes.</p>'
+        },
+        'page-privacy': {
+          badge: 'LEGAL & TRUST',
+          title: 'Privacy Policy & Data Security',
+          subtitle: 'Our strict commitment to protecting your enterprise employee data.',
+          content: '<p class="text-neutral-300 text-sm">SORA HR is fully compliant with DPDP 2023, GDPR, and ISO 27001 with 256-bit AES encryption.</p>'
+        },
+        'page-terms': {
+          badge: 'LEGAL & TERMS',
+          title: 'Terms of Service',
+          subtitle: 'Master enterprise subscription agreement and SLA terms.',
+          content: '<p class="text-neutral-300 text-sm">SORA HR enterprise cloud SLA guarantees 99.99% service availability.</p>'
+        },
+        'page-employee-portal': {
+          badge: 'EMPLOYEE EXPERIENCE',
+          title: 'Self-Service Employee Portal',
+          subtitle: 'Empowering your team with 24/7 mobile access to payslips, leaves & tax declarations.',
+          content: '<p class="text-neutral-300 text-sm">Employees can view payslips, apply for leaves, and submit investment proofs seamlessly.</p>'
+        },
+        'page-security': {
+          badge: 'SECURITY ASSURANCE',
+          title: 'Enterprise Security & Compliance',
+          subtitle: 'Bank-grade defense architecture built for modern enterprises.',
+          content: '<p class="text-neutral-300 text-sm">SOC 2 Type II certified with granular role-based access control (RBAC).</p>'
+        },
+        'page-2fa-policy': {
+          badge: 'AUTHENTICATION',
+          title: 'Two-Factor Authentication (2FA) Policy',
+          subtitle: 'Mandatory cryptographic authentication for all administrative actions.',
+          content: '<p class="text-neutral-300 text-sm">All administrative operations require TOTP verification to secure sensitive personnel records.</p>'
+        }
+      };
+
+      const data = pages[pageKey] || {
+        badge: 'PAGE',
+        title: 'SORA HR Enterprise Portal',
+        subtitle: 'Enterprise Human Resource Management',
+        content: '<p class="text-neutral-400 text-sm">Content is being updated by SORA HR editorial team.</p>'
+      };
+
+      badge.innerText = data.badge;
+      container.innerHTML = `
+        <div class="mb-6">
+          <h1 class="text-2xl sm:text-4xl font-bold text-white mb-2">${data.title}</h1>
+          <p class="text-neutral-400 text-sm">${data.subtitle}</p>
+        </div>
+        <div class="pt-6 border-t border-brand-border">${data.content}</div>
+        <div class="mt-8 pt-6 border-t border-brand-border flex items-center justify-between">
+          <button onclick="navigateTo('home')" class="px-5 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-neutral-300 hover:text-white transition-colors">
+            &larr; Back to Home
+          </button>
+          <button onclick="navigateTo('login')" class="px-6 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs uppercase tracking-wider">
+            Sign In to Portal
+          </button>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    // ------------------------------------------
+    // SPLIT LOGIN SLIDER LOGIC
+    // ------------------------------------------
+    function setLoginSlide(num) {
+      appData.currentSlide = num;
+      [1, 2, 3].forEach(i => {
+        const slide = document.getElementById(`loginSlide${i}`);
+        const dot = document.getElementById(`slideDot${i}`);
+        if (slide && dot) {
+          if (i === num) {
+            slide.classList.remove('hidden');
+            dot.className = "w-8 h-2 rounded-full bg-brand-amber transition-all";
+          } else {
+            slide.classList.add('hidden');
+            dot.className = "w-2.5 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all";
+          }
+        }
+      });
+      lucide.createIcons();
+    }
+
+    function startLoginSlider() {
+      if (appData.slideTimer) clearInterval(appData.slideTimer);
+      appData.slideTimer = setInterval(() => {
+        let next = appData.currentSlide + 1;
+        if (next > 3) next = 1;
+        setLoginSlide(next);
+      }, 4500);
+    }
+
+    function switchLoginMode(mode) {
+      const tabOtp = document.getElementById('authTabOtp');
+      const tab2fa = document.getElementById('authTab2fa');
+      const modeOtp = document.getElementById('authModeOtp');
+      const mode2fa = document.getElementById('authMode2fa');
+
+      if (mode === 'otp') {
+        tabOtp.className = "flex-1 py-2.5 rounded-xl bg-brand-amber text-neutral-950 font-extrabold shadow transition-all flex items-center justify-center gap-2";
+        tab2fa.className = "flex-1 py-2.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2";
+        modeOtp.classList.remove('hidden');
+        mode2fa.classList.add('hidden');
+      } else {
+        tab2fa.className = "flex-1 py-2.5 rounded-xl bg-brand-amber text-neutral-950 font-extrabold shadow transition-all flex items-center justify-center gap-2";
+        tabOtp.className = "flex-1 py-2.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2";
+        mode2fa.classList.remove('hidden');
+        modeOtp.classList.add('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    function sendOtpCode() {
+      const target = document.getElementById('loginOtpTarget').value;
+      if (!target) {
+        showToast('Input Required', 'Please enter your work email or phone.');
+        return;
+      }
+      document.getElementById('otpTargetLabel').innerText = target;
+      document.getElementById('otpInputStep').classList.add('hidden');
+      document.getElementById('otpVerifyStep').classList.remove('hidden');
+      showToast('OTP Dispatched', `A 6-digit verification code was sent to ${target}`);
+      lucide.createIcons();
+    }
+
+    function proceedTo2faTokenPrompt() {
+      const user = document.getElementById('twoFaUsername').value;
+      const pass = document.getElementById('twoFaPassword').value;
+
+      if (!user || !pass) {
+        showToast('Required Fields', 'Username/Email and Master Password are required.');
+        return;
+      }
+
+      document.getElementById('twoFaCredStep').classList.add('hidden');
+      document.getElementById('twoFaTokenStep').classList.remove('hidden');
+      showToast('Credentials Verified', 'Please enter your 6-digit Authenticator code.');
+      lucide.createIcons();
+    }
+
+    function toggleForgotPasswordBox() {
+      document.getElementById('forgotPasswordBox').classList.toggle('hidden');
+      lucide.createIcons();
+    }
+
+    function sendForgotOtp() {
+      document.getElementById('forgotStep1').classList.add('hidden');
+      document.getElementById('forgotStep2').classList.remove('hidden');
+      showToast('Code Sent', 'OTP sent to your verified email address.');
+      lucide.createIcons();
+    }
+
+    function finishPasswordReset() {
+      showToast('Password Updated', 'Your master password has been updated. Logging in...');
+      setTimeout(() => {
+        performSuccessfulLogin('Aarav Sharma', 'Password Reset');
+      }, 600);
+    }
+
+    function performSuccessfulLogin(name, method) {
+      appData.isLoggedIn = true;
+      appData.userName = name;
+      document.getElementById('superAdminNameDisplay').innerText = name;
+      showToast('Access Granted', `Welcome, ${name}! Signed in via ${method}.`);
+      navigateTo('portal-dashboard');
+    }
+
+    function handleLogout() {
+      appData.isLoggedIn = false;
+      showToast('Logged Out', 'You have been safely signed out.');
+      navigateTo('home');
+    }
+
+    // ------------------------------------------
+    // ADMIN PORTAL PAGES ROUTER
+    // ------------------------------------------
+    function showAdminPage(pageId) {
+      appData.currentAdminPage = pageId;
+
+      document.querySelectorAll('.admin-page').forEach(el => el.classList.add('hidden'));
+
+      // Clean active sidebar styling with zero text-shadow or outline glitches
+      document.querySelectorAll('.sidebar-btn').forEach(el => {
+        if (!el.getAttribute('onclick')?.includes('handleLogout')) {
+          el.className = "sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left";
+        }
+      });
+
+      const breadcrumb = document.getElementById('portalCurrentBreadcrumb');
+
+      if (pageId === 'portal-dashboard') {
+        document.getElementById('adminPage-dashboard').classList.remove('hidden');
+        document.getElementById('sideNavDashboard').className = "sidebar-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-brand-surface text-brand-amber border border-brand-amber/30 font-semibold text-left transition-all";
+        breadcrumb.innerText = 'Dashboard Overview';
+      } else if (pageId === 'portal-admin-list') {
+        document.getElementById('adminPage-admin-list').classList.remove('hidden');
+        document.getElementById('sideNavAdmins').className = "sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-brand-surface text-brand-amber border border-brand-amber/30 font-semibold text-left transition-all";
+        breadcrumb.innerText = 'Admin Management';
+        renderAdminListTable();
+      } else if (pageId === 'portal-admin-create') {
+        document.getElementById('adminPage-admin-create').classList.remove('hidden');
+        breadcrumb.innerText = 'Create New Administrator';
+        goToWizardStep1();
+      } else if (pageId === 'portal-pricing-master') {
+        document.getElementById('adminPage-pricing-master').classList.remove('hidden');
+        document.getElementById('sideNavPricingMaster').className = "sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-brand-surface text-brand-amber border border-brand-amber/30 font-semibold text-left transition-all";
+        breadcrumb.innerText = 'Module Pricing Master';
+        renderModulePricingMaster();
+      } else if (pageId === 'portal-quotation-invoice') {
+        document.getElementById('adminPage-quotation-invoice').classList.remove('hidden');
+        document.getElementById('sideNavQuotationInvoice').className = "sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-brand-surface text-brand-amber border border-brand-amber/30 font-semibold text-left transition-all";
+        breadcrumb.innerText = 'Performa Quotation & Invoice';
+        renderInvoiceModuleSelectors();
+        syncInvoiceData();
+      } else if (pageId.startsWith('cms-')) {
+        document.getElementById('adminPage-cms').classList.remove('hidden');
+        renderCmsPage(pageId.replace('cms-', ''));
+      }
+
+      lucide.createIcons();
+    }
+
+    function toggleWebsiteSidebarMenu() {
+      const sub = document.getElementById('sidebarCmsSubmenu');
+      const chv = document.getElementById('cmsChevron');
+      sub.classList.toggle('hidden');
+      chv.style.transform = sub.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    // ------------------------------------------
+    // ADMIN LIST TABLE RENDERING
+    // ------------------------------------------
+    function renderAdminListTable(filterText = '') {
+      const tbody = document.getElementById('adminListPageTbody');
+      const countEl = document.getElementById('adminListPageCount');
+      const badgeCount = document.getElementById('sidebarAdminCount');
+
+      const search = filterText.toLowerCase().trim();
+      const filtered = appData.admins.filter(a => {
+        return a.name.toLowerCase().includes(search) ||
+               a.email.toLowerCase().includes(search) ||
+               a.empId.toLowerCase().includes(search) ||
+               a.role.toLowerCase().includes(search) ||
+               a.department.toLowerCase().includes(search);
+      });
+
+      tbody.innerHTML = filtered.map(admin => {
+        const initials = admin.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+        
+        const permBadges = admin.modulePerms ? admin.modulePerms.map(mp => {
+          let letters = [];
+          if (mp.view) letters.push('V');
+          if (mp.add) letters.push('A');
+          if (mp.update) letters.push('U');
+          if (mp.delete) letters.push('D');
+          const code = letters.length === 4 ? 'All' : letters.join(',');
+          return `
+            <span class="inline-flex items-center gap-1 bg-brand-dark border border-brand-border/80 text-[10px] px-2 py-0.5 rounded-md text-neutral-300">
+              <span class="font-medium text-white">${mp.name}</span>
+              <span class="text-brand-amber font-mono font-bold">(${code})</span>
+            </span>
+          `;
+        }).join('') : '<span class="text-neutral-500">None</span>';
+
+        return `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-4 px-4">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full ${admin.avatarBg} flex items-center justify-center font-bold text-xs flex-shrink-0">
+                  ${initials}
+                </div>
+                <div>
+                  <div class="font-bold text-white text-xs">${admin.name}</div>
+                  <div class="text-[11px] text-neutral-400">${admin.email}</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-4 px-4 font-mono text-neutral-300">${admin.empId}</td>
+            <td class="py-4 px-4">
+              <div class="font-semibold text-neutral-200">${admin.role}</div>
+              <div class="text-[11px] text-neutral-400">${admin.department}</div>
+            </td>
+            <td class="py-4 px-4">
+              <div class="flex flex-wrap gap-1 max-w-sm">
+                ${permBadges}
+              </div>
+            </td>
+            <td class="py-4 px-4">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${admin.status}
+              </span>
+            </td>
+            <td class="py-4 px-4 text-neutral-400">${admin.lastActive}</td>
+            <td class="py-4 px-4 text-right">
+              <button onclick="removeAdmin('${admin.id}')" title="Revoke Access" class="p-1.5 text-neutral-400 hover:text-rose-400 hover:bg-white/5 rounded-lg transition-colors">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      countEl.innerText = `Showing ${filtered.length} of ${appData.admins.length} registered HR administrators`;
+      badgeCount.innerText = appData.admins.length;
+      lucide.createIcons();
+    }
+
+    function filterAdminList() {
+      const q = document.getElementById('adminTableSearch').value;
+      renderAdminListTable(q);
+    }
+
+    function removeAdmin(id) {
+      const idx = appData.admins.findIndex(a => a.id === id);
+      if (idx !== -1) {
+        const name = appData.admins[idx].name;
+        if (confirm(`Revoke administrative access for ${name}?`)) {
+          appData.admins.splice(idx, 1);
+          renderAdminListTable();
+          showToast('Admin Removed', `Access revoked for ${name}`);
+        }
+      }
+    }
+
+    // ------------------------------------------
+    // 2-STEP ADMIN CREATION WIZARD LOGIC
+    // Step 1: Personal & Role Details
+    // Step 2: Granular Permissions Matrix
+    // ------------------------------------------
+    function startAdminCreationWizard() {
+      showAdminPage('portal-admin-create');
+    }
+
+    function goToWizardStep1() {
+      document.getElementById('adminWizardStep1').classList.remove('hidden');
+      document.getElementById('adminWizardStep2').classList.add('hidden');
+
+      document.getElementById('stepBadge1').className = "px-3 py-1 rounded-full bg-brand-amber text-neutral-950 flex items-center gap-1.5 shadow font-bold";
+      document.getElementById('stepBadge2').className = "px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-neutral-400 flex items-center gap-1.5";
+      lucide.createIcons();
+    }
+
+    function goToWizardStep2() {
+      const name = document.getElementById('wizardName').value.trim();
+      const empId = document.getElementById('wizardEmpId').value.trim();
+      const email = document.getElementById('wizardEmail').value.trim();
+      const dept = document.getElementById('wizardDept').value;
+      const role = document.getElementById('wizardRole').value;
+      const phone = document.getElementById('wizardPhone').value.trim();
+
+      if (!name || !empId || !email) {
+        showToast('Required Fields', 'Full Name, Employee ID and Email are mandatory.');
+        return;
+      }
+
+      appData.tempWizardData = { name, empId, email, dept, role, phone };
+
+      // Update Step 2 Banner
+      document.getElementById('step2SummaryName').innerText = name;
+      document.getElementById('step2SummaryMeta').innerText = `${empId} \u2022 ${role} (${dept})`;
+      document.getElementById('step2Avatar').innerText = name.split(' ').map(n => n[0]).join('').substring(0, 2);
+
+      // Render Permissions Matrix
+      renderPermissionMatrixForm();
+
+      document.getElementById('adminWizardStep1').classList.add('hidden');
+      document.getElementById('adminWizardStep2').classList.remove('hidden');
+
+      document.getElementById('stepBadge1').className = "px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5";
+      document.getElementById('stepBadge2').className = "px-3 py-1 rounded-full bg-brand-amber text-neutral-950 flex items-center gap-1.5 shadow font-bold";
+
+      lucide.createIcons();
+    }
+
+    function renderPermissionMatrixForm() {
+      const tbody = document.getElementById('permissionMatrixTbody');
+      tbody.innerHTML = permissionModulesList.map(mod => `
+        <tr class="hover:bg-brand-surface/60 transition-colors">
+          <td class="py-3 px-4">
+            <div class="font-bold text-white text-xs">${mod.name}</div>
+            <div class="text-[10px] text-neutral-400">${mod.desc}</div>
+          </td>
+          <td class="py-3 px-3 text-center">
+            <input type="checkbox" name="perm_${mod.id}_view" data-mod="${mod.name}" data-action="view" checked class="perm-chk perm-view rounded border-brand-border text-brand-amber focus:ring-0">
+          </td>
+          <td class="py-3 px-3 text-center">
+            <input type="checkbox" name="perm_${mod.id}_add" data-mod="${mod.name}" data-action="add" checked class="perm-chk perm-add rounded border-brand-border text-brand-amber focus:ring-0">
+          </td>
+          <td class="py-3 px-3 text-center">
+            <input type="checkbox" name="perm_${mod.id}_update" data-mod="${mod.name}" data-action="update" checked class="perm-chk perm-update rounded border-brand-border text-brand-amber focus:ring-0">
+          </td>
+          <td class="py-3 px-3 text-center">
+            <input type="checkbox" name="perm_${mod.id}_delete" data-mod="${mod.name}" data-action="delete" class="perm-chk perm-delete rounded border-brand-border text-brand-amber focus:ring-0">
+          </td>
+          <td class="py-3 px-4 text-center">
+            <button type="button" onclick="toggleRowPerms('${mod.id}', true)" class="text-[10px] text-brand-amber hover:underline mr-1 font-semibold">All</button>
+            <span class="text-neutral-600">&bull;</span>
+            <button type="button" onclick="toggleRowPerms('${mod.id}', false)" class="text-[10px] text-neutral-400 hover:underline ml-1">None</button>
+          </td>
+        </tr>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function toggleRowPerms(modId, state) {
+      ['view', 'add', 'update', 'delete'].forEach(act => {
+        const el = document.querySelector(`input[name="perm_${modId}_${act}"]`);
+        if (el) el.checked = state;
+      });
+    }
+
+    function toggleColumnPerms(action, state) {
+      document.querySelectorAll(`.perm-${action}`).forEach(cb => cb.checked = state);
+    }
+
+    function toggleAllMatrixPerms(state) {
+      document.querySelectorAll('.perm-chk').forEach(cb => cb.checked = state);
+    }
+
+    function finalizeAdminCreation() {
+      const data = appData.tempWizardData;
+      if (!data.name) {
+        showToast('Error', 'Wizard session expired. Please refill details.');
+        goToWizardStep1();
+        return;
+      }
+
+      // Collect matrix permissions
+      const modulePerms = [];
+      permissionModulesList.forEach(mod => {
+        const v = document.querySelector(`input[name="perm_${mod.id}_view"]`)?.checked || false;
+        const a = document.querySelector(`input[name="perm_${mod.id}_add"]`)?.checked || false;
+        const u = document.querySelector(`input[name="perm_${mod.id}_update"]`)?.checked || false;
+        const d = document.querySelector(`input[name="perm_${mod.id}_delete"]`)?.checked || false;
+
+        if (v || a || u || d) {
+          modulePerms.push({
+            name: mod.name.split(' ')[0] + (mod.name.includes('ATS') ? ' (ATS)' : ''),
+            view: v,
+            add: a,
+            update: u,
+            delete: d
+          });
+        }
+      });
+
+      const newAdmin = {
+        id: 'ADM-' + Date.now().toString().slice(-3),
+        empId: data.empId,
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        department: data.dept,
+        modulePerms: modulePerms.length > 0 ? modulePerms : [{ name: 'Core HR', view: true, add: false, update: false, delete: false }],
+        status: 'Active',
+        lastActive: 'Just registered',
+        avatarBg: 'bg-amber-500 text-black'
+      };
+
+      appData.admins.unshift(newAdmin);
+      showToast('Admin Created!', `${data.name} has been enrolled with ${modulePerms.length} module permissions.`);
+      showAdminPage('portal-admin-list');
+    }
+
+    // ------------------------------------------
+    // MODULE PRICING MASTER LOGIC
+    // Allows admin to add/edit prices for each module
+    // ------------------------------------------
+    function renderModulePricingMaster() {
+      const tbody = document.getElementById('modulePricingMasterTbody');
+      tbody.innerHTML = moduleMasterList.map((mod, idx) => `
+        <tr class="hover:bg-brand-card/30 transition-colors">
+          <td class="py-3.5 px-4">
+            <div class="font-bold text-white text-xs">${mod.name}</div>
+            <div class="text-[10px] font-mono text-brand-amber font-semibold">${mod.code}</div>
+          </td>
+          <td class="py-3.5 px-4 text-neutral-400 text-xs">${mod.desc}</td>
+          <td class="py-3.5 px-4">
+            <div class="flex items-center gap-1.5">
+              <span class="text-neutral-500 font-mono">&#8377;</span>
+              <input type="number" id="modPrice_${idx}" value="${mod.price}" step="100" class="w-24 px-2 py-1 rounded-lg bg-brand-dark border border-brand-border text-xs text-brand-amber font-mono font-bold focus:outline-none focus:border-brand-amber">
+            </div>
+          </td>
+          <td class="py-3.5 px-4 font-mono text-neutral-300">
+            &#8377; ${(mod.price * 12).toLocaleString('en-IN')}
+          </td>
+          <td class="py-3.5 px-4">
+            <span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">Active</span>
+          </td>
+          <td class="py-3.5 px-4 text-right">
+            <button onclick="saveModulePrice(${idx})" class="px-3 py-1 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-xs text-brand-amber font-semibold transition-all">
+              Update Rate
+            </button>
+          </td>
+        </tr>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function saveModulePrice(idx) {
+      const input = document.getElementById(`modPrice_${idx}`);
+      const newPrice = parseInt(input.value);
+      if (!isNaN(newPrice) && newPrice >= 0) {
+        moduleMasterList[idx].price = newPrice;
+        renderModulePricingMaster();
+        showToast('Price Updated', `${moduleMasterList[idx].name} base price set to \u20B9${newPrice.toLocaleString('en-IN')}/mo`);
+      }
+    }
+
+    function promptAddCustomModule() {
+      const name = prompt('Enter New Module Name (e.g., Performance OKRs, Travel & Expense):');
+      if (!name) return;
+      const priceStr = prompt('Enter Monthly Base Price (\u20B9):', '2500');
+      const price = parseInt(priceStr) || 2500;
+      const code = 'MOD-' + name.substring(0, 4).toUpperCase();
+
+      moduleMasterList.push({
+        id: 'mod_' + Date.now().toString().slice(-4),
+        name: name,
+        code: code,
+        price: price,
+        selected: true,
+        desc: 'Custom enterprise integration module'
+      });
+
+      renderModulePricingMaster();
+      showToast('Module Added', `${name} has been created at \u20B9${price.toLocaleString('en-IN')}/mo.`);
+    }
+
+    // ------------------------------------------
+    // QUOTATION & INVOICE GENERATOR LOGIC
+    // Dynamic module selection, company details, custom GST %, PDF & Print
+    // ------------------------------------------
+    function renderInvoiceModuleSelectors() {
+      const container = document.getElementById('invoiceModuleCheckboxes');
+      container.innerHTML = moduleMasterList.map((mod, idx) => `
+        <label class="flex items-center justify-between p-2.5 rounded-xl bg-brand-dark border ${mod.selected ? 'border-brand-amber/60 bg-brand-amber/5' : 'border-brand-border'} hover:border-brand-amber/40 cursor-pointer transition-all">
+          <div class="flex items-center gap-2.5">
+            <input type="checkbox" onchange="toggleModuleSelection(${idx}, this.checked)" ${mod.selected ? 'checked' : ''} class="rounded border-brand-border text-brand-amber focus:ring-0">
+            <div>
+              <div class="font-bold text-white text-xs">${mod.name}</div>
+              <div class="text-[10px] text-neutral-400">${mod.desc}</div>
+            </div>
+          </div>
+          <span class="text-brand-amber font-mono font-bold text-xs flex-shrink-0">&#8377; ${mod.price.toLocaleString('en-IN')}/mo</span>
+        </label>
+      `).join('');
+    }
+
+    function toggleModuleSelection(idx, state) {
+      moduleMasterList[idx].selected = state;
+      renderInvoiceModuleSelectors();
+      syncInvoiceData();
+    }
+
+    function toggleAllInvoiceModules(state) {
+      moduleMasterList.forEach(m => m.selected = state);
+      renderInvoiceModuleSelectors();
+      syncInvoiceData();
+    }
+
+    function syncInvoiceData() {
+      // Pull inputs
+      const compName = document.getElementById('quoteCompanyName')?.value || 'Apex Global Technologies Pvt Ltd';
+      const gstin = document.getElementById('quoteGstin')?.value || '27AAACA9823P1ZQ';
+      const state = document.getElementById('quoteState')?.value || 'Maharashtra (27)';
+      const addr = document.getElementById('quoteAddress')?.value || 'Level 4, Cyber City, BKC, Mumbai 400051';
+      const invNum = document.getElementById('quoteInvNumber')?.value || 'INV-SORA-2026-9821';
+
+      const tierMult = parseFloat(document.getElementById('quoteHeadcountTier')?.value || '1.6');
+      const tierText = document.getElementById('quoteHeadcountTier')?.selectedOptions[0]?.text.split('(')[0].trim() || '51 - 200 Employees';
+
+      // Custom GST % (Requested by user)
+      const gstPct = parseFloat(document.getElementById('quoteGstPercent')?.value || '18');
+      const discPct = parseFloat(document.getElementById('quoteDiscountPercent')?.value || '20');
+
+      // Update Document Header
+      document.getElementById('invDisplayClient').innerText = compName;
+      document.getElementById('invDisplayGstin').innerText = gstin;
+      document.getElementById('invDisplayState').innerText = state;
+      document.getElementById('invDisplayAddress').innerText = addr;
+      document.getElementById('invDisplayNumber').innerText = invNum;
+      document.getElementById('invDisplayTier').innerText = tierText;
+
+      // Filter selected modules
+      const selectedMods = moduleMasterList.filter(m => m.selected);
+
+      let annualGross = 0;
+      const tbody = document.getElementById('invoiceTableItemsBody');
+      tbody.innerHTML = selectedMods.map(m => {
+        const itemAnnual = Math.round(m.price * tierMult * 12);
+        annualGross += itemAnnual;
+        return `
+          <tr>
+            <td class="py-2.5 font-semibold text-slate-800">
+              ${m.name}
+              <div class="text-[10px] text-slate-500 font-normal">${m.desc}</div>
+            </td>
+            <td class="py-2.5 text-center text-slate-600">12 Mo</td>
+            <td class="py-2.5 text-right font-mono text-slate-600">&#8377; ${Math.round(m.price * tierMult).toLocaleString('en-IN')}/mo</td>
+            <td class="py-2.5 text-right font-mono font-bold text-slate-900">&#8377; ${itemAnnual.toLocaleString('en-IN')}</td>
+          </tr>
+        `;
+      }).join('');
+
+      // Calculations
+      const discount = Math.round(annualGross * (discPct / 100));
+      const taxable = annualGross - discount;
+      const gstAmount = Math.round(taxable * (gstPct / 100));
+      const grandTotal = taxable + gstAmount;
+
+      document.getElementById('invDisplayGross').innerHTML = `&#8377; ${annualGross.toLocaleString('en-IN')}`;
+      document.getElementById('invDisplayDiscPct').innerText = discPct;
+      document.getElementById('invDisplayDiscount').innerHTML = `- &#8377; ${discount.toLocaleString('en-IN')}`;
+      document.getElementById('invDisplayTaxable').innerHTML = `&#8377; ${taxable.toLocaleString('en-IN')}`;
+
+      // Dynamic GST % in Invoice
+      document.getElementById('invDisplayGstPct').innerText = gstPct;
+      document.getElementById('invDisplayGstAmount').innerHTML = `&#8377; ${gstAmount.toLocaleString('en-IN')}`;
+      document.getElementById('invDisplayGrandTotal').innerHTML = `&#8377; ${grandTotal.toLocaleString('en-IN')}`;
+
+      lucide.createIcons();
+    }
+
+    // 1-Click Client PDF Download using html2pdf.js
+    function downloadInvoicePDF() {
+      const element = document.getElementById('printableInvoiceArea');
+      const invNum = document.getElementById('quoteInvNumber')?.value || 'INV-SORA-2026';
+
+      showToast('Generating PDF', 'Rendering high-resolution invoice document...');
+
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `${invNum}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      if (window.html2pdf) {
+        html2pdf().set(opt).from(element).save().then(() => {
+          showToast('Downloaded!', `${invNum}.pdf has been saved.`);
+        }).catch(err => {
+          window.print();
+        });
+      } else {
+        window.print();
+      }
+    }
+
+    // ------------------------------------------
+    // CMS PAGES
+    // ------------------------------------------
+    function renderCmsPage(type) {
+      const title = document.getElementById('cmsPageTitle');
+      const subtitle = document.getElementById('cmsPageSubtitle');
+      const container = document.getElementById('cmsPageDynamicContainer');
+      const breadcrumb = document.getElementById('portalCurrentBreadcrumb');
+
+      if (type === 'banner') {
+        title.innerText = 'Banner Management';
+        subtitle.innerText = 'Manage homepage promotional banners and hero slides.';
+        breadcrumb.innerText = 'Website CMS / Banners';
+        container.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-white uppercase">Active Banners (2)</span>
+              <button onclick="showToast('Add Banner', 'Banner upload dialog ready.')" class="px-3.5 py-1.5 rounded-lg bg-brand-amber text-neutral-950 font-bold text-xs">+ Add Hero Banner</button>
+            </div>
+            <div class="p-3.5 bg-brand-dark rounded-xl border border-brand-border flex items-center justify-between text-xs">
+              <div>
+                <div class="font-bold text-white">Smart HR. Stronger People (Main Hero)</div>
+                <div class="text-[11px] text-neutral-400">Position 1 &bull; Amber Radial Glow Theme</div>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-400">Live</span>
+            </div>
+          </div>
+        `;
+      } else if (type === 'blog') {
+        title.innerText = 'Blog & Article Management';
+        subtitle.innerText = 'Publish HR thought leadership and compliance updates.';
+        breadcrumb.innerText = 'Website CMS / Blog';
+        container.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-white uppercase">Published Articles (2)</span>
+              <button onclick="showToast('Draft Article', 'Rich article editor opened.')" class="px-3.5 py-1.5 rounded-lg bg-brand-amber text-neutral-950 font-bold text-xs">+ Write Article</button>
+            </div>
+          </div>
+        `;
+      } else if (type === 'about') {
+        title.innerText = 'About Us CMS';
+        subtitle.innerText = 'Edit company vision, leadership biographies, and security certifications.';
+        breadcrumb.innerText = 'Website CMS / About Us';
+        container.innerHTML = `
+          <div class="space-y-4 text-xs">
+            <label class="block font-bold text-white">Mission Statement</label>
+            <textarea rows="4" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white">At SORA HR, we believe that behind every enterprise triumph are resilient, empowered human beings. We build software with consumer-grade aesthetics and ironclad enterprise compliance.</textarea>
+            <button onclick="showToast('Content Saved', 'About Us content published successfully.')" class="px-4 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold">Save Changes</button>
+          </div>
+        `;
+      } else {
+        title.innerText = 'Privacy Policy CMS';
+        subtitle.innerText = 'Manage legal terms, DPDP 2023 adherence, and security disclosures.';
+        breadcrumb.innerText = 'Website CMS / Privacy Policy';
+        container.innerHTML = `
+          <div class="space-y-4 text-xs">
+            <label class="block font-bold text-white">Privacy Document Markdown</label>
+            <textarea rows="4" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white font-mono">SORA HR adheres to the Digital Personal Data Protection (DPDP) Act 2023 and ISO/IEC 27001 standards. Data is protected with 256-bit AES encryption.</textarea>
+            <button onclick="showToast('Policy Updated', 'Privacy Policy updated live.')" class="px-4 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold">Publish Policy</button>
+          </div>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    // ------------------------------------------
+    // TOAST SYSTEM
+    // ------------------------------------------
+    let toastTimer = null;
+    function showToast(title, msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastTitle').innerText = title;
+      document.getElementById('toastMessage').innerText = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 4000);
+      lucide.createIcons();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAdminListTable();
+      renderInvoiceModuleSelectors();
+      syncInvoiceData();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

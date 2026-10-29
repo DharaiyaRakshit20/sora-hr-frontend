@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80" fill="none">
+  <defs>
+    <linearGradient id="amberGlowLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Brand Emblem for light background -->
+  <g transform="translate(10, 16)">
+    <circle cx="24" cy="24" r="22" fill="#F59E0B" fill-opacity="0.12"/>
+    <circle cx="24" cy="24" r="20" stroke="url(#amberGlowLight)" stroke-width="3" stroke-linecap="round" stroke-dasharray="85 30"/>
+    <path d="M16 28 C 16 20, 24 20, 24 24 C 24 28, 32 28, 32 20" stroke="#0F172A" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="16" cy="28" r="2.5" fill="#D97706"/>
+    <circle cx="32" cy="20" r="2.5" fill="#F59E0B"/>
+    <circle cx="24" cy="24" r="2" fill="#0F172A"/>
+  </g>
+
+  <!-- Brand Typography: SORA (Dark Slate for crisp contrast) -->
+  <text x="68" y="50" font-family="'Plus Jakarta Sans', 'Outfit', 'Inter', -apple-system, sans-serif" font-size="32" font-weight="800" letter-spacing="0.08em" fill="#0F172A">
+    SORA
+  </text>
+
+  <!-- Vertical Divider in Signature Amber -->
+  <line x1="184" y1="24" x2="184" y2="54" stroke="url(#amberGlowLight)" stroke-width="4.5" stroke-linecap="round"/>
+
+  <!-- Brand Typography: HR -->
+  <text x="200" y="50" font-family="'Plus Jakarta Sans', 'Outfit', 'Inter', -apple-system, sans-serif" font-size="32" font-weight="800" letter-spacing="0.1em" fill="#0F172A">
+    HR
+  </text>
+
+  <!-- Tagline for invoices / emails -->
+  <text x="70" y="66" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="9" font-weight="600" letter-spacing="0.28em" fill="#64748B">
+    PEOPLE &bull; PAYROLL &bull; GROWTH
+  </text>
+</svg>
