@@ -3069,44 +3069,222 @@
     </div>
   </div>
 
-<!-- MODAL: CREATE POLICY -->
-  <div id="modalCreatePolicy" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
-      <div class="p-5 border-b border-brand-border flex items-center justify-between">
+<!-- MODAL: CREATE MULTI-PAGE POLICY (1 TO 4+ PAGES) -->
+  <div id="modalCreatePolicy" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      <div class="p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark">
         <div>
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <i data-lucide="shield" class="w-4 h-4 text-brand-amber"></i>
-            <span>Draft Company Policy Document</span>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="file-text" class="w-4 h-4 text-brand-amber"></i>
+            <span>Author Company Policy Document (Multi-Page)</span>
           </h3>
-          <p class="text-[11px] text-neutral-400 mt-0.5">Author governance rule with broadcast dispatch</p>
+          <p class="text-[11px] text-neutral-400 mt-0.5">Draft 1 to 4+ page regulatory charters, workplace policies &amp; compliance frameworks</p>
         </div>
-        <button onclick="closeModal('modalCreatePolicy')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+        <button onclick="closeModal('modalCreatePolicy')" class="text-neutral-400 hover:text-white p-1 text-lg leading-none">&times;</button>
       </div>
-      <div class="p-5 space-y-3.5 text-xs">
-        <div>
-          <label class="block text-neutral-300 font-semibold mb-1">Policy Title *</label>
-          <input type="text" id="policyTitleInput" placeholder="e.g. Remote Work Security & Dual-SIM Protocols" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+
+      <div class="p-6 space-y-4 text-xs max-h-[75vh] overflow-y-auto">
+        <!-- Top Metadata Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="md:col-span-1">
+            <label class="block text-neutral-300 font-semibold mb-1">Policy Document Title *</label>
+            <input type="text" id="policyTitleInput" placeholder="e.g. Information Security & Data Protection Charter" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Governance Pillar / Category *</label>
+            <select id="policyCategorySelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs font-semibold">
+              <option value="Operations &amp; Attendance">Operations &amp; Attendance</option>
+              <option value="Statutory &amp; Governance" selected>Statutory &amp; Governance</option>
+              <option value="Information Security &amp; IT">Information Security &amp; IT</option>
+              <option value="Compensation &amp; Benefits">Compensation &amp; Benefits</option>
+              <option value="Workplace Ethics &amp; POSH">Workplace Ethics &amp; POSH</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Target Department Scope *</label>
+            <select id="policyScopeSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs font-semibold">
+              <option value="All Apex Global Employees">All Apex Global Employees (104 Staff)</option>
+              <option value="Engineering &amp; Technology">Engineering &amp; Technology Only</option>
+              <option value="Sales &amp; Business Development">Sales &amp; Business Development Only</option>
+              <option value="Operations &amp; Logistics">Operations &amp; Logistics Only</option>
+            </select>
+          </div>
         </div>
-        <div>
-          <label class="block text-neutral-300 font-semibold mb-1">Target Department Scope</label>
-          <select id="policyScopeSelect" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
-            <option value="All Apex Global Employees">All Apex Global Employees (104 Staff)</option>
-            <option value="Engineering & Technology">Engineering & Technology Only</option>
-            <option value="Sales & Business Development">Sales & Business Development Only</option>
-          </select>
+
+        <!-- Mode Switcher Tabs (Write Multi-Page vs Upload PDF) -->
+        <div class="flex items-center justify-between border-b border-brand-border pb-2">
+          <div class="flex items-center gap-2">
+            <button type="button" id="btnPolicyModeEditor" onclick="setPolicyDraftMode('editor')" class="px-3 py-1.5 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+              <span>Multi-Page Document Editor</span>
+            </button>
+            <button type="button" id="btnPolicyModeUpload" onclick="setPolicyDraftMode('upload')" class="px-3 py-1.5 rounded-xl bg-brand-dark border border-brand-border text-neutral-300 hover:text-white font-semibold text-xs flex items-center gap-1.5 transition-all">
+              <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
+              <span>Upload PDF / DOCX File</span>
+            </button>
+          </div>
+          <span id="policyPageCountIndicator" class="text-[11px] text-brand-amber font-mono font-bold bg-brand-amber/10 px-2.5 py-1 rounded-lg border border-brand-amber/30">
+            📄 3 Pages Configured
+          </span>
         </div>
-        <div>
-          <label class="block text-neutral-300 font-semibold mb-1">Policy Description / Executive Summary *</label>
-          <textarea id="policyBodyInput" rows="3" placeholder="Summary of governance standards, compliance and employee obligations..." class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber resize-none"></textarea>
+
+        <!-- MODE 1: MULTI-PAGE DOCUMENT BUILDER (User can write 1 to 4+ pages) -->
+        <div id="policyEditorModeContainer" class="space-y-3">
+          <!-- Page Pills Bar -->
+          <div class="flex flex-wrap items-center gap-2 p-2 rounded-2xl bg-brand-dark border border-brand-border">
+            <span class="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider ml-2 mr-1">Document Pages:</span>
+            <div id="policyPageTabsNav" class="flex flex-wrap items-center gap-1.5">
+              <!-- Dynamically populated page pills: Page 1, Page 2, Page 3 -->
+            </div>
+            <button type="button" onclick="addNewPolicyPage()" class="px-3 py-1 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 border border-brand-amber/30 font-bold text-xs transition-all flex items-center gap-1 shadow-sm ml-auto">
+              <i data-lucide="plus" class="w-3 h-3"></i>
+              <span>Add Next Page</span>
+            </button>
+          </div>
+
+          <!-- Active Page Title & Quick Insert Clauses -->
+          <div class="p-4 rounded-2xl bg-brand-dark/80 border border-brand-border space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div class="flex-1">
+                <label class="block text-brand-amber font-bold text-xs mb-1">
+                  <span id="activePageLabel">Page 1 Chapter / Section Title *</span>
+                </label>
+                <input type="text" id="policyActivePageTitle" placeholder="e.g. Chapter 1: Purpose, Scope &amp; Definitions" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
+              </div>
+              <div class="flex items-center gap-2 sm:self-end">
+                <button type="button" onclick="deleteActivePolicyPage()" id="btnDeletePolicyPage" class="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-semibold flex items-center gap-1 transition-all">
+                  <i data-lucide="trash-2" class="w-3 h-3"></i>
+                  <span>Remove This Page</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Clause Template Insert Bar -->
+            <div class="flex flex-wrap items-center gap-1.5 pt-1">
+              <span class="text-[10px] text-neutral-400 font-medium">Insert Clause Snippet:</span>
+              <button type="button" onclick="insertClauseSnippet('scope')" class="px-2 py-0.5 rounded-md bg-white/5 hover:bg-brand-amber/20 hover:text-brand-amber text-neutral-300 text-[10px] border border-white/10 transition-all">+ Scope &amp; Purpose</button>
+              <button type="button" onclick="insertClauseSnippet('guidelines')" class="px-2 py-0.5 rounded-md bg-white/5 hover:bg-brand-amber/20 hover:text-brand-amber text-neutral-300 text-[10px] border border-white/10 transition-all">+ Mandatory Guidelines</button>
+              <button type="button" onclick="insertClauseSnippet('penalties')" class="px-2 py-0.5 rounded-md bg-white/5 hover:bg-brand-amber/20 hover:text-brand-amber text-neutral-300 text-[10px] border border-white/10 transition-all">+ Penalties &amp; Sanctions</button>
+              <button type="button" onclick="insertClauseSnippet('contacts')" class="px-2 py-0.5 rounded-md bg-white/5 hover:bg-brand-amber/20 hover:text-brand-amber text-neutral-300 text-[10px] border border-white/10 transition-all">+ Committee Contacts</button>
+              <button type="button" onclick="insertClauseSnippet('bullets')" class="px-2 py-0.5 rounded-md bg-white/5 hover:bg-brand-amber/20 hover:text-brand-amber text-neutral-300 text-[10px] border border-white/10 transition-all">• Bulleted List</button>
+            </div>
+
+            <!-- Page Content Body Area -->
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-xs">Page Text &amp; Governance Clauses *</label>
+              <textarea id="policyActivePageContent" rows="8" placeholder="Draft regulatory clauses, employee duties, procedures and operational rules for this page..." class="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-mono leading-relaxed focus:outline-none focus:border-brand-amber resize-y"></textarea>
+            </div>
+          </div>
         </div>
-        <label class="flex items-center gap-2 cursor-pointer p-2.5 rounded-xl bg-brand-dark border border-brand-border">
-          <input type="checkbox" id="policyEmailDispatchCheck" checked class="text-brand-amber">
-          <span class="text-neutral-300 text-[11px]">Send instant acknowledgment email to all target employees</span>
-        </label>
+
+        <!-- MODE 2: UPLOAD PRE-AUTHORED PDF / DOCX -->
+        <div id="policyUploadModeContainer" class="hidden space-y-3">
+          <div class="border-2 border-dashed border-brand-border hover:border-brand-amber/50 rounded-2xl p-6 text-center bg-brand-dark transition-colors cursor-pointer" onclick="document.getElementById('policyFileInput').click()">
+            <input type="file" id="policyFileInput" accept=".pdf,.docx,.doc" class="hidden" onchange="handlePolicyFileUpload(event)">
+            <i data-lucide="file-up" class="w-10 h-10 text-brand-amber mx-auto mb-2 opacity-80"></i>
+            <div class="font-bold text-white text-sm">Upload Multi-Page Policy Document (PDF / DOCX)</div>
+            <p class="text-neutral-400 text-xs mt-1">Drag and drop official 1-page to 10+ page policy archives up to 25MB.</p>
+            <div id="policyUploadedFileBadge" class="mt-3 hidden inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono text-xs">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+              <span id="policyUploadedFileName">Company_Charter_v3.pdf</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Executive Summary / Document Overview *</label>
+            <textarea id="policyUploadSummaryInput" rows="3" placeholder="Executive briefing of the uploaded multi-page document..." class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber"></textarea>
+          </div>
+        </div>
+
+        <!-- Compliance & Dispatch Checkbox -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <label class="flex items-center gap-2 cursor-pointer p-3 rounded-xl bg-brand-dark border border-brand-border">
+            <input type="checkbox" id="policyAckRequiredCheck" checked class="text-brand-amber rounded">
+            <span class="text-neutral-300 text-xs">Mandatory Employee Digital Sign-off</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer p-3 rounded-xl bg-brand-dark border border-brand-border">
+            <input type="checkbox" id="policyEmailDispatchCheck" checked class="text-brand-amber rounded">
+            <span class="text-neutral-300 text-xs">Broadcast instant email &amp; mobile alerts</span>
+          </label>
+        </div>
       </div>
-      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
-        <button onclick="closeModal('modalCreatePolicy')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300">Cancel</button>
-        <button onclick="submitPolicyModalAction()" class="px-5 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow">Publish Policy</button>
+
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-between">
+        <button onclick="closeModal('modalCreatePolicy')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5 transition-all">Cancel</button>
+        <button onclick="submitPolicyModalAction()" class="px-6 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5 transition-all">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+          <span>Publish &amp; Broadcast Policy</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MULTI-PAGE POLICY DOCUMENT VIEWER / READER -->
+  <div id="modalViewPolicyDocument" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150 max-h-[90vh]">
+      <!-- Document Header -->
+      <div class="p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-amber/15 text-brand-amber border border-brand-amber/30" id="viewPolicyCategoryBadge">Operations &amp; Attendance</span>
+            <span class="text-[10px] text-neutral-400 font-mono" id="viewPolicyDocId">DOC-REF: P-1</span>
+          </div>
+          <h2 class="text-lg font-bold text-white mt-1" id="viewPolicyModalTitle">Hybrid Work &amp; Lat-Long Attendance Policy 2026</h2>
+        </div>
+        <button onclick="closeModal('modalViewPolicyDocument')" class="text-neutral-400 hover:text-white p-1 text-lg leading-none">&times;</button>
+      </div>
+
+      <!-- Formal Letterhead Bar -->
+      <div class="bg-[#101015] px-6 py-2.5 border-b border-brand-border/60 flex items-center justify-between text-[11px] text-neutral-400">
+        <div>
+          <span class="font-bold text-white">APEX GLOBAL TECHNOLOGIES PVT LTD</span> &bull; <span>Corporate Regulatory Charter</span>
+        </div>
+        <div class="flex items-center gap-3 font-mono text-[10px]">
+          <span id="viewPolicyScope">Scope: All Employees</span>
+          <span id="viewPolicyUpdated">Updated: 28 Oct 2026</span>
+        </div>
+      </div>
+
+      <!-- Multi-Page Navigation Bar -->
+      <div class="px-6 py-3 bg-brand-dark border-b border-brand-border flex items-center justify-between">
+        <div class="flex items-center gap-1.5" id="viewPolicyPagePills">
+          <!-- Dynamically populated page pills: Page 1, Page 2, Page 3 -->
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="navigateViewerPage(-1)" id="btnViewPrevPage" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border text-neutral-300 hover:text-white text-xs font-semibold flex items-center gap-1">
+            &larr; Prev
+          </button>
+          <span id="viewPolicyPageIndicator" class="text-xs font-mono font-bold text-brand-amber px-2">Page 1 of 3</span>
+          <button type="button" onclick="navigateViewerPage(1)" id="btnViewNextPage" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border text-neutral-300 hover:text-white text-xs font-semibold flex items-center gap-1">
+            Next &rarr;
+          </button>
+        </div>
+      </div>
+
+      <!-- Page Content Paper Viewport -->
+      <div class="p-8 space-y-4 text-xs overflow-y-auto flex-1 bg-[#141419]">
+        <div class="bg-brand-surface p-6 rounded-2xl border border-brand-border shadow-lg">
+          <h3 class="text-sm font-bold text-brand-amber border-b border-brand-border/60 pb-2 mb-4" id="viewPolicyChapterTitle">
+            Chapter 1: Purpose, Scope &amp; Hybrid Work Models
+          </h3>
+          <div id="viewPolicyPageBody" class="text-neutral-200 text-xs leading-relaxed whitespace-pre-wrap font-sans">
+            <!-- Formatted page content -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Document Viewer Footer -->
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <button onclick="showToast('Print Document', 'Transmitting formatted multi-page document to system printer.'); window.print();" class="px-3 py-1.5 rounded-xl border border-brand-border bg-brand-surface text-neutral-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>Print</span>
+          </button>
+          <button onclick="showToast('PDF Export', 'Downloading official document PDF with corporate watermark.');" class="px-3 py-1.5 rounded-xl border border-brand-border bg-brand-surface text-neutral-300 hover:text-brand-amber text-xs font-semibold flex items-center gap-1.5 transition-all">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Download PDF</span>
+          </button>
+        </div>
+        <button onclick="closeModal('modalViewPolicyDocument')" class="px-5 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow">Close Document</button>
       </div>
     </div>
   </div>
@@ -3970,8 +4148,56 @@
         { id: 'RES-02', empId: 'EMP-AGT-0105', name: 'Megha Sen', role: 'Operations Coordinator', dept: 'Operations & Logistics', resDate: '20 Oct 2026', notice: '30 Days', noticeDays: 30, lwd: '19 Nov 2026', handover: '40% Complete', stage: 'Exit Interview Done', reason: 'Family relocation to Bengaluru' }
       ],
       policies: [
-        { id: 'P-1', title: 'Hybrid Work & Lat-Long Attendance Policy 2026', cat: 'Operations & Attendance', updated: '28 Oct 2026', desc: 'Guidelines for remote clock-in within 500m geofence and office standee QR scanning.' },
-        { id: 'P-2', title: 'POSH (Prevention of Sexual Harassment) Guidelines', cat: 'Statutory & Governance', updated: '15 Oct 2026', desc: 'Zero tolerance workplace safety charter with Internal Complaints Committee (ICC) contacts.' }
+        {
+          id: 'P-1',
+          title: 'Hybrid Work & Lat-Long Attendance Policy 2026',
+          cat: 'Operations & Attendance',
+          updated: '28 Oct 2026',
+          scope: 'All Apex Global Employees',
+          desc: 'Comprehensive operating standards for hybrid working schedules, 500m GPS geofenced clock-in, and physical office QR standee check-ins.',
+          pages: [
+            {
+              pageNumber: 1,
+              title: 'Chapter 1: Purpose, Scope & Hybrid Work Models',
+              content: '1.1 Purpose & Scope\nThis policy defines the official framework for flexible hybrid working across Apex Global Technologies Pvt Ltd. It applies to all full-time, contracted, and probation staff pan-India.\n\n1.2 Operational Models\n• Office-Centric (3 Days Office / 2 Days Remote): Applicable to Engineering, Product, and Central Operations teams.\n• Field / Client-Centric: Applicable to Sales and Business Development with dynamic customer visit routing.\n• Core Working Hours: Standard working hours are 09:30 AM to 06:30 PM with core collaboration hours between 11:00 AM and 04:00 PM IST.'
+            },
+            {
+              pageNumber: 2,
+              title: 'Chapter 2: GPS Lat-Long & QR Standee Clock-In Verification',
+              content: '2.1 Office Attendance via Dynamic QR Standee\nEmployees present at registered branch offices (BKC Mumbai, Whitefield Bengaluru, Cyber City Gurugram, Hinjawadi Pune) must scan the desk/reception QR standee using the Sora HR Mobile PWA.\n\n2.2 Field & Remote Clock-In Geofence\n• Remote and field employees must clock in with high-accuracy GPS coordinates (accuracy < 15 meters).\n• Any punch recorded outside the pre-approved client geofence (500-meter radius) will be automatically flagged for manager regularization review within 48 hours.'
+            },
+            {
+              pageNumber: 3,
+              title: 'Chapter 3: Regularization, Half-Day Rules & Non-Compliance',
+              content: '3.1 Grace Periods & Half-Day Rules\n• Grace Period: 15 minutes permissible delay from standard shift start time.\n• Half-Day Threshold: Any daily shift with less than 4.5 hours of logged active presence will be marked as a Half-Day Leave.\n\n3.2 Disciplinary Actions & Compliance Audit\nRepeated failure (3+ instances per billing cycle) to capture authentic lat-long punches or standee scans may lead to deduction of earned leaves or referral to the People & Culture disciplinary committee.'
+            }
+          ]
+        },
+        {
+          id: 'P-2',
+          title: 'POSH (Prevention of Sexual Harassment) Guidelines',
+          cat: 'Statutory & Governance',
+          updated: '15 Oct 2026',
+          scope: 'All Apex Global Employees',
+          desc: 'Zero tolerance workplace safety charter, gender sensitization norms, and Internal Complaints Committee (ICC) grievance redressal process.',
+          pages: [
+            {
+              pageNumber: 1,
+              title: 'Chapter 1: Policy Mandate & Zero-Tolerance Definition',
+              content: '1.1 Statutory Commitment\nIn strict compliance with the Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013, Apex Global Technologies is committed to maintaining a workplace free from harassment, intimidation, and discrimination.\n\n1.2 Prohibited Behaviors\nHarassment includes any unwelcome physical contact, demand for sexual favors, sexually colored remarks, display of explicit material, or creation of a hostile work environment across physical offices, remote calls, Slack, or company email.'
+            },
+            {
+              pageNumber: 2,
+              title: 'Chapter 2: Internal Complaints Committee (ICC) Constitution',
+              content: '2.1 ICC Members Pan-India\n• Presiding Officer: Pooja Iyer (Director of Technology) • pooja.i@apextech.com\n• Member Secretary: Rohan Mehra (Head of People) • rohan.m@apextech.com\n• External NGO Representative: Dr. Sunita Kulkarni (Stree Mukti Sanghatana)\n\n2.2 Timelines for Redressal\nAll formal complaints submitted to icc@apextech.com must be acknowledged within 24 hours. Preliminary inquiry must initiate within 7 working days, with final inquiry report submitted within 90 days.'
+            },
+            {
+              pageNumber: 3,
+              title: 'Chapter 3: Confidentiality, Interim Relief & Disciplinary Penalties',
+              content: '3.1 Strict Anti-Retaliation & Confidentiality\nAll proceedings, evidence, and identities of the complainant and witnesses shall remain strictly confidential. Retaliation of any form will result in immediate termination of employment.\n\n3.2 Corrective Action & Sanctions\nPenalties for proven harassment include formal written censure, withholding of promotion/increment, suspension, or summary dismissal with forfeiture of severance benefits.'
+            }
+          ]
+        }
       ],
       promotions: [
         { name: 'Ananya Verma', oldDesig: 'Account Executive', newDesig: 'Senior Account Executive', oldCtc: '₹ 7,80,000', newCtc: '₹ 9,20,000', inc: '+18%' },
@@ -6968,35 +7194,55 @@
     }
 
     // ------------------------------------------
-    // COMPANY POLICIES ENGINE
     // ------------------------------------------
-        let currentBroadcastPolicyTitle = '';
+    // COMPANY POLICIES ENGINE (MULTI-PAGE DOCUMENTS)
+    // ------------------------------------------
+    let currentBroadcastPolicyTitle = '';
+    let policyDraftMode = 'editor';
+    let policyDraftPages = [];
+    let activePolicyPageIndex = 0;
+    let viewingPolicyObj = null;
+    let viewingPolicyPageIndex = 0;
 
     function renderPolicyCards() {
       const container = document.getElementById('policyCardsContainer');
       if (!container) return;
-      container.innerHTML = appState.policies.map((p, idx) => `
-        <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-amber/15 text-brand-amber border border-brand-amber/30">${p.cat}</span>
-              <span class="text-[10px] text-neutral-500">Updated ${p.updated}</span>
+      container.innerHTML = appState.policies.map((p, idx) => {
+        const pageCount = (p.pages && p.pages.length) ? p.pages.length : 1;
+        return `
+          <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-amber/15 text-brand-amber border border-brand-amber/30">${p.cat}</span>
+                <span class="text-[10px] text-neutral-500 font-mono">Updated ${p.updated}</span>
+              </div>
+              <div class="flex items-start justify-between gap-2 mb-1.5">
+                <h3 class="text-sm font-bold text-white">${p.title}</h3>
+                <span class="px-2 py-0.5 rounded-md bg-brand-dark text-neutral-300 font-mono text-[10px] border border-brand-border flex-shrink-0">
+                  ${pageCount} ${pageCount === 1 ? 'Page' : 'Pages'}
+                </span>
+              </div>
+              <p class="text-xs text-neutral-400 leading-relaxed">${p.desc}</p>
             </div>
-            <h3 class="text-sm font-bold text-white mb-1.5">${p.title}</h3>
-            <p class="text-xs text-neutral-400 leading-relaxed">${p.desc}</p>
+            <div class="pt-4 mt-4 border-t border-brand-border/60 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <button onclick="viewPolicyDocumentModal(${idx})" class="text-xs text-brand-amber hover:underline font-bold flex items-center gap-1.5">
+                  <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                  <span>Read Document (${pageCount}P)</span>
+                </button>
+                <button onclick="showToast('Policy PDF', 'Downloading verified regulatory text for ${p.title}')" class="text-xs text-neutral-400 hover:text-white flex items-center gap-1">
+                  <i data-lucide="download" class="w-3 h-3"></i>
+                  <span>PDF</span>
+                </button>
+              </div>
+              <button onclick="openBroadcastConfirmModal('${p.title}')" class="px-3 py-1 rounded-lg bg-brand-dark hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs text-neutral-300 font-semibold transition-all flex items-center gap-1.5 shadow-sm">
+                <i data-lucide="radio" class="w-3 h-3 text-brand-amber"></i>
+                <span>Re-broadcast</span>
+              </button>
+            </div>
           </div>
-          <div class="pt-4 mt-4 border-t border-brand-border/60 flex items-center justify-between">
-            <button onclick="showToast('Policy PDF', 'Downloading full regulatory text for ${p.title}')" class="text-xs text-brand-amber hover:underline font-semibold flex items-center gap-1">
-              <i data-lucide="download" class="w-3 h-3"></i>
-              <span>Download PDF</span>
-            </button>
-            <button onclick="openBroadcastConfirmModal('${p.title}')" class="px-3 py-1 rounded-lg bg-brand-dark hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs text-neutral-300 font-semibold transition-all flex items-center gap-1.5 shadow-sm">
-              <i data-lucide="radio" class="w-3 h-3 text-brand-amber"></i>
-              <span>Re-broadcast</span>
-            </button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
       lucide.createIcons();
     }
 
@@ -7014,31 +7260,295 @@
       showToast('Broadcast Dispatched!', `"${currentBroadcastPolicyTitle}" successfully transmitted to ${target} with digital read receipts.`);
     }
 
+    // ------------------------------------------
+    // MULTI-PAGE POLICY DRAFTING ENGINE (1 TO 4+ PAGES)
+    // ------------------------------------------
     function openCreatePolicyModal() {
       document.getElementById('policyTitleInput').value = '';
-      document.getElementById('policyBodyInput').value = '';
+      document.getElementById('policyUploadSummaryInput').value = '';
+      document.getElementById('policyUploadedFileBadge').classList.add('hidden');
+
+      // Populate Departments in Policy Scope
+      const scopeSel = document.getElementById('policyScopeSelect');
+      if (scopeSel) {
+        let opts = `<option value="All Apex Global Employees">All Apex Global Employees (104 Staff)</option>`;
+        opts += appState.departments.map(d => `<option value="${d.name}">${d.name} Department Only</option>`).join('');
+        scopeSel.innerHTML = opts;
+      }
+
+      // Initialize with 3 Default Pages
+      policyDraftPages = [
+        {
+          title: 'Chapter 1: Purpose, Scope & Definitions',
+          content: '1.1 Purpose & Scope\nThis policy establishes standard operating protocols, compliance guidelines, and behavioral expectations across Apex Global Technologies.\n\n1.2 Scope & Applicability\nApplicable to all full-time employees, contractors, consultants, and interns across all branch offices.'
+        },
+        {
+          title: 'Chapter 2: Operational Standards & Code of Conduct',
+          content: '2.1 Standard Operating Protocols\nAll personnel must adhere to organizational guidelines, data integrity norms, and scheduled business hours.\n\n2.2 Supervisory Responsibilities\nTeam managers must verify compliance on a bi-weekly basis and address discrepancies within 48 hours.'
+        },
+        {
+          title: 'Chapter 3: Compliance Audits & Disciplinary Action',
+          content: '3.1 Audit & Record Keeping\nAudits are conducted quarterly by the People & Culture committee.\n\n3.2 Non-Compliance Penalties\nViolations will be subject to graded disciplinary actions ranging from formal written reprimand to termination.'
+        }
+      ];
+      activePolicyPageIndex = 0;
+      setPolicyDraftMode('editor');
+      renderPolicyPageTabs();
+      loadActivePolicyPage();
+
       document.getElementById('modalCreatePolicy').classList.remove('hidden');
       lucide.createIcons();
     }
 
+    function setPolicyDraftMode(mode) {
+      policyDraftMode = mode;
+      const btnEditor = document.getElementById('btnPolicyModeEditor');
+      const btnUpload = document.getElementById('btnPolicyModeUpload');
+      const editorContainer = document.getElementById('policyEditorModeContainer');
+      const uploadContainer = document.getElementById('policyUploadModeContainer');
+
+      if (mode === 'editor') {
+        btnEditor.className = 'px-3 py-1.5 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow';
+        btnUpload.className = 'px-3 py-1.5 rounded-xl bg-brand-dark border border-brand-border text-neutral-300 hover:text-white font-semibold text-xs flex items-center gap-1.5 transition-all';
+        editorContainer.classList.remove('hidden');
+        uploadContainer.classList.add('hidden');
+      } else {
+        btnUpload.className = 'px-3 py-1.5 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow';
+        btnEditor.className = 'px-3 py-1.5 rounded-xl bg-brand-dark border border-brand-border text-neutral-300 hover:text-white font-semibold text-xs flex items-center gap-1.5 transition-all';
+        editorContainer.classList.add('hidden');
+        uploadContainer.classList.remove('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    function renderPolicyPageTabs() {
+      const container = document.getElementById('policyPageTabsNav');
+      if (!container) return;
+      container.innerHTML = policyDraftPages.map((pg, idx) => {
+        const isActive = idx === activePolicyPageIndex;
+        const cls = isActive
+          ? 'bg-brand-amber text-neutral-950 font-bold shadow'
+          : 'bg-brand-surface text-neutral-300 hover:text-white border border-brand-border font-semibold';
+        return `
+          <button type="button" onclick="switchPolicyPage(${idx})" class="px-2.5 py-1 rounded-lg text-xs transition-all flex items-center gap-1.5 ${cls}">
+            <i data-lucide="file" class="w-3 h-3"></i>
+            <span>Page ${idx + 1}</span>
+          </button>
+        `;
+      }).join('');
+
+      const indicator = document.getElementById('policyPageCountIndicator');
+      if (indicator) {
+        indicator.innerText = `📄 ${policyDraftPages.length} ${policyDraftPages.length === 1 ? 'Page' : 'Pages'} Configured`;
+      }
+
+      const btnDel = document.getElementById('btnDeletePolicyPage');
+      if (btnDel) {
+        if (policyDraftPages.length > 1) {
+          btnDel.classList.remove('hidden');
+        } else {
+          btnDel.classList.add('hidden');
+        }
+      }
+      lucide.createIcons();
+    }
+
+    function saveCurrentPageDraft() {
+      if (policyDraftPages[activePolicyPageIndex]) {
+        policyDraftPages[activePolicyPageIndex].title = document.getElementById('policyActivePageTitle').value.trim() || `Chapter ${activePolicyPageIndex + 1}: General Provisions`;
+        policyDraftPages[activePolicyPageIndex].content = document.getElementById('policyActivePageContent').value;
+      }
+    }
+
+    function switchPolicyPage(newIdx) {
+      if (newIdx === activePolicyPageIndex) return;
+      saveCurrentPageDraft();
+      activePolicyPageIndex = newIdx;
+      renderPolicyPageTabs();
+      loadActivePolicyPage();
+    }
+
+    function loadActivePolicyPage() {
+      const pg = policyDraftPages[activePolicyPageIndex];
+      if (!pg) return;
+      const lbl = document.getElementById('activePageLabel');
+      if (lbl) lbl.innerText = `Page ${activePolicyPageIndex + 1} Chapter / Section Title *`;
+
+      document.getElementById('policyActivePageTitle').value = pg.title || '';
+      document.getElementById('policyActivePageContent').value = pg.content || '';
+    }
+
+    function addNewPolicyPage() {
+      saveCurrentPageDraft();
+      const nextNum = policyDraftPages.length + 1;
+      policyDraftPages.push({
+        title: `Chapter ${nextNum}: Guidelines &amp; Operating Framework`,
+        content: `${nextNum}.1 Clause Title\nDraft specific responsibilities, mandatory compliance requirements, and execution procedures for this page.`
+      });
+      activePolicyPageIndex = policyDraftPages.length - 1;
+      renderPolicyPageTabs();
+      loadActivePolicyPage();
+      showToast('Page Added', `Page ${nextNum} appended to document.`);
+    }
+
+    function deleteActivePolicyPage() {
+      if (policyDraftPages.length <= 1) {
+        showToast('Notice', 'Document must contain at least 1 page.');
+        return;
+      }
+      policyDraftPages.splice(activePolicyPageIndex, 1);
+      if (activePolicyPageIndex >= policyDraftPages.length) {
+        activePolicyPageIndex = policyDraftPages.length - 1;
+      }
+      renderPolicyPageTabs();
+      loadActivePolicyPage();
+      showToast('Page Removed', 'Page deleted from policy document.');
+    }
+
+    function insertClauseSnippet(type) {
+      const txt = document.getElementById('policyActivePageContent');
+      if (!txt) return;
+      let snippet = '';
+      if (type === 'scope') {
+        snippet = '\n\n• Applicability: All active full-time staff, contract workers, and third-party vendors pan-India.\n• Governing Laws: Compliance with statutory state labor laws and central governance mandates.';
+      } else if (type === 'guidelines') {
+        snippet = '\n\n• Standard Operation: Employees must adhere to the standard operating protocols documented in employee handbook.\n• Approvals: Formal sign-off required from Department Head prior to deviation.';
+      } else if (type === 'penalties') {
+        snippet = '\n\n• Penalty Matrix: Non-compliance will be subject to formal investigation, written warning, and potential salary deduction.';
+      } else if (type === 'contacts') {
+        snippet = '\n\n• Committee Contacts: Email hr-compliance@apextech.com or reach ICC Secretariat at +91 98203 34567.';
+      } else if (type === 'bullets') {
+        snippet = '\n• Item 1: Operational checklist item\n• Item 2: Verification guideline\n• Item 3: Regulatory requirement';
+      }
+      txt.value += snippet;
+      txt.focus();
+    }
+
+    function handlePolicyFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      document.getElementById('policyUploadedFileName').innerText = `${file.name} (~3 Pages • ${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+      document.getElementById('policyUploadedFileBadge').classList.remove('hidden');
+      if (!document.getElementById('policyTitleInput').value) {
+        document.getElementById('policyTitleInput').value = file.name.replace(/\.[^/.]+$/, '').replace(/_/g, ' ');
+      }
+      showToast('File Uploaded', `"${file.name}" uploaded successfully for policy publication.`);
+    }
+
     function submitPolicyModalAction() {
       const title = document.getElementById('policyTitleInput').value.trim();
-      const scope = document.getElementById('policyScopeSelect').value;
-      const body = document.getElementById('policyBodyInput').value.trim() || 'Corporate compliance standards and operational protocols.';
+      const cat = document.getElementById('policyCategorySelect')?.value || 'Statutory & Governance';
+      const scope = document.getElementById('policyScopeSelect')?.value || 'All Apex Global Employees';
+
       if (!title) {
         showToast('Required', 'Policy Title is required.');
         return;
       }
+
+      let pagesToSave = [];
+      let descText = '';
+
+      if (policyDraftMode === 'upload') {
+        const summary = document.getElementById('policyUploadSummaryInput').value.trim() || 'Uploaded formal policy document archive.';
+        descText = summary;
+        pagesToSave = [
+          { pageNumber: 1, title: 'Document Executive Summary', content: summary },
+          { pageNumber: 2, title: 'Official Policy Provisions', content: 'See attached verified PDF document for detailed statutory and operational clauses.' }
+        ];
+      } else {
+        saveCurrentPageDraft();
+        pagesToSave = policyDraftPages.map((pg, i) => ({
+          pageNumber: i + 1,
+          title: pg.title,
+          content: pg.content
+        }));
+        descText = (pagesToSave[0]?.content || 'Corporate regulatory standards').split('\n')[0].substring(0, 140) + '...';
+      }
+
       appState.policies.unshift({
         id: 'P-' + Date.now().toString().slice(-4),
         title: title,
-        cat: scope,
+        cat: cat,
+        scope: scope,
         updated: 'Today',
-        desc: body
+        desc: descText,
+        pages: pagesToSave
       });
+
       renderPolicyCards();
       closeModal('modalCreatePolicy');
-      showToast('Policy Published', `${title} broadcast to ${scope}.`);
+      showToast('Policy Published &amp; Broadcasted', `"${title}" (${pagesToSave.length} Pages) broadcasted to ${scope}.`);
+    }
+
+    // ------------------------------------------
+    // MULTI-PAGE POLICY VIEWER / READER MODAL
+    // ------------------------------------------
+    function viewPolicyDocumentModal(idx) {
+      viewingPolicyObj = appState.policies[idx] || appState.policies[0];
+      if (!viewingPolicyObj) return;
+
+      if (!viewingPolicyObj.pages || !viewingPolicyObj.pages.length) {
+        viewingPolicyObj.pages = [
+          { pageNumber: 1, title: 'General Provisions', content: viewingPolicyObj.desc || 'Policy contents' }
+        ];
+      }
+
+      viewingPolicyPageIndex = 0;
+      document.getElementById('viewPolicyModalTitle').innerText = viewingPolicyObj.title;
+      document.getElementById('viewPolicyCategoryBadge').innerText = viewingPolicyObj.cat;
+      document.getElementById('viewPolicyDocId').innerText = `REF: ${viewingPolicyObj.id || 'P-01'}`;
+      document.getElementById('viewPolicyScope').innerText = `Scope: ${viewingPolicyObj.scope || 'All Employees'}`;
+      document.getElementById('viewPolicyUpdated').innerText = `Updated: ${viewingPolicyObj.updated || '28 Oct 2026'}`;
+
+      renderViewerPages();
+      document.getElementById('modalViewPolicyDocument').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function renderViewerPages() {
+      if (!viewingPolicyObj || !viewingPolicyObj.pages) return;
+      const pages = viewingPolicyObj.pages;
+      const pillsContainer = document.getElementById('viewPolicyPagePills');
+      if (pillsContainer) {
+        pillsContainer.innerHTML = pages.map((pg, i) => {
+          const isActive = i === viewingPolicyPageIndex;
+          const cls = isActive
+            ? 'bg-brand-amber text-neutral-950 font-bold shadow'
+            : 'bg-brand-surface text-neutral-300 hover:text-white border border-brand-border';
+          return `
+            <button type="button" onclick="setViewerPage(${i})" class="px-2.5 py-1 rounded-lg text-xs transition-all font-semibold ${cls}">
+              Page ${i + 1}
+            </button>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('viewPolicyPageIndicator').innerText = `Page ${viewingPolicyPageIndex + 1} of ${pages.length}`;
+
+      const currPage = pages[viewingPolicyPageIndex] || pages[0];
+      document.getElementById('viewPolicyChapterTitle').innerText = currPage.title || `Page ${viewingPolicyPageIndex + 1}`;
+      document.getElementById('viewPolicyPageBody').innerText = currPage.content || '';
+
+      const btnPrev = document.getElementById('btnViewPrevPage');
+      const btnNext = document.getElementById('btnViewNextPage');
+      if (btnPrev) btnPrev.disabled = (viewingPolicyPageIndex === 0);
+      if (btnNext) btnNext.disabled = (viewingPolicyPageIndex === pages.length - 1);
+      lucide.createIcons();
+    }
+
+    function setViewerPage(idx) {
+      if (!viewingPolicyObj || !viewingPolicyObj.pages) return;
+      viewingPolicyPageIndex = idx;
+      renderViewerPages();
+    }
+
+    function navigateViewerPage(direction) {
+      if (!viewingPolicyObj || !viewingPolicyObj.pages) return;
+      const target = viewingPolicyPageIndex + direction;
+      if (target >= 0 && target < viewingPolicyObj.pages.length) {
+        viewingPolicyPageIndex = target;
+        renderViewerPages();
+      }
     }
 
     // ------------------------------------------
