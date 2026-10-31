@@ -662,18 +662,19 @@
               </div>
 
               <!-- Wizard Progress Badges -->
+              <!-- Wizard Progress Badges (Clickable Steps) -->
               <div class="flex items-center gap-2 text-xs font-semibold">
-                <div id="empStepBadge1" class="px-3 py-1 rounded-full bg-brand-amber text-neutral-950 flex items-center gap-1.5 shadow">
+                <button type="button" onclick="goToEmpWizardStep(1)" id="empStepBadge1" class="px-3.5 py-1.5 rounded-full bg-brand-amber text-neutral-950 font-bold flex items-center gap-1.5 shadow transition-all cursor-pointer">
                   <span>1. Role &amp; Dept</span>
-                </div>
+                </button>
                 <span class="text-neutral-600">&rarr;</span>
-                <div id="empStepBadge2" class="px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-neutral-400 flex items-center gap-1.5">
+                <button type="button" onclick="goToEmpWizardStep(2)" id="empStepBadge2" class="px-3.5 py-1.5 rounded-full bg-brand-surface border border-brand-border text-neutral-400 hover:border-brand-amber/50 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer">
                   <span>2. Profile Details</span>
-                </div>
+                </button>
                 <span class="text-neutral-600">&rarr;</span>
-                <div id="empStepBadge3" class="px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-neutral-400 flex items-center gap-1.5">
+                <button type="button" onclick="goToEmpWizardStep(3)" id="empStepBadge3" class="px-3.5 py-1.5 rounded-full bg-brand-surface border border-brand-border text-neutral-400 hover:border-brand-amber/50 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer">
                   <span>3. Documents</span>
-                </div>
+                </button>
               </div>
             </div>
 
@@ -1068,7 +1069,7 @@
               <div class="flex items-center gap-3">
                 <button id="masterActionAddBtn" onclick="triggerCurrentMasterAdd()" class="px-4 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
                   <i data-lucide="plus" class="w-4 h-4"></i>
-                  <span id="masterAddBtnLabel">+ Add Item</span>
+                  <span id="masterAddBtnLabel">Add Item</span>
                 </button>
               </div>
             </div>
@@ -3599,6 +3600,7 @@
       };
       document.getElementById('currentTabBreadcrumb').innerText = names[tabId] || 'Admin Portal';
 
+      if (tabId === 'employee-add') goToEmpWizardStep(1);
       if (tabId === 'employee-list') renderEmployeeTable();
       if (tabId === 'payroll') renderPayrollTable();
       if (tabId === 'attendance-latlong') renderAttendanceTable();
@@ -4045,15 +4047,16 @@
 
       // Update Add Button Label
       const labels = {
-        'roles': '+ Add Role & Permissions',
-        'departments': '+ Add Department',
-        'designations': '+ Add Designation',
-        'locations': '+ Add Work Location',
-        'shifts': '+ Add Work Shift',
-        'assets': '+ Add Company Asset',
-        'empTypes': '+ Add Employment Type'
+        'roles': 'Add Role & Permissions',
+        'departments': 'Add Department',
+        'designations': 'Add Designation',
+        'locations': 'Add Work Location',
+        'shifts': 'Add Work Shift',
+        'assets': 'Add Company Asset',
+        'empTypes': 'Add Employment Type'
       };
-      document.getElementById('masterAddBtnLabel').innerText = labels[tabName] || '+ Add Item';
+      const labelEl = document.getElementById('masterAddBtnLabel');
+      if (labelEl) labelEl.innerText = labels[tabName] || 'Add Item';
 
       renderMasterTable();
     }
@@ -4241,7 +4244,7 @@
       }
 
       thead.innerHTML = headers;
-      tbody.innerHTML = rows || `<tr><td colspan="4" class="py-8 text-center text-neutral-500">No records found. Click '+ Add Item' to create one.</td></tr>`;
+      tbody.innerHTML = rows || `<tr><td colspan="4" class="py-8 text-center text-neutral-500">No records found. Click 'Add Item' to create one.</td></tr>`;
       updateMasterBadges();
       lucide.createIcons();
     }
@@ -4296,18 +4299,32 @@
 
     function goToEmpWizardStep(stepNum) {
       [1, 2, 3].forEach(s => {
-        document.getElementById(`empStepContainer${s}`).classList.add('hidden');
-        document.getElementById(`empStepBadge${s}`).className = "px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-neutral-400 flex items-center gap-1.5";
+        const c = document.getElementById(`empStepContainer${s}`);
+        const b = document.getElementById(`empStepBadge${s}`);
+        if (c) c.classList.add('hidden');
+        if (b) {
+          b.className = "px-3.5 py-1.5 rounded-full bg-brand-surface border border-brand-border text-neutral-400 hover:border-brand-amber/50 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer";
+        }
       });
 
-      document.getElementById(`empStepContainer${stepNum}`).classList.remove('hidden');
-      document.getElementById(`empStepBadge${stepNum}`).className = "px-3 py-1 rounded-full bg-brand-amber text-neutral-950 font-bold flex items-center gap-1.5 shadow";
+      const activeContainer = document.getElementById(`empStepContainer${stepNum}`);
+      const activeBadge = document.getElementById(`empStepBadge${stepNum}`);
+      if (activeContainer) activeContainer.classList.remove('hidden');
+      if (activeBadge) {
+        activeBadge.className = "px-3.5 py-1.5 rounded-full bg-brand-amber text-neutral-950 font-bold flex items-center gap-1.5 shadow transition-all cursor-pointer";
+      }
 
       if (stepNum === 2) {
         const nextIdNum = appState.employees.length + 101;
-        document.getElementById('empAutoDisplayId').innerText = `EMP-AGT-0${nextIdNum}`;
+        const autoDisplayEl = document.getElementById('empAutoDisplayId');
+        if (autoDisplayEl) autoDisplayEl.innerText = `EMP-AGT-0${nextIdNum}`;
+        const customIdEl = document.getElementById('empCustomIdInput');
+        if (customIdEl && !customIdEl.value) {
+          customIdEl.value = `EMP-AGT-0${nextIdNum}`;
+        }
       }
       lucide.createIcons();
+      window.scrollTo({ top: 120, behavior: 'smooth' });
     }
 
     function previewProfilePhoto(e) {
