@@ -2355,28 +2355,50 @@
           </div>
         </div>
 
-        <!-- 2. Candidate Full Name & Target Position -->
+        <!-- 2. Candidate Full Name & Target Department -->
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-neutral-300 font-semibold mb-1">Candidate Full Name *</label>
             <input type="text" id="candidateNameInput" placeholder="e.g. Siddharth Rao" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
           </div>
           <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Target Position / Role *</label>
-            <input type="text" id="candidatePosInput" value="Full Stack React Engineer" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-neutral-300 font-semibold">Target Department *</label>
+              <button type="button" onclick="openCreateDeptModal()" class="text-[10px] text-brand-amber hover:underline font-semibold flex items-center gap-0.5">
+                <i data-lucide="plus" class="w-2.5 h-2.5"></i>
+                <span>Add Dept</span>
+              </button>
+            </div>
+            <select id="candidateDeptSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs font-semibold">
+              <!-- Dynamically populated from appState.departments -->
+            </select>
           </div>
         </div>
 
-        <!-- 3. Experience & Company / College -->
+        <!-- Target Designation & Total Experience -->
         <div class="grid grid-cols-2 gap-3">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-neutral-300 font-semibold">Target Designation / Role *</label>
+              <button type="button" onclick="openCreateDesignationModal()" class="text-[10px] text-brand-amber hover:underline font-semibold flex items-center gap-0.5">
+                <i data-lucide="plus" class="w-2.5 h-2.5"></i>
+                <span>Add Desig</span>
+              </button>
+            </div>
+            <select id="candidatePosSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs font-semibold">
+              <!-- Dynamically populated from appState.designations -->
+            </select>
+          </div>
           <div id="cndExpYearsGroup">
             <label id="cndExpYearsLabel" class="block text-neutral-300 font-semibold mb-1">Total Experience (Years) *</label>
             <input type="text" id="candidateExpInput" value="4 Years" placeholder="e.g. 3.5 Years" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
           </div>
-          <div>
-            <label id="cndCompanyLabel" class="block text-neutral-300 font-semibold mb-1">Current / Previous Company *</label>
-            <input type="text" id="candidateCompanyInput" placeholder="e.g. GrowthWave Tech / TCS" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
-          </div>
+        </div>
+
+        <!-- 3. Current / Past Organization or College -->
+        <div>
+          <label id="cndCompanyLabel" class="block text-neutral-300 font-semibold mb-1">Current / Previous Company *</label>
+          <input type="text" id="candidateCompanyInput" placeholder="e.g. GrowthWave Tech / TCS" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
         </div>
 
         <!-- 4. Highest Education / Degree & Availability -->
@@ -2470,12 +2492,28 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Designation Title *</label>
-            <input type="text" id="offerDesignation" value="Senior Cloud Architect" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-neutral-300 font-semibold text-xs">Designation Title *</label>
+              <button type="button" onclick="openCreateDesignationModal()" class="text-[10px] text-brand-amber hover:underline font-semibold flex items-center gap-0.5">
+                <i data-lucide="plus" class="w-2.5 h-2.5"></i>
+                <span>Add Desig</span>
+              </button>
+            </div>
+            <select id="offerDesignation" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
+              <!-- Dynamically populated from appState.designations -->
+            </select>
           </div>
           <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Department *</label>
-            <input type="text" id="offerDepartment" value="Engineering & Technology" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-neutral-300 font-semibold text-xs">Department *</label>
+              <button type="button" onclick="openCreateDeptModal()" class="text-[10px] text-brand-amber hover:underline font-semibold flex items-center gap-0.5">
+                <i data-lucide="plus" class="w-2.5 h-2.5"></i>
+                <span>Add Dept</span>
+              </button>
+            </div>
+            <select id="offerDepartment" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
+              <!-- Dynamically populated from appState.departments -->
+            </select>
           </div>
         </div>
 
@@ -4202,21 +4240,34 @@
     }
 
     function populateDeptDropdown() {
+      const optsWithCode = appState.departments.map(d => `<option value="${d.name}">${d.name} (${d.code})</option>`).join('');
+      const optsSimple = appState.departments.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
+
       const select = document.getElementById('empFormDeptSelect');
-      if (select) {
-        select.innerHTML = appState.departments.map(d => `<option value="${d.name}">${d.name} (${d.code})</option>`).join('');
-      }
+      if (select) select.innerHTML = optsWithCode;
+
       const modalSelect = document.getElementById('newDesigDeptSelect');
-      if (modalSelect) {
-        modalSelect.innerHTML = appState.departments.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
-      }
+      if (modalSelect) modalSelect.innerHTML = optsSimple;
+
+      const offerDept = document.getElementById('offerDepartment');
+      if (offerDept) offerDept.innerHTML = optsSimple;
+
+      const candDept = document.getElementById('candidateDeptSelect');
+      if (candDept) candDept.innerHTML = optsSimple;
     }
 
     function populateDesignationDropdown() {
+      const optsWithBand = appState.designations.map(d => `<option value="${d.title}">${d.title} &bull; ${d.band}</option>`).join('');
+      const optsSimple = appState.designations.map(d => `<option value="${d.title}">${d.title}</option>`).join('');
+
       const select = document.getElementById('empFormDesignationSelect');
-      if (select) {
-        select.innerHTML = appState.designations.map(d => `<option value="${d.title}">${d.title} • ${d.band}</option>`).join('');
-      }
+      if (select) select.innerHTML = optsWithBand;
+
+      const offerDesig = document.getElementById('offerDesignation');
+      if (offerDesig) offerDesig.innerHTML = optsSimple;
+
+      const candPos = document.getElementById('candidatePosSelect');
+      if (candPos) candPos.innerHTML = optsSimple;
     }
 
     function populateLocationDropdown() {
@@ -6257,8 +6308,9 @@
     function openAddCandidateModal() {
       setCandidateType('Experienced');
       populateCandidateStagesDropdown();
+      populateDeptDropdown();
+      populateDesignationDropdown();
       document.getElementById('candidateNameInput').value = '';
-      document.getElementById('candidatePosInput').value = 'Full Stack React Engineer';
       document.getElementById('candidateExpInput').value = '4 Years';
       document.getElementById('candidateCompanyInput').value = '';
       document.getElementById('candidateEducationInput').value = '';
@@ -6271,7 +6323,8 @@
 
     function submitCandidateModalAction() {
       const name = document.getElementById('candidateNameInput').value.trim();
-      const pos = document.getElementById('candidatePosInput').value.trim() || 'Software Engineer';
+      const pos = document.getElementById('candidatePosSelect')?.value || 'Senior Full Stack Engineer';
+      const dept = document.getElementById('candidateDeptSelect')?.value || 'Engineering & Technology';
       const type = currentCandidateType || 'Experienced';
       const exp = type === 'Fresher' ? 'Fresher (0 Years)' : (document.getElementById('candidateExpInput').value.trim() || '2 Years');
       const company = document.getElementById('candidateCompanyInput').value.trim() || (type === 'Fresher' ? 'Fresher / College Graduate' : 'Corporate Enterprise');
@@ -6298,8 +6351,8 @@
         id: 'CND-' + Math.floor(1000 + Math.random() * 9000),
         name: name,
         pos: pos,
+        dept: dept,
         candidateType: type,
-        dept: 'Engineering & Technology',
         exp: exp,
         currentOrg: company,
         education: education,
@@ -6308,13 +6361,13 @@
         notice: notice,
         stage: stage,
         score: type === 'Fresher' ? '88%' : '93%',
-        notes: `Enrolled into ATS. Background: ${type} (${exp}). Education: ${education}. Organization/College: ${company}. Key Skills: ${skills}.`,
+        notes: `Enrolled into ATS. Role: ${pos} (${dept}). Background: ${type} (${exp}). Education: ${education}. Organization/College: ${company}. Key Skills: ${skills}.`,
         resumeUrl: `${name.replace(/\s+/g, '_')}_Resume.pdf`
       });
 
       renderCandidateTable();
       closeModal('modalAddCandidate');
-      showToast('Candidate Enrolled', `${name} (${type}) added to "${stage}" pipeline.`);
+      showToast('Candidate Enrolled', `${name} (${pos}) added to "${stage}" pipeline.`);
     }
 
     function openCandidateDetailModal(idx) {
@@ -6458,12 +6511,15 @@
     }
 
     function openOfferGeneratorModal(preselectedName) {
+      populateDeptDropdown();
+      populateDesignationDropdown();
+
       const sel = document.getElementById('offerCandidateSelect');
       if (sel) {
         let opts = appState.candidates.map(c => 
-          `<option value="${c.name}">${c.name} &bull; ${c.pos} [${c.stage}]</option>`
+          `<option value="${c.name}">${c.name} &bull; ${c.pos} [${c.stage}]`
         ).join('');
-        opts += `<option value="__custom__">External / Manual Candidate Entry</option>`;
+        opts += `<option value="__custom__">+ External / Manual Candidate Entry</option>`;
         sel.innerHTML = opts;
 
         if (preselectedName) {
@@ -6485,8 +6541,44 @@
         if (customBox) customBox.classList.add('hidden');
         const c = appState.candidates.find(cand => cand.name === val);
         if (c) {
-          document.getElementById('offerDesignation').value = c.pos;
-          document.getElementById('offerDepartment').value = c.dept || 'Engineering & Technology';
+          const desigSel = document.getElementById('offerDesignation');
+          if (desigSel) {
+            let matched = false;
+            for (let opt of desigSel.options) {
+              if (opt.value === c.pos || opt.value.toLowerCase().includes(c.pos.toLowerCase()) || c.pos.toLowerCase().includes(opt.value.toLowerCase())) {
+                desigSel.value = opt.value;
+                matched = true;
+                break;
+              }
+            }
+            if (!matched && c.pos) {
+              const opt = document.createElement('option');
+              opt.value = c.pos;
+              opt.innerText = c.pos;
+              desigSel.appendChild(opt);
+              desigSel.value = c.pos;
+            }
+          }
+
+          const deptSel = document.getElementById('offerDepartment');
+          if (deptSel) {
+            let matched = false;
+            for (let opt of deptSel.options) {
+              if (opt.value === c.dept || opt.value.toLowerCase().includes(c.dept.toLowerCase()) || c.dept.toLowerCase().includes(opt.value.toLowerCase())) {
+                deptSel.value = opt.value;
+                matched = true;
+                break;
+              }
+            }
+            if (!matched && c.dept) {
+              const opt = document.createElement('option');
+              opt.value = c.dept;
+              opt.innerText = c.dept;
+              deptSel.appendChild(opt);
+              deptSel.value = c.dept;
+            }
+          }
+
           document.getElementById('offerCtcInput').value = `₹ ${c.ctc.replace(/[^0-9,]/g, '')}`;
         }
       }
@@ -6500,8 +6592,8 @@
       } else {
         name = selVal;
       }
-      const desig = document.getElementById('offerDesignation').value.trim() || 'Senior Specialist';
-      const dept = document.getElementById('offerDepartment').value.trim() || 'Engineering';
+      const desig = document.getElementById('offerDesignation').value || 'Senior Specialist';
+      const dept = document.getElementById('offerDepartment').value || 'Engineering & Technology';
       const ctc = document.getElementById('offerCtcInput').value.trim() || '₹ 15,00,000';
       const doj = document.getElementById('offerJoiningDate').value;
       
@@ -6522,7 +6614,7 @@
       });
       renderOfferTable();
       closeModal('modalCreateOffer');
-      showToast('Offer Letter Issued', `Official appointment letter dispatched to ${name}.`);
+      showToast('Offer Letter Issued', `Official appointment letter dispatched to ${name} for ${desig} in ${dept}.`);
     }
 
     function viewOfferLetterModal(idx) {
