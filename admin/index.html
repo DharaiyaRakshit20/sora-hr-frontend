@@ -431,6 +431,10 @@
                   <span>Employment Types</span>
                   <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-empTypes">4</span>
                 </button>
+                <button onclick="openMasterTab('leaveTypes')" id="nav-master-leaveTypes" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors flex items-center justify-between">
+                  <span>Leave Types &amp; Policies</span>
+                  <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-leaveTypes">5</span>
+                </button>
               </div>
             </div>
 
@@ -1110,6 +1114,11 @@
                 <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
                 <span>Employment Types</span>
                 <span id="mPillCount-empTypes" class="text-[10px] px-1.5 py-0.2 rounded-full bg-brand-dark font-mono">4</span>
+              </button>
+              <button onclick="openMasterTab('leaveTypes')" id="mTabBtn-leaveTypes" class="master-pill-btn px-3.5 py-2 rounded-xl bg-brand-surface text-neutral-300 hover:text-white border border-brand-border flex items-center gap-2 whitespace-nowrap">
+                <i data-lucide="calendar-heart" class="w-3.5 h-3.5 text-brand-amber"></i>
+                <span>Leave Types &amp; Policies</span>
+                <span id="mPillCount-leaveTypes" class="text-[10px] px-1.5 py-0.2 rounded-full bg-brand-dark font-mono">5</span>
               </button>
             </div>
 
@@ -2265,12 +2274,15 @@
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Leave Type *</label>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-neutral-300 font-semibold">Leave Type *</label>
+              <button type="button" onclick="openCreateLeaveTypeModal()" class="px-2 py-0.5 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold text-[10px] border border-brand-amber/30 transition-all flex items-center gap-1 shadow-sm">
+                <i data-lucide="plus" class="w-2.5 h-2.5"></i>
+                <span>Add Type</span>
+              </button>
+            </div>
             <select id="leaveTypeSelect" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
-              <option value="Casual Leave (CL)">Casual Leave (CL)</option>
-              <option value="Paid Leave (PL)">Paid Leave (PL)</option>
-              <option value="Sick Leave (SL)">Sick Leave (SL)</option>
-              <option value="Comp-Off">Compensatory Off</option>
+              <!-- Dynamically populated from appState.leaveTypes -->
             </select>
           </div>
           <div>
@@ -3160,6 +3172,71 @@
     </div>
   </div>
 
+
+  <!-- MODAL: CREATE / EDIT LEAVE TYPE -->
+  <div id="modalCreateLeaveType" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-brand-border flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="calendar-heart" class="w-4 h-4 text-brand-amber"></i>
+            <span>Add Leave Type &amp; Policy</span>
+          </h3>
+          <p class="text-xs text-neutral-400 mt-0.5">Define corporate leave categories, annual allowances and carry-forward rules.</p>
+        </div>
+        <button onclick="closeModal('modalCreateLeaveType')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Leave Category Name *</label>
+          <input type="text" id="newLeaveTypeName" placeholder="e.g. Bereavement Leave / Marriage Leave" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Leave Short Code *</label>
+            <input type="text" id="newLeaveTypeCode" placeholder="e.g. BL" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono uppercase focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Annual Quota / Allowance *</label>
+            <input type="text" id="newLeaveTypeQuota" placeholder="e.g. 10 Days/Year" value="12 Days/Year" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Compensation Type *</label>
+            <select id="newLeaveTypeComp" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+              <option value="Paid" selected>100% Fully Paid Leave</option>
+              <option value="Unpaid">Unpaid / Loss of Pay (LOP)</option>
+              <option value="Statutory Paid">Statutory Paid Leave</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Carry Forward Rule</label>
+            <select id="newLeaveTypeCarry" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+              <option value="No" selected>No (Lapses on 31st Dec)</option>
+              <option value="Max 30 Days">Max 30 Days Carry Forward</option>
+              <option value="Max 15 Days">Max 15 Days Carry Forward</option>
+              <option value="Encashable">Encashable at Year End</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Description &amp; Eligibility Guidelines</label>
+          <input type="text" id="newLeaveTypeDesc" placeholder="e.g. Applicable for immediate family bereavement with supervisor notification." class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
+        <button onclick="closeModal('modalCreateLeaveType')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">Cancel</button>
+        <button onclick="saveCustomLeaveType()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Save &amp; Select Leave Type</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: CREATE COMPANY ASSET -->
   <div id="modalCreateAsset" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
@@ -3638,6 +3715,13 @@
         { id: 'type_cont', name: 'Contractual / Vendor Retainer', notice: '15 Days', desc: '12-month fixed scope contract with invoice settlement' },
         { id: 'type_intern', name: 'Internship / Graduate Trainee', notice: '7 Days', desc: 'Stipend based technical training contract' }
       ],
+      leaveTypes: [
+        { id: 'lt_cl', name: 'Casual Leave (CL)', code: 'CL', quota: '12 Days/Year', type: 'Paid', carryForward: 'No', desc: 'Urgent personal matters & family functions' },
+        { id: 'lt_pl', name: 'Paid Leave (PL) / Earned Leave', code: 'PL', quota: '18 Days/Year', type: 'Paid', carryForward: 'Max 30 Days', desc: 'Planned vacations, leisure & extended personal time' },
+        { id: 'lt_sl', name: 'Sick Leave (SL) / Medical Leave', code: 'SL', quota: '10 Days/Year', type: 'Paid', carryForward: 'No', desc: 'Illness, hospitalization & medical recovery' },
+        { id: 'lt_co', name: 'Compensatory Off (Comp-Off)', code: 'CO', quota: 'As Earned', type: 'Paid', carryForward: 'Within 60 Days', desc: 'Compensatory day-off for weekend or holiday duty' },
+        { id: 'lt_ml', name: 'Maternity / Parental Leave', code: 'MPL', quota: '26 Weeks', type: 'Statutory Paid', carryForward: 'No', desc: 'Childbirth, newborn bonding & parental care' }
+      ],
       currentMasterTab: 'roles',
       locations: [
         { id: 'loc_bkc', name: 'Mumbai Head Office (BKC)', city: 'Mumbai', lat: 19.0657, lng: 72.8682, radius: 100 },
@@ -3991,6 +4075,13 @@
       }
     }
 
+    function populateLeaveTypeDropdown() {
+      const select = document.getElementById('leaveTypeSelect');
+      if (select) {
+        select.innerHTML = appState.leaveTypes.map(lt => `<option value="${lt.name}">${lt.name} (${lt.quota})</option>`).join('');
+      }
+    }
+
     function populateAllDropdowns() {
       populateRoleDropdown();
       populateDeptDropdown();
@@ -3999,6 +4090,7 @@
       populateShiftDropdown();
       populateAssetDropdown();
       populateEmploymentTypeDropdown();
+      populateLeaveTypeDropdown();
       updateMasterBadges();
     }
 
@@ -4010,7 +4102,8 @@
         'locations': appState.locations.length,
         'shifts': appState.shifts.length,
         'assets': appState.assets.length,
-        'empTypes': appState.employmentTypes.length
+        'empTypes': appState.employmentTypes.length,
+        'leaveTypes': appState.leaveTypes.length
       };
       for (const k in map) {
         const b = document.getElementById(`mCountBadge-${k}`);
@@ -4488,6 +4581,66 @@
       renderMasterTable();
     }
 
+    // ==========================================
+    // LEAVE TYPE MODAL HANDLERS
+    // ==========================================
+    function openCreateLeaveTypeModal(editId = null) {
+      currentEditingEntity = 'leaveTypes';
+      currentEditingId = editId;
+      const modal = document.getElementById('modalCreateLeaveType');
+      if (!modal) return;
+      if (!editId) {
+        document.getElementById('newLeaveTypeName').value = '';
+        document.getElementById('newLeaveTypeCode').value = '';
+        document.getElementById('newLeaveTypeQuota').value = '12 Days/Year';
+        document.getElementById('newLeaveTypeComp').value = 'Paid';
+        document.getElementById('newLeaveTypeCarry').value = 'No';
+        document.getElementById('newLeaveTypeDesc').value = '';
+      }
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveCustomLeaveType() {
+      const name = document.getElementById('newLeaveTypeName').value.trim();
+      const code = document.getElementById('newLeaveTypeCode').value.trim().toUpperCase() || 'LT';
+      const quota = document.getElementById('newLeaveTypeQuota').value.trim() || '12 Days/Year';
+      const type = document.getElementById('newLeaveTypeComp').value;
+      const carryForward = document.getElementById('newLeaveTypeCarry').value;
+      const desc = document.getElementById('newLeaveTypeDesc').value.trim() || 'Organizational leave category';
+
+      if (!name) {
+        showToast('Required', 'Leave Category Name is required.');
+        return;
+      }
+
+      if (currentEditingId && currentEditingEntity === 'leaveTypes') {
+        const existing = appState.leaveTypes.find(lt => lt.id === currentEditingId);
+        if (existing) {
+          existing.name = name;
+          existing.code = code;
+          existing.quota = quota;
+          existing.type = type;
+          existing.carryForward = carryForward;
+          existing.desc = desc;
+          showToast('Leave Type Updated', `${name} (${quota}) updated successfully.`);
+        }
+      } else {
+        const newLt = { id: 'lt_' + Date.now(), name, code, quota, type, carryForward, desc };
+        appState.leaveTypes.push(newLt);
+        showToast('Leave Type Added', `${name} (${quota}) registered in master setup.`);
+      }
+
+      populateLeaveTypeDropdown();
+      const lSelect = document.getElementById('leaveTypeSelect');
+      if (lSelect) lSelect.value = name;
+      closeModal('modalCreateLeaveType');
+      renderMasterTable();
+      updateMasterBadges();
+      currentEditingEntity = null;
+      currentEditingId = null;
+    }
+
     // Step 2 Employee ID & Credential Generation Functions
     let empIdCounter = 105;
     function regenerateEmployeeId() {
@@ -4571,7 +4724,8 @@
         'locations': 'Add Work Location',
         'shifts': 'Add Work Shift',
         'assets': 'Add Company Asset',
-        'empTypes': 'Add Employment Type'
+        'empTypes': 'Add Employment Type',
+        'leaveTypes': 'Add Leave Type'
       };
       const labelEl = document.getElementById('masterAddBtnLabel');
       if (labelEl) labelEl.innerText = labels[tabName] || 'Add Item';
@@ -4588,6 +4742,7 @@
       else if (t === 'shifts') openCreateShiftModal();
       else if (t === 'assets') openCreateAssetModal();
       else if (t === 'empTypes') openCreateEmploymentTypeModal();
+      else if (t === 'leaveTypes') openCreateLeaveTypeModal();
     }
 
     function renderMasterTable() {
@@ -4765,6 +4920,39 @@
             </td>
           </tr>
         `).join('');
+      } else if (t === 'leaveTypes') {
+        headers = `<tr>
+          <th class="py-3 px-4">Leave Category Name</th>
+          <th class="py-3 px-4">Short Code</th>
+          <th class="py-3 px-4">Annual Quota</th>
+          <th class="py-3 px-4">Compensation Type</th>
+          <th class="py-3 px-4">Carry Forward Rule</th>
+          <th class="py-3 px-4 text-right">Actions</th>
+        </tr>`;
+        const list = appState.leaveTypes.filter(lt => lt.name.toLowerCase().includes(q) || lt.code.toLowerCase().includes(q));
+        rows = list.map(lt => `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-brand-amber"></span>
+              <div>
+                <span>${lt.name}</span>
+                <div class="text-[10px] text-neutral-400 font-normal mt-0.5">${lt.desc || 'Standard corporate leave'}</div>
+              </div>
+            </td>
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-bold">${lt.code}</td>
+            <td class="py-3.5 px-4 font-mono text-white font-semibold">${lt.quota}</td>
+            <td class="py-3.5 px-4">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${lt.type.includes('Paid') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-neutral-500/10 text-neutral-300 border border-neutral-500/30'}">
+                ${lt.type}
+              </span>
+            </td>
+            <td class="py-3.5 px-4 text-neutral-300 text-xs">${lt.carryForward}</td>
+            <td class="py-3.5 px-4 text-right space-x-2">
+              <button onclick="editMasterItem('leaveTypes', '${lt.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
+              <button onclick="deleteMasterItem('leaveTypes', '${lt.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
+            </td>
+          </tr>
+        `).join('');
       }
 
       thead.innerHTML = headers;
@@ -4829,6 +5017,14 @@
         openCreateEmploymentTypeModal();
         document.getElementById('newEmpTypeName').value = item.name;
         document.getElementById('newEmpTypeNotice').value = item.notice;
+      } else if (entity === 'leaveTypes') {
+        openCreateLeaveTypeModal(id);
+        document.getElementById('newLeaveTypeName').value = item.name;
+        document.getElementById('newLeaveTypeCode').value = item.code;
+        document.getElementById('newLeaveTypeQuota').value = item.quota;
+        document.getElementById('newLeaveTypeComp').value = item.type;
+        document.getElementById('newLeaveTypeCarry').value = item.carryForward;
+        document.getElementById('newLeaveTypeDesc').value = item.desc || '';
       }
     }
 
