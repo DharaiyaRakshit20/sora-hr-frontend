@@ -1721,11 +1721,13 @@
               <div class="lg:col-span-7 flex flex-col items-center">
                 <!-- Standee Plaque Card -->
                 <div class="w-full max-w-md bg-gradient-to-b from-[#181820] to-[#0c0c10] p-7 rounded-[2rem] border-2 border-brand-border/80 shadow-2xl relative overflow-hidden text-center space-y-5">
-                  <!-- Decorative Acrylic Screws -->
-                  <div class="absolute top-3.5 left-4 w-2.5 h-2.5 rounded-full bg-neutral-400 border border-neutral-600 shadow-inner"></div>
-                  <div class="absolute top-3.5 right-4 w-2.5 h-2.5 rounded-full bg-neutral-400 border border-neutral-600 shadow-inner"></div>
-                  <div class="absolute bottom-3.5 left-4 w-2.5 h-2.5 rounded-full bg-neutral-400 border border-neutral-600 shadow-inner"></div>
-                  <div class="absolute bottom-3.5 right-4 w-2.5 h-2.5 rounded-full bg-neutral-400 border border-neutral-600 shadow-inner"></div>
+                  <!-- Decorative Acrylic Frame Screws (Isolated from space-y margin, perfectly symmetrical) -->
+                  <div class="pointer-events-none absolute inset-0 !m-0">
+                    <div class="absolute w-2.5 h-2.5 rounded-full bg-gradient-to-br from-neutral-300 via-neutral-400 to-neutral-500 border border-neutral-600 shadow-sm" style="top: 16px; left: 16px; margin: 0;"></div>
+                    <div class="absolute w-2.5 h-2.5 rounded-full bg-gradient-to-br from-neutral-300 via-neutral-400 to-neutral-500 border border-neutral-600 shadow-sm" style="top: 16px; right: 16px; margin: 0;"></div>
+                    <div class="absolute w-2.5 h-2.5 rounded-full bg-gradient-to-br from-neutral-300 via-neutral-400 to-neutral-500 border border-neutral-600 shadow-sm" style="bottom: 16px; left: 16px; margin: 0;"></div>
+                    <div class="absolute w-2.5 h-2.5 rounded-full bg-gradient-to-br from-neutral-300 via-neutral-400 to-neutral-500 border border-neutral-600 shadow-sm" style="bottom: 16px; right: 16px; margin: 0;"></div>
+                  </div>
 
                   <!-- Standee Top Header -->
                   <div class="space-y-1.5 pt-1">
