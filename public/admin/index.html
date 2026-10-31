@@ -435,6 +435,10 @@
                   <span>Leave Types &amp; Policies</span>
                   <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-leaveTypes">5</span>
                 </button>
+                <button onclick="openMasterTab('pipelineStages')" id="nav-master-pipelineStages" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors flex items-center justify-between">
+                  <span>Recruitment Stages</span>
+                  <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-pipelineStages">8</span>
+                </button>
               </div>
             </div>
 
@@ -1119,6 +1123,11 @@
                 <i data-lucide="calendar-heart" class="w-3.5 h-3.5 text-brand-amber"></i>
                 <span>Leave Types &amp; Policies</span>
                 <span id="mPillCount-leaveTypes" class="text-[10px] px-1.5 py-0.2 rounded-full bg-brand-dark font-mono">5</span>
+              </button>
+              <button onclick="openMasterTab('pipelineStages')" id="mTabBtn-pipelineStages" class="master-pill-btn px-3.5 py-2 rounded-xl bg-brand-surface text-neutral-300 hover:text-white border border-brand-border flex items-center gap-2 whitespace-nowrap">
+                <i data-lucide="git-commit" class="w-3.5 h-3.5 text-brand-amber"></i>
+                <span>Recruitment Stages</span>
+                <span id="mPillCount-pipelineStages" class="text-[10px] px-1.5 py-0.2 rounded-full bg-brand-dark font-mono">8</span>
               </button>
             </div>
 
@@ -2576,26 +2585,22 @@
           </div>
         </div>
 
-        <!-- ATS Stage Dropdown (User's Core Requirement) -->
+        <!-- ATS Stage Dropdown (Dynamically Populated from Master Setup) -->
         <div class="p-4 rounded-2xl bg-brand-dark border border-brand-amber/40 shadow-sm">
-          <label class="block text-brand-amber font-bold mb-1.5 text-xs flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-brand-amber font-bold text-xs flex items-center gap-1.5">
               <i data-lucide="git-commit" class="w-3.5 h-3.5"></i>
               <span>Update Recruitment Stage *</span>
-            </span>
-            <span class="text-[10px] text-neutral-400 font-normal">Select current pipeline stage</span>
-          </label>
+            </label>
+            <button type="button" onclick="openCreatePipelineStageModal()" class="px-2 py-0.5 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold text-[10px] border border-brand-amber/30 transition-all flex items-center gap-1 shadow-sm">
+              <i data-lucide="plus" class="w-2.5 h-2.5"></i>
+              <span>Add Stage</span>
+            </button>
+          </div>
           <select id="cndDetailStageSelect" onchange="onCandidateStageDropdownChange()" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-white font-semibold text-xs focus:outline-none focus:border-brand-amber">
-            <option value="Initial Screening">Initial Screening &amp; Resume Shortlist</option>
-            <option value="Interview Scheduled">Interview Scheduled / Round 1</option>
-            <option value="Technical Round 1">Technical Evaluation / Assignment</option>
-            <option value="Managerial Interview">Managerial &amp; Team Fit Interview</option>
-            <option value="Final HR Round">Final HR Round &amp; Salary Discussion</option>
-            <option value="Selected">★ Candidate Selected / Ready for Offer</option>
-            <option value="Offer Released">Offer Released</option>
-            <option value="Rejected">Rejected / Kept in Talent Pool</option>
+            <!-- Dynamically populated from appState.pipelineStages -->
           </select>
-          <p class="text-[10px] text-neutral-400 mt-1.5">Updating this changes the candidate's ATS status in real-time.</p>
+          <p class="text-[10px] text-neutral-400 mt-1.5">Configured in Master Setup. Updating this changes the candidate's ATS status in real-time.</p>
         </div>
 
         <!-- Quick Offer Release Banner -->
@@ -3237,6 +3242,61 @@
     </div>
   </div>
 
+
+  <!-- MODAL: CREATE / EDIT RECRUITMENT PIPELINE STAGE -->
+  <div id="modalCreatePipelineStage" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-brand-border flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="git-commit" class="w-4 h-4 text-brand-amber"></i>
+            <span>Add Recruitment Pipeline Stage</span>
+          </h3>
+          <p class="text-xs text-neutral-400 mt-0.5">Define interview rounds, evaluation checkpoints and ATS candidate progression.</p>
+        </div>
+        <button onclick="closeModal('modalCreatePipelineStage')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Stage Name / Full Title *</label>
+          <input type="text" id="newStageName" placeholder="e.g. Cultural Fit &amp; Founder Round" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Short Code / Badge Label *</label>
+            <input type="text" id="newStageCode" placeholder="e.g. Culture Fit" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono uppercase focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Pipeline Step Sequence *</label>
+            <input type="number" id="newStageOrder" value="5" min="1" max="20" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Pipeline Phase / Category *</label>
+          <select id="newStageCategory" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+            <option value="Sourcing &amp; Screening">Sourcing &amp; Screening</option>
+            <option value="Interview &amp; Evaluation" selected>Interview &amp; Technical Evaluation</option>
+            <option value="Selection &amp; Offer">Selection &amp; Offer Generation</option>
+            <option value="Talent Pool &amp; Closed">Talent Pool / Archived</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Stage Objective &amp; Evaluation Criteria</label>
+          <input type="text" id="newStageDesc" placeholder="e.g. Behavioral assessment with department director and values alignment." class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
+        <button onclick="closeModal('modalCreatePipelineStage')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">Cancel</button>
+        <button onclick="saveCustomPipelineStage()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Save &amp; Select Stage</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: CREATE COMPANY ASSET -->
   <div id="modalCreateAsset" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
@@ -3722,6 +3782,16 @@
         { id: 'lt_co', name: 'Compensatory Off (Comp-Off)', code: 'CO', quota: 'As Earned', type: 'Paid', carryForward: 'Within 60 Days', desc: 'Compensatory day-off for weekend or holiday duty' },
         { id: 'lt_ml', name: 'Maternity / Parental Leave', code: 'MPL', quota: '26 Weeks', type: 'Statutory Paid', carryForward: 'No', desc: 'Childbirth, newborn bonding & parental care' }
       ],
+      pipelineStages: [
+        { id: 'stg_1', name: 'Initial Screening & Resume Shortlist', code: 'Screening', category: 'Sourcing & Screening', order: 1, desc: 'Recruiter phone screen & resume qualification' },
+        { id: 'stg_2', name: 'Interview Scheduled / Round 1', code: 'Interview 1', category: 'Interview & Evaluation', order: 2, desc: 'First round technical or domain interview' },
+        { id: 'stg_3', name: 'Technical Evaluation / Assignment', code: 'Tech Round', category: 'Interview & Evaluation', order: 3, desc: 'Take-home assessment, live coding or system design' },
+        { id: 'stg_4', name: 'Managerial & Team Fit Interview', code: 'Managerial', category: 'Interview & Evaluation', order: 4, desc: 'Hiring manager culture fit & alignment round' },
+        { id: 'stg_5', name: 'Final HR Round & Salary Discussion', code: 'Final HR', category: 'Interview & Evaluation', order: 5, desc: 'Compensation breakdown & background verification' },
+        { id: 'stg_6', name: '★ Candidate Selected / Ready for Offer', code: 'Selected', category: 'Selection & Offer', order: 6, desc: 'Panel approved hire, ready for appointment letter' },
+        { id: 'stg_7', name: 'Offer Released', code: 'Offer Released', category: 'Selection & Offer', order: 7, desc: 'Formal appointment letter issued and dispatched' },
+        { id: 'stg_8', name: 'Rejected / Kept in Talent Pool', code: 'Rejected', category: 'Talent Pool & Closed', order: 8, desc: 'Candidate archived for future opportunities' }
+      ],
       currentMasterTab: 'roles',
       locations: [
         { id: 'loc_bkc', name: 'Mumbai Head Office (BKC)', city: 'Mumbai', lat: 19.0657, lng: 72.8682, radius: 100 },
@@ -4082,6 +4152,17 @@
       }
     }
 
+    function populateCandidateStagesDropdown() {
+      const select = document.getElementById('cndDetailStageSelect');
+      if (select) {
+        select.innerHTML = appState.pipelineStages
+          .slice()
+          .sort((a, b) => (a.order || 0) - (b.order || 0))
+          .map(stg => `<option value="${stg.name}">${stg.name}</option>`)
+          .join('');
+      }
+    }
+
     function populateAllDropdowns() {
       populateRoleDropdown();
       populateDeptDropdown();
@@ -4091,6 +4172,7 @@
       populateAssetDropdown();
       populateEmploymentTypeDropdown();
       populateLeaveTypeDropdown();
+      populateCandidateStagesDropdown();
       updateMasterBadges();
     }
 
@@ -4103,7 +4185,8 @@
         'shifts': appState.shifts.length,
         'assets': appState.assets.length,
         'empTypes': appState.employmentTypes.length,
-        'leaveTypes': appState.leaveTypes.length
+        'leaveTypes': appState.leaveTypes.length,
+        'pipelineStages': appState.pipelineStages.length
       };
       for (const k in map) {
         const b = document.getElementById(`mCountBadge-${k}`);
@@ -4641,6 +4724,67 @@
       currentEditingId = null;
     }
 
+    // ==========================================
+    // RECRUITMENT PIPELINE STAGES MODAL HANDLERS
+    // ==========================================
+    function openCreatePipelineStageModal(editId = null) {
+      currentEditingEntity = 'pipelineStages';
+      currentEditingId = editId;
+      const modal = document.getElementById('modalCreatePipelineStage');
+      if (!modal) return;
+      if (!editId) {
+        document.getElementById('newStageName').value = '';
+        document.getElementById('newStageCode').value = '';
+        document.getElementById('newStageCategory').value = 'Interview & Evaluation';
+        document.getElementById('newStageOrder').value = (appState.pipelineStages.length + 1);
+        document.getElementById('newStageDesc').value = '';
+      }
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveCustomPipelineStage() {
+      const name = document.getElementById('newStageName').value.trim();
+      const code = document.getElementById('newStageCode').value.trim() || 'Stage';
+      const category = document.getElementById('newStageCategory').value;
+      const order = parseInt(document.getElementById('newStageOrder').value) || (appState.pipelineStages.length + 1);
+      const desc = document.getElementById('newStageDesc').value.trim() || 'Candidate progression checkpoint';
+
+      if (!name) {
+        showToast('Required', 'Stage Name is required.');
+        return;
+      }
+
+      if (currentEditingId && currentEditingEntity === 'pipelineStages') {
+        const existing = appState.pipelineStages.find(stg => stg.id === currentEditingId);
+        if (existing) {
+          existing.name = name;
+          existing.code = code;
+          existing.category = category;
+          existing.order = order;
+          existing.desc = desc;
+          showToast('Stage Updated', `"${name}" updated successfully.`);
+        }
+      } else {
+        const newStg = { id: 'stg_' + Date.now(), name, code, category, order, desc };
+        appState.pipelineStages.push(newStg);
+        showToast('Stage Added', `"${name}" added to ATS pipeline.`);
+      }
+
+      populateCandidateStagesDropdown();
+      const sSelect = document.getElementById('cndDetailStageSelect');
+      if (sSelect) {
+        sSelect.value = name;
+        onCandidateStageDropdownChange();
+      }
+      closeModal('modalCreatePipelineStage');
+      renderMasterTable();
+      renderCandidateTable();
+      updateMasterBadges();
+      currentEditingEntity = null;
+      currentEditingId = null;
+    }
+
     // Step 2 Employee ID & Credential Generation Functions
     let empIdCounter = 105;
     function regenerateEmployeeId() {
@@ -4725,7 +4869,8 @@
         'shifts': 'Add Work Shift',
         'assets': 'Add Company Asset',
         'empTypes': 'Add Employment Type',
-        'leaveTypes': 'Add Leave Type'
+        'leaveTypes': 'Add Leave Type',
+        'pipelineStages': 'Add Pipeline Stage'
       };
       const labelEl = document.getElementById('masterAddBtnLabel');
       if (labelEl) labelEl.innerText = labels[tabName] || 'Add Item';
@@ -4743,6 +4888,7 @@
       else if (t === 'assets') openCreateAssetModal();
       else if (t === 'empTypes') openCreateEmploymentTypeModal();
       else if (t === 'leaveTypes') openCreateLeaveTypeModal();
+      else if (t === 'pipelineStages') openCreatePipelineStageModal();
     }
 
     function renderMasterTable() {
@@ -4953,6 +5099,40 @@
             </td>
           </tr>
         `).join('');
+      } else if (t === 'pipelineStages') {
+        headers = `<tr>
+          <th class="py-3 px-4">Sequence &amp; Stage Title</th>
+          <th class="py-3 px-4">Short Code</th>
+          <th class="py-3 px-4">Pipeline Phase / Category</th>
+          <th class="py-3 px-4">Evaluation Scope</th>
+          <th class="py-3 px-4 text-right">Actions</th>
+        </tr>`;
+        const list = appState.pipelineStages
+          .filter(stg => stg.name.toLowerCase().includes(q) || stg.code.toLowerCase().includes(q))
+          .sort((a, b) => (a.order || 0) - (b.order || 0));
+        rows = list.map(stg => `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-brand-amber/15 text-brand-amber border border-brand-amber/30 text-[11px] font-mono font-bold flex items-center justify-center flex-shrink-0">
+                #${stg.order || 1}
+              </span>
+              <div>
+                <span>${stg.name}</span>
+              </div>
+            </td>
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-bold">${stg.code}</td>
+            <td class="py-3.5 px-4">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/30">
+                ${stg.category}
+              </span>
+            </td>
+            <td class="py-3.5 px-4 text-neutral-400 text-xs">${stg.desc || 'Progression round'}</td>
+            <td class="py-3.5 px-4 text-right space-x-2">
+              <button onclick="editMasterItem('pipelineStages', '${stg.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
+              <button onclick="deleteMasterItem('pipelineStages', '${stg.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
+            </td>
+          </tr>
+        `).join('');
       }
 
       thead.innerHTML = headers;
@@ -5025,6 +5205,13 @@
         document.getElementById('newLeaveTypeComp').value = item.type;
         document.getElementById('newLeaveTypeCarry').value = item.carryForward;
         document.getElementById('newLeaveTypeDesc').value = item.desc || '';
+      } else if (entity === 'pipelineStages') {
+        openCreatePipelineStageModal(id);
+        document.getElementById('newStageName').value = item.name;
+        document.getElementById('newStageCode').value = item.code;
+        document.getElementById('newStageCategory').value = item.category;
+        document.getElementById('newStageOrder').value = item.order || 1;
+        document.getElementById('newStageDesc').value = item.desc || '';
       }
     }
 
@@ -5940,9 +6127,27 @@
       document.getElementById('cndDetailNotes').value = c.notes || '';
       document.getElementById('cndDetailResumeName').innerText = c.resumeUrl || `${c.name.replace(' ', '_')}_Resume.pdf`;
 
-      // Sync stage dropdown
+      // Populate dynamic pipeline stages from Master Setup
+      populateCandidateStagesDropdown();
       const sel = document.getElementById('cndDetailStageSelect');
-      if (sel) sel.value = c.stage;
+      if (sel) {
+        // If candidate stage matches an option or short code, select it
+        let matched = false;
+        for (let opt of sel.options) {
+          if (opt.value === c.stage || opt.value.toLowerCase().includes(c.stage.toLowerCase())) {
+            sel.value = opt.value;
+            matched = true;
+            break;
+          }
+        }
+        if (!matched && c.stage) {
+          const opt = document.createElement('option');
+          opt.value = c.stage;
+          opt.innerText = c.stage;
+          sel.appendChild(opt);
+          sel.value = c.stage;
+        }
+      }
 
       onCandidateStageDropdownChange();
       document.getElementById('modalCandidateDetail').classList.remove('hidden');
@@ -5953,7 +6158,7 @@
       const stage = document.getElementById('cndDetailStageSelect').value;
       const offerBox = document.getElementById('cndOfferPromptBox');
       if (offerBox) {
-        if (stage === 'Selected') {
+        if (stage.toLowerCase().includes('select') || stage.toLowerCase().includes('offer')) {
           offerBox.classList.remove('hidden');
         } else {
           offerBox.classList.add('hidden');
