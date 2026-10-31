@@ -250,10 +250,10 @@
   <!-- ========================================== -->
   <!-- VIEW 2: LOGGED-IN ADMIN PORTAL INTERFACE  -->
   <!-- ========================================== -->
-  <div id="view-admin-portal" class="flex-grow flex flex-col min-h-screen">
+  <div id="view-admin-portal" class="h-screen w-screen overflow-hidden flex flex-col">
     
     <!-- TOP HEADER (Edge-to-edge flush) -->
-    <header class="sticky top-0 z-40 bg-[#09090c]/95 backdrop-blur-md border-b border-brand-border/60 transition-all">
+    <header class="h-20 flex-shrink-0 z-40 bg-[#09090c]/95 backdrop-blur-md border-b border-brand-border/60 transition-all">
       <div class="w-full px-6 sm:px-8 h-20 flex items-center justify-between">
         
         <!-- START: Brand Logo + Company Tag -->
@@ -283,13 +283,14 @@
     </header>
 
     <!-- MAIN BODY: SIDEBAR + CONTENT -->
-    <div class="flex-grow flex w-full">
+    <div class="flex-grow flex w-full h-[calc(100vh-80px)] overflow-hidden">
       
       <!-- SIDEBAR -->
-      <aside class="w-64 sm:w-72 bg-[#0c0c10] border-r border-brand-border/60 flex-shrink-0 flex flex-col justify-between min-h-[calc(100vh-80px)]">
+      <aside class="w-64 sm:w-72 bg-[#0c0c10] border-r border-brand-border/60 flex-shrink-0 flex flex-col h-full overflow-hidden">
         
-        <div class="p-4 space-y-4">
-          <nav class="space-y-1 text-xs sm:text-sm font-medium pt-1">
+        <!-- Independent Scrollable Menu Area -->
+        <div class="flex-grow overflow-y-auto p-3 sm:p-4 space-y-1">
+          <nav class="space-y-1 text-xs sm:text-sm font-medium">
             
             <!-- 1. Dashboard -->
             <button onclick="switchTab('dashboard')" id="nav-dashboard" class="sidebar-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-brand-amber bg-brand-surface border border-brand-amber/30 font-semibold text-left">
@@ -297,16 +298,18 @@
               <span>Dashboard Overview</span>
             </button>
 
-            <!-- 2. Employee Management (Menu with 2 Submenus) -->
+            <!-- 2. Employee Management (Accordion with Indicator) -->
             <div>
-              <button onclick="toggleMenu('menuEmployees')" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <button id="btn-menuEmployees" onclick="toggleMenu('menuEmployees')" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-all text-left group">
                 <div class="flex items-center gap-3">
                   <i data-lucide="users" class="w-4 h-4 text-brand-amber"></i>
                   <span>Employee Management</span>
                 </div>
-                <i id="chv-menuEmployees" data-lucide="chevron-down" class="w-4 h-4 text-neutral-500 transition-transform"></i>
+                <div class="flex items-center gap-1.5">
+                  <span id="arrow-menuEmployees" class="font-mono font-black text-brand-amber text-sm leading-none transition-transform duration-200 inline-block">&gt;</span>
+                </div>
               </button>
-              <div id="sub-menuEmployees" class="pl-9 pr-2 py-1 space-y-1 text-xs text-neutral-400">
+              <div id="sub-menuEmployees" class="hidden pl-9 pr-2 py-1.5 space-y-1 text-xs text-neutral-400 border-l border-brand-border/40 ml-4 my-1">
                 <button onclick="switchTab('employee-list')" id="nav-employee-list" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors">
                   1. Employee List
                 </button>
@@ -316,16 +319,18 @@
               </div>
             </div>
 
-            <!-- 3. Import & Export (2 Submenus) -->
+            <!-- 3. Import & Export (Accordion with Indicator) -->
             <div>
-              <button onclick="toggleMenu('menuImportExport')" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <button id="btn-menuImportExport" onclick="toggleMenu('menuImportExport')" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-all text-left group">
                 <div class="flex items-center gap-3">
                   <i data-lucide="arrow-down-up" class="w-4 h-4 text-brand-amber"></i>
                   <span>Import &amp; Export</span>
                 </div>
-                <i id="chv-menuImportExport" data-lucide="chevron-down" class="w-4 h-4 text-neutral-500 transition-transform"></i>
+                <div class="flex items-center gap-1.5">
+                  <span id="arrow-menuImportExport" class="font-mono font-black text-brand-amber text-sm leading-none transition-transform duration-200 inline-block">&gt;</span>
+                </div>
               </button>
-              <div id="sub-menuImportExport" class="pl-9 pr-2 py-1 space-y-1 text-xs text-neutral-400">
+              <div id="sub-menuImportExport" class="hidden pl-9 pr-2 py-1.5 space-y-1 text-xs text-neutral-400 border-l border-brand-border/40 ml-4 my-1">
                 <button onclick="switchTab('import-export-users')" id="nav-import-export-users" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors">
                   User Import &amp; Export
                 </button>
@@ -417,24 +422,18 @@
           </nav>
         </div>
 
-        <!-- Sidebar Bottom: LOGOUT BUTTON -->
-        <div class="p-4 border-t border-brand-border/60 bg-brand-dark/40 space-y-3">
+        <!-- Sidebar Bottom: LOGOUT BUTTON (Pinned) -->
+        <div class="p-3.5 border-t border-brand-border/60 bg-brand-dark flex-shrink-0">
           <button onclick="adminLogout()" class="sidebar-btn w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-rose-500/30 text-rose-300 hover:bg-rose-500/10 hover:border-rose-500/60 font-semibold text-xs transition-all shadow-sm">
             <i data-lucide="log-out" class="w-4 h-4"></i>
             <span>Logout</span>
           </button>
-          <div class="text-[11px] text-neutral-500 flex items-center justify-between px-1">
-            <span>Apex Tech &bull; ID: AGT</span>
-            <span class="text-emerald-400 font-mono flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online
-            </span>
-          </div>
         </div>
 
       </aside>
 
       <!-- MAIN CONTENT VIEW AREA -->
-      <main class="flex-grow flex flex-col overflow-y-auto w-full bg-[#09090c]">
+      <main class="flex-grow flex flex-col h-full overflow-y-auto w-full bg-[#09090c]">
         
         <!-- Breadcrumb & Quick Info Bar -->
         <div class="h-14 px-6 sm:px-8 bg-brand-dark/60 border-b border-brand-border/40 flex items-center justify-between text-xs w-full">
@@ -1679,11 +1678,45 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Accordion Submenu: Only ONE submenu can stay open at a time!
+    const allAccordionMenus = ['menuEmployees', 'menuImportExport'];
+
     function toggleMenu(menuId) {
-      const sub = document.getElementById(`sub-${menuId}`);
-      const chv = document.getElementById(`chv-${menuId}`);
-      sub.classList.toggle('hidden');
-      chv.style.transform = sub.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+      allAccordionMenus.forEach(id => {
+        const sub = document.getElementById(`sub-${id}`);
+        const arrow = document.getElementById(`arrow-${id}`);
+        const btn = document.getElementById(`btn-${id}`);
+
+        if (id === menuId) {
+          const isCurrentlyOpen = !sub.classList.contains('hidden');
+          if (isCurrentlyOpen) {
+            // Close it
+            sub.classList.add('hidden');
+            if (arrow) {
+              arrow.style.transform = 'rotate(0deg)';
+              arrow.classList.remove('text-amber-300');
+            }
+            if (btn) btn.classList.remove('bg-brand-surface', 'text-brand-amber');
+          } else {
+            // Open it
+            sub.classList.remove('hidden');
+            if (arrow) {
+              arrow.style.transform = 'rotate(90deg)';
+              arrow.classList.add('text-amber-300');
+            }
+            if (btn) btn.classList.add('bg-brand-surface', 'text-brand-amber');
+          }
+        } else {
+          // Auto close all other submenus!
+          if (sub) sub.classList.add('hidden');
+          if (arrow) {
+            arrow.style.transform = 'rotate(0deg)';
+            arrow.classList.remove('text-amber-300');
+          }
+          if (btn) btn.classList.remove('bg-brand-surface', 'text-brand-amber');
+        }
+      });
+      lucide.createIcons();
     }
 
     // ==========================================
