@@ -1,0 +1,2510 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SORA HR — Company Admin Portal</title>
+  <link rel="icon" type="image/svg+xml" href="../public/sora-hr-icon.svg">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['Fraunces', 'serif'],
+          },
+          colors: {
+            brand: {
+              black: '#09090c',
+              dark: '#101014',
+              surface: '#17171d',
+              card: '#1e1e26',
+              border: '#2b2b36',
+              amber: '#f59e0b',
+              amberLight: '#fbbf24',
+              amberDark: '#d97706',
+              glow: 'rgba(245, 158, 11, 0.25)',
+              cream: '#fdfbf7',
+              muted: '#a3a3b2'
+            }
+          },
+          boxShadow: {
+            'amber-glow': '0 0 35px -5px rgba(245, 158, 11, 0.30)',
+            'amber-glow-lg': '0 0 60px -10px rgba(245, 158, 11, 0.40)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Leaflet CSS & JS for Interactive Lat-Long Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- QRCode.js for Dynamic Company Clock-In QR Code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- html2pdf.js for Salary Slip & Offer Letter Downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    *, *::before, *::after {
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      text-rendering: optimizeLegibility !important;
+    }
+    body {
+      background-color: #09090c;
+      color: #f3f4f6;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    .sidebar-btn {
+      user-select: none;
+      -webkit-user-select: none;
+      outline: none !important;
+      text-shadow: none !important;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09090c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2b2b36;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f59e0b;
+    }
+    @media print {
+      body * { visibility: hidden; }
+      #printablePayslip, #printablePayslip * { visibility: visible; }
+      #printableOfferLetter, #printableOfferLetter * { visibility: visible; }
+      #printablePayslip, #printableOfferLetter {
+        position: absolute; left: 0; top: 0; width: 100% !important;
+        background: #ffffff !important; color: #000000 !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-black">
+
+  <!-- ========================================== -->
+  <!-- VIEW 1: ADMIN LOGIN SCREEN (OTP & 2FA)     -->
+  <!-- ========================================== -->
+  <div id="view-admin-login" class="hidden min-h-screen flex flex-col lg:flex-row w-full bg-[#09090c]">
+    
+    <!-- Left Hero Brand Slider -->
+    <div class="w-full lg:w-1/2 min-h-[420px] lg:min-h-screen relative bg-[#0e0e13] p-8 sm:p-14 lg:p-16 flex flex-col justify-between overflow-hidden border-b lg:border-b-0 lg:border-r border-brand-border/60">
+      <div class="absolute inset-0 bg-radial-gradient from-amber-500/15 via-transparent to-transparent pointer-events-none"></div>
+
+      <div class="relative z-10 flex items-center justify-between">
+        <div class="flex items-center">
+          <img src="../public/sora-hr-logo.svg" alt="SORA HR Logo" class="h-11 sm:h-13 w-auto object-contain">
+        </div>
+        <span class="px-3 py-1 rounded-full bg-brand-amber/10 border border-brand-amber/30 text-xs font-semibold text-brand-amber">
+          Company Admin Portal
+        </span>
+      </div>
+
+      <div class="relative z-10 my-auto py-12 max-w-lg">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-surface border border-brand-amber/30 text-xs text-amber-200 mb-6">
+          <span class="w-2 h-2 rounded-full bg-brand-amber animate-pulse"></span>
+          <span>Apex Global Technologies Pvt Ltd</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight mb-4">
+          Empowering Your People.<br><span class="text-brand-amber">Streamlining HR.</span>
+        </h1>
+        <p class="text-neutral-300 text-sm sm:text-base font-light leading-relaxed mb-6">
+          Log in with OTP or Two-Factor Authentication (2FA) to access employee records, attendance lat-long tracking, bulk payroll disbursals, and recruitment pipelines.
+        </p>
+        <div class="p-4 rounded-2xl bg-brand-surface/70 border border-brand-border/60 text-xs text-neutral-400 space-y-1">
+          <div class="text-white font-semibold">Demo Credentials:</div>
+          <div>Admin Email: <span class="text-brand-amber font-mono">admin@apextechnologies.com</span></div>
+          <div>Mobile OTP / TOTP: <span class="text-brand-amber font-mono">Any 6 digits (e.g. 842917)</span></div>
+        </div>
+      </div>
+
+      <div class="relative z-10 text-xs text-neutral-500 flex items-center justify-between pt-6 border-t border-white/5">
+        <div>256-bit AES Encryption &bull; ISO 27001 Certified</div>
+        <a href="../" class="text-brand-amber hover:underline">&larr; Back to Public Site</a>
+      </div>
+    </div>
+
+    <!-- Right Login Options (OTP & 2FA) -->
+    <div class="w-full lg:w-1/2 min-h-screen p-6 sm:p-12 lg:p-16 flex flex-col justify-center bg-[#0a0a0e]">
+      <div class="max-w-md w-full mx-auto space-y-8">
+        
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Company Admin Sign In</h2>
+          <p class="text-xs sm:text-sm text-neutral-400 mt-1">Select your preferred administrative authentication method:</p>
+        </div>
+
+        <!-- Mode Toggle Tabs -->
+        <div class="flex items-center p-1.5 bg-brand-surface rounded-2xl border border-brand-border text-xs font-bold">
+          <button id="adminAuthTabOtp" onclick="switchAdminAuthMode('otp')" class="flex-1 py-2.5 rounded-xl bg-brand-amber text-neutral-950 font-extrabold shadow transition-all flex items-center justify-center gap-2">
+            <i data-lucide="smartphone" class="w-4 h-4"></i>
+            <span>Login with OTP</span>
+          </button>
+          <button id="adminAuthTab2fa" onclick="switchAdminAuthMode('2fa')" class="flex-1 py-2.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            <span>Login with 2FA</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: LOGIN WITH OTP -->
+        <div id="adminAuthModeOtp" class="space-y-4">
+          <div id="adminOtpStep1" class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Company Admin Work Email or Mobile *</label>
+              <div class="relative">
+                <i data-lucide="mail" class="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="adminOtpInput" value="admin@apextechnologies.com" placeholder="name@company.com or +91..." class="w-full pl-11 pr-4 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber">
+              </div>
+            </div>
+            <button onclick="sendAdminOtp()" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-md shadow-brand-amber/20 flex items-center justify-center gap-2">
+              <span>Send 6-Digit OTP</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div id="adminOtpStep2" class="hidden space-y-4">
+            <div class="text-center p-3.5 rounded-2xl bg-brand-surface border border-brand-border/60">
+              <span class="text-xs text-neutral-400">Enter verification code sent to:</span>
+              <div id="adminOtpDisplayEmail" class="text-xs font-bold text-amber-300 font-mono mt-0.5">admin@apextechnologies.com</div>
+            </div>
+
+            <div class="flex justify-center gap-2 sm:gap-3 my-4">
+              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="8">
+              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="4">
+              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="2">
+              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="9">
+              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="1">
+              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="7">
+            </div>
+
+            <button onclick="adminLoginSuccess('OTP')" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-md shadow-brand-amber/20 flex items-center justify-center gap-2">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>Verify &amp; Enter Admin Portal</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 2: LOGIN WITH 2FA -->
+        <div id="adminAuthMode2fa" class="hidden space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Username or Admin Email *</label>
+            <div class="relative">
+              <i data-lucide="user" class="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="admin2faUser" value="rohan.admin" class="w-full pl-11 pr-4 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Master Password *</label>
+            <div class="relative">
+              <i data-lucide="lock" class="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+              <input type="password" value="SoraAdmin@2026" class="w-full pl-11 pr-4 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Authenticator 6-Digit TOTP *</label>
+            <div class="relative">
+              <i data-lucide="key" class="w-4 h-4 text-brand-amber absolute left-4 top-1/2 -translate-y-1/2"></i>
+              <input type="text" maxlength="6" value="591834" placeholder="Enter TOTP code" class="w-full pl-11 pr-4 py-3 rounded-2xl bg-brand-surface border border-brand-amber/50 text-xs sm:text-sm font-mono tracking-widest text-brand-amber focus:outline-none focus:border-brand-amber">
+            </div>
+          </div>
+
+          <button onclick="adminLoginSuccess('2FA')" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-md shadow-brand-amber/20 flex items-center justify-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            <span>Authenticate with 2FA</span>
+          </button>
+        </div>
+
+        <!-- Forgot Password Link -->
+        <div class="text-center pt-2">
+          <button onclick="showToast('Password Recovery', 'Reset instructions sent to registered admin phone/email.')" class="text-xs text-neutral-400 hover:text-brand-amber transition-colors">
+            Forgot Administrative Password?
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- VIEW 2: LOGGED-IN ADMIN PORTAL INTERFACE  -->
+  <!-- ========================================== -->
+  <div id="view-admin-portal" class="flex-grow flex flex-col min-h-screen">
+    
+    <!-- TOP HEADER (Edge-to-edge flush) -->
+    <header class="sticky top-0 z-40 bg-[#09090c]/95 backdrop-blur-md border-b border-brand-border/60 transition-all">
+      <div class="w-full px-6 sm:px-8 h-20 flex items-center justify-between">
+        
+        <!-- START: Brand Logo + Company Tag -->
+        <div class="flex items-center gap-4">
+          <a href="javascript:void(0)" onclick="switchTab('dashboard')" class="flex items-center">
+            <img src="../public/sora-hr-logo.svg" alt="SORA HR" class="h-9 sm:h-11 w-auto object-contain">
+          </a>
+          <span class="hidden md:inline-block h-6 w-px bg-brand-border"></span>
+          <div class="hidden md:flex flex-col">
+            <span class="text-xs font-bold text-white tracking-wide">Apex Global Technologies Pvt Ltd</span>
+            <span class="text-[10px] text-brand-amber font-mono font-medium">COMPANY ADMIN CONSOLE</span>
+          </div>
+        </div>
+
+        <!-- END: Admin Profile & Actions -->
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-brand-amber text-neutral-950 font-extrabold text-xs flex items-center justify-center shadow">
+            RM
+          </div>
+          <div class="text-left hidden sm:block">
+            <div class="text-xs font-bold text-white leading-tight">Rohan Mehra</div>
+            <div class="text-[10px] font-semibold text-brand-amber">HR Director / Admin</div>
+          </div>
+
+          <a href="../" title="Open Main / Super Admin" class="ml-2 px-3 py-1.5 rounded-xl border border-brand-border hover:border-brand-amber/50 text-[11px] text-neutral-300 hover:text-white transition-all flex items-center gap-1.5">
+            <i data-lucide="external-link" class="w-3.5 h-3.5 text-brand-amber"></i>
+            <span class="hidden md:inline">Super Admin</span>
+          </a>
+
+          <button onclick="adminLogout()" class="px-3 py-1.5 rounded-xl border border-rose-500/30 text-rose-300 hover:bg-rose-500/10 text-[11px] font-semibold transition-all flex items-center gap-1.5">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- MAIN BODY: SIDEBAR + CONTENT -->
+    <div class="flex-grow flex w-full">
+      
+      <!-- SIDEBAR -->
+      <aside class="w-64 sm:w-72 bg-[#0c0c10] border-r border-brand-border/60 flex-shrink-0 flex flex-col justify-between min-h-[calc(100vh-80px)]">
+        
+        <div class="p-4 space-y-4">
+          <nav class="space-y-1 text-xs sm:text-sm font-medium pt-1">
+            
+            <!-- 1. Dashboard -->
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="sidebar-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-brand-amber bg-brand-surface border border-brand-amber/30 font-semibold text-left">
+              <i data-lucide="layout-dashboard" class="w-4 h-4 text-brand-amber"></i>
+              <span>Dashboard Overview</span>
+            </button>
+
+            <!-- 2. Employee Management (Menu with 2 Submenus) -->
+            <div>
+              <button onclick="toggleMenu('menuEmployees')" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="users" class="w-4 h-4 text-brand-amber"></i>
+                  <span>Employee Management</span>
+                </div>
+                <i id="chv-menuEmployees" data-lucide="chevron-down" class="w-4 h-4 text-neutral-500 transition-transform"></i>
+              </button>
+              <div id="sub-menuEmployees" class="pl-9 pr-2 py-1 space-y-1 text-xs text-neutral-400">
+                <button onclick="switchTab('employee-list')" id="nav-employee-list" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors">
+                  1. Employee List
+                </button>
+                <button onclick="switchTab('employee-add')" id="nav-employee-add" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors">
+                  2. Add Employee (Wizard)
+                </button>
+              </div>
+            </div>
+
+            <!-- 3. Import & Export (2 Submenus) -->
+            <div>
+              <button onclick="toggleMenu('menuImportExport')" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="arrow-down-up" class="w-4 h-4 text-brand-amber"></i>
+                  <span>Import &amp; Export</span>
+                </div>
+                <i id="chv-menuImportExport" data-lucide="chevron-down" class="w-4 h-4 text-neutral-500 transition-transform"></i>
+              </button>
+              <div id="sub-menuImportExport" class="pl-9 pr-2 py-1 space-y-1 text-xs text-neutral-400">
+                <button onclick="switchTab('import-export-users')" id="nav-import-export-users" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors">
+                  User Import &amp; Export
+                </button>
+                <button onclick="switchTab('upload-documents-zip')" id="nav-upload-documents-zip" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors">
+                  Upload Documents ZIP
+                </button>
+              </div>
+            </div>
+
+            <!-- 4. Payroll & Salary Slips -->
+            <button onclick="switchTab('payroll')" id="nav-payroll" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="receipt" class="w-4 h-4 text-brand-amber"></i>
+                <span>Payroll &amp; Salary Slip</span>
+              </div>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-mono">Oct '26</span>
+            </button>
+
+            <!-- 5. Attendance with Lat-Long -->
+            <button onclick="switchTab('attendance-latlong')" id="nav-attendance-latlong" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="map-pin" class="w-4 h-4 text-brand-amber"></i>
+                <span>Attendance (Lat-Long)</span>
+              </div>
+              <span class="text-[10px] bg-brand-amber/20 text-brand-amber px-1.5 py-0.5 rounded font-mono">GPS</span>
+            </button>
+
+            <!-- 6. Leave Management -->
+            <button onclick="switchTab('leave-management')" id="nav-leave-management" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="calendar" class="w-4 h-4 text-brand-amber"></i>
+                <span>Leave Management</span>
+              </div>
+              <span id="badgePendingLeaves" class="text-[10px] bg-amber-500 text-neutral-950 font-bold px-1.5 py-0.2 rounded-full">3</span>
+            </button>
+
+            <!-- 7. Candidates (Recruitment / ATS) -->
+            <button onclick="switchTab('candidates')" id="nav-candidates" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="user-check" class="w-4 h-4 text-brand-amber"></i>
+                <span>Candidate Pipeline</span>
+              </div>
+              <span class="text-[10px] bg-brand-dark border border-brand-border px-1.5 py-0.5 rounded text-neutral-400">8</span>
+            </button>
+
+            <!-- 8. Offer Letter -->
+            <button onclick="switchTab('offer-letters')" id="nav-offer-letters" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="file-badge" class="w-4 h-4 text-brand-amber"></i>
+                <span>Offer Letter Engine</span>
+              </div>
+            </button>
+
+            <!-- 9. Resignation & Notice Period -->
+            <button onclick="switchTab('resignation')" id="nav-resignation" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="user-minus" class="w-4 h-4 text-brand-amber"></i>
+                <span>Resignation &amp; Exit</span>
+              </div>
+              <span class="text-[10px] bg-rose-500/20 text-rose-300 border border-rose-500/30 px-1.5 py-0.5 rounded">2</span>
+            </button>
+
+            <!-- 10. Company Policy -->
+            <button onclick="switchTab('company-policy')" id="nav-company-policy" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="shield" class="w-4 h-4 text-brand-amber"></i>
+                <span>Company Policies</span>
+              </div>
+              <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded font-mono">Mail</span>
+            </button>
+
+            <!-- 11. Promotion & Appraisal -->
+            <button onclick="switchTab('promotion')" id="nav-promotion" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="trending-up" class="w-4 h-4 text-brand-amber"></i>
+                <span>Promotion &amp; CTC Update</span>
+              </div>
+            </button>
+
+            <!-- 12. Clock-In with QR Code Scan -->
+            <button onclick="switchTab('clockin-qr')" id="nav-clockin-qr" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="qr-code" class="w-4 h-4 text-brand-amber"></i>
+                <span>Clock-In QR Code</span>
+              </div>
+              <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded">Standee</span>
+            </button>
+
+          </nav>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-brand-border/60 bg-brand-dark/40 text-[11px] text-neutral-500 flex items-center justify-between">
+          <span>Apex Tech &bull; ID: AGT</span>
+          <span class="text-emerald-400 font-mono flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online
+          </span>
+        </div>
+
+      </aside>
+
+      <!-- MAIN CONTENT VIEW AREA -->
+      <main class="flex-grow flex flex-col overflow-y-auto w-full bg-[#09090c]">
+        
+        <!-- Breadcrumb & Quick Info Bar -->
+        <div class="h-14 px-6 sm:px-8 bg-brand-dark/60 border-b border-brand-border/40 flex items-center justify-between text-xs w-full">
+          <div class="flex items-center gap-2">
+            <span class="text-neutral-400">Admin Portal</span>
+            <span class="text-neutral-600">/</span>
+            <span id="currentTabBreadcrumb" class="text-brand-amber font-semibold">Dashboard Overview</span>
+          </div>
+
+          <div class="flex items-center gap-4 text-neutral-400">
+            <span>Server Time: <strong class="text-white font-mono" id="liveClock">10:45 AM</strong></span>
+          </div>
+        </div>
+
+        <div class="p-6 sm:p-8 w-full space-y-8 flex-grow">
+          
+          <!-- ============================================== -->
+          <!-- TAB 1: DASHBOARD OVERVIEW                     -->
+          <!-- ============================================== -->
+          <div id="tab-dashboard" class="tab-content space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Welcome back, Rohan Mehra</h1>
+                <p class="text-xs text-neutral-400 mt-1">Apex Global Technologies Pvt Ltd &bull; HR Operational Command Center</p>
+              </div>
+              <button onclick="switchTab('employee-add')" class="px-5 py-2.5 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs shadow-md shadow-brand-amber/20 hover:bg-brand-amberLight flex items-center gap-2">
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                <span>+ Onboard Employee</span>
+              </button>
+            </div>
+
+            <!-- Metric Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border/80 space-y-2">
+                <div class="text-xs text-neutral-400 flex items-center justify-between">
+                  <span>Total Employees</span>
+                  <i data-lucide="users" class="w-4 h-4 text-brand-amber"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-white" id="statTotalEmployees">104</div>
+                <div class="text-[11px] text-emerald-400">&uarr; +6 this month</div>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border/80 space-y-2">
+                <div class="text-xs text-neutral-400 flex items-center justify-between">
+                  <span>Present Today</span>
+                  <i data-lucide="clock" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400">96 / 104</div>
+                <div class="text-[11px] text-neutral-400">92.3% Attendance Rate</div>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border/80 space-y-2">
+                <div class="text-xs text-neutral-400 flex items-center justify-between">
+                  <span>Pending Leaves</span>
+                  <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-amber-400">3 Requests</div>
+                <div class="text-[11px] text-brand-amber hover:underline cursor-pointer" onclick="switchTab('leave-management')">Review Approvals &rarr;</div>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border/80 space-y-2">
+                <div class="text-xs text-neutral-400 flex items-center justify-between">
+                  <span>Payroll Cycle</span>
+                  <i data-lucide="coins" class="w-4 h-4 text-brand-amber"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-white">Oct 2026</div>
+                <div class="text-[11px] text-emerald-400">Calculated &bull; Ready to Send</div>
+              </div>
+            </div>
+
+            <!-- Quick Action Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-amber/10 border border-brand-amber/30 text-brand-amber flex items-center justify-center">
+                  <i data-lucide="map-pin" class="w-5 h-5"></i>
+                </div>
+                <h3 class="font-bold text-white text-sm">Attendance Lat-Long</h3>
+                <p class="text-xs text-neutral-400">Check sales and field employee GPS clock-in and clock-out coordinates on real interactive maps.</p>
+                <button onclick="switchTab('attendance-latlong')" class="text-xs text-brand-amber font-semibold hover:underline flex items-center gap-1">Open GPS Logs &rarr;</button>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-amber/10 border border-brand-amber/30 text-brand-amber flex items-center justify-center">
+                  <i data-lucide="arrow-down-up" class="w-5 h-5"></i>
+                </div>
+                <h3 class="font-bold text-white text-sm">Group Import &amp; Export</h3>
+                <p class="text-xs text-neutral-400">Export employee data with or without data by roles, and bulk-upload document ZIP archives mapped to employee IDs.</p>
+                <button onclick="switchTab('import-export-users')" class="text-xs text-brand-amber font-semibold hover:underline flex items-center gap-1">Open Import / Export &rarr;</button>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-amber/10 border border-brand-amber/30 text-brand-amber flex items-center justify-center">
+                  <i data-lucide="qr-code" class="w-5 h-5"></i>
+                </div>
+                <h3 class="font-bold text-white text-sm">QR Code Clock-In Standee</h3>
+                <p class="text-xs text-neutral-400">Generate company branded QR code for reception and test live mobile scanner clock-in simulation.</p>
+                <button onclick="switchTab('clockin-qr')" class="text-xs text-brand-amber font-semibold hover:underline flex items-center gap-1">Generate Standee QR &rarr;</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 2: EMPLOYEE LIST                           -->
+          <!-- ============================================== -->
+          <div id="tab-employee-list" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white">Employee Directory</h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Active organizational employee records with departments, roles and designations.</p>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <div class="relative">
+                  <i data-lucide="search" class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                  <input type="text" id="employeeSearchInput" oninput="renderEmployeeTable()" placeholder="Search by name, ID, role..." class="pl-9 pr-4 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber w-48 sm:w-64">
+                </div>
+
+                <button onclick="switchTab('employee-add')" class="px-4 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+                  <i data-lucide="user-plus" class="w-4 h-4"></i>
+                  <span>+ Add Employee</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-xl">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border">
+                    <tr>
+                      <th class="py-3.5 px-4">Employee Profile</th>
+                      <th class="py-3.5 px-4">Employee ID</th>
+                      <th class="py-3.5 px-4">Department &amp; Designation</th>
+                      <th class="py-3.5 px-4">Role &amp; Permissions</th>
+                      <th class="py-3.5 px-4">Phone / Email</th>
+                      <th class="py-3.5 px-4">Status</th>
+                      <th class="py-3.5 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="employeeTableTbody" class="divide-y divide-brand-border/60 text-neutral-300">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 3: ADD EMPLOYEE (3-STEP WIZARD)            -->
+          <!-- ============================================== -->
+          <div id="tab-employee-add" class="tab-content hidden space-y-6">
+            
+            <div class="border-b border-brand-border pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white">Add New Employee</h1>
+                <p class="text-xs text-neutral-400 mt-0.5">3-Step Employee Onboarding Wizard &bull; RBAC, Profile &amp; Document Enrollment</p>
+              </div>
+
+              <!-- Wizard Progress Badges -->
+              <div class="flex items-center gap-2 text-xs font-semibold">
+                <div id="empStepBadge1" class="px-3 py-1 rounded-full bg-brand-amber text-neutral-950 flex items-center gap-1.5 shadow">
+                  <span>1. Role &amp; Dept</span>
+                </div>
+                <span class="text-neutral-600">&rarr;</span>
+                <div id="empStepBadge2" class="px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-neutral-400 flex items-center gap-1.5">
+                  <span>2. Profile Details</span>
+                </div>
+                <span class="text-neutral-600">&rarr;</span>
+                <div id="empStepBadge3" class="px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-neutral-400 flex items-center gap-1.5">
+                  <span>3. Documents</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 1 CONTAINER -->
+            <div id="empStepContainer1" class="space-y-6 bg-brand-surface p-6 sm:p-8 rounded-2xl border border-brand-border">
+              <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                <span>Step 1: Role, Permissions, Department &amp; Designation</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Role Dropdown with + Button -->
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label class="text-xs font-semibold text-neutral-300">Assign Role &amp; Permissions *</label>
+                    <button type="button" onclick="openCreateRoleModal()" class="text-[11px] text-brand-amber hover:underline font-bold flex items-center gap-1">
+                      <span class="w-4 h-4 rounded-full bg-brand-amber/20 flex items-center justify-center font-bold text-xs">+</span>
+                      <span>Add New Role</span>
+                    </button>
+                  </div>
+                  <div class="flex gap-2">
+                    <select id="empFormRoleSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                      <!-- Dynamic roles -->
+                    </select>
+                    <button type="button" onclick="openCreateRoleModal()" title="Create Custom Role with View, Create, Update, Delete Permissions" class="px-3 py-2 rounded-xl bg-brand-amber/10 border border-brand-amber/40 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold transition-all">
+                      +
+                    </button>
+                  </div>
+                  <span class="text-[10px] text-neutral-500 mt-1 block">Click '+' to define granular View, Create, Update, Delete permissions.</span>
+                </div>
+
+                <!-- Department Dropdown -->
+                <div>
+                  <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Department *</label>
+                  <select id="empFormDeptSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                    <option value="Engineering & Technology">Engineering &amp; Technology</option>
+                    <option value="Sales & Business Development">Sales &amp; Business Development</option>
+                    <option value="Human Resources & Talent">Human Resources &amp; Talent</option>
+                    <option value="Finance & Accounts">Finance &amp; Accounts</option>
+                    <option value="Operations & Logistics">Operations &amp; Logistics</option>
+                    <option value="Customer Success">Customer Success</option>
+                  </select>
+                </div>
+
+                <!-- Designation -->
+                <div>
+                  <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Designation Title *</label>
+                  <input type="text" id="empFormDesignation" placeholder="e.g. Senior Backend Engineer / Field Sales Officer" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                </div>
+
+                <!-- Work Location / Branch -->
+                <div>
+                  <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Work Location / Branch *</label>
+                  <select id="empFormBranch" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                    <option value="Mumbai Head Office (BKC)">Mumbai Head Office (BKC)</option>
+                    <option value="Bengaluru Tech Park">Bengaluru Tech Park</option>
+                    <option value="Gurugram Cyber City">Gurugram Cyber City</option>
+                    <option value="Remote / Field">Remote / Field (Lat-Long Clock-In)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Next Button -->
+              <div class="pt-4 border-t border-brand-border flex justify-end">
+                <button type="button" onclick="goToEmpWizardStep(2)" class="px-6 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs tracking-wide shadow transition-all flex items-center gap-2">
+                  <span>Next: Employee Profile &rarr;</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 2 CONTAINER -->
+            <div id="empStepContainer2" class="hidden space-y-6 bg-brand-surface p-6 sm:p-8 rounded-2xl border border-brand-border">
+              <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="user" class="w-4 h-4"></i>
+                <span>Step 2: Employee Profile &amp; Statutory HRMS Details</span>
+              </div>
+
+              <!-- Auto-generated Info Bar -->
+              <div class="p-4 rounded-xl bg-brand-dark border border-brand-border/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div class="text-xs text-neutral-400">Company Auto-Generated Employee ID:</div>
+                  <div class="text-lg font-extrabold text-brand-amber font-mono mt-0.5" id="empAutoDisplayId">EMP-AGT-0105</div>
+                </div>
+
+                <label class="flex items-center gap-2.5 cursor-pointer bg-brand-surface px-3.5 py-2 rounded-xl border border-brand-border">
+                  <input type="checkbox" id="empAutoGenerateCreds" checked onchange="toggleCredsGen()" class="rounded border-brand-border text-brand-amber focus:ring-0">
+                  <span class="text-xs text-neutral-300 font-medium">Auto-generate Portal Username &amp; Password</span>
+                </label>
+              </div>
+
+              <div id="generatedCredsPreview" class="p-3.5 rounded-xl bg-brand-amber/5 border border-brand-amber/30 text-xs text-neutral-300 flex items-center justify-between">
+                <span>Credentials will be auto-generated and dispatched to official email on submit.</span>
+                <span class="font-mono text-brand-amber">Default: emp.[firstname] / Pass: Sora@2026</span>
+              </div>
+
+              <!-- Personal & Employment Fields -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs text-neutral-300 font-semibold mb-1">First Name *</label>
+                  <input type="text" id="empFormFirstName" required placeholder="e.g. Ananya" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
+                </div>
+                <div>
+                  <label class="block text-xs text-neutral-300 font-semibold mb-1">Last Name *</label>
+                  <input type="text" id="empFormLastName" required placeholder="e.g. Verma" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
+                </div>
+                <div>
+                  <label class="block text-xs text-neutral-300 font-semibold mb-1">Official Work Email *</label>
+                  <input type="email" id="empFormOfficialEmail" required placeholder="ananya.v@apextech.com" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
+                </div>
+
+                <div>
+                  <label class="block text-xs text-neutral-300 font-semibold mb-1">Contact Phone *</label>
+                  <input type="tel" id="empFormPhone" required placeholder="+91 98765 43210" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
+                </div>
+                <div>
+                  <label class="block text-xs text-neutral-300 font-semibold mb-1">Date of Joining *</label>
+                  <input type="date" id="empFormDoj" value="2026-11-01" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
+                </div>
+                <div>
+                  <label class="block text-xs text-neutral-300 font-semibold mb-1">Employment Type</label>
+                  <select id="empFormType" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
+                    <option value="Full-Time Permanent">Full-Time Permanent</option>
+                    <option value="Contractual">Contractual</option>
+                    <option value="Probationary">Probationary (6 Months)</option>
+                    <option value="Internship">Internship</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs text-neutral-300 font-semibold mb-1">Base Monthly Gross CTC (&#8377;)</label>
+                  <input type="number" id="empFormSalary" value="65000" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white font-mono">
+                </div>
+                <div>
+                  <label class="block text-xs text-neutral-300 font-semibold mb-1">Bank Account Number</label>
+                  <input type="text" id="empFormBankAc" placeholder="50100098234102" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white font-mono">
+                </div>
+                <div>
+                  <label class="block text-xs text-neutral-300 font-semibold mb-1">Bank IFSC Code</label>
+                  <input type="text" id="empFormBankIfsc" placeholder="HDFC0000240" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white font-mono uppercase">
+                </div>
+              </div>
+
+              <!-- Navigation -->
+              <div class="pt-4 border-t border-brand-border flex items-center justify-between">
+                <button type="button" onclick="goToEmpWizardStep(1)" class="px-5 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">
+                  &larr; Back to Step 1
+                </button>
+                <button type="button" onclick="goToEmpWizardStep(3)" class="px-6 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs tracking-wide shadow flex items-center gap-2">
+                  <span>Next: Upload Documents &rarr;</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 3 CONTAINER -->
+            <div id="empStepContainer3" class="hidden space-y-6 bg-brand-surface p-6 sm:p-8 rounded-2xl border border-brand-border">
+              <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                <span>Step 3: Document Uploads &amp; Photo Identification</span>
+              </div>
+
+              <!-- Photo & Resume Required -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Profile Image -->
+                <div class="p-4 rounded-xl bg-brand-dark border border-brand-border space-y-3">
+                  <div class="flex items-center justify-between">
+                    <label class="text-xs font-bold text-white">Employee Profile Photo * <span class="text-brand-amber">(Required)</span></label>
+                  </div>
+                  <div class="flex items-center gap-4">
+                    <div id="empPhotoPreview" class="w-20 h-20 rounded-2xl bg-brand-surface border border-brand-border flex items-center justify-center text-neutral-500 overflow-hidden">
+                      <i data-lucide="user" class="w-8 h-8"></i>
+                    </div>
+                    <div class="flex-grow space-y-2">
+                      <input type="file" id="empPhotoInput" accept="image/*" onchange="previewProfilePhoto(event)" class="text-xs text-neutral-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-amber file:text-neutral-950 hover:file:bg-brand-amberLight cursor-pointer">
+                      <p class="text-[10px] text-neutral-500">JPG, PNG or WebP up to 5MB.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Resume Upload -->
+                <div class="p-4 rounded-xl bg-brand-dark border border-brand-border space-y-3">
+                  <div class="flex items-center justify-between">
+                    <label class="text-xs font-bold text-white">Candidate Resume / CV * <span class="text-brand-amber">(Required)</span></label>
+                  </div>
+                  <input type="file" id="empResumeInput" accept=".pdf,.doc,.docx" onchange="handleResumeSelected(event)" class="text-xs text-neutral-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-amber file:text-neutral-950 hover:file:bg-brand-amberLight cursor-pointer">
+                  <div id="resumeSelectedBadge" class="hidden text-xs text-emerald-400 font-medium flex items-center gap-1.5">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    <span id="resumeFileName">Resume_Ananya_Verma.pdf</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dynamic Additional Documents -->
+              <div class="space-y-3 pt-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-white">Additional Identification &amp; Statutory Documents (Optional)</span>
+                  <button type="button" onclick="addCustomDocField()" class="text-xs text-brand-amber hover:underline font-semibold">+ Add Other Document</button>
+                </div>
+
+                <div id="additionalDocsContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div class="p-3 rounded-xl bg-brand-dark border border-brand-border flex items-center justify-between">
+                    <span>Aadhaar Card (Govt ID)</span>
+                    <input type="file" class="w-28 text-[10px] text-neutral-500">
+                  </div>
+                  <div class="p-3 rounded-xl bg-brand-dark border border-brand-border flex items-center justify-between">
+                    <span>PAN Card</span>
+                    <input type="file" class="w-28 text-[10px] text-neutral-500">
+                  </div>
+                  <div class="p-3 rounded-xl bg-brand-dark border border-brand-border flex items-center justify-between">
+                    <span>Degree Certificate</span>
+                    <input type="file" class="w-28 text-[10px] text-neutral-500">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Navigation & Submit -->
+              <div class="pt-4 border-t border-brand-border flex items-center justify-between">
+                <button type="button" onclick="goToEmpWizardStep(2)" class="px-5 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">
+                  &larr; Back to Step 2
+                </button>
+                <button type="button" onclick="submitNewEmployee()" class="px-7 py-3 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs tracking-wide shadow-lg shadow-brand-amber/25 flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                  <span>Complete &amp; Enroll Employee</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 4: IMPORT & EXPORT (USERS)                 -->
+          <!-- ============================================== -->
+          <div id="tab-import-export-users" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white">User Data Import &amp; Export</h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Bulk data operations for organizational personnel records (excluding documents).</p>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button onclick="openExportModal()" class="px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber/50 text-white font-semibold text-xs flex items-center gap-2">
+                  <i data-lucide="download" class="w-4 h-4 text-brand-amber"></i>
+                  <span>Export Users</span>
+                </button>
+                <button onclick="openImportModal()" class="px-4 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+                  <i data-lucide="upload" class="w-4 h-4"></i>
+                  <span>Import Users</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Info Card -->
+            <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border space-y-3">
+              <div class="flex items-center gap-2 text-xs font-bold text-brand-amber uppercase">
+                <i data-lucide="info" class="w-4 h-4"></i>
+                <span>Group By Role Export &amp; Template Generation</span>
+              </div>
+              <p class="text-xs text-neutral-300 leading-relaxed max-w-3xl">
+                You can filter by specific organizational roles (Sales, Engineering, Operations, Executive) and choose whether to export <strong>With Existing Personnel Data</strong> or as a <strong>Blank Excel Template</strong> ready for clean batch importing.
+              </p>
+            </div>
+
+            <!-- Recent Data Exports / Imports Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+              <div class="p-4 border-b border-brand-border font-bold text-xs text-white">Recent Data Import / Export Operations</div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+                    <tr>
+                      <th class="py-3 px-4">Date &amp; Time</th>
+                      <th class="py-3 px-4">Operation</th>
+                      <th class="py-3 px-4">Target Role / Group</th>
+                      <th class="py-3 px-4">Mode</th>
+                      <th class="py-3 px-4">Records Count</th>
+                      <th class="py-3 px-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-brand-border/40 text-neutral-300">
+                    <tr>
+                      <td class="py-3 px-4 text-neutral-400">30 Oct 2026, 04:15 PM</td>
+                      <td class="py-3 px-4 font-semibold text-white">Export Users</td>
+                      <td class="py-3 px-4">Sales &amp; Marketing</td>
+                      <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-brand-amber/10 text-brand-amber font-mono">With Data</span></td>
+                      <td class="py-3 px-4 font-mono">24 Employees</td>
+                      <td class="py-3 px-4 text-emerald-400 font-bold">&bull; Completed</td>
+                    </tr>
+                    <tr>
+                      <td class="py-3 px-4 text-neutral-400">28 Oct 2026, 11:30 AM</td>
+                      <td class="py-3 px-4 font-semibold text-white">Import Users</td>
+                      <td class="py-3 px-4">Engineering &amp; Tech</td>
+                      <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono">Batch Insert</span></td>
+                      <td class="py-3 px-4 font-mono">12 Created</td>
+                      <td class="py-3 px-4 text-emerald-400 font-bold">&bull; Completed</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 5: UPLOAD DOCUMENTS ZIP                    -->
+          <!-- ============================================== -->
+          <div id="tab-upload-documents-zip" class="tab-content hidden space-y-6">
+            <div class="border-b border-brand-border pb-4">
+              <h1 class="text-2xl font-bold text-white">Bulk Document ZIP Upload</h1>
+              <p class="text-xs text-neutral-400 mt-0.5">Upload consolidated ZIP archives containing folders or files prefixed with Employee Codes (e.g. EMP-AGT-0101_aadhaar.pdf).</p>
+            </div>
+
+            <!-- ZIP Dropzone -->
+            <div class="p-8 rounded-3xl bg-brand-surface border-2 border-dashed border-brand-amber/40 hover:border-brand-amber text-center space-y-4 transition-all">
+              <div class="w-14 h-14 rounded-2xl bg-brand-amber/10 text-brand-amber border border-brand-amber/30 flex items-center justify-center mx-auto shadow-amber-glow">
+                <i data-lucide="archive" class="w-7 h-7"></i>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white">Drag &amp; Drop Main Document ZIP Archive</h3>
+                <p class="text-xs text-neutral-400 max-w-md mx-auto mt-1">
+                  System automatically unpacks and matches each document to the corresponding employee ID.
+                </p>
+              </div>
+              <div class="flex items-center justify-center gap-3">
+                <input type="file" id="zipFileInput" accept=".zip" onchange="simulateZipUpload(event)" class="hidden">
+                <button type="button" onclick="document.getElementById('zipFileInput').click()" class="px-6 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow">
+                  Browse ZIP File
+                </button>
+              </div>
+            </div>
+
+            <!-- Upload History Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+              <div class="p-4 border-b border-brand-border font-bold text-xs text-white">ZIP Upload History &amp; Extraction Logs</div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+                    <tr>
+                      <th class="py-3 px-4">Upload Timestamp</th>
+                      <th class="py-3 px-4">Archive File Name</th>
+                      <th class="py-3 px-4">Files Extracted</th>
+                      <th class="py-3 px-4">Mapped Employees</th>
+                      <th class="py-3 px-4">Uploaded By</th>
+                      <th class="py-3 px-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="zipAuditLogTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 6: PAYROLL & SALARY SLIPS                  -->
+          <!-- ============================================== -->
+          <div id="tab-payroll" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white">Payroll &amp; Salary Disbursal Master</h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Month-wise compensation calculations, PF/ESIC deductions, TDS, and bulk slip dispatch.</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <select id="payrollMonthSelect" onchange="filterPayrollMonth()" class="px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber font-semibold">
+                  <option value="Oct 2026">October 2026</option>
+                  <option value="Sep 2026">September 2026</option>
+                  <option value="Aug 2026">August 2026</option>
+                </select>
+
+                <button onclick="processBatchPayroll()" class="px-4 py-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber/50 text-white font-semibold text-xs flex items-center gap-1.5">
+                  <i data-lucide="calculator" class="w-4 h-4 text-brand-amber"></i>
+                  <span>Recalculate Batch</span>
+                </button>
+
+                <button onclick="dispatchAllPayslips()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow">
+                  <i data-lucide="send" class="w-4 h-4"></i>
+                  <span>Send All Payslips (Email/WhatsApp)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Payroll Summary Banner -->
+            <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div>
+                <div class="text-[11px] text-neutral-400 uppercase tracking-wider">Gross Payroll Budget</div>
+                <div class="text-xl sm:text-2xl font-black text-white mt-1">&#8377; 68,45,000</div>
+              </div>
+              <div>
+                <div class="text-[11px] text-neutral-400 uppercase tracking-wider">Statutory Deductions (PF/ESIC)</div>
+                <div class="text-xl sm:text-2xl font-black text-amber-400 mt-1">&#8377; 8,21,400</div>
+              </div>
+              <div>
+                <div class="text-[11px] text-neutral-400 uppercase tracking-wider">Net Bank Disbursal</div>
+                <div class="text-xl sm:text-2xl font-black text-emerald-400 mt-1">&#8377; 60,23,600</div>
+              </div>
+              <div>
+                <div class="text-[11px] text-neutral-400 uppercase tracking-wider">Bank Transfer File</div>
+                <button onclick="exportBankSalarySheet()" class="mt-1 text-xs font-bold text-brand-amber hover:underline flex items-center gap-1">
+                  <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+                  <span>Download NEFT Sheet</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Payroll Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+                    <tr>
+                      <th class="py-3 px-4">Employee</th>
+                      <th class="py-3 px-4">Department</th>
+                      <th class="py-3 px-4 text-right">Gross Salary</th>
+                      <th class="py-3 px-4 text-right">PF &amp; ESIC</th>
+                      <th class="py-3 px-4 text-right">TDS (Tax)</th>
+                      <th class="py-3 px-4 text-right">Net Payout</th>
+                      <th class="py-3 px-4 text-center">Status</th>
+                      <th class="py-3 px-4 text-right">Payslip</th>
+                    </tr>
+                  </thead>
+                  <tbody id="payrollTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 7: ATTENDANCE WITH LAT-LONG & MAP          -->
+          <!-- ============================================== -->
+          <div id="tab-attendance-latlong" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white">Attendance with Lat-Long Geofencing</h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Field staff &amp; remote sales GPS coordinates with dual Clock-In / Clock-Out map verification.</p>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <input type="date" value="2026-10-30" class="px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white">
+                <button onclick="showToast('Live GPS Sync', 'Refreshed active mobile coordinates for 18 field staff.')" class="px-4 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                  <span>Refresh GPS</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Attendance Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+                    <tr>
+                      <th class="py-3 px-4">Employee</th>
+                      <th class="py-3 px-4">Date</th>
+                      <th class="py-3 px-4">Clock-In (Lat, Long)</th>
+                      <th class="py-3 px-4">Clock-Out (Lat, Long)</th>
+                      <th class="py-3 px-4">Break Time</th>
+                      <th class="py-3 px-4">Total Hours</th>
+                      <th class="py-3 px-4 text-right">Map View</th>
+                    </tr>
+                  </thead>
+                  <tbody id="attendanceTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 8: LEAVE MANAGEMENT                        -->
+          <!-- ============================================== -->
+          <div id="tab-leave-management" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white">Leave Management (Full / Half Days)</h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Manage Paid Leaves (PL), Casual Leaves (CL), Sick Leaves (SL) and Half-Day sessions.</p>
+              </div>
+              <button onclick="openApplyLeaveModal()" class="px-4 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Apply / Record Leave</span>
+              </button>
+            </div>
+
+            <!-- Leave Requests Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+              <div class="p-4 border-b border-brand-border font-bold text-xs text-white">Pending &amp; Recent Leave Applications</div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+                    <tr>
+                      <th class="py-3 px-4">Employee</th>
+                      <th class="py-3 px-4">Leave Type</th>
+                      <th class="py-3 px-4">Duration Mode</th>
+                      <th class="py-3 px-4">Dates</th>
+                      <th class="py-3 px-4">Reason</th>
+                      <th class="py-3 px-4">Status</th>
+                      <th class="py-3 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leaveRequestsTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 9: CANDIDATE PIPELINE (ATS)                -->
+          <!-- ============================================== -->
+          <div id="tab-candidates" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white">Candidate Recruitment Pipeline</h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Applicant tracking, resume screening, evaluation scorecards, and offer releases.</p>
+              </div>
+              <button onclick="openAddCandidateModal()" class="px-4 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                <span>+ Add Candidate</span>
+              </button>
+            </div>
+
+            <!-- Candidates Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+                    <tr>
+                      <th class="py-3 px-4">Candidate Name</th>
+                      <th class="py-3 px-4">Applied Position</th>
+                      <th class="py-3 px-4">Experience</th>
+                      <th class="py-3 px-4">Expected CTC</th>
+                      <th class="py-3 px-4">Stage</th>
+                      <th class="py-3 px-4">Resume</th>
+                      <th class="py-3 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="candidatesTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 10: OFFER LETTER ENGINE                    -->
+          <!-- ============================================== -->
+          <div id="tab-offer-letters" class="tab-content hidden space-y-6">
+            <div class="border-b border-brand-border pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white">Offer Letter Generator</h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Generate formal company letterhead offer appointments with CTC compensation structures.</p>
+              </div>
+              <button onclick="openOfferGeneratorModal()" class="px-4 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+                <i data-lucide="file-plus" class="w-4 h-4"></i>
+                <span>+ Generate Offer Letter</span>
+              </button>
+            </div>
+
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+              <div class="p-4 border-b border-brand-border font-bold text-xs text-white">Issued Offer Letters Archive</div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+                    <tr>
+                      <th class="py-3 px-4">Candidate</th>
+                      <th class="py-3 px-4">Designation</th>
+                      <th class="py-3 px-4">Department</th>
+                      <th class="py-3 px-4">Annual CTC</th>
+                      <th class="py-3 px-4">Joining Date</th>
+                      <th class="py-3 px-4">Status</th>
+                      <th class="py-3 px-4 text-right">Letter Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="offerLettersTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 11: RESIGNATION & NOTICE PERIOD            -->
+          <!-- ============================================== -->
+          <div id="tab-resignation" class="tab-content hidden space-y-6">
+            <div class="border-b border-brand-border pb-4">
+              <h1 class="text-2xl font-bold text-white">Resignation &amp; Exit Management</h1>
+              <p class="text-xs text-neutral-400 mt-0.5">Notice period calculation, clearance checklists (NDC), exit interviews, and relieving letter generation.</p>
+            </div>
+
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+              <div class="p-4 border-b border-brand-border font-bold text-xs text-white">Active Resignations &amp; Notice Periods</div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+                    <tr>
+                      <th class="py-3 px-4">Employee</th>
+                      <th class="py-3 px-4">Resignation Date</th>
+                      <th class="py-3 px-4">Notice Period</th>
+                      <th class="py-3 px-4">Official LWD</th>
+                      <th class="py-3 px-4">Handover / NDC</th>
+                      <th class="py-3 px-4">Stage</th>
+                      <th class="py-3 px-4 text-right">Relieving Letter</th>
+                    </tr>
+                  </thead>
+                  <tbody id="resignationTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 12: COMPANY POLICY ENGINE                  -->
+          <!-- ============================================== -->
+          <div id="tab-company-policy" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white">Company Policy Creator &amp; Email Dispatcher</h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Draft internal policies here and dispatch instantly to all employees or selected team members.</p>
+              </div>
+              <button onclick="openCreatePolicyModal()" class="px-4 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>+ Draft New Policy</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="policyCardsContainer">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 13: PROMOTION & CTC UPDATE                 -->
+          <!-- ============================================== -->
+          <div id="tab-promotion" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white">Employee Promotions &amp; Salary Appraisal</h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Record title upgrades, revise salary compensation, and generate formal promotion letters.</p>
+              </div>
+              <button onclick="openPromotionModal()" class="px-4 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+                <i data-lucide="trending-up" class="w-4 h-4"></i>
+                <span>+ Process Promotion</span>
+              </button>
+            </div>
+
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+              <div class="p-4 border-b border-brand-border font-bold text-xs text-white">Promotion &amp; Increment History</div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+                    <tr>
+                      <th class="py-3 px-4">Employee</th>
+                      <th class="py-3 px-4">Previous Designation</th>
+                      <th class="py-3 px-4">Promoted Designation</th>
+                      <th class="py-3 px-4 text-right">Old CTC</th>
+                      <th class="py-3 px-4 text-right">New CTC</th>
+                      <th class="py-3 px-4 text-center">Increment %</th>
+                      <th class="py-3 px-4 text-right">Letter</th>
+                    </tr>
+                  </thead>
+                  <tbody id="promotionHistoryTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB 14: CLOCK-IN QR CODE STANDEE & SCANNER     -->
+          <!-- ============================================== -->
+          <div id="tab-clockin-qr" class="tab-content hidden space-y-6">
+            <div class="border-b border-brand-border pb-4">
+              <h1 class="text-2xl font-bold text-white">Office Reception Standee QR Clock-In</h1>
+              <p class="text-xs text-neutral-400 mt-0.5">Generate company-branded QR code standee for touchless office entrance clock-in.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+              
+              <!-- QR Code Card -->
+              <div class="bg-brand-surface p-8 rounded-3xl border border-brand-border text-center space-y-6 shadow-xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-amber/10 border border-brand-amber/30 text-xs font-bold text-brand-amber uppercase">
+                  <span>Official Attendance Standee</span>
+                </div>
+
+                <div class="p-6 bg-white rounded-3xl inline-block shadow-2xl mx-auto" id="qrCodeContainer">
+                  <!-- QR Code Rendered Here -->
+                </div>
+
+                <div>
+                  <h3 class="text-lg font-bold text-white">Apex Global Technologies Pvt Ltd</h3>
+                  <p class="text-xs text-neutral-400 mt-1">Scan via SORA Mobile App &bull; Geofenced at BKC Office</p>
+                </div>
+
+                <div class="flex items-center justify-center gap-3">
+                  <button onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-xs text-white hover:border-brand-amber flex items-center gap-2">
+                    <i data-lucide="printer" class="w-4 h-4 text-brand-amber"></i>
+                    <span>Print Standee Poster</span>
+                  </button>
+                  <button onclick="testEmployeeQrScan()" class="px-5 py-2.5 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+                    <i data-lucide="scan" class="w-4 h-4"></i>
+                    <span>Test Mobile Scanner</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Information & How it works -->
+              <div class="space-y-4">
+                <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border space-y-3">
+                  <h4 class="font-bold text-white text-sm flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-brand-amber"></i>
+                    <span>Anti-Proxy Security Features</span>
+                  </h4>
+                  <ul class="text-xs text-neutral-300 space-y-2 list-disc pl-4">
+                    <li>Dynamic cryptographic token embedded in QR code.</li>
+                    <li>Dual verification: Mobile app cross-verifies employee device GPS location with office geofence.</li>
+                    <li>Instant real-time clock-in log recorded into the attendance database with exact timestamp.</li>
+                  </ul>
+                </div>
+
+                <!-- Live Scan Activity Log -->
+                <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border space-y-3">
+                  <div class="font-bold text-white text-xs">Recent QR Scan Clock-Ins Today</div>
+                  <div id="qrScanLiveFeed" class="space-y-2 text-xs text-neutral-400">
+                    <div class="p-2.5 rounded-xl bg-brand-dark flex items-center justify-between">
+                      <span class="text-white font-medium">EMP-AGT-0101 &bull; Vikram Joshi</span>
+                      <span class="text-emerald-400 font-mono">09:12 AM &bull; In Office</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-brand-dark flex items-center justify-between">
+                      <span class="text-white font-medium">EMP-AGT-0102 &bull; Sneha Reddy</span>
+                      <span class="text-emerald-400 font-mono">09:18 AM &bull; In Office</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODALS SECTION                                 -->
+  <!-- ============================================== -->
+
+  <!-- MODAL 1: CREATE CUSTOM ROLE & PERMISSION MATRIX (From Step 1 + Button) -->
+  <div id="modalCreateRole" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      
+      <div class="p-6 border-b border-brand-border flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-bold text-white">Create Custom Role &amp; Permission Matrix</h3>
+          <p class="text-xs text-neutral-400 mt-0.5">Assign granular View (V), Create (C), Update (U), Delete (D) rights for this role.</p>
+        </div>
+        <button onclick="closeModal('modalCreateRole')" class="text-neutral-400 hover:text-white p-1">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-5 overflow-y-auto flex-grow text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Role Title *</label>
+            <input type="text" id="newRoleTitle" placeholder="e.g. Lead Payroll Officer" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Short Description</label>
+            <input type="text" id="newRoleDesc" placeholder="Full control of compensation & compliance" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+
+        <div class="font-bold text-brand-amber uppercase tracking-wider text-[11px] flex items-center justify-between">
+          <span>Module Permissions (View, Create, Update, Delete)</span>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="toggleRoleMatrixAll(true)" class="text-brand-amber hover:underline text-[10px]">All</button>
+            <span class="text-neutral-600">&bull;</span>
+            <button type="button" onclick="toggleRoleMatrixAll(false)" class="text-neutral-400 hover:underline text-[10px]">None</button>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-brand-border overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[#121217] text-neutral-400 uppercase text-[10px]">
+              <tr>
+                <th class="py-2.5 px-3">HRMS Module</th>
+                <th class="py-2.5 px-2 text-center">View (V)</th>
+                <th class="py-2.5 px-2 text-center">Create (C)</th>
+                <th class="py-2.5 px-2 text-center">Update (U)</th>
+                <th class="py-2.5 px-2 text-center">Delete (D)</th>
+              </tr>
+            </thead>
+            <tbody id="roleModalMatrixTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
+        <button onclick="closeModal('modalCreateRole')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">Cancel</button>
+        <button onclick="saveCustomRole()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow">Save &amp; Select Role</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL 2: LAT-LONG ROUTE MAP VIEWER -->
+  <div id="modalLatLongMap" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col">
+      <div class="p-6 border-b border-brand-border flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-brand-amber"></i>
+            <span id="mapModalTitle">Attendance Geo-Location Map</span>
+          </h3>
+          <p class="text-xs text-neutral-400 mt-0.5" id="mapModalSubtitle">Clock-In &amp; Clock-Out GPS Coordinates</p>
+        </div>
+        <button onclick="closeModal('modalLatLongMap')" class="text-neutral-400 hover:text-white text-xl">&times;</button>
+      </div>
+
+      <!-- Map Display Container -->
+      <div id="leafletMapElement" class="w-full h-80 bg-neutral-900"></div>
+
+      <div class="p-4 bg-brand-dark border-t border-brand-border grid grid-cols-2 gap-4 text-xs">
+        <div class="p-3 rounded-xl bg-brand-surface border border-emerald-500/30">
+          <div class="font-bold text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Clock-In Location:
+          </div>
+          <div id="mapClockInDetails" class="text-neutral-300 mt-1 font-mono text-[11px]">19.0760&deg; N, 72.8777&deg; E &bull; 09:15 AM</div>
+        </div>
+        <div class="p-3 rounded-xl bg-brand-surface border border-rose-500/30">
+          <div class="font-bold text-rose-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-rose-400"></span> Clock-Out Location:
+          </div>
+          <div id="mapClockOutDetails" class="text-neutral-300 mt-1 font-mono text-[11px]">19.0825&deg; N, 72.8850&deg; E &bull; 06:40 PM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: EXPORT USERS (ROLE DROPDOWN + WITH/WITHOUT DATA CHECKBOXES) -->
+  <div id="modalExportUsers" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-md p-6 space-y-5 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <h3 class="text-base font-bold text-white">Export Users by Role</h3>
+        <button onclick="closeModal('modalExportUsers')" class="text-neutral-400 hover:text-white">&times;</button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Select Role Group</label>
+          <select id="exportRoleSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white">
+            <option value="ALL">All Roles &amp; Groups</option>
+            <option value="Sales">Sales &amp; Business Development</option>
+            <option value="Engineering">Engineering &amp; Tech</option>
+            <option value="HR">Human Resources</option>
+            <option value="Operations">Operations</option>
+          </select>
+        </div>
+
+        <div class="space-y-2 p-3.5 bg-brand-dark rounded-xl border border-brand-border">
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="radio" name="exportMode" value="with_data" checked class="text-brand-amber">
+            <div>
+              <div class="font-bold text-white">With Existing Data</div>
+              <div class="text-[10px] text-neutral-400">Includes all registered personnel records</div>
+            </div>
+          </label>
+          <label class="flex items-center gap-2.5 cursor-pointer pt-2 border-t border-brand-border/60">
+            <input type="radio" name="exportMode" value="without_data" class="text-brand-amber">
+            <div>
+              <div class="font-bold text-white">Without Data (Blank Template)</div>
+              <div class="text-[10px] text-neutral-400">Generates empty headers template for fresh import</div>
+            </div>
+          </label>
+        </div>
+
+        <p class="text-[10px] text-neutral-500 italic">* Note: Document attachments are excluded from table export.</p>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-brand-border">
+        <button onclick="closeModal('modalExportUsers')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300">Cancel</button>
+        <button onclick="triggerDownloadUsersExport()" class="px-5 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>Download Excel (.csv)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: SALARY SLIP PDF VIEWER -->
+  <div id="modalSalarySlip" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white text-slate-900 rounded-3xl w-full max-w-2xl my-8 overflow-hidden shadow-2xl flex flex-col">
+      <div class="p-4 bg-slate-900 text-white flex items-center justify-between no-print">
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Salary Slip Document Preview</span>
+        <div class="flex items-center gap-2">
+          <button onclick="printSalarySlip()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-white flex items-center gap-1">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>Print</span>
+          </button>
+          <button onclick="downloadSalarySlipPDF()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-xs text-neutral-950 font-bold flex items-center gap-1">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Download PDF</span>
+          </button>
+          <button onclick="closeModal('modalSalarySlip')" class="p-1.5 hover:bg-white/10 rounded-lg text-white">&times;</button>
+        </div>
+      </div>
+
+      <!-- Printable Payslip Area -->
+      <div id="printablePayslip" class="p-8 sm:p-10 space-y-6 text-xs text-slate-800">
+        <!-- Header -->
+        <div class="flex justify-between items-start border-b border-slate-200 pb-4">
+          <div>
+            <div class="text-xl font-black text-slate-900">Apex Global Technologies Pvt Ltd</div>
+            <div class="text-[11px] text-slate-500">BKC Cyber Park, Bandra East, Mumbai 400051</div>
+            <div class="text-[10px] text-slate-500 font-mono mt-0.5">PAN: AAACA9823P &bull; TAN: MUMM12345C</div>
+          </div>
+          <div class="text-right">
+            <div class="text-base font-extrabold text-amber-600 uppercase">Payslip for Oct 2026</div>
+            <div class="text-[11px] text-slate-500">Pay Date: 31-Oct-2026</div>
+          </div>
+        </div>
+
+        <!-- Employee Info Grid -->
+        <div class="grid grid-cols-2 gap-4 border-b border-slate-200 pb-4">
+          <div>
+            <div>Name: <strong id="slipEmpName">Ananya Verma</strong></div>
+            <div>Employee ID: <strong id="slipEmpId">EMP-AGT-0102</strong></div>
+            <div>Department: <span id="slipEmpDept">Sales &amp; Marketing</span></div>
+          </div>
+          <div>
+            <div>Designation: <strong id="slipEmpDesig">Senior Account Executive</strong></div>
+            <div>Bank A/C: <span id="slipEmpBank">50100098234102 (HDFC)</span></div>
+            <div>Working Days: <strong>26 Days</strong> &bull; LOP: <strong>0</strong></div>
+          </div>
+        </div>
+
+        <!-- Earnings & Deductions Table -->
+        <div class="grid grid-cols-2 gap-6 border-b border-slate-200 pb-4">
+          <div>
+            <div class="font-bold text-slate-900 uppercase text-[10px] border-b border-slate-200 pb-1 mb-2">Earnings</div>
+            <div class="flex justify-between py-1"><span>Basic Salary:</span><span id="slipBasic">&#8377; 35,000</span></div>
+            <div class="flex justify-between py-1"><span>HRA:</span><span id="slipHra">&#8377; 17,500</span></div>
+            <div class="flex justify-between py-1"><span>Special Allowance:</span><span id="slipSpecial">&#8377; 12,500</span></div>
+            <div class="flex justify-between py-1 border-t border-slate-200 font-bold"><span>Total Earnings:</span><span id="slipTotalEarnings">&#8377; 65,000</span></div>
+          </div>
+          <div>
+            <div class="font-bold text-slate-900 uppercase text-[10px] border-b border-slate-200 pb-1 mb-2">Deductions</div>
+            <div class="flex justify-between py-1"><span>Provident Fund (PF):</span><span id="slipPf">&#8377; 1,800</span></div>
+            <div class="flex justify-between py-1"><span>Professional Tax (PT):</span><span>&#8377; 200</span></div>
+            <div class="flex justify-between py-1"><span>TDS / Income Tax:</span><span id="slipTds">&#8377; 1,500</span></div>
+            <div class="flex justify-between py-1 border-t border-slate-200 font-bold"><span>Total Deductions:</span><span id="slipTotalDeductions">&#8377; 3,500</span></div>
+          </div>
+        </div>
+
+        <!-- Net Salary -->
+        <div class="p-4 bg-amber-50 rounded-2xl flex justify-between items-center border border-amber-200">
+          <div>
+            <div class="text-[10px] uppercase font-bold text-amber-800">Net Take Home Pay:</div>
+            <div class="text-xs text-slate-600" id="slipInWords">Sixty-One Thousand Five Hundred Rupees Only</div>
+          </div>
+          <div class="text-2xl font-black text-amber-600 font-mono" id="slipNetPay">&#8377; 61,500</div>
+        </div>
+
+        <div class="flex justify-between items-end pt-4 text-[10px] text-slate-400">
+          <div>This is a computer-generated payslip authenticated by SORA HR Technologies.</div>
+          <div class="text-center font-bold text-slate-700">
+            <div>Authorized Signatory</div>
+            <div class="text-slate-500 font-normal">Apex Global Technologies</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="adminToast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-brand-surface border border-brand-amber/40 shadow-amber-glow px-4 py-3 rounded-2xl flex items-center gap-3">
+      <div class="w-8 h-8 rounded-xl bg-brand-amber/20 text-brand-amber flex items-center justify-center font-bold text-xs">
+        <i data-lucide="check" class="w-4 h-4"></i>
+      </div>
+      <div>
+        <div id="adminToastTitle" class="text-xs font-bold text-white">Success</div>
+        <div id="adminToastMsg" class="text-[11px] text-neutral-400">Action processed.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // INITIAL DATA STORES & STATE
+    // ==========================================
+    const appState = {
+      isLoggedIn: true,
+      currentTab: 'dashboard',
+      roles: [
+        { id: 'role_hr_exec', title: 'HR Executive', desc: 'Employee onboarding, attendance & leave', perms: { v: true, c: true, u: true, d: false } },
+        { id: 'role_sales_lead', title: 'Field Sales Lead', desc: 'Client deals, lat-long attendance', perms: { v: true, c: true, u: false, d: false } },
+        { id: 'role_tech_lead', title: 'Senior Tech Lead', desc: 'Engineering directory & team appraisals', perms: { v: true, c: false, u: false, d: false } },
+        { id: 'role_payroll_mgr', title: 'Payroll Manager', desc: 'Full compensation, tax & slip engine', perms: { v: true, c: true, u: true, d: true } }
+      ],
+      employees: [
+        { id: 'EMP-AGT-0101', name: 'Vikram Joshi', role: 'Field Sales Lead', dept: 'Sales & Business Development', email: 'vikram.j@apextech.com', phone: '+91 98201 12345', salary: 75000, status: 'Active' },
+        { id: 'EMP-AGT-0102', name: 'Ananya Verma', role: 'Senior Account Executive', dept: 'Sales & Business Development', email: 'ananya.v@apextech.com', phone: '+91 98202 23456', salary: 65000, status: 'Active' },
+        { id: 'EMP-AGT-0103', name: 'Rohan Mehra', role: 'HR Executive', dept: 'Human Resources & Talent', email: 'rohan.m@apextech.com', phone: '+91 98203 34567', salary: 85000, status: 'Active' },
+        { id: 'EMP-AGT-0104', name: 'Pooja Iyer', role: 'Full Stack Engineer', dept: 'Engineering & Technology', email: 'pooja.i@apextech.com', phone: '+91 98204 45678', salary: 95000, status: 'Active' }
+      ],
+      attendance: [
+        { empId: 'EMP-AGT-0101', name: 'Vikram Joshi', date: '30 Oct 2026', inTime: '09:15 AM', inLat: 19.0760, inLng: 72.8777, outTime: '06:40 PM', outLat: 19.0825, outLng: 72.8850, breakTime: '45 Min', hours: '9h 25m' },
+        { empId: 'EMP-AGT-0102', name: 'Ananya Verma', date: '30 Oct 2026', inTime: '09:28 AM', inLat: 19.1136, inLng: 72.8697, outTime: '06:30 PM', outLat: 19.1150, outLng: 72.8710, breakTime: '30 Min', hours: '9h 02m' },
+        { empId: 'EMP-AGT-0104', name: 'Pooja Iyer', date: '30 Oct 2026', inTime: '09:05 AM', inLat: 19.0650, inLng: 72.8670, outTime: '06:10 PM', outLat: 19.0650, outLng: 72.8670, breakTime: '60 Min', hours: '9h 05m' }
+      ],
+      leaves: [
+        { id: 'L-101', name: 'Pooja Iyer', type: 'Casual Leave (CL)', mode: 'Full Day', dates: '03 Nov - 04 Nov 2026', reason: 'Family Function in Pune', status: 'Pending' },
+        { id: 'L-102', name: 'Vikram Joshi', type: 'Paid Leave (PL)', mode: 'Half-Day (Second Half)', dates: '02 Nov 2026', reason: 'Personal Bank Errand', status: 'Pending' },
+        { id: 'L-103', name: 'Ananya Verma', type: 'Sick Leave (SL)', mode: 'Full Day', dates: '29 Oct 2026', reason: 'Viral Fever & Doctor Visit', status: 'Approved' }
+      ],
+      candidates: [
+        { name: 'Kavita Sundaram', pos: 'Product Marketing Manager', exp: '6 Years', ctc: '₹ 18,00,000', stage: 'Final Round', score: '94%' },
+        { name: 'Aditya Nair', pos: 'DevOps & Cloud Engineer', exp: '4 Years', ctc: '₹ 14,50,000', stage: 'Selected', score: '98%' },
+        { name: 'Siddharth Rao', pos: 'Corporate Sales Specialist', exp: '3 Years', ctc: '₹ 9,00,000', stage: 'Screening', score: '82%' }
+      ],
+      offers: [
+        { name: 'Aditya Nair', desig: 'DevOps & Cloud Engineer', dept: 'Engineering', ctc: '₹ 14,50,000', doj: '15 Nov 2026', status: 'Sent via Email' }
+      ],
+      resignations: [
+        { name: 'Harsh Vardhan', resDate: '15 Oct 2026', notice: '60 Days', lwd: '14 Dec 2026', handover: '75% Complete', stage: 'Notice Period Active' },
+        { name: 'Megha Sen', resDate: '20 Oct 2026', notice: '30 Days', lwd: '19 Nov 2026', handover: '40% Complete', stage: 'Exit Interview Done' }
+      ],
+      policies: [
+        { id: 'P-1', title: 'Hybrid Work & Lat-Long Attendance Policy 2026', cat: 'Operations & Attendance', updated: '28 Oct 2026', desc: 'Guidelines for remote clock-in within 500m geofence and office standee QR scanning.' },
+        { id: 'P-2', title: 'POSH (Prevention of Sexual Harassment) Guidelines', cat: 'Statutory & Governance', updated: '15 Oct 2026', desc: 'Zero tolerance workplace safety charter with Internal Complaints Committee (ICC) contacts.' }
+      ],
+      promotions: [
+        { name: 'Ananya Verma', oldDesig: 'Account Executive', newDesig: 'Senior Account Executive', oldCtc: '₹ 7,80,000', newCtc: '₹ 9,20,000', inc: '+18%' },
+        { name: 'Pooja Iyer', oldDesig: 'Software Engineer', newDesig: 'Full Stack Engineer', oldCtc: '₹ 9,50,000', newCtc: '₹ 11,40,000', inc: '+20%' }
+      ],
+      zipLogs: [
+        { date: '29 Oct 2026, 05:20 PM', file: 'EMP_DOCS_BATCH_Q4.zip', count: '48 Files', mapped: '16 Employees', user: 'Rohan Mehra', status: 'Success' },
+        { date: '22 Oct 2026, 11:10 AM', file: 'SALES_TEAM_KYC.zip', count: '24 Files', mapped: '12 Employees', user: 'Rohan Mehra', status: 'Success' }
+      ]
+    };
+
+    // ==========================================
+    // ROUTING & TAB NAVIGATION
+    // ==========================================
+    function switchTab(tabId) {
+      appState.currentTab = tabId;
+
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const activeEl = document.getElementById(`tab-${tabId}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      // Update sidebar active highlights
+      document.querySelectorAll('.sidebar-btn').forEach(btn => {
+        btn.classList.remove('text-brand-amber', 'bg-brand-surface', 'border', 'border-brand-amber/30');
+      });
+
+      const navBtn = document.getElementById(`nav-${tabId}`);
+      if (navBtn) {
+        navBtn.classList.add('text-brand-amber', 'bg-brand-surface', 'border', 'border-brand-amber/30');
+      }
+
+      // Update Breadcrumb
+      const names = {
+        'dashboard': 'Dashboard Overview',
+        'employee-list': 'Employee Directory',
+        'employee-add': 'Add Employee (Wizard)',
+        'import-export-users': 'User Data Import & Export',
+        'upload-documents-zip': 'Upload Documents ZIP',
+        'payroll': 'Payroll & Salary Slips',
+        'attendance-latlong': 'Attendance Lat-Long Geofence',
+        'leave-management': 'Leave Management',
+        'candidates': 'Candidate Pipeline',
+        'offer-letters': 'Offer Letter Engine',
+        'resignation': 'Resignation & Exit',
+        'company-policy': 'Company Policies',
+        'promotion': 'Promotion & Increment',
+        'clockin-qr': 'Clock-In QR Code'
+      };
+      document.getElementById('currentTabBreadcrumb').innerText = names[tabId] || 'Admin Portal';
+
+      if (tabId === 'employee-list') renderEmployeeTable();
+      if (tabId === 'payroll') renderPayrollTable();
+      if (tabId === 'attendance-latlong') renderAttendanceTable();
+      if (tabId === 'leave-management') renderLeaveTable();
+      if (tabId === 'candidates') renderCandidateTable();
+      if (tabId === 'offer-letters') renderOfferTable();
+      if (tabId === 'resignation') renderResignationTable();
+      if (tabId === 'company-policy') renderPolicyCards();
+      if (tabId === 'promotion') renderPromotionTable();
+      if (tabId === 'upload-documents-zip') renderZipAuditTable();
+      if (tabId === 'clockin-qr') renderQrCodeStandee();
+
+      lucide.createIcons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleMenu(menuId) {
+      const sub = document.getElementById(`sub-${menuId}`);
+      const chv = document.getElementById(`chv-${menuId}`);
+      sub.classList.toggle('hidden');
+      chv.style.transform = sub.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    // ==========================================
+    // 1. AUTH LOGIC (OTP & 2FA)
+    // ==========================================
+    function switchAdminAuthMode(mode) {
+      const tabOtp = document.getElementById('adminAuthTabOtp');
+      const tab2fa = document.getElementById('adminAuthTab2fa');
+      const modeOtp = document.getElementById('adminAuthModeOtp');
+      const mode2fa = document.getElementById('adminAuthMode2fa');
+
+      if (mode === 'otp') {
+        tabOtp.className = "flex-1 py-2.5 rounded-xl bg-brand-amber text-neutral-950 font-extrabold shadow transition-all flex items-center justify-center gap-2";
+        tab2fa.className = "flex-1 py-2.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2";
+        modeOtp.classList.remove('hidden');
+        mode2fa.classList.add('hidden');
+      } else {
+        tab2fa.className = "flex-1 py-2.5 rounded-xl bg-brand-amber text-neutral-950 font-extrabold shadow transition-all flex items-center justify-center gap-2";
+        tabOtp.className = "flex-1 py-2.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2";
+        mode2fa.classList.remove('hidden');
+        modeOtp.classList.add('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    function sendAdminOtp() {
+      const target = document.getElementById('adminOtpInput').value.trim();
+      document.getElementById('adminOtpDisplayEmail').innerText = target;
+      document.getElementById('adminOtpStep1').classList.add('hidden');
+      document.getElementById('adminOtpStep2').classList.remove('hidden');
+      showToast('OTP Sent', `6-digit authentication code sent to ${target}`);
+      lucide.createIcons();
+    }
+
+    function adminLoginSuccess(mode) {
+      appState.isLoggedIn = true;
+      document.getElementById('view-admin-login').classList.add('hidden');
+      document.getElementById('view-admin-portal').classList.remove('hidden');
+      showToast('Welcome Rohan Mehra', `Authenticated as Company Admin via ${mode}`);
+      switchTab('dashboard');
+    }
+
+    function adminLogout() {
+      appState.isLoggedIn = false;
+      document.getElementById('view-admin-portal').classList.add('hidden');
+      document.getElementById('view-admin-login').classList.remove('hidden');
+      showToast('Logged Out', 'Company Admin session closed safely.');
+    }
+
+    // ==========================================
+    // 2. EMPLOYEE MANAGEMENT & 3-STEP WIZARD
+    // ==========================================
+    function renderEmployeeTable() {
+      const q = document.getElementById('employeeSearchInput')?.value?.toLowerCase().trim() || '';
+      const tbody = document.getElementById('employeeTableTbody');
+      
+      const filtered = appState.employees.filter(e => 
+        e.name.toLowerCase().includes(q) ||
+        e.id.toLowerCase().includes(q) ||
+        e.role.toLowerCase().includes(q) ||
+        e.dept.toLowerCase().includes(q)
+      );
+
+      tbody.innerHTML = filtered.map(emp => `
+        <tr class="hover:bg-brand-card/40 transition-colors">
+          <td class="py-3.5 px-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-brand-amber/20 text-brand-amber border border-brand-amber font-bold text-xs flex items-center justify-center">
+                ${emp.name.split(' ').map(n=>n[0]).join('')}
+              </div>
+              <div>
+                <div class="font-bold text-white text-xs">${emp.name}</div>
+                <div class="text-[11px] text-neutral-400">${emp.email}</div>
+              </div>
+            </div>
+          </td>
+          <td class="py-3.5 px-4 font-mono font-bold text-amber-300">${emp.id}</td>
+          <td class="py-3.5 px-4">
+            <div class="font-medium text-white">${emp.dept}</div>
+            <div class="text-[11px] text-neutral-400">CTC: &#8377; ${emp.salary.toLocaleString('en-IN')}/mo</div>
+          </td>
+          <td class="py-3.5 px-4">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-brand-dark border border-brand-border text-brand-amber font-semibold text-[10px]">
+              ${emp.role}
+            </span>
+          </td>
+          <td class="py-3.5 px-4 text-neutral-400">${emp.phone}</td>
+          <td class="py-3.5 px-4">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${emp.status}
+            </span>
+          </td>
+          <td class="py-3.5 px-4 text-right">
+            <button onclick="viewEmployeePayslip('${emp.id}')" class="p-1.5 text-neutral-400 hover:text-brand-amber" title="Salary Slip">
+              <i data-lucide="receipt" class="w-4 h-4"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      document.getElementById('statTotalEmployees').innerText = appState.employees.length;
+      lucide.createIcons();
+    }
+
+    function populateRoleDropdown() {
+      const select = document.getElementById('empFormRoleSelect');
+      select.innerHTML = appState.roles.map(r => `
+        <option value="${r.title}">${r.title} (${r.desc})</option>
+      `).join('');
+    }
+
+    function goToEmpWizardStep(stepNum) {
+      [1, 2, 3].forEach(s => {
+        document.getElementById(`empStepContainer${s}`).classList.add('hidden');
+        document.getElementById(`empStepBadge${s}`).className = "px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-neutral-400 flex items-center gap-1.5";
+      });
+
+      document.getElementById(`empStepContainer${stepNum}`).classList.remove('hidden');
+      document.getElementById(`empStepBadge${stepNum}`).className = "px-3 py-1 rounded-full bg-brand-amber text-neutral-950 font-bold flex items-center gap-1.5 shadow";
+
+      if (stepNum === 2) {
+        const nextIdNum = appState.employees.length + 101;
+        document.getElementById('empAutoDisplayId').innerText = `EMP-AGT-0${nextIdNum}`;
+      }
+      lucide.createIcons();
+    }
+
+    function previewProfilePhoto(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          document.getElementById('empPhotoPreview').innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleResumeSelected(e) {
+      const file = e.target.files[0];
+      if (file) {
+        document.getElementById('resumeFileName').innerText = file.name;
+        document.getElementById('resumeSelectedBadge').classList.remove('hidden');
+      }
+    }
+
+    function addCustomDocField() {
+      const title = prompt('Enter Document Name (e.g. Passport, Driving License, Offer Letter):');
+      if (!title) return;
+      const c = document.getElementById('additionalDocsContainer');
+      const div = document.createElement('div');
+      div.className = "p-3 rounded-xl bg-brand-dark border border-brand-border flex items-center justify-between";
+      div.innerHTML = `<span>${title}</span><input type="file" class="w-28 text-[10px] text-neutral-500">`;
+      c.appendChild(div);
+    }
+
+    function submitNewEmployee() {
+      const first = document.getElementById('empFormFirstName').value.trim();
+      const last = document.getElementById('empFormLastName').value.trim();
+      const email = document.getElementById('empFormOfficialEmail').value.trim();
+      const role = document.getElementById('empFormRoleSelect').value;
+      const dept = document.getElementById('empFormDeptSelect').value;
+      const phone = document.getElementById('empFormPhone').value.trim();
+      const salary = parseInt(document.getElementById('empFormSalary').value) || 50000;
+      const empId = document.getElementById('empAutoDisplayId').innerText;
+
+      if (!first || !email) {
+        showToast('Required Fields', 'First Name and Official Work Email are required.');
+        return;
+      }
+
+      appState.employees.push({
+        id: empId,
+        name: `${first} ${last}`,
+        role: role,
+        dept: dept,
+        email: email,
+        phone: phone || '+91 98000 00000',
+        salary: salary,
+        status: 'Active'
+      });
+
+      showToast('Employee Enrolled!', `${first} ${last} added as ${empId}`);
+      switchTab('employee-list');
+    }
+
+    // Role Modal Matrix Logic (Triggered from + button)
+    function openCreateRoleModal() {
+      document.getElementById('modalCreateRole').classList.remove('hidden');
+      const tbody = document.getElementById('roleModalMatrixTbody');
+      const modules = ['Employee Directory', 'Attendance & Lat-Long', 'Leave Management', 'Payroll Engine', 'Recruitment ATS', 'Company Policies'];
+      tbody.innerHTML = modules.map((m, i) => `
+        <tr class="hover:bg-brand-surface/60">
+          <td class="py-2.5 px-3 font-semibold text-white">${m}</td>
+          <td class="py-2.5 px-2 text-center"><input type="checkbox" checked class="role-chk role-v rounded text-brand-amber"></td>
+          <td class="py-2.5 px-2 text-center"><input type="checkbox" checked class="role-chk role-c rounded text-brand-amber"></td>
+          <td class="py-2.5 px-2 text-center"><input type="checkbox" ${i < 3 ? 'checked' : ''} class="role-chk role-u rounded text-brand-amber"></td>
+          <td class="py-2.5 px-2 text-center"><input type="checkbox" ${i === 0 ? 'checked' : ''} class="role-chk role-d rounded text-brand-amber"></td>
+        </tr>
+      `).join('');
+    }
+
+    function toggleRoleMatrixAll(state) {
+      document.querySelectorAll('.role-chk').forEach(c => c.checked = state);
+    }
+
+    function saveCustomRole() {
+      const title = document.getElementById('newRoleTitle').value.trim();
+      const desc = document.getElementById('newRoleDesc').value.trim();
+      if (!title) {
+        showToast('Role Name Missing', 'Please enter a title for this role.');
+        return;
+      }
+
+      const newRole = { id: 'role_' + Date.now(), title, desc: desc || 'Custom role with V/C/U/D permissions', perms: { v: true, c: true, u: true, d: false } };
+      appState.roles.push(newRole);
+      populateRoleDropdown();
+      document.getElementById('empFormRoleSelect').value = title;
+      closeModal('modalCreateRole');
+      showToast('Role Created', `${title} saved with custom permissions matrix.`);
+    }
+
+    // ==========================================
+    // 3. GROUP IMPORT & EXPORT
+    // ==========================================
+    function openExportModal() {
+      document.getElementById('modalExportUsers').classList.remove('hidden');
+    }
+
+    function triggerDownloadUsersExport() {
+      const role = document.getElementById('exportRoleSelect').value;
+      const mode = document.querySelector('input[name="exportMode"]:checked').value;
+      closeModal('modalExportUsers');
+
+      const filename = `SORA_AGT_Users_${role}_${mode}.csv`;
+      let csvContent = "data:text/csv;charset=utf-8,Employee_ID,Full_Name,Department,Designation,Official_Email,Phone,Base_Salary,Status\n";
+      
+      if (mode === 'with_data') {
+        appState.employees.forEach(e => {
+          csvContent += `${e.id},"${e.name}","${e.dept}","${e.role}","${e.email}","${e.phone}",${e.salary},${e.status}\n`;
+        });
+      }
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('Export Complete', `Downloaded ${filename}`);
+    }
+
+    function openImportModal() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.csv';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        if (file) {
+          showToast('Importing Users...', `Parsed ${file.name}. 14 records processed.`);
+        }
+      };
+      input.click();
+    }
+
+    function simulateZipUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        showToast('Processing ZIP Archive...', `Extracting & mapping ${file.name}`);
+        setTimeout(() => {
+          appState.zipLogs.unshift({
+            date: 'Just now',
+            file: file.name,
+            count: '36 Documents',
+            mapped: `${appState.employees.length} Employees`,
+            user: 'Rohan Mehra',
+            status: 'Success'
+          });
+          renderZipAuditTable();
+          showToast('Documents Mapped!', `36 files successfully linked to employee codes.`);
+        }, 1200);
+      }
+    }
+
+    function renderZipAuditTable() {
+      const tbody = document.getElementById('zipAuditLogTbody');
+      tbody.innerHTML = appState.zipLogs.map(l => `
+        <tr class="hover:bg-brand-card/40">
+          <td class="py-3 px-4 text-neutral-400">${l.date}</td>
+          <td class="py-3 px-4 font-mono font-bold text-brand-amber">${l.file}</td>
+          <td class="py-3 px-4 font-semibold text-white">${l.count}</td>
+          <td class="py-3 px-4">${l.mapped}</td>
+          <td class="py-3 px-4 text-neutral-400">${l.user}</td>
+          <td class="py-3 px-4 text-emerald-400 font-bold">&bull; ${l.status}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ==========================================
+    // 4. PAYROLL & SALARY SLIPS
+    // ==========================================
+    function renderPayrollTable() {
+      const tbody = document.getElementById('payrollTableTbody');
+      tbody.innerHTML = appState.employees.map(emp => {
+        const pf = 1800;
+        const tds = Math.round(emp.salary * 0.05);
+        const pt = 200;
+        const net = emp.salary - pf - tds - pt;
+
+        return `
+          <tr class="hover:bg-brand-card/40">
+            <td class="py-3 px-4">
+              <div class="font-bold text-white text-xs">${emp.name}</div>
+              <div class="text-[10px] text-brand-amber font-mono">${emp.id}</div>
+            </td>
+            <td class="py-3 px-4 text-neutral-400">${emp.dept}</td>
+            <td class="py-3 px-4 text-right font-mono font-semibold text-white">&#8377; ${emp.salary.toLocaleString('en-IN')}</td>
+            <td class="py-3 px-4 text-right font-mono text-amber-400">&#8377; ${pf + pt}</td>
+            <td class="py-3 px-4 text-right font-mono text-neutral-400">&#8377; ${tds}</td>
+            <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">&#8377; ${net.toLocaleString('en-IN')}</td>
+            <td class="py-3 px-4 text-center">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Generated</span>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <button onclick="viewEmployeePayslip('${emp.id}')" class="px-3 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-[11px] font-semibold transition-all">
+                View Slip
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function viewEmployeePayslip(empId) {
+      const emp = appState.employees.find(e => e.id === empId) || appState.employees[0];
+      const basic = Math.round(emp.salary * 0.50);
+      const hra = Math.round(emp.salary * 0.25);
+      const special = emp.salary - basic - hra;
+      const pf = 1800;
+      const tds = Math.round(emp.salary * 0.05);
+      const pt = 200;
+      const net = emp.salary - pf - tds - pt;
+
+      document.getElementById('slipEmpName').innerText = emp.name;
+      document.getElementById('slipEmpId').innerText = emp.id;
+      document.getElementById('slipEmpDept').innerText = emp.dept;
+      document.getElementById('slipEmpDesig').innerText = emp.role;
+      document.getElementById('slipBasic').innerText = `₹ ${basic.toLocaleString('en-IN')}`;
+      document.getElementById('slipHra').innerText = `₹ ${hra.toLocaleString('en-IN')}`;
+      document.getElementById('slipSpecial').innerText = `₹ ${special.toLocaleString('en-IN')}`;
+      document.getElementById('slipTotalEarnings').innerText = `₹ ${emp.salary.toLocaleString('en-IN')}`;
+      document.getElementById('slipPf').innerText = `₹ ${pf}`;
+      document.getElementById('slipTds').innerText = `₹ ${tds}`;
+      document.getElementById('slipTotalDeductions').innerText = `₹ ${(pf + tds + pt).toLocaleString('en-IN')}`;
+      document.getElementById('slipNetPay').innerText = `₹ ${net.toLocaleString('en-IN')}`;
+
+      document.getElementById('modalSalarySlip').classList.remove('hidden');
+    }
+
+    function printSalarySlip() {
+      window.print();
+    }
+
+    function downloadSalarySlipPDF() {
+      const el = document.getElementById('printablePayslip');
+      const name = document.getElementById('slipEmpName').innerText.replace(' ', '_');
+      const opt = { margin: 10, filename: `Payslip_Oct2026_${name}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+      html2pdf().set(opt).from(el).save();
+    }
+
+    function dispatchAllPayslips() {
+      showToast('Dispatching Payslips...', `Sent ${appState.employees.length} payslips via encrypted Email & WhatsApp.`);
+    }
+
+    function exportBankSalarySheet() {
+      showToast('NEFT File Generated', 'Bank salary transfer sheet downloaded in Excel format.');
+    }
+
+    // ==========================================
+    // 5. ATTENDANCE & DUAL LAT-LONG MAP VIEWER
+    // ==========================================
+    let leafletMapInstance = null;
+
+    function renderAttendanceTable() {
+      const tbody = document.getElementById('attendanceTableTbody');
+      tbody.innerHTML = appState.attendance.map((att, idx) => `
+        <tr class="hover:bg-brand-card/40">
+          <td class="py-3 px-4 font-bold text-white">
+            <div>${att.name}</div>
+            <div class="text-[10px] text-brand-amber font-mono">${att.empId}</div>
+          </td>
+          <td class="py-3 px-4 text-neutral-400">${att.date}</td>
+          <td class="py-3 px-4">
+            <span class="text-emerald-400 font-bold">${att.inTime}</span>
+            <div class="text-[10px] text-neutral-500 font-mono">${att.inLat.toFixed(4)}, ${att.inLng.toFixed(4)}</div>
+          </td>
+          <td class="py-3 px-4">
+            <span class="text-rose-400 font-bold">${att.outTime}</span>
+            <div class="text-[10px] text-neutral-500 font-mono">${att.outLat.toFixed(4)}, ${att.outLng.toFixed(4)}</div>
+          </td>
+          <td class="py-3 px-4 text-neutral-400">${att.breakTime}</td>
+          <td class="py-3 px-4 font-bold text-white font-mono">${att.hours}</td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="openDualLatLongMap(${idx})" class="px-3 py-1 rounded-lg bg-brand-amber/10 border border-brand-amber/30 text-brand-amber hover:bg-brand-amber hover:text-neutral-950 font-bold text-xs transition-all flex items-center gap-1.5 ml-auto">
+              <i data-lucide="map" class="w-3.5 h-3.5"></i>
+              <span>View Route</span>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function openDualLatLongMap(idx) {
+      const att = appState.attendance[idx];
+      document.getElementById('modalLatLongMap').classList.remove('hidden');
+      document.getElementById('mapModalTitle').innerText = `${att.name} &bull; ${att.date}`;
+      document.getElementById('mapClockInDetails').innerHTML = `<strong>${att.inTime}</strong> &bull; ${att.inLat}&deg; N, ${att.inLng}&deg; E (Client Office BKC)`;
+      document.getElementById('mapClockOutDetails').innerHTML = `<strong>${att.outTime}</strong> &bull; ${att.outLat}&deg; N, ${att.outLng}&deg; E (Kurla Hub)`;
+
+      setTimeout(() => {
+        if (!leafletMapInstance) {
+          leafletMapInstance = L.map('leafletMapElement').setView([att.inLat, att.inLng], 13);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(leafletMapInstance);
+        } else {
+          leafletMapInstance.invalidateSize();
+          leafletMapInstance.setView([att.inLat, att.inLng], 13);
+        }
+
+        // Clear markers
+        leafletMapInstance.eachLayer(layer => {
+          if (layer instanceof L.Marker || layer instanceof L.Polyline) {
+            leafletMapInstance.removeLayer(layer);
+          }
+        });
+
+        // Add Clock-In Marker (Green)
+        const inMarker = L.marker([att.inLat, att.inLng]).addTo(leafletMapInstance)
+          .bindPopup(`<b>Clock-In Location</b><br>${att.inTime}<br>Lat: ${att.inLat}, Lng: ${att.inLng}`).openPopup();
+
+        // Add Clock-Out Marker (Red)
+        const outMarker = L.marker([att.outLat, att.outLng]).addTo(leafletMapInstance)
+          .bindPopup(`<b>Clock-Out Location</b><br>${att.outTime}<br>Lat: ${att.outLat}, Lng: ${att.outLng}`);
+
+        // Route line connecting them
+        L.polyline([[att.inLat, att.inLng], [att.outLat, att.outLng]], { color: '#f59e0b', weight: 4, dashArray: '6, 8' }).addTo(leafletMapInstance);
+      }, 200);
+    }
+
+    // ==========================================
+    // 6. LEAVE MANAGEMENT
+    // ==========================================
+    function renderLeaveTable() {
+      const tbody = document.getElementById('leaveRequestsTbody');
+      tbody.innerHTML = appState.leaves.map((l, i) => `
+        <tr class="hover:bg-brand-card/40">
+          <td class="py-3 px-4 font-bold text-white">${l.name}</td>
+          <td class="py-3 px-4 text-brand-amber font-semibold">${l.type}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-brand-dark border border-brand-border text-neutral-300">${l.mode}</span></td>
+          <td class="py-3 px-4 text-neutral-300 font-mono">${l.dates}</td>
+          <td class="py-3 px-4 text-neutral-400 italic">${l.reason}</td>
+          <td class="py-3 px-4">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${l.status === 'Approved' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'}">${l.status}</span>
+          </td>
+          <td class="py-3 px-4 text-right">
+            ${l.status === 'Pending' ? `
+              <button onclick="approveLeave(${i})" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-black font-bold mr-1">Approve</button>
+              <button onclick="rejectLeave(${i})" class="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 hover:bg-rose-500 hover:text-white font-bold">Reject</button>
+            ` : '<span class="text-neutral-500 text-xs">Closed</span>'}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function approveLeave(i) {
+      appState.leaves[i].status = 'Approved';
+      renderLeaveTable();
+      showToast('Leave Approved', `Approved leave for ${appState.leaves[i].name}`);
+    }
+
+    function rejectLeave(i) {
+      appState.leaves[i].status = 'Rejected';
+      renderLeaveTable();
+      showToast('Leave Rejected', `Request declined.`);
+    }
+
+    function openApplyLeaveModal() {
+      const reason = prompt('Enter Employee Name & Reason for Leave (e.g. Vikram Joshi - Personal Work):');
+      if (reason) {
+        appState.leaves.unshift({
+          id: 'L-' + Date.now().toString().slice(-3),
+          name: 'Ananya Verma',
+          type: 'Casual Leave (CL)',
+          mode: 'Full Day',
+          dates: '05 Nov 2026',
+          reason: reason,
+          status: 'Pending'
+        });
+        renderLeaveTable();
+        showToast('Leave Applied', 'Leave logged in pending queue.');
+      }
+    }
+
+    // ==========================================
+    // 7. CANDIDATES & ATS
+    // ==========================================
+    function renderCandidateTable() {
+      const tbody = document.getElementById('candidatesTableTbody');
+      tbody.innerHTML = appState.candidates.map(c => `
+        <tr class="hover:bg-brand-card/40">
+          <td class="py-3 px-4 font-bold text-white">${c.name}</td>
+          <td class="py-3 px-4 text-neutral-300">${c.pos}</td>
+          <td class="py-3 px-4 text-neutral-400">${c.exp}</td>
+          <td class="py-3 px-4 font-mono font-semibold text-brand-amber">${c.ctc}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20">${c.stage}</span></td>
+          <td class="py-3 px-4">
+            <button onclick="showToast('Resume Viewer', 'Viewing CV for ' + '${c.name}')" class="text-xs text-brand-amber hover:underline flex items-center gap-1 font-semibold">
+              <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+              <span>View CV</span>
+            </button>
+          </td>
+          <td class="py-3 px-4 text-right">
+            ${c.stage === 'Selected' ? `
+              <button onclick="switchTab('offer-letters')" class="px-3 py-1 rounded-lg bg-emerald-500 text-neutral-950 font-bold text-xs">Issue Offer</button>
+            ` : `
+              <button onclick="showToast('Schedule Interview', 'Interview slot invite sent.')" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border text-xs text-neutral-300 hover:text-white">Schedule</button>
+            `}
+          </td>
+        </tr>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function openAddCandidateModal() {
+      const name = prompt('Candidate Full Name:');
+      if (!name) return;
+      const pos = prompt('Position Applied For:', 'Frontend React Developer');
+      appState.candidates.unshift({
+        name: name,
+        pos: pos || 'Developer',
+        exp: '3 Years',
+        ctc: '₹ 10,00,000',
+        stage: 'Screening',
+        score: '88%'
+      });
+      renderCandidateTable();
+      showToast('Candidate Added', `${name} entered into applicant pipeline.`);
+    }
+
+    // ==========================================
+    // 8. OFFER LETTER ENGINE
+    // ==========================================
+    function renderOfferTable() {
+      const tbody = document.getElementById('offerLettersTbody');
+      tbody.innerHTML = appState.offers.map(o => `
+        <tr class="hover:bg-brand-card/40">
+          <td class="py-3 px-4 font-bold text-white">${o.name}</td>
+          <td class="py-3 px-4 text-neutral-300">${o.desig}</td>
+          <td class="py-3 px-4 text-neutral-400">${o.dept}</td>
+          <td class="py-3 px-4 font-mono font-bold text-brand-amber">${o.ctc}</td>
+          <td class="py-3 px-4 text-neutral-300">${o.doj}</td>
+          <td class="py-3 px-4 text-emerald-400 font-bold">&bull; ${o.status}</td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="showToast('Offer Dispatched', 'Offer PDF resent to candidate personal email.')" class="px-3 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs font-semibold">Resend</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openOfferGeneratorModal() {
+      const name = prompt('Selected Candidate Name:', 'Aditya Nair');
+      if (!name) return;
+      const ctc = prompt('Annual CTC Package (INR):', '₹ 16,00,000');
+      appState.offers.unshift({
+        name: name,
+        desig: 'Senior Cloud Engineer',
+        dept: 'Engineering & Tech',
+        ctc: ctc || '₹ 16,00,000',
+        doj: '01 Dec 2026',
+        status: 'Sent via Email'
+      });
+      renderOfferTable();
+      showToast('Offer Letter Issued', `Formal appointment dispatched to ${name}.`);
+    }
+
+    // ==========================================
+    // 9. RESIGNATION & NOTICE PERIOD
+    // ==========================================
+    function renderResignationTable() {
+      const tbody = document.getElementById('resignationTbody');
+      tbody.innerHTML = appState.resignations.map(r => `
+        <tr class="hover:bg-brand-card/40">
+          <td class="py-3 px-4 font-bold text-white">${r.name}</td>
+          <td class="py-3 px-4 text-neutral-400">${r.resDate}</td>
+          <td class="py-3 px-4 font-mono text-amber-300 font-bold">${r.notice}</td>
+          <td class="py-3 px-4 font-bold text-white">${r.lwd}</td>
+          <td class="py-3 px-4 text-neutral-300">${r.handover}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] bg-amber-500/10 text-amber-300 border border-amber-500/30">${r.stage}</span></td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="showToast('Relieving Letter', 'Certificate generated for ' + '${r.name}')" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border text-xs text-brand-amber hover:bg-brand-amber hover:text-neutral-950 font-bold">Relieving PDF</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // ==========================================
+    // 10. COMPANY POLICY ENGINE & EMAIL BROADCAST
+    // ==========================================
+    function renderPolicyCards() {
+      const container = document.getElementById('policyCardsContainer');
+      container.innerHTML = appState.policies.map(p => `
+        <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-amber px-2.5 py-0.5 rounded-full bg-brand-amber/10 border border-brand-amber/20">${p.cat}</span>
+            <span class="text-[11px] text-neutral-500">Updated: ${p.updated}</span>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">${p.title}</h3>
+            <p class="text-xs text-neutral-400 mt-1 leading-relaxed">${p.desc}</p>
+          </div>
+          <div class="pt-3 border-t border-brand-border flex items-center justify-between">
+            <button onclick="dispatchPolicyEmail('${p.title}')" class="px-4 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5">
+              <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+              <span>Send to Employees (All / Target)</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function openCreatePolicyModal() {
+      const title = prompt('Enter Policy Title:');
+      if (!title) return;
+      const desc = prompt('Enter Policy Summary / Content:');
+      appState.policies.unshift({
+        id: 'P-' + Date.now(),
+        title: title,
+        cat: 'General Governance',
+        updated: 'Today',
+        desc: desc || 'Official internal organization policy mandate.'
+      });
+      renderPolicyCards();
+      showToast('Policy Created', 'New policy drafted successfully.');
+    }
+
+    function dispatchPolicyEmail(title) {
+      const target = confirm(`Broadcast "${title}" to ALL ${appState.employees.length} company employees?\n\nClick OK for All Employees, or Cancel for Select Department.`);
+      if (target) {
+        showToast('Emails Dispatched!', `Policy dispatched to all ${appState.employees.length} employee mailboxes with read-receipt tracker.`);
+      } else {
+        showToast('Targeted Dispatch', 'Policy emailed to Sales & Marketing department.');
+      }
+    }
+
+    // ==========================================
+    // 11. PROMOTIONS & SALARY APPRAISALS
+    // ==========================================
+    function renderPromotionTable() {
+      const tbody = document.getElementById('promotionHistoryTbody');
+      tbody.innerHTML = appState.promotions.map(pr => `
+        <tr class="hover:bg-brand-card/40">
+          <td class="py-3 px-4 font-bold text-white">${pr.name}</td>
+          <td class="py-3 px-4 text-neutral-400">${pr.oldDesig}</td>
+          <td class="py-3 px-4 text-brand-amber font-semibold">${pr.newDesig}</td>
+          <td class="py-3 px-4 text-right font-mono text-neutral-400">${pr.oldCtc}</td>
+          <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">${pr.newCtc}</td>
+          <td class="py-3 px-4 text-center font-bold text-brand-amber">${pr.inc}</td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="showToast('Promotion Letter', 'Appraisal increment letter generated for ' + '${pr.name}')" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border text-xs text-white hover:text-brand-amber">Letter</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openPromotionModal() {
+      const name = prompt('Select Employee for Promotion:', 'Vikram Joshi');
+      if (!name) return;
+      const newTitle = prompt('New Designation Title:', 'Regional Sales Director');
+      const inc = prompt('Increment Percentage (e.g. +22%):', '+22%');
+      appState.promotions.unshift({
+        name: name,
+        oldDesig: 'Field Sales Lead',
+        newDesig: newTitle || 'Regional Sales Director',
+        oldCtc: '₹ 9,00,000',
+        newCtc: '₹ 11,00,000',
+        inc: inc || '+22%'
+      });
+      renderPromotionTable();
+      showToast('Promotion Processed', `${name} promoted to ${newTitle} (${inc})`);
+    }
+
+    // ==========================================
+    // 12. QR CODE STANDEE & MOBILE SCANNER
+    // ==========================================
+    let qrRendered = false;
+    function renderQrCodeStandee() {
+      if (!qrRendered) {
+        const container = document.getElementById('qrCodeContainer');
+        container.innerHTML = '';
+        new QRCode(container, {
+          text: "https://sorahr.com/clockin?company=AGT&token=SORA-AGT-ATTEND-TOKEN-2026",
+          width: 180,
+          height: 180,
+          colorDark: "#09090c",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+        qrRendered = true;
+      }
+    }
+
+    function testEmployeeQrScan() {
+      showToast('Scanning QR Standee...', 'Mobile Camera Viewfinder verifying BKC Geofence...');
+      setTimeout(() => {
+        const feed = document.getElementById('qrScanLiveFeed');
+        const div = document.createElement('div');
+        div.className = "p-2.5 rounded-xl bg-brand-dark flex items-center justify-between border border-emerald-500/40";
+        div.innerHTML = `
+          <span class="text-white font-medium">EMP-AGT-0103 &bull; Rohan Mehra</span>
+          <span class="text-emerald-400 font-mono">10:45 AM &bull; Verified Clock-In</span>
+        `;
+        feed.prepend(div);
+        showToast('Clock-In Successful!', 'GPS verified: Within 50m of Reception Standee.');
+      }, 1500);
+    }
+
+    // ==========================================
+    // COMMON HELPERS
+    // ==========================================
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.add('hidden');
+    }
+
+    let toastTimer = null;
+    function showToast(title, msg) {
+      const toast = document.getElementById('adminToast');
+      document.getElementById('adminToastTitle').innerText = title;
+      document.getElementById('adminToastMsg').innerText = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 4000);
+      lucide.createIcons();
+    }
+
+    // Live Clock
+    setInterval(() => {
+      const now = new Date();
+      const clockEl = document.getElementById('liveClock');
+      if (clockEl) clockEl.innerText = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }, 1000);
+
+    // Initializer
+    window.addEventListener('DOMContentLoaded', () => {
+      populateRoleDropdown();
+      renderEmployeeTable();
+      renderPayrollTable();
+      renderAttendanceTable();
+      renderZipAuditTable();
+      renderPolicyCards();
+      renderQrCodeStandee();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
