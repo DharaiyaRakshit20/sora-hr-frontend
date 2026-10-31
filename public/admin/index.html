@@ -107,7 +107,7 @@
   <!-- ========================================== -->
   <!-- VIEW 1: ADMIN LOGIN SCREEN (OTP & 2FA)     -->
   <!-- ========================================== -->
-  <div id="view-admin-login" class="hidden min-h-screen flex flex-col lg:flex-row w-full bg-[#09090c]">
+  <div id="view-admin-login" class="min-h-screen flex flex-col lg:flex-row w-full bg-[#09090c]">
     
     <!-- Left Hero Brand Slider -->
     <div class="w-full lg:w-1/2 min-h-[420px] lg:min-h-screen relative bg-[#0e0e13] p-8 sm:p-14 lg:p-16 flex flex-col justify-between overflow-hidden border-b lg:border-b-0 lg:border-r border-brand-border/60">
@@ -249,7 +249,7 @@
   <!-- ========================================== -->
   <!-- VIEW 2: LOGGED-IN ADMIN PORTAL INTERFACE  -->
   <!-- ========================================== -->
-  <div id="view-admin-portal" class="h-screen w-screen overflow-hidden flex flex-col">
+  <div id="view-admin-portal" class="hidden h-screen w-screen overflow-hidden flex flex-col">
     
     <!-- TOP HEADER (Edge-to-edge flush) -->
     <header class="h-20 flex-shrink-0 z-40 bg-[#09090c]/95 backdrop-blur-md border-b border-brand-border/60 transition-all">
@@ -1572,7 +1572,7 @@
     // INITIAL DATA STORES & STATE
     // ==========================================
     const appState = {
-      isLoggedIn: true,
+      isLoggedIn: false,
       currentTab: 'dashboard',
       roles: [
         { id: 'role_hr_exec', title: 'HR Executive', desc: 'Employee onboarding, attendance & leave', perms: { v: true, c: true, u: true, d: false } },
@@ -1762,6 +1762,8 @@
       appState.isLoggedIn = false;
       document.getElementById('view-admin-portal').classList.add('hidden');
       document.getElementById('view-admin-login').classList.remove('hidden');
+      document.getElementById('adminOtpStep2')?.classList.add('hidden');
+      document.getElementById('adminOtpStep1')?.classList.remove('hidden');
       showToast('Logged Out', 'Company Admin session closed safely.');
     }
 
