@@ -5419,14 +5419,23 @@
       currentGMapAtt = att;
       document.getElementById('modalLatLongMap').classList.remove('hidden');
       
-      // Fix raw bullet entity bug
+      const locText = att.location || 'Office Standee';
       document.getElementById('mapModalTitle').innerHTML = `<span>${att.name}</span> <span class="text-brand-amber font-mono">&bull;</span> <span class="text-neutral-300 font-normal">${att.date}</span>`;
-      document.getElementById('mapClockInDetails').innerHTML = `<strong>${att.inTime}</strong> &bull; ${att.inLat}&deg; N, ${att.inLng}&deg; E (Client Office BKC)`;
-      document.getElementById('mapClockOutDetails').innerHTML = `<strong>${att.outTime}</strong> &bull; ${att.outLat}&deg; N, ${att.outLng}&deg; E (Kurla Hub)`;
+      document.getElementById('mapClockInDetails').innerHTML = `<strong>${att.inTime}</strong> &bull; ${att.inLat}&deg; N, ${att.inLng}&deg; E (${locText})`;
+      document.getElementById('mapClockOutDetails').innerHTML = `<strong>${att.outTime}</strong> &bull; ${att.outLat}&deg; N, ${att.outLng}&deg; E (${locText})`;
 
       setTimeout(() => {
+        const isSameLocation = (Math.abs(att.inLat - att.outLat) < 0.0008) && (Math.abs(att.inLng - att.outLng) < 0.0008);
+        const offset = 0.0022; // Horizontal visual separation so BOTH IN (Green) & OUT (Red) pins are distinct & clearly visible!
+
+        const inLat = att.inLat;
+        const inLng = isSameLocation ? (att.inLng - offset) : att.inLng;
+
+        const outLat = att.outLat;
+        const outLng = isSameLocation ? (att.outLng + offset) : att.outLng;
+
         if (!leafletMapInstance) {
-          leafletMapInstance = L.map('leafletMapElement').setView([att.inLat, att.inLng], 13);
+          leafletMapInstance = L.map('leafletMapElement').setView([att.inLat, att.inLng], 14);
           const lyrs = currentMapMode === 'streets' ? 'm' : 'y';
           currentMapTileLayer = L.tileLayer(`https://{s}.google.com/vt/lyrs=${lyrs}&x={x}&y={y}&z={z}`, {
             maxZoom: 20,
@@ -5435,7 +5444,6 @@
           }).addTo(leafletMapInstance);
         } else {
           leafletMapInstance.invalidateSize();
-          leafletMapInstance.setView([att.inLat, att.inLng], 13);
         }
 
         // Clear previous markers
@@ -5445,31 +5453,40 @@
           }
         });
 
-        // Google Maps style Clock-In (Green Pin) & Clock-Out (Red Pin)
+        // Luxury Google Maps Badges with time display
         const greenIcon = L.divIcon({
           className: 'custom-map-pin',
-          html: '<div style="background-color:#10b981; color:#000; font-weight:bold; font-size:10px; padding:3px 7px; border-radius:12px; border:2px solid #fff; box-shadow:0 0 10px rgba(16, 185, 129, 0.8); text-align:center;">IN</div>',
-          iconSize: [32, 24]
+          html: `<div style="background-color:#10b981; color:#052e16; font-weight:900; font-family:monospace; font-size:11px; padding:4px 9px; border-radius:14px; border:2.5px solid #ffffff; box-shadow:0 0 14px rgba(16, 185, 129, 0.9); text-align:center; white-space:nowrap; cursor:pointer;">🟢 IN &bull; ${att.inTime}</div>`,
+          iconSize: [92, 28],
+          iconAnchor: [46, 14]
         });
 
         const redIcon = L.divIcon({
           className: 'custom-map-pin',
-          html: '<div style="background-color:#ef4444; color:#fff; font-weight:bold; font-size:10px; padding:3px 7px; border-radius:12px; border:2px solid #fff; box-shadow:0 0 10px rgba(239, 68, 68, 0.8); text-align:center;">OUT</div>',
-          iconSize: [32, 24]
+          html: `<div style="background-color:#ef4444; color:#ffffff; font-weight:900; font-family:monospace; font-size:11px; padding:4px 9px; border-radius:14px; border:2.5px solid #ffffff; box-shadow:0 0 14px rgba(239, 68, 68, 0.9); text-align:center; white-space:nowrap; cursor:pointer;">🔴 OUT &bull; ${att.outTime}</div>`,
+          iconSize: [98, 28],
+          iconAnchor: [49, 14]
         });
 
-        L.marker([att.inLat, att.inLng], { icon: greenIcon }).addTo(leafletMapInstance)
-          .bindPopup(`<b>Clock-In Location</b><br>${att.inTime}<br>Lat: ${att.inLat}, Lng: ${att.inLng}`).openPopup();
+        // 1. Clock-In Marker
+        L.marker([inLat, inLng], { icon: greenIcon, zIndexOffset: 1000 }).addTo(leafletMapInstance)
+          .bindPopup(`<div class="text-xs font-sans"><b>🟢 Clock-In Punch</b><br><span class="font-mono text-emerald-600 font-bold">${att.inTime}</span><br>${locText}<br><span class="text-[10px] text-gray-500 font-mono">${att.inLat}&deg; N, ${att.inLng}&deg; E</span></div>`);
 
-        L.marker([att.outLat, att.outLng], { icon: redIcon }).addTo(leafletMapInstance)
-          .bindPopup(`<b>Clock-Out Location</b><br>${att.outTime}<br>Lat: ${att.outLat}, Lng: ${att.outLng}`);
+        // 2. Clock-Out Marker
+        L.marker([outLat, outLng], { icon: redIcon, zIndexOffset: 1001 }).addTo(leafletMapInstance)
+          .bindPopup(`<div class="text-xs font-sans"><b>🔴 Clock-Out Punch</b><br><span class="font-mono text-rose-600 font-bold">${att.outTime}</span><br>${locText}<br><span class="text-[10px] text-gray-500 font-mono">${att.outLat}&deg; N, ${att.outLng}&deg; E</span></div>`);
 
-        // Google blue route line connecting coordinates
-        L.polyline([[att.inLat, att.inLng], [att.outLat, att.outLng]], {
-          color: '#4285F4',
+        // 3. Connect with Google Route line
+        L.polyline([[inLat, inLng], [outLat, outLng]], {
+          color: '#3b82f6',
           weight: 4,
-          dashArray: '8, 8'
+          opacity: 0.9,
+          dashArray: isSameLocation ? '4, 6' : '8, 8'
         }).addTo(leafletMapInstance);
+
+        // 4. Fit bounds so both pins are ALWAYS centered & completely visible
+        const bounds = L.latLngBounds([[inLat, inLng], [outLat, outLng]]);
+        leafletMapInstance.fitBounds(bounds, { padding: [60, 60], maxZoom: 15 });
 
         lucide.createIcons();
       }, 200);
