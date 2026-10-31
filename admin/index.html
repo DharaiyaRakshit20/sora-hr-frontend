@@ -2320,52 +2320,119 @@
   </div>
 
   <!-- MODAL: ADD CANDIDATE -->
-  <div id="modalAddCandidate" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-md shadow-2xl overflow-hidden flex flex-col">
-      <div class="p-5 border-b border-brand-border flex items-center justify-between">
+  <div id="modalAddCandidate" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      <div class="p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark">
         <div>
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
             <i data-lucide="user-plus" class="w-4 h-4 text-brand-amber"></i>
             <span>Add Recruitment Candidate</span>
           </h3>
-          <p class="text-[11px] text-neutral-400 mt-0.5">Enroll applicant in ATS talent pipeline</p>
+          <p class="text-[11px] text-neutral-400 mt-0.5">Enroll applicant in ATS talent pipeline with background &amp; skill profile</p>
         </div>
-        <button onclick="closeModal('modalAddCandidate')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+        <button onclick="closeModal('modalAddCandidate')" class="text-neutral-400 hover:text-white p-1 text-lg leading-none">&times;</button>
       </div>
-      <div class="p-5 space-y-3.5 text-xs">
+
+      <div class="p-5 space-y-3.5 text-xs max-h-[75vh] overflow-y-auto">
+        <!-- 1. Background Experience Type Selector (Fresher vs Experienced) -->
         <div>
-          <label class="block text-neutral-300 font-semibold mb-1">Candidate Full Name *</label>
-          <input type="text" id="candidateNameInput" placeholder="e.g. Siddharth Rao" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          <label class="block text-neutral-300 font-semibold mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="user-check" class="w-3.5 h-3.5 text-brand-amber"></i>
+              <span>Candidate Experience Level *</span>
+            </span>
+            <span id="cndTypeBadge" class="text-[10px] text-brand-amber font-mono font-bold">Experienced Professional</span>
+          </label>
+          <div class="grid grid-cols-2 gap-2 bg-brand-dark p-1.5 rounded-2xl border border-brand-border">
+            <button type="button" id="btnCndTypeExp" onclick="setCandidateType('Experienced')" class="py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 bg-brand-amber text-neutral-950 shadow">
+              <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+              <span>Experienced Professional</span>
+            </button>
+            <button type="button" id="btnCndTypeFresh" onclick="setCandidateType('Fresher')" class="py-2 px-3 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2">
+              <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+              <span>Fresher / Graduate</span>
+            </button>
+          </div>
         </div>
+
+        <!-- 2. Candidate Full Name & Target Position -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Target Position *</label>
-            <input type="text" id="candidatePosInput" value="Full Stack React Engineer" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+            <label class="block text-neutral-300 font-semibold mb-1">Candidate Full Name *</label>
+            <input type="text" id="candidateNameInput" placeholder="e.g. Siddharth Rao" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
           </div>
           <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Experience (Years)</label>
-            <input type="text" id="candidateExpInput" value="4 Years" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+            <label class="block text-neutral-300 font-semibold mb-1">Target Position / Role *</label>
+            <input type="text" id="candidatePosInput" value="Full Stack React Engineer" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
           </div>
         </div>
+
+        <!-- 3. Experience & Company / College -->
         <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Expected CTC (₹)</label>
-            <input type="text" id="candidateCtcInput" value="₹ 14,00,000" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          <div id="cndExpYearsGroup">
+            <label id="cndExpYearsLabel" class="block text-neutral-300 font-semibold mb-1">Total Experience (Years) *</label>
+            <input type="text" id="candidateExpInput" value="4 Years" placeholder="e.g. 3.5 Years" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
           </div>
           <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Initial Stage</label>
-            <select id="candidateStageSelect" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
-              <option value="Initial Screening">Initial Screening</option>
-              <option value="Technical Round 1">Technical Round 1</option>
-              <option value="Managerial Interview">Managerial Interview</option>
-              <option value="Final HR Round">Final HR Round</option>
+            <label id="cndCompanyLabel" class="block text-neutral-300 font-semibold mb-1">Current / Previous Company *</label>
+            <input type="text" id="candidateCompanyInput" placeholder="e.g. GrowthWave Tech / TCS" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
+          </div>
+        </div>
+
+        <!-- 4. Highest Education / Degree & Availability -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1 flex items-center gap-1.5">
+              <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-brand-amber"></i>
+              <span>Highest Qualification / Degree *</span>
+            </label>
+            <input type="text" id="candidateEducationInput" placeholder="e.g. B.Tech Computer Science / MCA / MBA" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Notice Period / Availability</label>
+            <select id="candidateNoticeInput" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
+              <option value="Immediate">Immediate / Serving Notice</option>
+              <option value="15 Days">15 Days</option>
+              <option value="30 Days" selected>30 Days</option>
+              <option value="60 Days">60 Days</option>
+              <option value="90 Days">90 Days</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 5. Key Skills & Tech Stack -->
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="award" class="w-3.5 h-3.5 text-brand-amber"></i>
+              <span>Key Skills &amp; Tech Stack *</span>
+            </span>
+            <span class="text-[10px] text-neutral-400 font-normal">Comma-separated</span>
+          </label>
+          <input type="text" id="candidateSkillsInput" placeholder="e.g. React.js, Node.js, TypeScript, PostgreSQL, Tailwind CSS" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
+        </div>
+
+        <!-- 6. Expected CTC & Initial Stage -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Expected Annual CTC (₹)</label>
+            <input type="text" id="candidateCtcInput" value="₹ 14,00,000" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber text-xs">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Initial Pipeline Stage *</label>
+            <select id="candidateStageSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
+              <!-- Dynamically populated from appState.pipelineStages -->
             </select>
           </div>
         </div>
       </div>
+
       <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
-        <button onclick="closeModal('modalAddCandidate')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300">Cancel</button>
-        <button onclick="submitCandidateModalAction()" class="px-5 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow">Enroll in ATS</button>
+        <button onclick="closeModal('modalAddCandidate')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5 transition-all">Cancel</button>
+        <button onclick="submitCandidateModalAction()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5 transition-all">
+          <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+          <span>Enroll in ATS</span>
+        </button>
       </div>
     </div>
   </div>
@@ -2560,8 +2627,13 @@
             </div>
           </div>
           <div class="text-right">
-            <span class="text-[10px] text-neutral-500 uppercase tracking-wider block font-semibold">Evaluation Score</span>
-            <span id="cndDetailScore" class="text-emerald-400 font-bold text-sm font-mono mt-0.5 inline-block">94% &bull; Strong Hire</span>
+            <div id="cndDetailTypeBadge" class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-amber/15 text-brand-amber border border-brand-amber/30 mb-1">
+              Experienced
+            </div>
+            <div>
+              <span class="text-[10px] text-neutral-500 uppercase tracking-wider block font-semibold">Evaluation Score</span>
+              <span id="cndDetailScore" class="text-emerald-400 font-bold text-sm font-mono mt-0.5 inline-block">94% &bull; Strong Hire</span>
+            </div>
           </div>
         </div>
 
@@ -2582,6 +2654,35 @@
           <div class="p-3 rounded-xl bg-brand-dark border border-brand-border">
             <span class="text-[10px] text-neutral-500 uppercase tracking-wider block font-semibold">Target Department</span>
             <span id="cndDetailDept" class="text-white font-semibold text-xs mt-0.5 block">Marketing &amp; Growth</span>
+          </div>
+        </div>
+
+        <!-- Candidate Academic Study & Organization/College Cards -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="p-3 rounded-xl bg-brand-dark border border-brand-border">
+            <span class="text-[10px] text-neutral-500 uppercase tracking-wider block font-semibold flex items-center gap-1.5">
+              <i data-lucide="graduation-cap" class="w-3 h-3 text-brand-amber"></i>
+              <span>Highest Education / Study</span>
+            </span>
+            <span id="cndDetailEducation" class="text-white font-semibold text-xs mt-0.5 block">MBA in Marketing (IIM Bangalore)</span>
+          </div>
+          <div class="p-3 rounded-xl bg-brand-dark border border-brand-border">
+            <span class="text-[10px] text-neutral-500 uppercase tracking-wider block font-semibold flex items-center gap-1.5">
+              <i data-lucide="building-2" class="w-3 h-3 text-brand-amber"></i>
+              <span id="cndDetailOrgLabel">Previous / Current Company</span>
+            </span>
+            <span id="cndDetailOrgCard" class="text-brand-amber font-semibold text-xs mt-0.5 block">GrowthWave Tech</span>
+          </div>
+        </div>
+
+        <!-- Candidate Verified Skills & Tech Stack -->
+        <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border">
+          <span class="text-[10px] text-neutral-500 uppercase tracking-wider block font-semibold flex items-center gap-1.5 mb-2">
+            <i data-lucide="award" class="w-3 h-3 text-brand-amber"></i>
+            <span>Verified Skills &amp; Tech Stack</span>
+          </span>
+          <div id="cndDetailSkillsContainer" class="flex flex-wrap gap-1.5">
+            <!-- Populated dynamically -->
           </div>
         </div>
 
@@ -3818,9 +3919,10 @@
         { id: 'L-103', name: 'Ananya Verma', empId: 'EMP-AGT-0102', dept: 'Sales & Business Development', type: 'Sick Leave (SL)', mode: 'Full Day', dates: '29 Oct 2026', days: 1, reason: 'Viral Fever & Doctor Visit with medical certificate', status: 'Approved', clBalance: 10, plBalance: 15, slBalance: 4 }
       ],
       candidates: [
-        { id: 'CND-8801', name: 'Kavita Sundaram', pos: 'Product Marketing Manager', dept: 'Marketing & Growth', exp: '6 Years', currentOrg: 'GrowthWave Tech', ctc: '₹ 18,00,000', notice: '30 Days', stage: 'Final HR Round', score: '94%', notes: 'Strong presentation skills, deep B2B SaaS product positioning expertise.', resumeUrl: 'Kavita_Sundaram_Resume.pdf' },
-        { id: 'CND-8802', name: 'Aditya Nair', pos: 'DevOps & Cloud Engineer', dept: 'Engineering & Technology', exp: '4 Years', currentOrg: 'CloudNine Systems', ctc: '₹ 14,50,000', notice: '15 Days', stage: 'Selected', score: '98%', notes: 'Exceptional Kubernetes, AWS CI/CD and Terraform infrastructure knowledge.', resumeUrl: 'Aditya_Nair_DevOps_CV.pdf' },
-        { id: 'CND-8803', name: 'Siddharth Rao', pos: 'Corporate Sales Specialist', dept: 'Sales & Business Development', exp: '3 Years', currentOrg: 'InnoSales India', ctc: '₹ 9,00,000', notice: '30 Days', stage: 'Interview Scheduled', score: '82%', notes: 'Good enterprise communication, demonstrated quota attainment in past 4 quarters.', resumeUrl: 'Siddharth_Rao_CV.pdf' }
+        { id: 'CND-8801', name: 'Kavita Sundaram', pos: 'Product Marketing Manager', candidateType: 'Experienced', dept: 'Marketing & Growth', exp: '6 Years', currentOrg: 'GrowthWave Tech', education: 'MBA in Marketing & Product Strategy (IIM Bangalore)', skills: 'B2B SaaS Positioning, Product Marketing, GTM Strategy, Analytics, Content Operations', ctc: '₹ 18,00,000', notice: '30 Days', stage: 'Final HR Round & Salary Discussion', score: '94%', notes: 'Strong presentation skills, deep B2B SaaS product positioning expertise.', resumeUrl: 'Kavita_Sundaram_Resume.pdf' },
+        { id: 'CND-8802', name: 'Aditya Nair', pos: 'DevOps & Cloud Engineer', candidateType: 'Experienced', dept: 'Engineering & Technology', exp: '4 Years', currentOrg: 'CloudNine Systems', education: 'B.Tech in Computer Engineering (VJTI Mumbai)', skills: 'Kubernetes, AWS Cloud, Terraform, Docker, CI/CD Pipelines, Linux SysAdmin', ctc: '₹ 14,50,000', notice: '15 Days', stage: 'Candidate Selected / Ready for Offer', score: '98%', notes: 'Exceptional Kubernetes, AWS CI/CD and Terraform infrastructure knowledge.', resumeUrl: 'Aditya_Nair_DevOps_CV.pdf' },
+        { id: 'CND-8803', name: 'Siddharth Rao', pos: 'Corporate Sales Specialist', candidateType: 'Experienced', dept: 'Sales & Business Development', exp: '3 Years', currentOrg: 'InnoSales India', education: 'B.Com & Advanced Enterprise Sales (Delhi University)', skills: 'Enterprise B2B Sales, CRM Salesforce, Lead Generation, Pipeline Velocity, Negotiation', ctc: '₹ 9,00,000', notice: '30 Days', stage: 'Interview Scheduled / Round 1', score: '82%', notes: 'Good enterprise communication, demonstrated quota attainment in past 4 quarters.', resumeUrl: 'Siddharth_Rao_CV.pdf' },
+        { id: 'CND-8804', name: 'Priya Sharma', pos: 'Associate Frontend Developer', candidateType: 'Fresher', dept: 'Engineering & Technology', exp: 'Fresher (0 Years)', currentOrg: 'IIT Roorkee (Campus)', education: 'B.Tech in Computer Science (Batch 2026)', skills: 'React.js, JavaScript (ES6+), HTML5/CSS3, Tailwind CSS, REST APIs, Git', ctc: '₹ 7,50,000', notice: 'Immediate', stage: 'Technical Evaluation / Assignment', score: '88%', notes: 'Strong algorithms foundation, built active open-source React dashboard projects.', resumeUrl: 'Priya_Sharma_Resume.pdf' }
       ],
       offers: [
         { id: 'OFF-AGT-091', candidateId: 'CND-8802', name: 'Aditya Nair', desig: 'DevOps & Cloud Engineer', dept: 'Engineering & Technology', ctc: '₹ 14,50,000', doj: '15 Nov 2026', status: 'Sent via Email', date: '28 Oct 2026' }
@@ -4153,14 +4255,17 @@
     }
 
     function populateCandidateStagesDropdown() {
-      const select = document.getElementById('cndDetailStageSelect');
-      if (select) {
-        select.innerHTML = appState.pipelineStages
-          .slice()
-          .sort((a, b) => (a.order || 0) - (b.order || 0))
-          .map(stg => `<option value="${stg.name}">${stg.name}</option>`)
-          .join('');
-      }
+      const optionsHtml = appState.pipelineStages
+        .slice()
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(stg => `<option value="${stg.name}">${stg.name}</option>`)
+        .join('');
+
+      const detailSelect = document.getElementById('cndDetailStageSelect');
+      if (detailSelect) detailSelect.innerHTML = optionsHtml;
+
+      const addSelect = document.getElementById('candidateStageSelect');
+      if (addSelect) addSelect.innerHTML = optionsHtml;
     }
 
     function populateAllDropdowns() {
@@ -6038,19 +6143,36 @@
       if (!tbody) return;
       tbody.innerHTML = appState.candidates.map((c, idx) => {
         let stageColor = 'bg-brand-dark border-brand-border text-neutral-300';
-        if (c.stage === 'Selected') stageColor = 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-bold';
-        else if (c.stage.includes('Final')) stageColor = 'bg-amber-500/15 border-amber-500/30 text-amber-300 font-bold';
-        else if (c.stage.includes('Technical') || c.stage.includes('Interview')) stageColor = 'bg-sky-500/15 border-sky-500/30 text-sky-300 font-medium';
-        else if (c.stage === 'Rejected') stageColor = 'bg-rose-500/15 border-rose-500/30 text-rose-400 font-bold';
+        if (c.stage.includes('Selected') || c.stage === 'Selected') stageColor = 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-bold';
+        else if (c.stage.includes('Final') || c.stage.includes('HR')) stageColor = 'bg-amber-500/15 border-amber-500/30 text-amber-300 font-bold';
+        else if (c.stage.includes('Technical') || c.stage.includes('Interview') || c.stage.includes('Round')) stageColor = 'bg-sky-500/15 border-sky-500/30 text-sky-300 font-medium';
+        else if (c.stage.includes('Rejected')) stageColor = 'bg-rose-500/15 border-rose-500/30 text-rose-400 font-bold';
+
+        const isFresher = c.candidateType === 'Fresher' || (c.exp && c.exp.toLowerCase().includes('fresh'));
+        const typeBadge = isFresher
+          ? `<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Fresher</span>`
+          : `<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">Exp</span>`;
 
         return `
           <tr class="hover:bg-brand-card/60 transition-colors cursor-pointer group" onclick="openCandidateDetailModal(${idx})">
             <td class="py-3 px-4">
-              <div class="font-bold text-white text-xs">${c.name}</div>
-              <div class="text-[10px] text-brand-amber font-mono">Match: ${c.score || '90%'}</div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-white text-xs">${c.name}</span>
+                ${typeBadge}
+              </div>
+              <div class="text-[10px] text-neutral-400 flex items-center gap-1 mt-0.5">
+                <i data-lucide="graduation-cap" class="w-2.5 h-2.5 text-brand-amber"></i>
+                <span class="truncate max-w-[150px]">${c.education || 'Graduate'}</span>
+              </div>
             </td>
-            <td class="py-3 px-4 text-neutral-300 font-medium">${c.pos}</td>
-            <td class="py-3 px-4 text-neutral-400">${c.exp}</td>
+            <td class="py-3 px-4">
+              <div class="text-neutral-200 font-medium">${c.pos}</div>
+              <div class="text-[10px] text-neutral-400 flex items-center gap-1 mt-0.5">
+                <i data-lucide="building" class="w-2.5 h-2.5 text-neutral-500"></i>
+                <span class="truncate max-w-[140px]">${c.currentOrg || 'Corporate Tech'}</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 font-mono text-neutral-300">${c.exp}</td>
             <td class="py-3 px-4 font-mono font-bold text-emerald-400">&#8377; ${c.ctc.replace(/[^0-9,]/g, '')}</td>
             <td class="py-3 px-4">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] border ${stageColor}">
@@ -6075,39 +6197,124 @@
       lucide.createIcons();
     }
 
+    let currentCandidateType = 'Experienced';
+
+    function setCandidateType(type) {
+      currentCandidateType = type;
+      const btnExp = document.getElementById('btnCndTypeExp');
+      const btnFresh = document.getElementById('btnCndTypeFresh');
+      const badge = document.getElementById('cndTypeBadge');
+      const expInput = document.getElementById('candidateExpInput');
+      const expLabel = document.getElementById('cndExpYearsLabel');
+      const compLabel = document.getElementById('cndCompanyLabel');
+      const compInput = document.getElementById('candidateCompanyInput');
+      const noticeInput = document.getElementById('candidateNoticeInput');
+
+      if (type === 'Fresher') {
+        if (btnFresh) {
+          btnFresh.className = 'py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 bg-emerald-500 text-neutral-950 shadow';
+        }
+        if (btnExp) {
+          btnExp.className = 'py-2 px-3 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2';
+        }
+        if (badge) {
+          badge.innerText = 'Fresher / College Graduate';
+          badge.className = 'text-[10px] text-emerald-400 font-mono font-bold';
+        }
+        if (expInput) {
+          expInput.value = 'Fresher (0 Years)';
+          expInput.readOnly = true;
+          expInput.classList.add('opacity-75');
+        }
+        if (expLabel) expLabel.innerText = 'Experience Status';
+        if (compLabel) compLabel.innerText = 'College / University / Campus *';
+        if (compInput) compInput.placeholder = 'e.g. IIT Bombay / Mumbai University / BITS Pilani';
+        if (noticeInput) noticeInput.value = 'Immediate';
+      } else {
+        if (btnExp) {
+          btnExp.className = 'py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 bg-brand-amber text-neutral-950 shadow';
+        }
+        if (btnFresh) {
+          btnFresh.className = 'py-2 px-3 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2';
+        }
+        if (badge) {
+          badge.innerText = 'Experienced Professional';
+          badge.className = 'text-[10px] text-brand-amber font-mono font-bold';
+        }
+        if (expInput) {
+          if (expInput.value === 'Fresher (0 Years)' || !expInput.value) expInput.value = '3.5 Years';
+          expInput.readOnly = false;
+          expInput.classList.remove('opacity-75');
+        }
+        if (expLabel) expLabel.innerText = 'Total Experience (Years) *';
+        if (compLabel) compLabel.innerText = 'Current / Previous Company *';
+        if (compInput) compInput.placeholder = 'e.g. GrowthWave Tech / TCS / Infosys';
+        if (noticeInput) noticeInput.value = '30 Days';
+      }
+      lucide.createIcons();
+    }
+
     function openAddCandidateModal() {
+      setCandidateType('Experienced');
+      populateCandidateStagesDropdown();
       document.getElementById('candidateNameInput').value = '';
+      document.getElementById('candidatePosInput').value = 'Full Stack React Engineer';
+      document.getElementById('candidateExpInput').value = '4 Years';
+      document.getElementById('candidateCompanyInput').value = '';
+      document.getElementById('candidateEducationInput').value = '';
+      document.getElementById('candidateSkillsInput').value = '';
+      document.getElementById('candidateCtcInput').value = '₹ 14,00,000';
+      document.getElementById('candidateNoticeInput').value = '30 Days';
       document.getElementById('modalAddCandidate').classList.remove('hidden');
       lucide.createIcons();
     }
 
     function submitCandidateModalAction() {
       const name = document.getElementById('candidateNameInput').value.trim();
-      const pos = document.getElementById('candidatePosInput').value.trim() || 'Engineer';
-      const exp = document.getElementById('candidateExpInput').value.trim() || '3 Years';
+      const pos = document.getElementById('candidatePosInput').value.trim() || 'Software Engineer';
+      const type = currentCandidateType || 'Experienced';
+      const exp = type === 'Fresher' ? 'Fresher (0 Years)' : (document.getElementById('candidateExpInput').value.trim() || '2 Years');
+      const company = document.getElementById('candidateCompanyInput').value.trim() || (type === 'Fresher' ? 'Fresher / College Graduate' : 'Corporate Enterprise');
+      const education = document.getElementById('candidateEducationInput').value.trim() || 'Graduate Degree';
+      const skills = document.getElementById('candidateSkillsInput').value.trim() || 'Domain Expertise, Team Collaboration';
       const ctc = document.getElementById('candidateCtcInput').value.trim() || '₹ 12,00,000';
-      const stage = document.getElementById('candidateStageSelect').value;
+      const notice = document.getElementById('candidateNoticeInput').value || (type === 'Fresher' ? 'Immediate' : '30 Days');
+      const stage = document.getElementById('candidateStageSelect').value || (appState.pipelineStages[0] ? appState.pipelineStages[0].name : 'Initial Screening');
+
       if (!name) {
         showToast('Required', 'Candidate Full Name is required.');
         return;
       }
+      if (!education) {
+        showToast('Required', 'Highest Qualification / Degree is required.');
+        return;
+      }
+      if (!skills) {
+        showToast('Required', 'Key Skills are required.');
+        return;
+      }
+
       appState.candidates.unshift({
         id: 'CND-' + Math.floor(1000 + Math.random() * 9000),
         name: name,
         pos: pos,
+        candidateType: type,
         dept: 'Engineering & Technology',
         exp: exp,
-        currentOrg: 'Industry Specialist',
+        currentOrg: company,
+        education: education,
+        skills: skills,
         ctc: ctc,
-        notice: '30 Days',
+        notice: notice,
         stage: stage,
-        score: '91%',
-        notes: 'Enrolled via Admin ATS quick portal.',
-        resumeUrl: `${name.replace(' ', '_')}_Resume.pdf`
+        score: type === 'Fresher' ? '88%' : '93%',
+        notes: `Enrolled into ATS. Background: ${type} (${exp}). Education: ${education}. Organization/College: ${company}. Key Skills: ${skills}.`,
+        resumeUrl: `${name.replace(/\s+/g, '_')}_Resume.pdf`
       });
+
       renderCandidateTable();
       closeModal('modalAddCandidate');
-      showToast('Candidate Added', `${name} enrolled in talent pipeline.`);
+      showToast('Candidate Enrolled', `${name} (${type}) added to "${stage}" pipeline.`);
     }
 
     function openCandidateDetailModal(idx) {
@@ -6115,9 +6322,11 @@
       const c = appState.candidates[idx];
       if (!c) return;
 
+      const isFresher = c.candidateType === 'Fresher' || (c.exp && c.exp.toLowerCase().includes('fresh'));
+
       document.getElementById('cndDetailName').innerText = c.name;
       document.getElementById('cndDetailRole').innerText = c.pos;
-      document.getElementById('cndDetailOrg').innerText = `Current: ${c.currentOrg || 'Corporate Tech'}`;
+      document.getElementById('cndDetailOrg').innerText = `${isFresher ? 'Campus / College' : 'Current Org'}: ${c.currentOrg || 'Corporate Tech'}`;
       document.getElementById('cndDetailAvatar').innerText = c.name.split(' ').map(n=>n[0]).join('');
       document.getElementById('cndDetailScore').innerHTML = `${c.score || '90%'} &bull; Candidate Match`;
       document.getElementById('cndDetailExp').innerText = c.exp;
@@ -6125,7 +6334,44 @@
       document.getElementById('cndDetailNotice').innerText = c.notice || '30 Days';
       document.getElementById('cndDetailDept').innerText = c.dept || 'Engineering';
       document.getElementById('cndDetailNotes').value = c.notes || '';
-      document.getElementById('cndDetailResumeName').innerText = c.resumeUrl || `${c.name.replace(' ', '_')}_Resume.pdf`;
+      document.getElementById('cndDetailResumeName').innerText = c.resumeUrl || `${c.name.replace(/\s+/g, '_')}_Resume.pdf`;
+
+      // Fresher / Experienced badge
+      const typeBadgeEl = document.getElementById('cndDetailTypeBadge');
+      if (typeBadgeEl) {
+        if (isFresher) {
+          typeBadgeEl.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 mb-1';
+          typeBadgeEl.innerText = 'Fresher / Graduate';
+        } else {
+          typeBadgeEl.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-amber/15 text-brand-amber border border-brand-amber/30 mb-1';
+          typeBadgeEl.innerText = 'Experienced Professional';
+        }
+      }
+
+      // Education & Past Company
+      const eduEl = document.getElementById('cndDetailEducation');
+      if (eduEl) eduEl.innerText = c.education || 'Graduate Degree';
+
+      const orgCardEl = document.getElementById('cndDetailOrgCard');
+      if (orgCardEl) orgCardEl.innerText = c.currentOrg || 'Corporate Tech';
+
+      const orgLabelEl = document.getElementById('cndDetailOrgLabel');
+      if (orgLabelEl) orgLabelEl.innerText = isFresher ? 'College / University' : 'Current / Previous Org';
+
+      // Skills chips
+      const skillsContainer = document.getElementById('cndDetailSkillsContainer');
+      if (skillsContainer) {
+        const skillsList = (c.skills || 'Domain Expertise, Team Work')
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean);
+        skillsContainer.innerHTML = skillsList.map(skill => `
+          <span class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-brand-surface text-brand-amber border border-brand-amber/30 flex items-center gap-1 shadow-xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-amber"></span>
+            <span>${skill}</span>
+          </span>
+        `).join('');
+      }
 
       // Populate dynamic pipeline stages from Master Setup
       populateCandidateStagesDropdown();
