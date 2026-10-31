@@ -321,6 +321,49 @@
               </div>
             </div>
 
+            <!-- Master Setup / Organization Master (Accordion with Indicator) -->
+            <div>
+              <button id="btn-menuMasterSetup" onclick="toggleMenu('menuMasterSetup')" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-all text-left group">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="sliders" class="w-4 h-4 text-brand-amber"></i>
+                  <span>Master Setup</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span id="arrow-menuMasterSetup" class="font-mono font-black text-brand-amber text-sm leading-none transition-transform duration-200 inline-block">&gt;</span>
+                </div>
+              </button>
+              <div id="sub-menuMasterSetup" class="hidden pl-9 pr-2 py-1.5 space-y-1 text-xs text-neutral-400 border-l border-brand-border/40 ml-4 my-1">
+                <button onclick="openMasterTab('roles')" id="nav-master-roles" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors flex items-center justify-between">
+                  <span>Roles &amp; Permissions</span>
+                  <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-roles">4</span>
+                </button>
+                <button onclick="openMasterTab('departments')" id="nav-master-departments" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors flex items-center justify-between">
+                  <span>Departments</span>
+                  <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-departments">6</span>
+                </button>
+                <button onclick="openMasterTab('designations')" id="nav-master-designations" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors flex items-center justify-between">
+                  <span>Designations</span>
+                  <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-designations">6</span>
+                </button>
+                <button onclick="openMasterTab('locations')" id="nav-master-locations" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors flex items-center justify-between">
+                  <span>Work Locations / Branches</span>
+                  <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-locations">5</span>
+                </button>
+                <button onclick="openMasterTab('shifts')" id="nav-master-shifts" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors flex items-center justify-between">
+                  <span>Work Shifts &amp; Timings</span>
+                  <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-shifts">3</span>
+                </button>
+                <button onclick="openMasterTab('assets')" id="nav-master-assets" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors flex items-center justify-between">
+                  <span>Company Assets / Kits</span>
+                  <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-assets">4</span>
+                </button>
+                <button onclick="openMasterTab('empTypes')" id="nav-master-empTypes" class="sidebar-btn w-full text-left py-1.5 px-2 rounded-lg hover:text-brand-amber hover:bg-brand-surface transition-colors flex items-center justify-between">
+                  <span>Employment Types</span>
+                  <span class="text-[10px] text-brand-amber font-mono" id="mCountBadge-empTypes">4</span>
+                </button>
+              </div>
+            </div>
+
             <!-- 3. Import & Export (Accordion with Indicator) -->
             <div>
               <button id="btn-menuImportExport" onclick="toggleMenu('menuImportExport')" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-all text-left group">
@@ -566,90 +609,103 @@
 
             <!-- STEP 1 CONTAINER -->
             <div id="empStepContainer1" class="space-y-6 bg-brand-surface p-6 sm:p-8 rounded-2xl border border-brand-border">
-              <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
-                <i data-lucide="shield-check" class="w-4 h-4"></i>
-                <span>Step 1: Role, Permissions, Department &amp; Designation</span>
+              <div class="flex items-center justify-between">
+                <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                  <i data-lucide="shield-check" class="w-4 h-4"></i>
+                  <span>Step 1: Role, Permissions, Department, Shifts &amp; Assets</span>
+                </div>
+                <span class="text-[11px] text-neutral-400">All dropdown master options can be configured in Master Setup</span>
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <!-- Role Dropdown with + Button -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- 1. Role Dropdown -->
                 <div>
                   <div class="flex items-center justify-between mb-1.5">
                     <label class="text-xs font-semibold text-neutral-300">Assign Role &amp; Permissions *</label>
-                    <button type="button" onclick="openCreateRoleModal()" class="text-[11px] text-brand-amber hover:underline font-bold flex items-center gap-1">
-                      <span class="w-4 h-4 rounded-full bg-brand-amber/20 flex items-center justify-center font-bold text-xs">+</span>
-                      <span>Add New Role</span>
+                    <button type="button" onclick="openCreateRoleModal()" class="px-2.5 py-0.5 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold text-[11px] border border-brand-amber/30 transition-all flex items-center gap-1 shadow-sm">
+                      <i data-lucide="plus" class="w-3 h-3"></i>
+                      <span>Add Role</span>
                     </button>
                   </div>
-                  <div class="flex gap-2">
-                    <select id="empFormRoleSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
-                      <!-- Dynamic roles -->
-                    </select>
-                    <button type="button" onclick="openCreateRoleModal()" title="Create Custom Role with View, Create, Update, Delete Permissions" class="px-3 py-2 rounded-xl bg-brand-amber/10 border border-brand-amber/40 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold transition-all">
-                      +
-                    </button>
-                  </div>
-                  <span class="text-[10px] text-neutral-500 mt-1 block">Click '+' to define granular View, Create, Update, Delete permissions.</span>
+                  <select id="empFormRoleSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                    <!-- Dynamic roles -->
+                  </select>
+                  <span class="text-[10px] text-neutral-500 mt-1 block">Define granular View, Create, Update, Delete rights.</span>
                 </div>
 
-                <!-- Department Dropdown with + Button -->
+                <!-- 2. Department Dropdown -->
                 <div>
                   <div class="flex items-center justify-between mb-1.5">
                     <label class="text-xs font-semibold text-neutral-300">Department *</label>
-                    <button type="button" onclick="openCreateDeptModal()" class="text-[11px] text-brand-amber hover:underline font-bold flex items-center gap-1">
-                      <span class="w-4 h-4 rounded-full bg-brand-amber/20 flex items-center justify-center font-bold text-xs">+</span>
-                      <span>Add Department</span>
+                    <button type="button" onclick="openCreateDeptModal()" class="px-2.5 py-0.5 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold text-[11px] border border-brand-amber/30 transition-all flex items-center gap-1 shadow-sm">
+                      <i data-lucide="plus" class="w-3 h-3"></i>
+                      <span>Add Dept</span>
                     </button>
                   </div>
-                  <div class="flex gap-2">
-                    <select id="empFormDeptSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
-                      <!-- Dynamic departments -->
-                    </select>
-                    <button type="button" onclick="openCreateDeptModal()" title="Add New Department" class="px-3 py-2 rounded-xl bg-brand-amber/10 border border-brand-amber/40 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold transition-all">
-                      +
-                    </button>
-                  </div>
-                  <span class="text-[10px] text-neutral-500 mt-1 block">Click '+' to define organizational unit, department code & HOD.</span>
+                  <select id="empFormDeptSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                    <!-- Dynamic departments -->
+                  </select>
+                  <span class="text-[10px] text-neutral-500 mt-1 block">Organizational unit, department code &amp; HOD.</span>
                 </div>
 
-                <!-- Designation Dropdown with + Button -->
+                <!-- 3. Designation Dropdown -->
                 <div>
                   <div class="flex items-center justify-between mb-1.5">
                     <label class="text-xs font-semibold text-neutral-300">Designation Title *</label>
-                    <button type="button" onclick="openCreateDesignationModal()" class="text-[11px] text-brand-amber hover:underline font-bold flex items-center gap-1">
-                      <span class="w-4 h-4 rounded-full bg-brand-amber/20 flex items-center justify-center font-bold text-xs">+</span>
+                    <button type="button" onclick="openCreateDesignationModal()" class="px-2.5 py-0.5 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold text-[11px] border border-brand-amber/30 transition-all flex items-center gap-1 shadow-sm">
+                      <i data-lucide="plus" class="w-3 h-3"></i>
                       <span>Add Designation</span>
                     </button>
                   </div>
-                  <div class="flex gap-2">
-                    <select id="empFormDesignationSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
-                      <!-- Dynamic designations -->
-                    </select>
-                    <button type="button" onclick="openCreateDesignationModal()" title="Add New Designation" class="px-3 py-2 rounded-xl bg-brand-amber/10 border border-brand-amber/40 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold transition-all">
-                      +
-                    </button>
-                  </div>
-                  <span class="text-[10px] text-neutral-500 mt-1 block">Click '+' to create job title, career band & seniority level.</span>
+                  <select id="empFormDesignationSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                    <!-- Dynamic designations -->
+                  </select>
+                  <span class="text-[10px] text-neutral-500 mt-1 block">Official job title, career band &amp; seniority.</span>
                 </div>
 
-                <!-- Work Location / Branch Dropdown with + Button -->
+                <!-- 4. Work Location / Branch Dropdown -->
                 <div>
                   <div class="flex items-center justify-between mb-1.5">
                     <label class="text-xs font-semibold text-neutral-300">Work Location / Branch *</label>
-                    <button type="button" onclick="openCreateLocationModal()" class="text-[11px] text-brand-amber hover:underline font-bold flex items-center gap-1">
-                      <span class="w-4 h-4 rounded-full bg-brand-amber/20 flex items-center justify-center font-bold text-xs">+</span>
-                      <span>Add Branch / Location</span>
+                    <button type="button" onclick="openCreateLocationModal()" class="px-2.5 py-0.5 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold text-[11px] border border-brand-amber/30 transition-all flex items-center gap-1 shadow-sm">
+                      <i data-lucide="plus" class="w-3 h-3"></i>
+                      <span>Add Branch</span>
                     </button>
                   </div>
-                  <div class="flex gap-2">
-                    <select id="empFormBranchSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
-                      <!-- Dynamic locations -->
-                    </select>
-                    <button type="button" onclick="openCreateLocationModal()" title="Add New Work Location / Branch" class="px-3 py-2 rounded-xl bg-brand-amber/10 border border-brand-amber/40 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold transition-all">
-                      +
+                  <select id="empFormBranchSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                    <!-- Dynamic locations -->
+                  </select>
+                  <span class="text-[10px] text-neutral-500 mt-1 block">Regional office, branch &amp; GPS geofence coords.</span>
+                </div>
+
+                <!-- 5. Work Shift & Timings -->
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label class="text-xs font-semibold text-neutral-300">Work Shift &amp; Timings *</label>
+                    <button type="button" onclick="openCreateShiftModal()" class="px-2.5 py-0.5 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold text-[11px] border border-brand-amber/30 transition-all flex items-center gap-1 shadow-sm">
+                      <i data-lucide="plus" class="w-3 h-3"></i>
+                      <span>Add Shift</span>
                     </button>
                   </div>
-                  <span class="text-[10px] text-neutral-500 mt-1 block">Click '+' to register office branch with GPS lat-long geofence.</span>
+                  <select id="empFormShiftSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                    <!-- Dynamic shifts -->
+                  </select>
+                  <span class="text-[10px] text-neutral-500 mt-1 block">Shift schedule, grace buffer &amp; clock-in timing.</span>
+                </div>
+
+                <!-- 6. Hardware & Company Assets -->
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label class="text-xs font-semibold text-neutral-300">Assigned Assets &amp; Kit *</label>
+                    <button type="button" onclick="openCreateAssetModal()" class="px-2.5 py-0.5 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold text-[11px] border border-brand-amber/30 transition-all flex items-center gap-1 shadow-sm">
+                      <i data-lucide="plus" class="w-3 h-3"></i>
+                      <span>Add Asset</span>
+                    </button>
+                  </div>
+                  <select id="empFormAssetSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                    <!-- Dynamic assets -->
+                  </select>
+                  <span class="text-[10px] text-neutral-500 mt-1 block">Laptops, monitors, fleet SIMs &amp; kits.</span>
                 </div>
               </div>
 
@@ -665,36 +721,90 @@
             <div id="empStepContainer2" class="hidden space-y-6 bg-brand-surface p-6 sm:p-8 rounded-2xl border border-brand-border">
               <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
                 <i data-lucide="user" class="w-4 h-4"></i>
-                <span>Step 2: Employee Profile &amp; Statutory HRMS Details</span>
+                <span>Step 2: Employee Profile, Credentials &amp; Statutory Details</span>
               </div>
 
-              <!-- Auto-generated Info Bar -->
-              <div class="p-4 rounded-xl bg-brand-dark border border-brand-border/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <div class="text-xs text-neutral-400">Company Auto-Generated Employee ID:</div>
-                  <div class="text-lg font-extrabold text-brand-amber font-mono mt-0.5" id="empAutoDisplayId">EMP-AGT-0105</div>
+              <!-- Top Bar: Preview & Editable Employee ID -->
+              <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-brand-amber/10 border border-brand-amber/30 flex items-center justify-center text-brand-amber">
+                    <i data-lucide="id-card" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-bold text-white">Official Company Employee ID</span>
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Auto-Generated &bull; Editable</span>
+                    </div>
+                    <div class="text-[11px] text-neutral-400 mt-0.5">Sequence based on company code (AGT). You can edit this ID manually or click refresh.</div>
+                  </div>
                 </div>
 
-                <label class="flex items-center gap-2.5 cursor-pointer bg-brand-surface px-3.5 py-2 rounded-xl border border-brand-border">
-                  <input type="checkbox" id="empAutoGenerateCreds" checked onchange="toggleCredsGen()" class="rounded border-brand-border text-brand-amber focus:ring-0">
-                  <span class="text-xs text-neutral-300 font-medium">Auto-generate Portal Username &amp; Password</span>
-                </label>
+                <div class="flex items-center gap-2">
+                  <input type="text" id="empCustomIdInput" value="EMP-AGT-0105" class="w-44 px-3 py-1.5 rounded-xl bg-brand-surface border border-brand-amber/50 text-brand-amber font-mono font-bold text-sm tracking-wide focus:outline-none focus:border-brand-amber text-center">
+                  <button type="button" onclick="regenerateEmployeeId()" title="Regenerate Next ID Sequence" class="p-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-brand-amber transition-colors">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                  </button>
+                </div>
               </div>
 
-              <div id="generatedCredsPreview" class="p-3.5 rounded-xl bg-brand-amber/5 border border-brand-amber/30 text-xs text-neutral-300 flex items-center justify-between">
-                <span>Credentials will be auto-generated and dispatched to official email on submit.</span>
-                <span class="font-mono text-brand-amber">Default: emp.[firstname] / Pass: Sora@2026</span>
+              <!-- Independent Username and Password Generation Cards -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Username Card -->
+                <div class="p-4 rounded-xl bg-brand-dark/90 border border-brand-border space-y-3">
+                  <div class="flex items-center justify-between">
+                    <label class="text-xs font-bold text-white flex items-center gap-2">
+                      <i data-lucide="at-sign" class="w-3.5 h-3.5 text-brand-amber"></i>
+                      <span>Portal Username *</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 cursor-pointer text-[11px] text-neutral-300">
+                      <input type="checkbox" id="empAutoGenerateUsername" checked onchange="toggleUsernameGen()" class="rounded border-brand-border text-brand-amber focus:ring-0">
+                      <span>Auto-generate</span>
+                    </label>
+                  </div>
+                  <div class="relative">
+                    <i data-lucide="user-check" class="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input type="text" id="empPortalUsername" value="emp.ananya" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-xs sm:text-sm font-mono text-brand-amber focus:outline-none focus:border-brand-amber">
+                  </div>
+                  <p class="text-[10px] text-neutral-500" id="usernameGenNote">Auto-synced with employee's first name. Uncheck to type custom username.</p>
+                </div>
+
+                <!-- Password Card -->
+                <div class="p-4 rounded-xl bg-brand-dark/90 border border-brand-border space-y-3">
+                  <div class="flex items-center justify-between">
+                    <label class="text-xs font-bold text-white flex items-center gap-2">
+                      <i data-lucide="key" class="w-3.5 h-3.5 text-brand-amber"></i>
+                      <span>Portal Password *</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 cursor-pointer text-[11px] text-neutral-300">
+                      <input type="checkbox" id="empAutoGeneratePassword" checked onchange="togglePasswordGen()" class="rounded border-brand-border text-brand-amber focus:ring-0">
+                      <span>Auto-generate</span>
+                    </label>
+                  </div>
+                  <div class="relative flex items-center gap-2">
+                    <div class="relative flex-grow">
+                      <i data-lucide="lock" class="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                      <input type="password" id="empPortalPassword" value="Sora@2026!7x" class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-xs sm:text-sm font-mono text-brand-amber focus:outline-none focus:border-brand-amber">
+                      <button type="button" onclick="togglePasswordVisibility('empPortalPassword', this)" title="Show/Hide Password" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-brand-amber p-1 transition-colors">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                    <button type="button" onclick="generateNewRandomPassword()" title="Generate New Secure Password" class="p-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-brand-amber transition-colors flex-shrink-0">
+                      <i data-lucide="shuffle" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                  <p class="text-[10px] text-neutral-500" id="passwordGenNote">Cryptographically secure 12-char credential. Uncheck to set manually.</p>
+                </div>
               </div>
 
               <!-- Personal & Employment Fields -->
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label class="block text-xs text-neutral-300 font-semibold mb-1">First Name *</label>
-                  <input type="text" id="empFormFirstName" required placeholder="e.g. Ananya" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
+                  <input type="text" id="empFormFirstName" required placeholder="e.g. Ananya" oninput="syncAutoGeneratedCreds()" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
                 </div>
                 <div>
                   <label class="block text-xs text-neutral-300 font-semibold mb-1">Last Name *</label>
-                  <input type="text" id="empFormLastName" required placeholder="e.g. Verma" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
+                  <input type="text" id="empFormLastName" required placeholder="e.g. Verma" oninput="syncAutoGeneratedCreds()" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
                 </div>
                 <div>
                   <label class="block text-xs text-neutral-300 font-semibold mb-1">Official Work Email *</label>
@@ -710,12 +820,15 @@
                   <input type="date" id="empFormDoj" value="2026-11-01" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
                 </div>
                 <div>
-                  <label class="block text-xs text-neutral-300 font-semibold mb-1">Employment Type</label>
-                  <select id="empFormType" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
-                    <option value="Full-Time Permanent">Full-Time Permanent</option>
-                    <option value="Contractual">Contractual</option>
-                    <option value="Probationary">Probationary (6 Months)</option>
-                    <option value="Internship">Internship</option>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label class="block text-xs text-neutral-300 font-semibold">Employment Type *</label>
+                    <button type="button" onclick="openCreateEmploymentTypeModal()" class="px-2 py-0.5 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold text-[10px] border border-brand-amber/30 transition-all flex items-center gap-1 shadow-sm">
+                      <i data-lucide="plus" class="w-2.5 h-2.5"></i>
+                      <span>Add Type</span>
+                    </button>
+                  </div>
+                  <select id="empFormTypeSelect" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                    <!-- Dynamic employment types -->
                   </select>
                 </div>
 
@@ -744,7 +857,6 @@
               </div>
             </div>
 
-            <!-- STEP 3 CONTAINER -->
             <div id="empStepContainer3" class="hidden space-y-6 bg-brand-surface p-6 sm:p-8 rounded-2xl border border-brand-border">
               <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
                 <i data-lucide="file-text" class="w-4 h-4"></i>
@@ -818,6 +930,92 @@
 
             </div>
 
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TAB: MASTER SETUP (CENTRALIZED DIRECTORY CONFIGURATION) -->
+          <!-- ============================================== -->
+          <div id="tab-master-setup" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <h1 class="text-2xl font-bold text-white flex items-center gap-2.5">
+                  <i data-lucide="sliders" class="w-6 h-6 text-brand-amber"></i>
+                  <span>Organization Master Setup</span>
+                </h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Centralized configuration engine for roles, departments, designations, branches, shifts, company assets &amp; employment contracts.</p>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <button id="masterActionAddBtn" onclick="triggerCurrentMasterAdd()" class="px-4 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+                  <i data-lucide="plus" class="w-4 h-4"></i>
+                  <span id="masterAddBtnLabel">+ Add Item</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Sub-Tabs Navigation for Master Entities -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-brand-border/60 text-xs font-semibold">
+              <button onclick="openMasterTab('roles')" id="mTabBtn-roles" class="master-pill-btn px-3.5 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold flex items-center gap-2 whitespace-nowrap shadow">
+                <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                <span>Roles &amp; Permissions</span>
+                <span id="mPillCount-roles" class="text-[10px] px-1.5 py-0.2 rounded-full bg-black/20 font-mono">4</span>
+              </button>
+              <button onclick="openMasterTab('departments')" id="mTabBtn-departments" class="master-pill-btn px-3.5 py-2 rounded-xl bg-brand-surface text-neutral-300 hover:text-white border border-brand-border flex items-center gap-2 whitespace-nowrap">
+                <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                <span>Departments</span>
+                <span id="mPillCount-departments" class="text-[10px] px-1.5 py-0.2 rounded-full bg-brand-dark font-mono">6</span>
+              </button>
+              <button onclick="openMasterTab('designations')" id="mTabBtn-designations" class="master-pill-btn px-3.5 py-2 rounded-xl bg-brand-surface text-neutral-300 hover:text-white border border-brand-border flex items-center gap-2 whitespace-nowrap">
+                <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
+                <span>Designations</span>
+                <span id="mPillCount-designations" class="text-[10px] px-1.5 py-0.2 rounded-full bg-brand-dark font-mono">6</span>
+              </button>
+              <button onclick="openMasterTab('locations')" id="mTabBtn-locations" class="master-pill-btn px-3.5 py-2 rounded-xl bg-brand-surface text-neutral-300 hover:text-white border border-brand-border flex items-center gap-2 whitespace-nowrap">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                <span>Work Locations / Branches</span>
+                <span id="mPillCount-locations" class="text-[10px] px-1.5 py-0.2 rounded-full bg-brand-dark font-mono">5</span>
+              </button>
+              <button onclick="openMasterTab('shifts')" id="mTabBtn-shifts" class="master-pill-btn px-3.5 py-2 rounded-xl bg-brand-surface text-neutral-300 hover:text-white border border-brand-border flex items-center gap-2 whitespace-nowrap">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                <span>Work Shifts</span>
+                <span id="mPillCount-shifts" class="text-[10px] px-1.5 py-0.2 rounded-full bg-brand-dark font-mono">3</span>
+              </button>
+              <button onclick="openMasterTab('assets')" id="mTabBtn-assets" class="master-pill-btn px-3.5 py-2 rounded-xl bg-brand-surface text-neutral-300 hover:text-white border border-brand-border flex items-center gap-2 whitespace-nowrap">
+                <i data-lucide="laptop" class="w-3.5 h-3.5"></i>
+                <span>Company Assets</span>
+                <span id="mPillCount-assets" class="text-[10px] px-1.5 py-0.2 rounded-full bg-brand-dark font-mono">4</span>
+              </button>
+              <button onclick="openMasterTab('empTypes')" id="mTabBtn-empTypes" class="master-pill-btn px-3.5 py-2 rounded-xl bg-brand-surface text-neutral-300 hover:text-white border border-brand-border flex items-center gap-2 whitespace-nowrap">
+                <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+                <span>Employment Types</span>
+                <span id="mPillCount-empTypes" class="text-[10px] px-1.5 py-0.2 rounded-full bg-brand-dark font-mono">4</span>
+              </button>
+            </div>
+
+            <!-- Search & Filter Bar -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-brand-surface p-3 rounded-2xl border border-brand-border">
+              <div class="relative flex-grow max-w-md">
+                <i data-lucide="search" class="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="masterSearchInput" oninput="renderMasterTable()" placeholder="Search records in this master..." class="w-full pl-10 pr-4 py-2 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+              </div>
+              <div class="text-xs text-neutral-400 flex items-center gap-2">
+                <span id="masterEntitySummaryText">Showing all master records</span>
+              </div>
+            </div>
+
+            <!-- Master Data Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead id="masterTableThead" class="bg-brand-dark border-b border-brand-border text-neutral-400 font-semibold uppercase text-[10px] tracking-wider">
+                    <!-- Dynamic Headers -->
+                  </thead>
+                  <tbody id="masterTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                    <!-- Dynamic Body -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
 
           <!-- ============================================== -->
@@ -1571,6 +1769,156 @@
     </div>
   </div>
 
+  <!-- MODAL: CREATE WORK SHIFT -->
+  <div id="modalCreateShift" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-brand-border flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="clock" class="w-4 h-4 text-brand-amber"></i>
+            <span>Add Work Shift &amp; Timings</span>
+          </h3>
+          <p class="text-xs text-neutral-400 mt-0.5">Define shift work hours, grace period and half-day policy.</p>
+        </div>
+        <button onclick="closeModal('modalCreateShift')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Shift Name *</label>
+          <input type="text" id="newShiftName" placeholder="e.g. Morning Flex Shift" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Start Time (Clock-In) *</label>
+            <input type="text" id="newShiftStart" value="09:30 AM" placeholder="09:30 AM" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">End Time (Clock-Out) *</label>
+            <input type="text" id="newShiftEnd" value="06:30 PM" placeholder="06:30 PM" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Grace Period (Minutes)</label>
+            <input type="text" id="newShiftGrace" value="15 Mins" placeholder="15 Mins" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Half-Day Minimum Hours</label>
+            <input type="text" id="newShiftHalfDay" value="4.5 Hours" placeholder="4.5 Hours" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Shift Notes / Applicable Teams</label>
+          <input type="text" id="newShiftDesc" placeholder="e.g. Standard office operational hours" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
+        <button onclick="closeModal('modalCreateShift')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">Cancel</button>
+        <button onclick="saveCustomShift()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Save &amp; Select Shift</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE COMPANY ASSET -->
+  <div id="modalCreateAsset" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-brand-border flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="laptop" class="w-4 h-4 text-brand-amber"></i>
+            <span>Add Company Asset / Equipment</span>
+          </h3>
+          <p class="text-xs text-neutral-400 mt-0.5">Register hardware, laptops, monitors or mobile devices in inventory.</p>
+        </div>
+        <button onclick="closeModal('modalCreateAsset')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Asset Name / Model *</label>
+          <input type="text" id="newAssetName" placeholder="e.g. MacBook Pro M3 Max (16-inch)" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Category *</label>
+            <select id="newAssetCategory" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+              <option value="Laptop / Workstation">Laptop / Workstation</option>
+              <option value="Monitor / Display Kit">Monitor / Display Kit</option>
+              <option value="Mobile / Tablet + SIM">Mobile / Tablet + SIM</option>
+              <option value="Workstation Accessories">Workstation Accessories</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Serial / Asset Tag</label>
+            <input type="text" id="newAssetSerial" placeholder="e.g. MBP-2026-9021" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono uppercase focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Hardware Specs / Allocation Notes</label>
+          <input type="text" id="newAssetDesc" placeholder="e.g. 36GB RAM, 1TB SSD, Space Black, AppleCare+" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
+        <button onclick="closeModal('modalCreateAsset')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">Cancel</button>
+        <button onclick="saveCustomAsset()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Save &amp; Select Asset</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE EMPLOYMENT TYPE -->
+  <div id="modalCreateEmploymentType" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-brand-border flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="briefcase" class="w-4 h-4 text-brand-amber"></i>
+            <span>Add Employment Type</span>
+          </h3>
+          <p class="text-xs text-neutral-400 mt-0.5">Define employment contract category, standard notice period &amp; benefits.</p>
+        </div>
+        <button onclick="closeModal('modalCreateEmploymentType')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Employment Type Name *</label>
+          <input type="text" id="newEmpTypeName" placeholder="e.g. Retainer Specialist / Consultant" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Notice Period *</label>
+            <input type="text" id="newEmpTypeNotice" value="30 Days" placeholder="30 Days" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Tax / Compliance Type</label>
+            <input type="text" id="newEmpTypeTax" value="Standard TDS / Form 16" placeholder="e.g. 194J Retainer" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Benefits &amp; Policy Scope</label>
+          <input type="text" id="newEmpTypeDesc" placeholder="e.g. Standard medical insurance, statutory leave &amp; gratuity eligibility" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
+        <button onclick="closeModal('modalCreateEmploymentType')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">Cancel</button>
+        <button onclick="saveCustomEmploymentType()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Save &amp; Select Type</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL 2: LAT-LONG ROUTE MAP VIEWER -->
   <div id="modalLatLongMap" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col">
@@ -1782,6 +2130,24 @@
         { id: 'desig_pmm', title: 'Product Marketing Manager', band: 'L4 - Lead', dept: 'Marketing & Growth' },
         { id: 'desig_devops', title: 'Cloud & DevOps Architect', band: 'L4 - Lead', dept: 'Engineering & Technology' }
       ],
+      shifts: [
+        { id: 'shift_gen', name: 'General Day Shift', start: '09:30 AM', end: '06:30 PM', grace: '15 Mins', halfDay: '4.5 Hours', desc: 'Standard office operational hours' },
+        { id: 'shift_morn', name: 'Morning Flex Shift', start: '08:00 AM', end: '05:00 PM', grace: '15 Mins', halfDay: '4.5 Hours', desc: 'Early technical & support shift' },
+        { id: 'shift_night', name: 'US / Global Overlap Shift', start: '06:30 PM', end: '03:30 AM', grace: '30 Mins', halfDay: '4.5 Hours', desc: 'US customer success & sales coverage' }
+      ],
+      assets: [
+        { id: 'ast_mbp', name: 'MacBook Pro M3 Max (16-inch)', category: 'Laptop / Workstation', serial: 'MBP-2026-9021', desc: 'Apple Silicon 36GB RAM / 1TB SSD' },
+        { id: 'ast_dell', name: 'Dell XPS 15 + Dual 4K Kit', category: 'Laptop / Workstation', serial: 'DELL-XPS-4412', desc: 'Intel i9 / 32GB RAM + Dual Monitors' },
+        { id: 'ast_think', name: 'Lenovo ThinkPad T14 Gen 4', category: 'Laptop / Workstation', serial: 'LNV-TP-1823', desc: 'Standard Corporate Engineering Machine' },
+        { id: 'ast_tab', name: 'Samsung Galaxy Tab Active (Fleet)', category: 'Mobile / Tablet + SIM', serial: 'SAM-TAB-0941', desc: 'Rugged GPS field attendance tablet' }
+      ],
+      employmentTypes: [
+        { id: 'type_perm', name: 'Full-Time Permanent', notice: '60 Days', desc: 'Standard permanent role with full PF, ESIC & health benefits' },
+        { id: 'type_prob', name: 'Probationary / Trainee', notice: '30 Days', desc: '6-month probation track prior to full confirmation' },
+        { id: 'type_cont', name: 'Contractual / Vendor Retainer', notice: '15 Days', desc: '12-month fixed scope contract with invoice settlement' },
+        { id: 'type_intern', name: 'Internship / Graduate Trainee', notice: '7 Days', desc: 'Stipend based technical training contract' }
+      ],
+      currentMasterTab: 'roles',
       locations: [
         { id: 'loc_bkc', name: 'Mumbai Head Office (BKC)', city: 'Mumbai', lat: 19.0657, lng: 72.8682, radius: 100 },
         { id: 'loc_blr', name: 'Bengaluru Tech Hub (Whitefield)', city: 'Bengaluru', lat: 12.9716, lng: 77.5946, radius: 150 },
@@ -1887,7 +2253,7 @@
     }
 
     // Accordion Submenu: Only ONE submenu can stay open at a time!
-    const allAccordionMenus = ['menuEmployees', 'menuImportExport'];
+    const allAccordionMenus = ['menuEmployees', 'menuMasterSetup', 'menuImportExport'];
 
     function toggleMenu(menuId) {
       allAccordionMenus.forEach(id => {
@@ -2040,115 +2406,490 @@
       lucide.createIcons();
     }
 
+    // ==========================================
+    // ALL DROPDOWN POPULATORS & MASTER ENGINE
+    // ==========================================
     function populateRoleDropdown() {
       const select = document.getElementById('empFormRoleSelect');
-      if (!select) return;
-      select.innerHTML = appState.roles.map(r => `
-        <option value="${r.title}">${r.title} (${r.desc})</option>
-      `).join('');
+      if (select) {
+        select.innerHTML = appState.roles.map(r => `<option value="${r.title}">${r.title} (${r.desc})</option>`).join('');
+      }
     }
 
     function populateDeptDropdown() {
       const select = document.getElementById('empFormDeptSelect');
-      if (!select) return;
-      select.innerHTML = appState.departments.map(d => `
-        <option value="${d.name}">${d.name} (${d.code})</option>
-      `).join('');
+      if (select) {
+        select.innerHTML = appState.departments.map(d => `<option value="${d.name}">${d.name} (${d.code})</option>`).join('');
+      }
       const modalSelect = document.getElementById('newDesigDeptSelect');
       if (modalSelect) {
-        modalSelect.innerHTML = appState.departments.map(d => `
-          <option value="${d.name}">${d.name}</option>
-        `).join('');
+        modalSelect.innerHTML = appState.departments.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
       }
     }
 
     function populateDesignationDropdown() {
       const select = document.getElementById('empFormDesignationSelect');
-      if (!select) return;
-      select.innerHTML = appState.designations.map(d => `
-        <option value="${d.title}">${d.title} • ${d.band}</option>
-      `).join('');
+      if (select) {
+        select.innerHTML = appState.designations.map(d => `<option value="${d.title}">${d.title} • ${d.band}</option>`).join('');
+      }
     }
 
     function populateLocationDropdown() {
       const select = document.getElementById('empFormBranchSelect');
-      if (!select) return;
-      select.innerHTML = appState.locations.map(l => `
-        <option value="${l.name}">${l.name} (${l.city})</option>
-      `).join('');
+      if (select) {
+        select.innerHTML = appState.locations.map(l => `<option value="${l.name}">${l.name} (${l.city})</option>`).join('');
+      }
     }
 
-    // Modal Triggers & Savers for Department, Designation & Location
-    function openCreateDeptModal() {
-      document.getElementById('newDeptName').value = '';
-      document.getElementById('newDeptCode').value = '';
-      document.getElementById('newDeptHead').value = '';
-      document.getElementById('newDeptDesc').value = '';
-      document.getElementById('modalCreateDept').classList.remove('hidden');
+    function populateShiftDropdown() {
+      const select = document.getElementById('empFormShiftSelect');
+      if (select) {
+        select.innerHTML = appState.shifts.map(s => `<option value="${s.name}">${s.name} (${s.start} - ${s.end})</option>`).join('');
+      }
+    }
+
+    function populateAssetDropdown() {
+      const select = document.getElementById('empFormAssetSelect');
+      if (select) {
+        select.innerHTML = appState.assets.map(a => `<option value="${a.name}">${a.name} [${a.category}]</option>`).join('');
+      }
+    }
+
+    function populateEmploymentTypeDropdown() {
+      const select = document.getElementById('empFormTypeSelect');
+      if (select) {
+        select.innerHTML = appState.employmentTypes.map(t => `<option value="${t.name}">${t.name} (Notice: ${t.notice})</option>`).join('');
+      }
+    }
+
+    function populateAllDropdowns() {
+      populateAllDropdowns();
+      populateShiftDropdown();
+      populateAssetDropdown();
+      populateEmploymentTypeDropdown();
+      updateMasterBadges();
+    }
+
+    function updateMasterBadges() {
+      const map = {
+        'roles': appState.roles.length,
+        'departments': appState.departments.length,
+        'designations': appState.designations.length,
+        'locations': appState.locations.length,
+        'shifts': appState.shifts.length,
+        'assets': appState.assets.length,
+        'empTypes': appState.employmentTypes.length
+      };
+      for (const k in map) {
+        const b = document.getElementById(`mCountBadge-${k}`);
+        if (b) b.innerText = map[k];
+        const p = document.getElementById(`mPillCount-${k}`);
+        if (p) p.innerText = map[k];
+      }
+    }
+
+    // Modal Handlers for Shift, Asset, and Employment Type
+    function openCreateShiftModal() {
+      document.getElementById('newShiftName').value = '';
+      document.getElementById('newShiftDesc').value = '';
+      document.getElementById('modalCreateShift').classList.remove('hidden');
       lucide.createIcons();
     }
 
-    function saveCustomDept() {
-      const name = document.getElementById('newDeptName').value.trim();
-      const code = document.getElementById('newDeptCode').value.trim() || name.substring(0, 3).toUpperCase();
-      const head = document.getElementById('newDeptHead').value.trim();
+    function saveCustomShift() {
+      const name = document.getElementById('newShiftName').value.trim();
+      const start = document.getElementById('newShiftStart').value.trim() || '09:30 AM';
+      const end = document.getElementById('newShiftEnd').value.trim() || '06:30 PM';
+      const grace = document.getElementById('newShiftGrace').value.trim() || '15 Mins';
+      const halfDay = document.getElementById('newShiftHalfDay').value.trim() || '4.5 Hours';
+      const desc = document.getElementById('newShiftDesc').value.trim() || 'Standard operational hours';
       if (!name) {
-        showToast('Required', 'Department Name is required.');
+        showToast('Required', 'Shift Name is required.');
         return;
       }
-      appState.departments.push({ id: 'dept_' + Date.now(), name, code, head });
-      populateDeptDropdown();
-      document.getElementById('empFormDeptSelect').value = name;
-      closeModal('modalCreateDept');
-      showToast('Department Added', `${name} (${code}) added and selected.`);
+      appState.shifts.push({ id: 'shift_' + Date.now(), name, start, end, grace, halfDay, desc });
+      populateShiftDropdown();
+      const sSelect = document.getElementById('empFormShiftSelect');
+      if (sSelect) sSelect.value = name;
+      closeModal('modalCreateShift');
+      showToast('Shift Added', `${name} (${start} - ${end}) added and selected.`);
+      renderMasterTable();
     }
 
-    function openCreateDesignationModal() {
-      document.getElementById('newDesigTitle').value = '';
-      document.getElementById('newDesigDesc').value = '';
-      populateDeptDropdown();
-      document.getElementById('modalCreateDesignation').classList.remove('hidden');
+    function openCreateAssetModal() {
+      document.getElementById('newAssetName').value = '';
+      document.getElementById('newAssetSerial').value = 'AST-' + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('newAssetDesc').value = '';
+      document.getElementById('modalCreateAsset').classList.remove('hidden');
       lucide.createIcons();
     }
 
-    function saveCustomDesignation() {
-      const title = document.getElementById('newDesigTitle').value.trim();
-      const band = document.getElementById('newDesigBand').value;
-      const dept = document.getElementById('newDesigDeptSelect')?.value || '';
-      if (!title) {
-        showToast('Required', 'Designation Title is required.');
+    function saveCustomAsset() {
+      const name = document.getElementById('newAssetName').value.trim();
+      const category = document.getElementById('newAssetCategory').value;
+      const serial = document.getElementById('newAssetSerial').value.trim();
+      const desc = document.getElementById('newAssetDesc').value.trim();
+      if (!name) {
+        showToast('Required', 'Asset Name / Model is required.');
         return;
       }
-      appState.designations.push({ id: 'desig_' + Date.now(), title, band, dept });
-      populateDesignationDropdown();
-      document.getElementById('empFormDesignationSelect').value = title;
-      closeModal('modalCreateDesignation');
-      showToast('Designation Added', `${title} (${band}) added and selected.`);
+      appState.assets.push({ id: 'ast_' + Date.now(), name, category, serial, desc });
+      populateAssetDropdown();
+      const aSelect = document.getElementById('empFormAssetSelect');
+      if (aSelect) aSelect.value = name;
+      closeModal('modalCreateAsset');
+      showToast('Asset Registered', `${name} [${category}] registered in inventory.`);
+      renderMasterTable();
     }
 
-    function openCreateLocationModal() {
-      document.getElementById('newLocName').value = '';
-      document.getElementById('newLocCity').value = '';
-      document.getElementById('newLocAddress').value = '';
-      document.getElementById('modalCreateLocation').classList.remove('hidden');
+    function openCreateEmploymentTypeModal() {
+      document.getElementById('newEmpTypeName').value = '';
+      document.getElementById('newEmpTypeDesc').value = '';
+      document.getElementById('modalCreateEmploymentType').classList.remove('hidden');
       lucide.createIcons();
     }
 
-    function saveCustomLocation() {
-      const name = document.getElementById('newLocName').value.trim();
-      const city = document.getElementById('newLocCity').value.trim();
-      const lat = parseFloat(document.getElementById('newLocLat').value) || 19.0760;
-      const lng = parseFloat(document.getElementById('newLocLng').value) || 72.8777;
-      const radius = parseInt(document.getElementById('newLocRadius').value) || 100;
-      if (!name || !city) {
-        showToast('Required', 'Branch Name and City are required.');
+    function saveCustomEmploymentType() {
+      const name = document.getElementById('newEmpTypeName').value.trim();
+      const notice = document.getElementById('newEmpTypeNotice').value.trim() || '30 Days';
+      const desc = document.getElementById('newEmpTypeDesc').value.trim();
+      if (!name) {
+        showToast('Required', 'Employment Type Name is required.');
         return;
       }
-      appState.locations.push({ id: 'loc_' + Date.now(), name, city, lat, lng, radius });
-      populateLocationDropdown();
-      document.getElementById('empFormBranchSelect').value = name;
-      closeModal('modalCreateLocation');
-      showToast('Location Added', `${name} registered for geofenced attendance.`);
+      appState.employmentTypes.push({ id: 'type_' + Date.now(), name, notice, desc });
+      populateEmploymentTypeDropdown();
+      const tSelect = document.getElementById('empFormTypeSelect');
+      if (tSelect) tSelect.value = name;
+      closeModal('modalCreateEmploymentType');
+      showToast('Employment Type Added', `${name} with ${notice} notice period added.`);
+      renderMasterTable();
+    }
+
+    // Step 2 Employee ID & Credential Generation Functions
+    let empIdCounter = 105;
+    function regenerateEmployeeId() {
+      empIdCounter++;
+      const padded = String(empIdCounter).padStart(4, '0');
+      const newId = `EMP-AGT-${padded}`;
+      document.getElementById('empCustomIdInput').value = newId;
+      showToast('Employee ID Generated', `Assigned sequential code: ${newId}`);
+    }
+
+    function syncAutoGeneratedCreds() {
+      if (document.getElementById('empAutoGenerateUsername')?.checked) {
+        const fn = document.getElementById('empFormFirstName')?.value?.trim() || '';
+        const clean = fn.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user';
+        document.getElementById('empPortalUsername').value = `emp.${clean}`;
+      }
+    }
+
+    function toggleUsernameGen() {
+      const chk = document.getElementById('empAutoGenerateUsername');
+      const input = document.getElementById('empPortalUsername');
+      const note = document.getElementById('usernameGenNote');
+      if (chk.checked) {
+        syncAutoGeneratedCreds();
+        note.innerText = "Auto-synced with employee's first name. Uncheck to type custom username.";
+      } else {
+        note.innerText = "Custom Username mode active. Type desired username above.";
+        input.focus();
+      }
+    }
+
+    function togglePasswordGen() {
+      const chk = document.getElementById('empAutoGeneratePassword');
+      const note = document.getElementById('passwordGenNote');
+      if (chk.checked) {
+        generateNewRandomPassword();
+        note.innerText = "Cryptographically secure 12-char credential. Uncheck to set manually.";
+      } else {
+        note.innerText = "Custom Password mode active. Type desired secret password above.";
+      }
+    }
+
+    function generateNewRandomPassword() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%";
+      let pwd = "Sora@2026!";
+      for (let i = 0; i < 3; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('empPortalPassword').value = pwd;
+      showToast('Password Generated', 'Fresh secure password generated and previewed.');
+    }
+
+    // ==========================================
+    // MASTER SETUP PAGE & TABLE CONTROLLER
+    // ==========================================
+    function openMasterTab(tabName) {
+      appState.currentMasterTab = tabName;
+      switchTab('master-setup');
+
+      // Update Submenu highlight in sidebar
+      document.querySelectorAll('#sub-menuMasterSetup button').forEach(b => {
+        b.classList.remove('text-brand-amber', 'font-bold');
+      });
+      const activeNav = document.getElementById(`nav-master-${tabName}`);
+      if (activeNav) activeNav.classList.add('text-brand-amber', 'font-bold');
+
+      // Update Pill Buttons
+      document.querySelectorAll('.master-pill-btn').forEach(btn => {
+        btn.className = "master-pill-btn px-3.5 py-2 rounded-xl bg-brand-surface text-neutral-300 hover:text-white border border-brand-border flex items-center gap-2 whitespace-nowrap";
+      });
+      const activePill = document.getElementById(`mTabBtn-${tabName}`);
+      if (activePill) {
+        activePill.className = "master-pill-btn px-3.5 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold flex items-center gap-2 whitespace-nowrap shadow";
+      }
+
+      // Update Add Button Label
+      const labels = {
+        'roles': '+ Add Role & Permissions',
+        'departments': '+ Add Department',
+        'designations': '+ Add Designation',
+        'locations': '+ Add Work Location',
+        'shifts': '+ Add Work Shift',
+        'assets': '+ Add Company Asset',
+        'empTypes': '+ Add Employment Type'
+      };
+      document.getElementById('masterAddBtnLabel').innerText = labels[tabName] || '+ Add Item';
+
+      renderMasterTable();
+    }
+
+    function triggerCurrentMasterAdd() {
+      const t = appState.currentMasterTab;
+      if (t === 'roles') openCreateRoleModal();
+      else if (t === 'departments') openCreateDeptModal();
+      else if (t === 'designations') openCreateDesignationModal();
+      else if (t === 'locations') openCreateLocationModal();
+      else if (t === 'shifts') openCreateShiftModal();
+      else if (t === 'assets') openCreateAssetModal();
+      else if (t === 'empTypes') openCreateEmploymentTypeModal();
+    }
+
+    function renderMasterTable() {
+      const t = appState.currentMasterTab || 'roles';
+      const q = document.getElementById('masterSearchInput')?.value?.toLowerCase().trim() || '';
+      const thead = document.getElementById('masterTableThead');
+      const tbody = document.getElementById('masterTableTbody');
+      if (!thead || !tbody) return;
+
+      let headers = '';
+      let rows = '';
+
+      if (t === 'roles') {
+        headers = `<tr>
+          <th class="py-3 px-4">Role Title</th>
+          <th class="py-3 px-4">Description</th>
+          <th class="py-3 px-4 text-center">Permissions Matrix</th>
+          <th class="py-3 px-4 text-right">Actions</th>
+        </tr>`;
+        const list = appState.roles.filter(r => r.title.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q));
+        rows = list.map(r => `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-brand-amber"></span>
+              <span>${r.title}</span>
+            </td>
+            <td class="py-3.5 px-4 text-neutral-400">${r.desc}</td>
+            <td class="py-3.5 px-4 text-center">
+              <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/15 text-emerald-400 font-mono">View ✓</span>
+              <span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/15 text-amber-400 font-mono">Create ✓</span>
+              <span class="px-2 py-0.5 rounded text-[10px] bg-sky-500/15 text-sky-400 font-mono">Update ✓</span>
+              <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/15 text-rose-400 font-mono">Delete ✓</span>
+            </td>
+            <td class="py-3.5 px-4 text-right space-x-2">
+              <button onclick="editMasterItem('roles', '${r.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
+              <button onclick="deleteMasterItem('roles', '${r.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } else if (t === 'departments') {
+        headers = `<tr>
+          <th class="py-3 px-4">Department Name</th>
+          <th class="py-3 px-4">Dept Code</th>
+          <th class="py-3 px-4">Head of Department (HOD)</th>
+          <th class="py-3 px-4 text-right">Actions</th>
+        </tr>`;
+        const list = appState.departments.filter(d => d.name.toLowerCase().includes(q) || d.code.toLowerCase().includes(q));
+        rows = list.map(d => `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span>${d.name}</span>
+            </td>
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-bold">${d.code}</td>
+            <td class="py-3.5 px-4 text-neutral-300">${d.head || 'Leadership Board'}</td>
+            <td class="py-3.5 px-4 text-right space-x-2">
+              <button onclick="editMasterItem('departments', '${d.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
+              <button onclick="deleteMasterItem('departments', '${d.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } else if (t === 'designations') {
+        headers = `<tr>
+          <th class="py-3 px-4">Designation Title</th>
+          <th class="py-3 px-4">Seniority Band</th>
+          <th class="py-3 px-4">Department Mapping</th>
+          <th class="py-3 px-4 text-right">Actions</th>
+        </tr>`;
+        const list = appState.designations.filter(ds => ds.title.toLowerCase().includes(q) || ds.band.toLowerCase().includes(q));
+        rows = list.map(ds => `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+              <span>${ds.title}</span>
+            </td>
+            <td class="py-3.5 px-4"><span class="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-500/10 border border-brand-amber/30 text-brand-amber font-semibold">${ds.band}</span></td>
+            <td class="py-3.5 px-4 text-neutral-400">${ds.dept || 'Cross-Functional'}</td>
+            <td class="py-3.5 px-4 text-right space-x-2">
+              <button onclick="editMasterItem('designations', '${ds.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
+              <button onclick="deleteMasterItem('designations', '${ds.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } else if (t === 'locations') {
+        headers = `<tr>
+          <th class="py-3 px-4">Branch / Facility</th>
+          <th class="py-3 px-4">City</th>
+          <th class="py-3 px-4">GPS Geofence</th>
+          <th class="py-3 px-4 text-right">Actions</th>
+        </tr>`;
+        const list = appState.locations.filter(l => l.name.toLowerCase().includes(q) || l.city.toLowerCase().includes(q));
+        rows = list.map(l => `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span>${l.name}</span>
+            </td>
+            <td class="py-3.5 px-4 text-neutral-300">${l.city}</td>
+            <td class="py-3.5 px-4 font-mono text-neutral-400 text-[11px]">${l.lat ? `${l.lat}, ${l.lng} (${l.radius}m)` : 'PAN-India Remote'}</td>
+            <td class="py-3.5 px-4 text-right space-x-2">
+              <button onclick="editMasterItem('locations', '${l.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
+              <button onclick="deleteMasterItem('locations', '${l.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } else if (t === 'shifts') {
+        headers = `<tr>
+          <th class="py-3 px-4">Shift Name</th>
+          <th class="py-3 px-4">Working Hours</th>
+          <th class="py-3 px-4">Grace Buffer &amp; Half-Day</th>
+          <th class="py-3 px-4 text-right">Actions</th>
+        </tr>`;
+        const list = appState.shifts.filter(s => s.name.toLowerCase().includes(q) || s.start.toLowerCase().includes(q));
+        rows = list.map(s => `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-violet-400"></span>
+              <span>${s.name}</span>
+            </td>
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-semibold">${s.start} &rarr; ${s.end}</td>
+            <td class="py-3.5 px-4 text-neutral-400">Grace: ${s.grace} &bull; Min Half-Day: ${s.halfDay}</td>
+            <td class="py-3.5 px-4 text-right space-x-2">
+              <button onclick="editMasterItem('shifts', '${s.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
+              <button onclick="deleteMasterItem('shifts', '${s.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } else if (t === 'assets') {
+        headers = `<tr>
+          <th class="py-3 px-4">Asset Name / Kit</th>
+          <th class="py-3 px-4">Category</th>
+          <th class="py-3 px-4">Serial / Tag</th>
+          <th class="py-3 px-4 text-right">Actions</th>
+        </tr>`;
+        const list = appState.assets.filter(a => a.name.toLowerCase().includes(q) || a.serial.toLowerCase().includes(q));
+        rows = list.map(a => `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+              <span>${a.name}</span>
+            </td>
+            <td class="py-3.5 px-4 text-neutral-300">${a.category}</td>
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-semibold">${a.serial}</td>
+            <td class="py-3.5 px-4 text-right space-x-2">
+              <button onclick="editMasterItem('assets', '${a.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
+              <button onclick="deleteMasterItem('assets', '${a.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } else if (t === 'empTypes') {
+        headers = `<tr>
+          <th class="py-3 px-4">Employment Category</th>
+          <th class="py-3 px-4">Notice Period</th>
+          <th class="py-3 px-4">Policy Description</th>
+          <th class="py-3 px-4 text-right">Actions</th>
+        </tr>`;
+        const list = appState.employmentTypes.filter(et => et.name.toLowerCase().includes(q));
+        rows = list.map(et => `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span>${et.name}</span>
+            </td>
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-semibold">${et.notice}</td>
+            <td class="py-3.5 px-4 text-neutral-400">${et.desc || 'Standard corporate benefits'}</td>
+            <td class="py-3.5 px-4 text-right space-x-2">
+              <button onclick="editMasterItem('empTypes', '${et.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
+              <button onclick="deleteMasterItem('empTypes', '${et.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      thead.innerHTML = headers;
+      tbody.innerHTML = rows || `<tr><td colspan="4" class="py-8 text-center text-neutral-500">No records found. Click '+ Add Item' to create one.</td></tr>`;
+      updateMasterBadges();
+      lucide.createIcons();
+    }
+
+    function deleteMasterItem(entity, id) {
+      const idx = appState[entity].findIndex(x => x.id === id);
+      if (idx !== -1) {
+        const item = appState[entity][idx];
+        const name = item.title || item.name;
+        appState[entity].splice(idx, 1);
+        populateAllDropdowns();
+        renderMasterTable();
+        showToast('Item Deleted', `${name} removed from master configuration.`);
+      }
+    }
+
+    function editMasterItem(entity, id) {
+      const item = appState[entity].find(x => x.id === id);
+      if (!item) return;
+      if (entity === 'roles') {
+        openCreateRoleModal();
+        document.getElementById('newRoleTitle').value = item.title;
+        document.getElementById('newRoleDesc').value = item.desc;
+      } else if (entity === 'departments') {
+        openCreateDeptModal();
+        document.getElementById('newDeptName').value = item.name;
+        document.getElementById('newDeptCode').value = item.code;
+        document.getElementById('newDeptHead').value = item.head;
+      } else if (entity === 'designations') {
+        openCreateDesignationModal();
+        document.getElementById('newDesigTitle').value = item.title;
+        document.getElementById('newDesigBand').value = item.band;
+      } else if (entity === 'locations') {
+        openCreateLocationModal();
+        document.getElementById('newLocName').value = item.name;
+        document.getElementById('newLocCity').value = item.city;
+      } else if (entity === 'shifts') {
+        openCreateShiftModal();
+        document.getElementById('newShiftName').value = item.name;
+        document.getElementById('newShiftStart').value = item.start;
+        document.getElementById('newShiftEnd').value = item.end;
+      } else if (entity === 'assets') {
+        openCreateAssetModal();
+        document.getElementById('newAssetName').value = item.name;
+        document.getElementById('newAssetSerial').value = item.serial;
+      } else if (entity === 'empTypes') {
+        openCreateEmploymentTypeModal();
+        document.getElementById('newEmpTypeName').value = item.name;
+        document.getElementById('newEmpTypeNotice').value = item.notice;
+      }
     }
 
     function goToEmpWizardStep(stepNum) {
@@ -2206,7 +2947,12 @@
       const branch = document.getElementById('empFormBranchSelect')?.value || 'Mumbai Head Office (BKC)';
       const phone = document.getElementById('empFormPhone').value.trim();
       const salary = parseInt(document.getElementById('empFormSalary').value) || 50000;
-      const empId = document.getElementById('empAutoDisplayId').innerText;
+      const empId = document.getElementById('empCustomIdInput')?.value?.trim() || 'EMP-AGT-0105';
+      const shift = document.getElementById('empFormShiftSelect')?.value || 'General Day Shift';
+      const asset = document.getElementById('empFormAssetSelect')?.value || 'MacBook Pro M3 Max';
+      const empType = document.getElementById('empFormTypeSelect')?.value || 'Full-Time Permanent';
+      const username = document.getElementById('empPortalUsername')?.value?.trim() || `emp.${first.toLowerCase()}`;
+      const password = document.getElementById('empPortalPassword')?.value?.trim() || 'Sora@2026!7x';
 
       if (!first || !email) {
         showToast('Required Fields', 'First Name and Official Work Email are required.');
@@ -2803,10 +3549,7 @@
 
     // Initializer
     window.addEventListener('DOMContentLoaded', () => {
-      populateRoleDropdown();
-      populateDeptDropdown();
-      populateDesignationDropdown();
-      populateLocationDropdown();
+      populateAllDropdowns();
       renderEmployeeTable();
       renderPayrollTable();
       renderAttendanceTable();
