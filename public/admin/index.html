@@ -2605,6 +2605,166 @@
     </div>
   </div>
 
+  <!-- MODAL: EDIT EMPLOYEE PROFILE & DETAILS -->
+  <div id="modalEditEmployee" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      <div class="p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-brand-amber/20 text-brand-amber border border-brand-amber/40 flex items-center justify-center font-bold text-sm" id="editEmpAvatar">
+            VJ
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <span id="editEmpModalTitle">Edit Employee Details</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brand-dark border border-brand-border text-brand-amber" id="editEmpIdBadge">EMP-AGT-0101</span>
+            </h3>
+            <p class="text-[11px] text-neutral-400 mt-0.5">Update organizational assignments, contact info &amp; compensation</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalEditEmployee')" class="text-neutral-400 hover:text-white p-1 text-lg leading-none">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-5 text-xs max-h-[75vh] overflow-y-auto">
+        
+        <!-- SECTION 1: Personal & Contact Information -->
+        <div class="space-y-3">
+          <div class="text-[11px] font-bold text-brand-amber uppercase tracking-wider flex items-center gap-1.5 border-b border-brand-border/60 pb-1.5">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+            <span>Personal &amp; Contact Information</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Full Name *</label>
+              <input type="text" id="editEmpName" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Employee ID Code *</label>
+              <input type="text" id="editEmpIdInput" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-amber-300 font-mono text-xs font-bold focus:outline-none focus:border-brand-amber">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Official Email *</label>
+              <input type="email" id="editEmpEmail" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Phone Number *</label>
+              <input type="tel" id="editEmpPhone" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs font-mono focus:outline-none focus:border-brand-amber">
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Organization, Role & Assignments -->
+        <div class="space-y-3">
+          <div class="text-[11px] font-bold text-brand-amber uppercase tracking-wider flex items-center gap-1.5 border-b border-brand-border/60 pb-1.5">
+            <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+            <span>Organizational Role &amp; Assignments</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Department *</label>
+              <select id="editEmpDeptSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber font-medium">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Designation Title *</label>
+              <select id="editEmpDesigSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber font-medium">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Role &amp; Permissions *</label>
+              <select id="editEmpRoleSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber font-medium">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Work Location / Branch *</label>
+              <select id="editEmpLocationSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber font-medium">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Work Shift</label>
+              <select id="editEmpShiftSelect" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Assigned Asset</label>
+              <select id="editEmpAssetSelect" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Employment Type</label>
+              <select id="editEmpTypeSelect" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Compensation & Lifecycle Status -->
+        <div class="space-y-3">
+          <div class="text-[11px] font-bold text-brand-amber uppercase tracking-wider flex items-center gap-1.5 border-b border-brand-border/60 pb-1.5">
+            <i data-lucide="indian-rupee" class="w-3.5 h-3.5"></i>
+            <span>Compensation &amp; Lifecycle Status</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Monthly Base Salary (INR) *</label>
+              <input type="number" id="editEmpSalaryInput" oninput="updateEditCtcPreview()" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono text-xs font-bold focus:outline-none focus:border-brand-amber">
+              <span class="text-[10px] text-neutral-400 mt-1 block" id="editEmpCtcPreview">Annual CTC: ₹ 9,00,000</span>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Employment Status *</label>
+              <select id="editEmpStatusSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
+                <option value="Active">● Active (Regular Full-Time)</option>
+                <option value="On Notice Period">▲ On Notice Period</option>
+                <option value="Resigned">■ Resigned (Pending Clearance)</option>
+                <option value="On Leave">◆ On Leave / Sabbatical</option>
+                <option value="Terminated">✕ Terminated / Exited</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wizard Deep Edit Banner -->
+        <div class="p-3.5 rounded-2xl bg-brand-dark border border-brand-border flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="folder-cog" class="w-4 h-4 text-brand-amber"></i>
+            <span class="text-neutral-300 text-[11px]">Need to replace documents or re-run the 3-step enrollment wizard?</span>
+          </div>
+          <button type="button" onclick="editEmployeeInWizard()" class="px-3 py-1.5 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-brand-amber font-semibold text-xs transition-all flex items-center gap-1 shadow-sm">
+            <span>Open in 3-Step Wizard &rarr;</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Action Footer -->
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-between">
+        <button onclick="closeModal('modalEditEmployee')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-400 hover:text-white">Cancel</button>
+        <button onclick="saveEmployeeEditedDetails()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs transition-all flex items-center gap-1.5 shadow-lg">
+          <i data-lucide="save" class="w-3.5 h-3.5"></i>
+          <span>Save &amp; Update Profile</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: EMPLOYEE STATUS & NOTICE PERIOD UPDATE -->
   <div id="modalEmployeeStatusUpdate" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
@@ -3594,14 +3754,17 @@
         }
 
         return `
-          <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-3.5 px-4">
+          <tr class="hover:bg-brand-card/60 transition-colors group">
+            <td class="py-3.5 px-4 cursor-pointer" onclick="openEditEmployeeModal('${emp.id}')" title="Click to Edit Profile">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-brand-amber/20 text-brand-amber border border-brand-amber font-bold text-xs flex items-center justify-center">
+                <div class="w-8 h-8 rounded-full bg-brand-amber/20 text-brand-amber border border-brand-amber font-bold text-xs flex items-center justify-center shrink-0">
                   ${emp.name.split(' ').map(n=>n[0]).join('')}
                 </div>
                 <div>
-                  <div class="font-bold text-white text-xs">${emp.name}</div>
+                  <div class="font-bold text-white text-xs group-hover:text-brand-amber transition-colors flex items-center gap-1.5">
+                    <span>${emp.name}</span>
+                    <i data-lucide="edit-2" class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-brand-amber"></i>
+                  </div>
                   <div class="text-[11px] text-neutral-400">${emp.email}</div>
                 </div>
               </div>
@@ -3616,12 +3779,16 @@
                 ${emp.role}
               </span>
             </td>
-            <td class="py-3.5 px-4 text-neutral-400">${emp.phone}</td>
+            <td class="py-3.5 px-4 text-neutral-400 font-mono text-[11px]">${emp.phone}</td>
             <td class="py-3.5 px-4">${statusBadge}</td>
             <td class="py-3.5 px-4 text-right">
               <div class="flex items-center justify-end gap-1.5">
+                <button onclick="openEditEmployeeModal('${emp.id}')" class="px-2.5 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border hover:border-brand-amber text-[11px] font-semibold text-neutral-200 transition-all flex items-center gap-1 shadow-sm" title="Edit Employee Profile">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5 text-brand-amber"></i>
+                  <span>Edit</span>
+                </button>
                 <button onclick="openEmployeeStatusModal('${emp.id}')" class="px-2.5 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-[11px] font-semibold text-neutral-300 transition-all flex items-center gap-1 shadow-sm" title="Change Status & Notice Period">
-                  <i data-lucide="user-cog" class="w-3.5 h-3.5 text-brand-amber"></i>
+                  <i data-lucide="user-cog" class="w-3.5 h-3.5 text-amber-400"></i>
                   <span>Status / Notice</span>
                 </button>
                 <button onclick="viewEmployeePayslip('${emp.id}')" class="p-1.5 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-neutral-400 transition-all" title="Salary Slip">
@@ -5169,6 +5336,160 @@
       }
       document.getElementById('modalOfferPreview').classList.remove('hidden');
       lucide.createIcons();
+    }
+
+    // ------------------------------------------
+    // EMPLOYEE PROFILE EDITOR & UPDATE ENGINE
+    // ------------------------------------------
+    let currentEditEmpId = null;
+    let editingWizardEmpId = null;
+
+    function openEditEmployeeModal(empId) {
+      currentEditEmpId = empId;
+      const emp = appState.employees.find(e => e.id === empId);
+      if (!emp) return;
+
+      document.getElementById('editEmpAvatar').innerText = emp.name.split(' ').map(n=>n[0]).join('');
+      document.getElementById('editEmpModalTitle').innerText = `Edit: ${emp.name}`;
+      document.getElementById('editEmpIdBadge').innerText = emp.id;
+      document.getElementById('editEmpName').value = emp.name;
+      document.getElementById('editEmpIdInput').value = emp.id;
+      document.getElementById('editEmpEmail').value = emp.email;
+      document.getElementById('editEmpPhone').value = emp.phone;
+      document.getElementById('editEmpSalaryInput').value = emp.salary;
+      document.getElementById('editEmpStatusSelect').value = emp.status || 'Active';
+
+      // Populate Departments Dropdown
+      const deptSelect = document.getElementById('editEmpDeptSelect');
+      if (deptSelect) {
+        deptSelect.innerHTML = appState.departments.map(d => 
+          `<option value="${d.name}" ${d.name === emp.dept ? 'selected' : ''}>${d.name} (${d.code})</option>`
+        ).join('');
+      }
+
+      // Populate Designations Dropdown
+      const desigSelect = document.getElementById('editEmpDesigSelect');
+      if (desigSelect) {
+        desigSelect.innerHTML = appState.designations.map(d => 
+          `<option value="${d.title}" ${d.title === emp.role ? 'selected' : ''}>${d.title} [${d.band}]</option>`
+        ).join('');
+      }
+
+      // Populate Roles Dropdown
+      const roleSelect = document.getElementById('editEmpRoleSelect');
+      if (roleSelect) {
+        roleSelect.innerHTML = appState.roles.map(r => 
+          `<option value="${r.title}" ${r.title === emp.role ? 'selected' : ''}>${r.title} &bull; ${r.desc}</option>`
+        ).join('');
+      }
+
+      // Populate Locations Dropdown
+      const locSelect = document.getElementById('editEmpLocationSelect');
+      if (locSelect) {
+        locSelect.innerHTML = appState.locations.map(l => 
+          `<option value="${l.name}">${l.name} (${l.city})</option>`
+        ).join('');
+      }
+
+      // Populate Shifts Dropdown
+      const shiftSelect = document.getElementById('editEmpShiftSelect');
+      if (shiftSelect) {
+        shiftSelect.innerHTML = appState.shifts.map(s => 
+          `<option value="${s.name}">${s.name} (${s.start} - ${s.end})</option>`
+        ).join('');
+      }
+
+      // Populate Assets Dropdown
+      const assetSelect = document.getElementById('editEmpAssetSelect');
+      if (assetSelect) {
+        assetSelect.innerHTML = appState.assets.map(a => 
+          `<option value="${a.name}">${a.name} [${a.category}]</option>`
+        ).join('');
+      }
+
+      // Populate Employment Types Dropdown
+      const typeSelect = document.getElementById('editEmpTypeSelect');
+      if (typeSelect) {
+        typeSelect.innerHTML = appState.employmentTypes.map(t => 
+          `<option value="${t.name}">${t.name} (Notice: ${t.notice})</option>`
+        ).join('');
+      }
+
+      updateEditCtcPreview();
+      document.getElementById('modalEditEmployee').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function updateEditCtcPreview() {
+      const salary = parseInt(document.getElementById('editEmpSalaryInput').value) || 0;
+      const ctcPreview = document.getElementById('editEmpCtcPreview');
+      if (ctcPreview) {
+        ctcPreview.innerText = `Annual CTC: ₹ ${(salary * 12).toLocaleString('en-IN')} (₹ ${salary.toLocaleString('en-IN')}/mo)`;
+      }
+    }
+
+    function saveEmployeeEditedDetails() {
+      const emp = appState.employees.find(e => e.id === currentEditEmpId);
+      if (!emp) return;
+
+      const name = document.getElementById('editEmpName').value.trim();
+      const newId = document.getElementById('editEmpIdInput').value.trim();
+      const email = document.getElementById('editEmpEmail').value.trim();
+      const phone = document.getElementById('editEmpPhone').value.trim();
+      const dept = document.getElementById('editEmpDeptSelect').value;
+      const desig = document.getElementById('editEmpDesigSelect').value;
+      const salary = parseInt(document.getElementById('editEmpSalaryInput').value) || emp.salary;
+      const status = document.getElementById('editEmpStatusSelect').value;
+
+      if (!name) {
+        showToast('Required', 'Employee full name cannot be blank.');
+        return;
+      }
+
+      emp.name = name;
+      emp.id = newId || emp.id;
+      emp.email = email || emp.email;
+      emp.phone = phone || emp.phone;
+      emp.dept = dept;
+      emp.role = desig;
+      emp.salary = salary;
+      emp.status = status;
+
+      renderEmployeeTable();
+      renderPayrollTable();
+      closeModal('modalEditEmployee');
+      showToast('Profile Updated', `${emp.name} (${emp.id}) records and assignments saved.`);
+    }
+
+    function editEmployeeInWizard(empId) {
+      const targetId = empId || currentEditEmpId;
+      const emp = appState.employees.find(e => e.id === targetId);
+      if (!emp) return;
+
+      closeModal('modalEditEmployee');
+      switchTab('employee-add');
+
+      // Pre-fill Step 1
+      const roleSel = document.getElementById('empFormRoleSelect');
+      if (roleSel) roleSel.value = emp.role;
+      const deptSel = document.getElementById('empFormDeptSelect');
+      if (deptSel) deptSel.value = emp.dept;
+      const desigSel = document.getElementById('empFormDesignationSelect');
+      if (desigSel) desigSel.value = emp.role;
+
+      // Pre-fill Step 2
+      const fullName = document.getElementById('empFullNameInput');
+      if (fullName) fullName.value = emp.name;
+      const email = document.getElementById('empEmailInput');
+      if (email) email.value = emp.email;
+      const phone = document.getElementById('empPhoneInput');
+      if (phone) phone.value = emp.phone;
+      const salary = document.getElementById('empSalaryInput');
+      if (salary) salary.value = emp.salary;
+      const code = document.getElementById('empCodeInput');
+      if (code) code.value = emp.id;
+
+      showToast('Wizard Mode', `Loaded ${emp.name}'s details into the 3-Step Wizard for editing.`);
     }
 
     // ------------------------------------------
