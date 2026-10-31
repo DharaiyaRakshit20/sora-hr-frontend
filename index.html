@@ -588,7 +588,10 @@
                 <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Master Password *</label>
                 <div class="relative">
                   <i data-lucide="lock" class="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                  <input type="password" id="twoFaPassword" value="SoraEnterprise2026@" placeholder="••••••••••••" class="w-full pl-11 pr-4 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber">
+                  <input type="password" id="twoFaPassword" value="SoraEnterprise2026@" placeholder="••••••••••••" class="w-full pl-11 pr-11 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber">
+                  <button type="button" onclick="togglePasswordVisibility('twoFaPassword', this)" title="Toggle password visibility" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-brand-amber p-1 transition-colors">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                  </button>
                 </div>
               </div>
 
@@ -1795,6 +1798,15 @@
       document.getElementById('otpInputStep').classList.add('hidden');
       document.getElementById('otpVerifyStep').classList.remove('hidden');
       showToast('OTP Dispatched', `A 6-digit verification code was sent to ${target}`);
+      lucide.createIcons();
+    }
+
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      btn.innerHTML = `<i data-lucide="${isPassword ? 'eye-off' : 'eye'}" class="w-4 h-4"></i>`;
       lucide.createIcons();
     }
 
