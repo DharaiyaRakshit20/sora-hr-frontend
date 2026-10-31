@@ -592,34 +592,64 @@
                   <span class="text-[10px] text-neutral-500 mt-1 block">Click '+' to define granular View, Create, Update, Delete permissions.</span>
                 </div>
 
-                <!-- Department Dropdown -->
+                <!-- Department Dropdown with + Button -->
                 <div>
-                  <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Department *</label>
-                  <select id="empFormDeptSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
-                    <option value="Engineering & Technology">Engineering &amp; Technology</option>
-                    <option value="Sales & Business Development">Sales &amp; Business Development</option>
-                    <option value="Human Resources & Talent">Human Resources &amp; Talent</option>
-                    <option value="Finance & Accounts">Finance &amp; Accounts</option>
-                    <option value="Operations & Logistics">Operations &amp; Logistics</option>
-                    <option value="Customer Success">Customer Success</option>
-                  </select>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label class="text-xs font-semibold text-neutral-300">Department *</label>
+                    <button type="button" onclick="openCreateDeptModal()" class="text-[11px] text-brand-amber hover:underline font-bold flex items-center gap-1">
+                      <span class="w-4 h-4 rounded-full bg-brand-amber/20 flex items-center justify-center font-bold text-xs">+</span>
+                      <span>Add Department</span>
+                    </button>
+                  </div>
+                  <div class="flex gap-2">
+                    <select id="empFormDeptSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                      <!-- Dynamic departments -->
+                    </select>
+                    <button type="button" onclick="openCreateDeptModal()" title="Add New Department" class="px-3 py-2 rounded-xl bg-brand-amber/10 border border-brand-amber/40 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold transition-all">
+                      +
+                    </button>
+                  </div>
+                  <span class="text-[10px] text-neutral-500 mt-1 block">Click '+' to define organizational unit, department code & HOD.</span>
                 </div>
 
-                <!-- Designation -->
+                <!-- Designation Dropdown with + Button -->
                 <div>
-                  <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Designation Title *</label>
-                  <input type="text" id="empFormDesignation" placeholder="e.g. Senior Backend Engineer / Field Sales Officer" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label class="text-xs font-semibold text-neutral-300">Designation Title *</label>
+                    <button type="button" onclick="openCreateDesignationModal()" class="text-[11px] text-brand-amber hover:underline font-bold flex items-center gap-1">
+                      <span class="w-4 h-4 rounded-full bg-brand-amber/20 flex items-center justify-center font-bold text-xs">+</span>
+                      <span>Add Designation</span>
+                    </button>
+                  </div>
+                  <div class="flex gap-2">
+                    <select id="empFormDesignationSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                      <!-- Dynamic designations -->
+                    </select>
+                    <button type="button" onclick="openCreateDesignationModal()" title="Add New Designation" class="px-3 py-2 rounded-xl bg-brand-amber/10 border border-brand-amber/40 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold transition-all">
+                      +
+                    </button>
+                  </div>
+                  <span class="text-[10px] text-neutral-500 mt-1 block">Click '+' to create job title, career band & seniority level.</span>
                 </div>
 
-                <!-- Work Location / Branch -->
+                <!-- Work Location / Branch Dropdown with + Button -->
                 <div>
-                  <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Work Location / Branch *</label>
-                  <select id="empFormBranch" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
-                    <option value="Mumbai Head Office (BKC)">Mumbai Head Office (BKC)</option>
-                    <option value="Bengaluru Tech Park">Bengaluru Tech Park</option>
-                    <option value="Gurugram Cyber City">Gurugram Cyber City</option>
-                    <option value="Remote / Field">Remote / Field (Lat-Long Clock-In)</option>
-                  </select>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label class="text-xs font-semibold text-neutral-300">Work Location / Branch *</label>
+                    <button type="button" onclick="openCreateLocationModal()" class="text-[11px] text-brand-amber hover:underline font-bold flex items-center gap-1">
+                      <span class="w-4 h-4 rounded-full bg-brand-amber/20 flex items-center justify-center font-bold text-xs">+</span>
+                      <span>Add Branch / Location</span>
+                    </button>
+                  </div>
+                  <div class="flex gap-2">
+                    <select id="empFormBranchSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                      <!-- Dynamic locations -->
+                    </select>
+                    <button type="button" onclick="openCreateLocationModal()" title="Add New Work Location / Branch" class="px-3 py-2 rounded-xl bg-brand-amber/10 border border-brand-amber/40 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 font-bold transition-all">
+                      +
+                    </button>
+                  </div>
+                  <span class="text-[10px] text-neutral-500 mt-1 block">Click '+' to register office branch with GPS lat-long geofence.</span>
                 </div>
               </div>
 
@@ -1388,6 +1418,159 @@
     </div>
   </div>
 
+  <!-- MODAL: CREATE DEPARTMENT (Triggered from Step 1 + Button) -->
+  <div id="modalCreateDept" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-brand-border flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="building-2" class="w-4 h-4 text-brand-amber"></i>
+            <span>Add New Department</span>
+          </h3>
+          <p class="text-xs text-neutral-400 mt-0.5">Create corporate division, department code & assign department head.</p>
+        </div>
+        <button onclick="closeModal('modalCreateDept')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Department Name *</label>
+          <input type="text" id="newDeptName" placeholder="e.g. Artificial Intelligence & R&D" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Department Code *</label>
+            <input type="text" id="newDeptCode" placeholder="e.g. AIRD" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono uppercase focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Head of Department (HOD)</label>
+            <input type="text" id="newDeptHead" placeholder="e.g. Dr. Aryan Saxena" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Scope & Description</label>
+          <textarea id="newDeptDesc" rows="2" placeholder="Primary objective, operating scope & key responsibilities..." class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber resize-none"></textarea>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
+        <button onclick="closeModal('modalCreateDept')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">Cancel</button>
+        <button onclick="saveCustomDept()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Save & Select Department</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE DESIGNATION (Triggered from Step 1 + Button) -->
+  <div id="modalCreateDesignation" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-brand-border flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="badge-check" class="w-4 h-4 text-brand-amber"></i>
+            <span>Add New Designation</span>
+          </h3>
+          <p class="text-xs text-neutral-400 mt-0.5">Define job title, career seniority band & department mapping.</p>
+        </div>
+        <button onclick="closeModal('modalCreateDesignation')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Designation Title *</label>
+          <input type="text" id="newDesigTitle" placeholder="e.g. Principal Cloud Security Architect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Seniority Band / Level *</label>
+            <select id="newDesigBand" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+              <option value="L1 - Associate">L1 - Associate / Entry</option>
+              <option value="L2 - Specialist">L2 - Mid Specialist</option>
+              <option value="L3 - Senior" selected>L3 - Senior Specialist</option>
+              <option value="L4 - Lead / Principal">L4 - Lead / Principal</option>
+              <option value="L5 - Director / VP">L5 - Director / VP</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Department</label>
+            <select id="newDesigDeptSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Key Responsibilities / Role Description</label>
+          <textarea id="newDesigDesc" rows="2" placeholder="Core competencies, tech stack or quota metrics..." class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber resize-none"></textarea>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
+        <button onclick="closeModal('modalCreateDesignation')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">Cancel</button>
+        <button onclick="saveCustomDesignation()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Save & Select Designation</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE WORK LOCATION / BRANCH (Triggered from Step 1 + Button) -->
+  <div id="modalCreateLocation" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-brand-border flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-brand-amber"></i>
+            <span>Add Work Location / Branch</span>
+          </h3>
+          <p class="text-xs text-neutral-400 mt-0.5">Register corporate office, SEZ hub or branch with GPS attendance geofence.</p>
+        </div>
+        <button onclick="closeModal('modalCreateLocation')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Branch / Office Name *</label>
+          <input type="text" id="newLocName" placeholder="e.g. Hyderabad HITEC City Hub (Mindspace)" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">City / Region *</label>
+            <input type="text" id="newLocCity" placeholder="e.g. Hyderabad, Telangana" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Geofence Radius (Meters)</label>
+            <input type="number" id="newLocRadius" value="150" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Office Latitude (GPS)</label>
+            <input type="number" step="0.0001" id="newLocLat" value="17.4435" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Office Longitude (GPS)</label>
+            <input type="number" step="0.0001" id="newLocLng" value="78.3772" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Detailed Address</label>
+          <input type="text" id="newLocAddress" placeholder="Building 12B, Mindspace IT Park, HITEC City, Hyderabad" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
+        <button onclick="closeModal('modalCreateLocation')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5">Cancel</button>
+        <button onclick="saveCustomLocation()" class="px-6 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Save & Select Branch</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL 2: LAT-LONG ROUTE MAP VIEWER -->
   <div id="modalLatLongMap" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col">
@@ -1582,6 +1765,29 @@
         { id: 'role_sales_lead', title: 'Field Sales Lead', desc: 'Client deals, lat-long attendance', perms: { v: true, c: true, u: false, d: false } },
         { id: 'role_tech_lead', title: 'Senior Tech Lead', desc: 'Engineering directory & team appraisals', perms: { v: true, c: false, u: false, d: false } },
         { id: 'role_payroll_mgr', title: 'Payroll Manager', desc: 'Full compensation, tax & slip engine', perms: { v: true, c: true, u: true, d: true } }
+      ],
+      departments: [
+        { id: 'dept_eng', name: 'Engineering & Technology', code: 'ENG', head: 'Pooja Iyer' },
+        { id: 'dept_sales', name: 'Sales & Business Development', code: 'SBD', head: 'Vikram Joshi' },
+        { id: 'dept_hr', name: 'Human Resources & Talent', code: 'HRT', head: 'Rohan Mehra' },
+        { id: 'dept_fin', name: 'Finance & Accounts', code: 'FIN', head: 'Kavita Sundaram' },
+        { id: 'dept_ops', name: 'Operations & Logistics', code: 'OPS', head: 'Rajesh Nair' },
+        { id: 'dept_cs', name: 'Customer Success & Support', code: 'CSS', head: 'Neha Sharma' }
+      ],
+      designations: [
+        { id: 'desig_se', title: 'Senior Full Stack Engineer', band: 'L3 - Senior', dept: 'Engineering & Technology' },
+        { id: 'desig_fsl', title: 'Field Sales Lead', band: 'L2 - Mid', dept: 'Sales & Business Development' },
+        { id: 'desig_hr', title: 'HR Executive', band: 'L2 - Mid', dept: 'Human Resources & Talent' },
+        { id: 'desig_sae', title: 'Senior Account Executive', band: 'L3 - Senior', dept: 'Sales & Business Development' },
+        { id: 'desig_pmm', title: 'Product Marketing Manager', band: 'L4 - Lead', dept: 'Marketing & Growth' },
+        { id: 'desig_devops', title: 'Cloud & DevOps Architect', band: 'L4 - Lead', dept: 'Engineering & Technology' }
+      ],
+      locations: [
+        { id: 'loc_bkc', name: 'Mumbai Head Office (BKC)', city: 'Mumbai', lat: 19.0657, lng: 72.8682, radius: 100 },
+        { id: 'loc_blr', name: 'Bengaluru Tech Hub (Whitefield)', city: 'Bengaluru', lat: 12.9716, lng: 77.5946, radius: 150 },
+        { id: 'loc_ggn', name: 'Gurugram Cyber City (DLF Phase 2)', city: 'Gurugram', lat: 28.4595, lng: 77.0266, radius: 120 },
+        { id: 'loc_pun', name: 'Pune Innovation Campus (Hinjawadi)', city: 'Pune', lat: 18.5913, lng: 73.7389, radius: 100 },
+        { id: 'loc_rem', name: 'Remote / Field (Lat-Long Clock-In)', city: 'Pan-India', lat: 0, lng: 0, radius: 0 }
       ],
       employees: [
         { id: 'EMP-AGT-0101', name: 'Vikram Joshi', role: 'Field Sales Lead', dept: 'Sales & Business Development', email: 'vikram.j@apextech.com', phone: '+91 98201 12345', salary: 75000, status: 'Active' },
@@ -1836,9 +2042,113 @@
 
     function populateRoleDropdown() {
       const select = document.getElementById('empFormRoleSelect');
+      if (!select) return;
       select.innerHTML = appState.roles.map(r => `
         <option value="${r.title}">${r.title} (${r.desc})</option>
       `).join('');
+    }
+
+    function populateDeptDropdown() {
+      const select = document.getElementById('empFormDeptSelect');
+      if (!select) return;
+      select.innerHTML = appState.departments.map(d => `
+        <option value="${d.name}">${d.name} (${d.code})</option>
+      `).join('');
+      const modalSelect = document.getElementById('newDesigDeptSelect');
+      if (modalSelect) {
+        modalSelect.innerHTML = appState.departments.map(d => `
+          <option value="${d.name}">${d.name}</option>
+        `).join('');
+      }
+    }
+
+    function populateDesignationDropdown() {
+      const select = document.getElementById('empFormDesignationSelect');
+      if (!select) return;
+      select.innerHTML = appState.designations.map(d => `
+        <option value="${d.title}">${d.title} • ${d.band}</option>
+      `).join('');
+    }
+
+    function populateLocationDropdown() {
+      const select = document.getElementById('empFormBranchSelect');
+      if (!select) return;
+      select.innerHTML = appState.locations.map(l => `
+        <option value="${l.name}">${l.name} (${l.city})</option>
+      `).join('');
+    }
+
+    // Modal Triggers & Savers for Department, Designation & Location
+    function openCreateDeptModal() {
+      document.getElementById('newDeptName').value = '';
+      document.getElementById('newDeptCode').value = '';
+      document.getElementById('newDeptHead').value = '';
+      document.getElementById('newDeptDesc').value = '';
+      document.getElementById('modalCreateDept').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveCustomDept() {
+      const name = document.getElementById('newDeptName').value.trim();
+      const code = document.getElementById('newDeptCode').value.trim() || name.substring(0, 3).toUpperCase();
+      const head = document.getElementById('newDeptHead').value.trim();
+      if (!name) {
+        showToast('Required', 'Department Name is required.');
+        return;
+      }
+      appState.departments.push({ id: 'dept_' + Date.now(), name, code, head });
+      populateDeptDropdown();
+      document.getElementById('empFormDeptSelect').value = name;
+      closeModal('modalCreateDept');
+      showToast('Department Added', `${name} (${code}) added and selected.`);
+    }
+
+    function openCreateDesignationModal() {
+      document.getElementById('newDesigTitle').value = '';
+      document.getElementById('newDesigDesc').value = '';
+      populateDeptDropdown();
+      document.getElementById('modalCreateDesignation').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveCustomDesignation() {
+      const title = document.getElementById('newDesigTitle').value.trim();
+      const band = document.getElementById('newDesigBand').value;
+      const dept = document.getElementById('newDesigDeptSelect')?.value || '';
+      if (!title) {
+        showToast('Required', 'Designation Title is required.');
+        return;
+      }
+      appState.designations.push({ id: 'desig_' + Date.now(), title, band, dept });
+      populateDesignationDropdown();
+      document.getElementById('empFormDesignationSelect').value = title;
+      closeModal('modalCreateDesignation');
+      showToast('Designation Added', `${title} (${band}) added and selected.`);
+    }
+
+    function openCreateLocationModal() {
+      document.getElementById('newLocName').value = '';
+      document.getElementById('newLocCity').value = '';
+      document.getElementById('newLocAddress').value = '';
+      document.getElementById('modalCreateLocation').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveCustomLocation() {
+      const name = document.getElementById('newLocName').value.trim();
+      const city = document.getElementById('newLocCity').value.trim();
+      const lat = parseFloat(document.getElementById('newLocLat').value) || 19.0760;
+      const lng = parseFloat(document.getElementById('newLocLng').value) || 72.8777;
+      const radius = parseInt(document.getElementById('newLocRadius').value) || 100;
+      if (!name || !city) {
+        showToast('Required', 'Branch Name and City are required.');
+        return;
+      }
+      appState.locations.push({ id: 'loc_' + Date.now(), name, city, lat, lng, radius });
+      populateLocationDropdown();
+      document.getElementById('empFormBranchSelect').value = name;
+      closeModal('modalCreateLocation');
+      showToast('Location Added', `${name} registered for geofenced attendance.`);
     }
 
     function goToEmpWizardStep(stepNum) {
@@ -1892,6 +2202,8 @@
       const email = document.getElementById('empFormOfficialEmail').value.trim();
       const role = document.getElementById('empFormRoleSelect').value;
       const dept = document.getElementById('empFormDeptSelect').value;
+      const desig = document.getElementById('empFormDesignationSelect')?.value || role;
+      const branch = document.getElementById('empFormBranchSelect')?.value || 'Mumbai Head Office (BKC)';
       const phone = document.getElementById('empFormPhone').value.trim();
       const salary = parseInt(document.getElementById('empFormSalary').value) || 50000;
       const empId = document.getElementById('empAutoDisplayId').innerText;
@@ -2492,6 +2804,9 @@
     // Initializer
     window.addEventListener('DOMContentLoaded', () => {
       populateRoleDropdown();
+      populateDeptDropdown();
+      populateDesignationDropdown();
+      populateLocationDropdown();
       renderEmployeeTable();
       renderPayrollTable();
       renderAttendanceTable();
