@@ -4084,7 +4084,7 @@
       if (idx !== -1) {
         const item = appState[entity][idx];
         const name = item.title || item.name;
-        appState[entity].splice(idx₹ );
+        appState[entity].splice(idx, 1);
         populateAllDropdowns();
         renderMasterTable();
         showToast('Item Deleted', `${name} removed from master configuration.`);
@@ -4384,7 +4384,7 @@
           });
           renderZipAuditTable();
           showToast('Documents Mapped!', `36 files successfully linked to employee codes.`);
-        }₹ 200);
+        }, 200);
       }
     }
 
@@ -4607,7 +4607,7 @@
     function renderCustomCalendar() {
       const titleEl = document.getElementById('calMonthYearTitle');
       if (titleEl) titleEl.innerText = `${monthNames[calCurrentMonth]} ${calCurrentYear}`;
-      const firstDay = new Date(calCurrentYear, calCurrentMonth₹ ).getDay();
+      const firstDay = new Date(calCurrentYear, calCurrentMonth, 1).getDay();
       const daysInMonth = new Date(calCurrentYear, calCurrentMonth + 1, 0).getDate();
       const grid = document.getElementById('calDaysGrid');
       if (!grid) return;
