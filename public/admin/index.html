@@ -837,7 +837,7 @@
                       <span>Add Dept</span>
                     </button>
                   </div>
-                  <select id="empFormDeptSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                  <select id="empFormDeptSelect" onchange="onEmpWizardDeptChange()" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
                     <!-- Dynamic departments -->
                   </select>
                   <span class="text-[10px] text-neutral-500 mt-1 block">Organizational unit, department code &amp; HOD.</span>
@@ -919,26 +919,68 @@
                 <span>Step 2: Employee Profile, Credentials &amp; Statutory Details</span>
               </div>
 
-              <!-- Top Bar: Preview & Editable Employee ID -->
-              <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-xl bg-brand-amber/10 border border-brand-amber/30 flex items-center justify-center text-brand-amber">
-                    <i data-lucide="id-card" class="w-5 h-5"></i>
-                  </div>
-                  <div>
-                    <div class="flex items-center gap-2">
-                      <span class="text-xs font-bold text-white">Official Company Employee ID</span>
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Auto-Generated &bull; Editable</span>
+              <!-- Top Bar: Auto-Generated Employee ID with Dynamic Pattern Choice (User Requirement 5) -->
+              <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand-amber/10 border border-brand-amber/30 flex items-center justify-center text-brand-amber flex-shrink-0">
+                      <i data-lucide="id-card" class="w-5 h-5"></i>
                     </div>
-                    <div class="text-[11px] text-neutral-400 mt-0.5">Sequence based on company code (AGT). You can edit this ID manually or click refresh.</div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-white">Official Employee ID Generator</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Auto-Generated &bull; Dynamic Prefix</span>
+                      </div>
+                      <div class="text-[11px] text-neutral-400 mt-0.5">Company Prefix (TP-001, KF-0001), Department Code (ENG-001, SAL-001), ya Simple EMP (EMP-001).</div>
+                    </div>
+                  </div>
+
+                  <!-- Next ID Display & Regenerate Button -->
+                  <div class="flex items-center gap-2">
+                    <input type="text" id="empCustomIdInput" value="TP-001" class="w-48 px-3 py-1.5 rounded-xl bg-brand-surface border border-brand-amber/50 text-brand-amber font-mono font-bold text-sm tracking-wide focus:outline-none focus:border-brand-amber text-center">
+                    <button type="button" onclick="regenerateEmployeeId()" title="Regenerate Next Sequential ID" class="p-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-brand-amber transition-colors shadow-sm">
+                      <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    </button>
                   </div>
                 </div>
 
-                <div class="flex items-center gap-2">
-                  <input type="text" id="empCustomIdInput" value="EMP-AGT-0105" class="w-44 px-3 py-1.5 rounded-xl bg-brand-surface border border-brand-amber/50 text-brand-amber font-mono font-bold text-sm tracking-wide focus:outline-none focus:border-brand-amber text-center">
-                  <button type="button" onclick="regenerateEmployeeId()" title="Regenerate Next ID Sequence" class="p-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-brand-amber transition-colors">
-                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                  </button>
+                <!-- Pattern Selection Row (Company Prefix, Dept Prefix, or Simple EMP) -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-brand-border/60 text-xs">
+                  <!-- Option 1: Company 2-Letter Code -->
+                  <label class="p-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber cursor-pointer flex items-center gap-2.5 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+                    <input type="radio" name="empIdFormatMode" value="company" checked onchange="regenerateEmployeeId()" class="text-brand-amber focus:ring-0">
+                    <div>
+                      <div class="font-bold text-white flex items-center gap-1">
+                        <span>Company Prefix</span>
+                        <span class="text-[9px] bg-brand-amber/20 text-brand-amber px-1.5 py-0.2 rounded font-mono font-bold">TP-001 / KF-0001</span>
+                      </div>
+                      <div class="text-[10px] text-neutral-400">TapiPe (TP-001), Kofficode (KF-0001), AGT</div>
+                    </div>
+                  </label>
+
+                  <!-- Option 2: Department Prefix -->
+                  <label class="p-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber cursor-pointer flex items-center gap-2.5 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+                    <input type="radio" name="empIdFormatMode" value="dept" onchange="regenerateEmployeeId()" class="text-brand-amber focus:ring-0">
+                    <div>
+                      <div class="font-bold text-white flex items-center gap-1">
+                        <span>Department Code</span>
+                        <span class="text-[9px] bg-sky-500/20 text-sky-300 px-1.5 py-0.2 rounded font-mono font-bold">ENG-001 / SBD-001</span>
+                      </div>
+                      <div class="text-[10px] text-neutral-400">Auto-changes with Department select (ENG, SBD, HRT)</div>
+                    </div>
+                  </label>
+
+                  <!-- Option 3: Simple Sequential EMP -->
+                  <label class="p-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber cursor-pointer flex items-center gap-2.5 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+                    <input type="radio" name="empIdFormatMode" value="simple" onchange="regenerateEmployeeId()" class="text-brand-amber focus:ring-0">
+                    <div>
+                      <div class="font-bold text-white flex items-center gap-1">
+                        <span>Simple EMP Sequence</span>
+                        <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.2 rounded font-mono font-bold">EMP-001, EMP-002</span>
+                      </div>
+                      <div class="text-[10px] text-neutral-400">Sequential: EMP-001, EMP-002, EMP-003</div>
+                    </div>
+                  </label>
                 </div>
               </div>
 
@@ -1434,72 +1476,116 @@
           <!-- TAB 6: PAYROLL & SALARY SLIPS                  -->
           <!-- ============================================== -->
           <div id="tab-payroll" class="tab-content hidden space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+            <!-- Header with Title, From-To Pay Period, Company Rules, & Bulk Actions -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-brand-border pb-4">
               <div>
-                <h1 class="text-2xl font-bold text-white">Payroll &amp; Salary Disbursal Master</h1>
-                <p class="text-xs text-neutral-400 mt-0.5">Month-wise compensation calculations, PF/ESIC deductions, TDS, and bulk slip dispatch.</p>
+                <h1 class="text-2xl font-bold text-white flex items-center gap-2.5">
+                  <span>Payroll &amp; Salary Disbursal Master</span>
+                  <span class="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">Oct '26 Active</span>
+                </h1>
+                <p class="text-xs text-neutral-400 mt-0.5">Pay period (From &ndash; To Date), attendance day/hour integration, Basic/HRA/DA salary splits, overtime, and statutory deductions.</p>
               </div>
 
-              <div class="flex flex-wrap items-center gap-2">
-                <select id="payrollMonthSelect" onchange="filterPayrollMonth()" class="px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber font-semibold">
-                  <option value="Oct 2026">October 2026</option>
-                  <option value="Sep 2026">September 2026</option>
-                  <option value="Aug 2026">August 2026</option>
+              <!-- Controls: Pay Period Range + Month Quick Select + Company Rules -->
+              <div class="flex flex-wrap items-center gap-2.5">
+                <!-- Quick Month Select -->
+                <select id="payrollMonthSelect" onchange="onPayrollMonthChange()" class="px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber font-semibold shadow-sm">
+                  <option value="2026-10">October 2026</option>
+                  <option value="2026-09">September 2026</option>
+                  <option value="2026-08">August 2026</option>
                 </select>
 
-                <button onclick="processBatchPayroll()" class="px-4 py-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber/50 text-white font-semibold text-xs flex items-center gap-1.5">
-                  <i data-lucide="calculator" class="w-4 h-4 text-brand-amber"></i>
-                  <span>Recalculate Batch</span>
+                <!-- Pay Period From & To Date Pickers -->
+                <div class="flex items-center gap-1.5 bg-brand-surface px-3 py-1 rounded-xl border border-brand-border text-xs">
+                  <span class="text-neutral-400 text-[11px] font-semibold">From:</span>
+                  <input type="date" id="payrollFromDate" value="2026-10-01" onchange="recalculatePayrollFromDates()" class="bg-brand-dark px-2 py-1 rounded-lg border border-brand-border text-white text-xs font-mono focus:border-brand-amber outline-none">
+                  <span class="text-neutral-400 text-[11px] font-semibold ml-1">To:</span>
+                  <input type="date" id="payrollToDate" value="2026-10-31" onchange="recalculatePayrollFromDates()" class="bg-brand-dark px-2 py-1 rounded-lg border border-brand-border text-white text-xs font-mono focus:border-brand-amber outline-none">
+                </div>
+
+                <!-- Company Payroll Rules Modal Trigger Button -->
+                <button type="button" onclick="openCompanyPayrollRulesModal()" title="Configure Company Payroll Calculation Rules" class="px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-brand-amber hover:text-white font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm">
+                  <i data-lucide="sliders" class="w-3.5 h-3.5 text-brand-amber"></i>
+                  <span>Payroll Rules</span>
                 </button>
 
-                <button onclick="dispatchAllPayslips()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow">
-                  <i data-lucide="send" class="w-4 h-4"></i>
-                  <span>Send All Payslips (Email/WhatsApp)</span>
+                <!-- Recalculate Batch -->
+                <button type="button" onclick="processBatchPayroll()" class="px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber/50 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-all">
+                  <i data-lucide="calculator" class="w-3.5 h-3.5 text-brand-amber"></i>
+                  <span>Recalculate</span>
                 </button>
-              </div>
-            </div>
 
-            <!-- Payroll Summary Banner -->
-            <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div>
-                <div class="text-[11px] text-neutral-400 uppercase tracking-wider">Gross Payroll Budget</div>
-                <div class="text-xl sm:text-2xl font-black text-white mt-1">&#8377; 68,45,000</div>
-              </div>
-              <div>
-                <div class="text-[11px] text-neutral-400 uppercase tracking-wider">Statutory Deductions (PF/ESIC)</div>
-                <div class="text-xl sm:text-2xl font-black text-amber-400 mt-1">&#8377; 8,21,400</div>
-              </div>
-              <div>
-                <div class="text-[11px] text-neutral-400 uppercase tracking-wider">Net Bank Disbursal</div>
-                <div class="text-xl sm:text-2xl font-black text-emerald-400 mt-1">&#8377; 60,23,600</div>
-              </div>
-              <div>
-                <div class="text-[11px] text-neutral-400 uppercase tracking-wider">Bank Transfer File</div>
-                <button onclick="exportBankSalarySheet()" class="mt-1 text-xs font-bold text-brand-amber hover:underline flex items-center gap-1">
-                  <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
-                  <span>Download NEFT Sheet</span>
+                <!-- Send All Payslips -->
+                <button type="button" onclick="dispatchAllPayslips()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow transition-all">
+                  <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                  <span>Send Payslips</span>
                 </button>
               </div>
             </div>
 
-            <!-- Payroll Table -->
-            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
+            <!-- Payroll Summary Banner (4 KPI Metrics) -->
+            <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border grid grid-cols-2 lg:grid-cols-4 gap-4 shadow-md">
+              <div class="border-r border-brand-border/40 pr-3">
+                <div class="text-[10px] text-neutral-400 uppercase tracking-wider font-semibold">Gross Payroll Budget</div>
+                <div class="text-xl sm:text-2xl font-black text-white mt-1 font-mono" id="kpiPayrollGross">&#8377; 68,45,000</div>
+                <div class="text-[10px] text-neutral-500 mt-0.5">Calculated for 104 staff</div>
+              </div>
+              <div class="border-r border-brand-border/40 pr-3">
+                <div class="text-[10px] text-neutral-400 uppercase tracking-wider font-semibold text-amber-400">Overtime Disbursal</div>
+                <div class="text-xl sm:text-2xl font-black text-amber-400 mt-1 font-mono" id="kpiPayrollOvertime">&#8377; 1,84,500</div>
+                <div class="text-[10px] text-neutral-500 mt-0.5">142 total hours approved OT</div>
+              </div>
+              <div class="border-r border-brand-border/40 pr-3">
+                <div class="text-[10px] text-neutral-400 uppercase tracking-wider font-semibold text-rose-400">Statutory &amp; LOP Deductions</div>
+                <div class="text-xl sm:text-2xl font-black text-rose-400 mt-1 font-mono" id="kpiPayrollDeductions">&#8377; 8,21,400</div>
+                <div class="text-[10px] text-neutral-500 mt-0.5">PF, PT, TDS &amp; 12.5 LOP days</div>
+              </div>
+              <div>
+                <div class="text-[10px] text-neutral-400 uppercase tracking-wider font-semibold text-emerald-400">Net Bank Disbursal</div>
+                <div class="text-xl sm:text-2xl font-black text-emerald-400 mt-1 font-mono" id="kpiPayrollNet">&#8377; 62,08,100</div>
+                <div class="mt-1 flex items-center gap-2">
+                  <button onclick="exportBankSalarySheet()" class="text-[11px] font-bold text-brand-amber hover:underline flex items-center gap-1 font-mono">
+                    <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+                    <span>Download NEFT Excel</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Company Payroll Policy Banner -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border/80 text-xs text-neutral-400 font-mono">
+              <div class="flex flex-wrap items-center gap-2 text-[11px]">
+                <span class="text-brand-amber font-bold flex items-center gap-1"><i data-lucide="check-check" class="w-3.5 h-3.5"></i> Applied Company Rule:</span>
+                <span id="activePayrollRuleBadge" class="text-white">26 Working Days &bull; Basic 50% &bull; HRA 25% &bull; DA 10% &bull; PF 12% &bull; PT &#8377;200 &bull; 1.5x Overtime</span>
+              </div>
+              <div class="text-[11px] text-amber-300 font-bold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Pay Period: <span id="displayPayPeriodDates">01 Oct 2026 &ndash; 31 Oct 2026</span></span>
+              </div>
+            </div>
+
+            <!-- Comprehensive Corporate Payroll Table -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-lg">
               <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] border-b border-brand-border">
                     <tr>
-                      <th class="py-3 px-4">Employee</th>
-                      <th class="py-3 px-4">Department</th>
-                      <th class="py-3 px-4 text-right">Gross Salary</th>
-                      <th class="py-3 px-4 text-right">PF &amp; ESIC</th>
-                      <th class="py-3 px-4 text-right">TDS (Tax)</th>
-                      <th class="py-3 px-4 text-right">Net Payout</th>
-                      <th class="py-3 px-4 text-center">Status</th>
-                      <th class="py-3 px-4 text-right">Payslip</th>
+                      <th class="py-3.5 px-4">Employee Profile</th>
+                      <th class="py-3.5 px-4">Department</th>
+                      <th class="py-3.5 px-4 text-center">Attendance Summary (Days &amp; OT)</th>
+                      <th class="py-3.5 px-4 text-right">Basic Salary</th>
+                      <th class="py-3.5 px-4 text-right">HRA &amp; DA</th>
+                      <th class="py-3.5 px-4 text-right">Overtime Pay</th>
+                      <th class="py-3.5 px-4 text-right">Gross Salary</th>
+                      <th class="py-3.5 px-4 text-right">PF &amp; PT</th>
+                      <th class="py-3.5 px-4 text-right">TDS &amp; LOP Deduct</th>
+                      <th class="py-3.5 px-4 text-right font-bold text-emerald-400">Net Take-Home</th>
+                      <th class="py-3.5 px-4 text-right">CTC (Cost)</th>
+                      <th class="py-3.5 px-4 text-right">Payslip</th>
                     </tr>
                   </thead>
                   <tbody id="payrollTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
-                    <!-- Populated dynamically -->
+                    <!-- Populated dynamically via renderPayrollTable() -->
                   </tbody>
                 </table>
               </div>
@@ -1507,7 +1593,7 @@
 
           </div>
 
-                    <!-- ============================================== -->
+          <!-- ============================================== -->
           <!-- TAB 7: ATTENDANCE WITH LAT-LONG & MAP          -->
           <!-- ============================================== -->
           <div id="tab-attendance-latlong" class="tab-content hidden space-y-6">
@@ -1516,9 +1602,9 @@
               <div>
                 <h1 class="text-2xl font-bold text-white flex items-center gap-2.5">
                   <span>Attendance &amp; Shift Governance</span>
-                  <span class="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Live Tracking</span>
+                  <span class="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Days &amp; Hours Mode</span>
                 </h1>
-                <p class="text-xs text-neutral-400 mt-0.5">Biometric QR standee, GPS geofencing, shift anomaly tracking (Late In, Early Exit, Short Hours) &amp; regularization.</p>
+                <p class="text-xs text-neutral-400 mt-0.5">Biometric QR standee, GPS geofencing, dual Days (1.0D, 0.5D, 0.0D) &amp; Hours tracking (Worked, Deficit, Overtime) &amp; regularization.</p>
               </div>
 
               <div class="flex items-center gap-2">
@@ -1563,96 +1649,82 @@
               </div>
             </div>
 
-            <!-- 6 KPI Metric Cards for Workplace Attendance Governance -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+            <!-- 7 KPI Metric Cards (User Requirement 2: Present, Absent, Halfday, Late In, Early Out, Sort Hour, Overtime) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
               <!-- Total Staff -->
-              <div onclick="filterAttendanceByStatus('all')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-brand-amber/50 transition-all shadow-sm group">
-                <div class="flex items-center justify-between text-neutral-400 mb-2">
-                  <span class="text-[11px] font-medium uppercase tracking-wider">Total Staff</span>
-                  <div class="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-neutral-300 group-hover:text-white transition-colors">
-                    <i data-lucide="users" class="w-4 h-4"></i>
-                  </div>
+              <div onclick="filterAttendanceByStatus('all')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-brand-amber/50 transition-all shadow-sm group">
+                <div class="flex items-center justify-between text-neutral-400 mb-1.5">
+                  <span class="text-[10px] font-medium uppercase tracking-wider">Total Staff</span>
+                  <i data-lucide="users" class="w-3.5 h-3.5 text-neutral-400"></i>
                 </div>
-                <div class="text-2xl font-black text-white font-mono" id="attKpiTotal">104</div>
-                <div class="text-[10px] text-neutral-400 mt-1 flex items-center gap-1">
-                  <span>Enrolled headcount</span>
-                </div>
+                <div class="text-xl font-black text-white font-mono" id="attKpiTotal">104</div>
+                <div class="text-[9px] text-neutral-500 mt-0.5">Workforce</div>
               </div>
 
               <!-- Present (On-Time) -->
-              <div onclick="filterAttendanceByStatus('present')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-emerald-500/50 transition-all shadow-sm group">
-                <div class="flex items-center justify-between text-neutral-400 mb-2">
-                  <span class="text-[11px] font-medium uppercase tracking-wider text-emerald-400">Present (On-Time)</span>
-                  <div class="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500/20 transition-colors">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i>
-                  </div>
+              <div onclick="filterAttendanceByStatus('present')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-emerald-500/50 transition-all shadow-sm group">
+                <div class="flex items-center justify-between text-neutral-400 mb-1.5">
+                  <span class="text-[10px] font-medium uppercase tracking-wider text-emerald-400">Present (1.0D)</span>
+                  <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
                 </div>
-                <div class="text-2xl font-black text-emerald-400 font-mono" id="attKpiPresent">82</div>
-                <div class="text-[10px] text-neutral-400 mt-1 flex items-center gap-1">
-                  <span class="text-emerald-400 font-semibold">&ge;8h full shift</span>
-                </div>
+                <div class="text-xl font-black text-emerald-400 font-mono" id="attKpiPresent">78</div>
+                <div class="text-[9px] text-neutral-500 mt-0.5">&ge;8h full day</div>
               </div>
 
               <!-- Late In -->
-              <div onclick="filterAttendanceByStatus('late')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-amber-500/50 transition-all shadow-sm group">
-                <div class="flex items-center justify-between text-neutral-400 mb-2">
-                  <span class="text-[11px] font-medium uppercase tracking-wider text-amber-400">Late Arrival</span>
-                  <div class="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 group-hover:bg-amber-500/20 transition-colors">
-                    <i data-lucide="clock" class="w-4 h-4"></i>
-                  </div>
+              <div onclick="filterAttendanceByStatus('late')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-amber-500/50 transition-all shadow-sm group">
+                <div class="flex items-center justify-between text-neutral-400 mb-1.5">
+                  <span class="text-[10px] font-medium uppercase tracking-wider text-amber-400">Late In</span>
+                  <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
                 </div>
-                <div class="text-2xl font-black text-amber-400 font-mono" id="attKpiLate">9</div>
-                <div class="text-[10px] text-neutral-400 mt-1 flex items-center gap-1">
-                  <span class="text-amber-400 font-semibold">&gt;15m grace delay</span>
-                </div>
+                <div class="text-xl font-black text-amber-400 font-mono" id="attKpiLate">8</div>
+                <div class="text-[9px] text-neutral-500 mt-0.5">&gt;15m delay</div>
               </div>
 
-              <!-- Early Exit -->
-              <div onclick="filterAttendanceByStatus('early')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-orange-500/50 transition-all shadow-sm group">
-                <div class="flex items-center justify-between text-neutral-400 mb-2">
-                  <span class="text-[11px] font-medium uppercase tracking-wider text-orange-400">Early Exit</span>
-                  <div class="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400 group-hover:bg-orange-500/20 transition-colors">
-                    <i data-lucide="log-out" class="w-4 h-4"></i>
-                  </div>
+              <!-- Early Out -->
+              <div onclick="filterAttendanceByStatus('early')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-orange-500/50 transition-all shadow-sm group">
+                <div class="flex items-center justify-between text-neutral-400 mb-1.5">
+                  <span class="text-[10px] font-medium uppercase tracking-wider text-orange-400">Early Out</span>
+                  <i data-lucide="log-out" class="w-3.5 h-3.5 text-orange-400"></i>
                 </div>
-                <div class="text-2xl font-black text-orange-400 font-mono" id="attKpiEarly">5</div>
-                <div class="text-[10px] text-neutral-400 mt-1 flex items-center gap-1">
-                  <span class="text-orange-400 font-semibold">Left before 06:30 PM</span>
-                </div>
+                <div class="text-xl font-black text-orange-400 font-mono" id="attKpiEarly">5</div>
+                <div class="text-[9px] text-neutral-500 mt-0.5">Left before end</div>
               </div>
 
-              <!-- Short Hours / Half-Day -->
-              <div onclick="filterAttendanceByStatus('short')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-purple-500/50 transition-all shadow-sm group">
-                <div class="flex items-center justify-between text-neutral-400 mb-2">
-                  <span class="text-[11px] font-medium uppercase tracking-wider text-purple-400">Short Hours</span>
-                  <div class="w-7 h-7 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:bg-purple-500/20 transition-colors">
-                    <i data-lucide="hourglass" class="w-4 h-4"></i>
-                  </div>
+              <!-- Half-Day (0.5D) -->
+              <div onclick="filterAttendanceByStatus('halfday')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-indigo-500/50 transition-all shadow-sm group">
+                <div class="flex items-center justify-between text-neutral-400 mb-1.5">
+                  <span class="text-[10px] font-medium uppercase tracking-wider text-indigo-400">Half-Day (0.5D)</span>
+                  <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-indigo-400"></i>
                 </div>
-                <div class="text-2xl font-black text-purple-400 font-mono" id="attKpiShort">4</div>
-                <div class="text-[10px] text-neutral-400 mt-1 flex items-center gap-1">
-                  <span class="text-purple-400 font-semibold">4h to 7h 59m deficit</span>
-                </div>
+                <div class="text-xl font-black text-indigo-400 font-mono" id="attKpiHalfDay">3</div>
+                <div class="text-[9px] text-neutral-500 mt-0.5">4h to 7h work</div>
               </div>
 
-              <!-- Absent (Loss of Pay) -->
-              <div onclick="filterAttendanceByStatus('absent')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-rose-500/50 transition-all shadow-sm group">
-                <div class="flex items-center justify-between text-neutral-400 mb-2">
-                  <span class="text-[11px] font-medium uppercase tracking-wider text-rose-400">Absent (LOP)</span>
-                  <div class="w-7 h-7 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-400 group-hover:bg-rose-500/20 transition-colors">
-                    <i data-lucide="x-circle" class="w-4 h-4"></i>
-                  </div>
+              <!-- Overtime (OT) -->
+              <div onclick="filterAttendanceByStatus('overtime')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-yellow-500/50 transition-all shadow-sm group">
+                <div class="flex items-center justify-between text-neutral-400 mb-1.5">
+                  <span class="text-[10px] font-medium uppercase tracking-wider text-yellow-400">Overtime (OT)</span>
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5 text-yellow-400"></i>
                 </div>
-                <div class="text-2xl font-black text-rose-400 font-mono" id="attKpiAbsent">4</div>
-                <div class="text-[10px] text-neutral-400 mt-1 flex items-center gap-1">
-                  <span class="text-rose-400 font-semibold">&lt;4h or No Clock-In</span>
+                <div class="text-xl font-black text-yellow-400 font-mono" id="attKpiOvertime">6</div>
+                <div class="text-[9px] text-neutral-500 mt-0.5">+Extra shift hours</div>
+              </div>
+
+              <!-- Absent (LOP) -->
+              <div onclick="filterAttendanceByStatus('absent')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-rose-500/50 transition-all shadow-sm group">
+                <div class="flex items-center justify-between text-neutral-400 mb-1.5">
+                  <span class="text-[10px] font-medium uppercase tracking-wider text-rose-400">Absent (0.0D)</span>
+                  <i data-lucide="x-circle" class="w-3.5 h-3.5 text-rose-400"></i>
                 </div>
+                <div class="text-xl font-black text-rose-400 font-mono" id="attKpiAbsent">4</div>
+                <div class="text-[9px] text-neutral-500 mt-0.5">Loss of Pay</div>
               </div>
             </div>
 
             <!-- Dual Filter Controls: Status Filter Pills + Punch Method Pills -->
             <div class="bg-brand-surface p-4 rounded-2xl border border-brand-border space-y-3.5 shadow-md">
-              <!-- Top Row: Attendance Status Tabs -->
+              <!-- Top Row: Attendance Status Tabs (Present, Absent, Half-Day, Late In, Early Out, Sort Hour, Overtime) -->
               <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-brand-border/60 pb-3">
                 <div class="flex flex-wrap items-center gap-1.5">
                   <span class="text-xs text-neutral-400 font-medium mr-1 flex items-center gap-1.5">
@@ -1663,25 +1735,31 @@
                     All (104)
                   </button>
                   <button type="button" onclick="filterAttendanceByStatus('present')" id="btnAttStatus-present" class="px-3 py-1.5 rounded-xl text-xs text-neutral-400 hover:text-white transition-all flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Present
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Present (1.0D)
                   </button>
                   <button type="button" onclick="filterAttendanceByStatus('late')" id="btnAttStatus-late" class="px-3 py-1.5 rounded-xl text-xs text-neutral-400 hover:text-white transition-all flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-amber-400"></span> Late In
                   </button>
                   <button type="button" onclick="filterAttendanceByStatus('early')" id="btnAttStatus-early" class="px-3 py-1.5 rounded-xl text-xs text-neutral-400 hover:text-white transition-all flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-orange-400"></span> Early Exit
+                    <span class="w-2 h-2 rounded-full bg-orange-400"></span> Early Out
+                  </button>
+                  <button type="button" onclick="filterAttendanceByStatus('halfday')" id="btnAttStatus-halfday" class="px-3 py-1.5 rounded-xl text-xs text-neutral-400 hover:text-white transition-all flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-indigo-400"></span> Half-Day (0.5D)
                   </button>
                   <button type="button" onclick="filterAttendanceByStatus('short')" id="btnAttStatus-short" class="px-3 py-1.5 rounded-xl text-xs text-neutral-400 hover:text-white transition-all flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-purple-400"></span> Short Hours / Half-Day
+                    <span class="w-2 h-2 rounded-full bg-purple-400"></span> Short Hours
+                  </button>
+                  <button type="button" onclick="filterAttendanceByStatus('overtime')" id="btnAttStatus-overtime" class="px-3 py-1.5 rounded-xl text-xs text-neutral-400 hover:text-white transition-all flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400"></span> Overtime (+OT)
                   </button>
                   <button type="button" onclick="filterAttendanceByStatus('absent')" id="btnAttStatus-absent" class="px-3 py-1.5 rounded-xl text-xs text-neutral-400 hover:text-white transition-all flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-rose-400"></span> Absent
+                    <span class="w-2 h-2 rounded-full bg-rose-400"></span> Absent (0.0D)
                   </button>
                 </div>
 
                 <div class="text-[11px] text-neutral-400 flex items-center gap-2 bg-brand-dark px-3 py-1.5 rounded-xl border border-brand-border/60 self-start lg:self-auto font-mono">
-                  <span class="text-brand-amber font-semibold">Shift Policy:</span>
-                  <span>09:30 AM – 06:30 PM &bull; 15m Grace &bull; Min 8h Full Day</span>
+                  <span class="text-brand-amber font-semibold">Dual Metric:</span>
+                  <span>Days (1.0D / 0.5D / 0.0D) + Hours (Worked / Deficit / OT)</span>
                 </div>
               </div>
 
@@ -1702,12 +1780,12 @@
                   <span class="text-neutral-600">&bull;</span>
                   <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span> GPS Geofenced (50m)</span>
                   <span class="text-neutral-600">&bull;</span>
-                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-400"></span> Auto Deficit Calc</span>
+                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> OT &ge; 06:30 PM</span>
                 </div>
               </div>
             </div>
 
-            <!-- Attendance Table -->
+            <!-- Attendance Table: Shows BOTH Days & Hours Explicitly -->
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-lg">
               <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs">
@@ -1717,14 +1795,15 @@
                       <th class="py-3.5 px-4">Shift &amp; Date</th>
                       <th class="py-3.5 px-4">Clock-In (Punch &amp; GPS)</th>
                       <th class="py-3.5 px-4">Clock-Out (Punch &amp; GPS)</th>
-                      <th class="py-3.5 px-4">Total &amp; Work Hours</th>
+                      <th class="py-3.5 px-4">Day Weightage (Days)</th>
+                      <th class="py-3.5 px-4">Hours Breakdown (Worked/OT/Deficit)</th>
                       <th class="py-3.5 px-4">Attendance Status</th>
                       <th class="py-3.5 px-4">Punch Source</th>
                       <th class="py-3.5 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="attendanceTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
-                    <!-- Populated dynamically -->
+                    <!-- Populated dynamically via renderAttendanceTable() -->
                   </tbody>
                 </table>
               </div>
@@ -1738,13 +1817,115 @@
           <div id="tab-leave-management" class="tab-content hidden space-y-6">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
               <div>
-                <h1 class="text-2xl font-bold text-white">Leave Management (Full / Half Days)</h1>
-                <p class="text-xs text-neutral-400 mt-0.5">Manage Paid Leaves (PL), Casual Leaves (CL), Sick Leaves (SL) and Half-Day sessions.</p>
+                <div class="flex items-center gap-2.5">
+                  <h1 class="text-2xl font-bold text-white">Leave Management System</h1>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-amber/15 text-brand-amber border border-brand-amber/30">10 Leave Policy Rules Active</span>
+                </div>
+                <p class="text-xs text-neutral-400 mt-0.5">CL, SL, EL, PL, LWP (Leave Without Pay), Birthday Leave, Marriage Leave, Comp-Off &amp; Maternity/Paternity with automated payroll deduction.</p>
               </div>
-              <button onclick="openApplyLeaveModal()" class="px-4 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                <span>Apply / Record Leave</span>
-              </button>
+              <div class="flex items-center gap-2.5">
+                <button onclick="openMasterSubTab('leaves')" class="px-3 py-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white font-semibold text-xs flex items-center gap-1.5 transition-all">
+                  <i data-lucide="sliders" class="w-4 h-4 text-brand-amber"></i>
+                  <span>Manage Quotas</span>
+                </button>
+                <button onclick="openApplyLeaveModal()" class="px-4 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+                  <i data-lucide="plus" class="w-4 h-4"></i>
+                  <span>Apply / Record Leave</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 10 Comprehensive Leave Categories & Statutory Rules Grid (User Requirement 4) -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+                <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+                  <span>Casual (CL)</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] bg-brand-amber/20 text-brand-amber font-mono font-bold">12 D/Yr</span>
+                </div>
+                <div class="text-sm font-bold text-white mt-1">Paid Leave</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Urgent family & personal</div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+                <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+                  <span>Sick (SL)</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] bg-sky-500/20 text-sky-300 font-mono font-bold">10 D/Yr</span>
+                </div>
+                <div class="text-sm font-bold text-white mt-1">Medical Paid</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Illness & doctor recovery</div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+                <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+                  <span>Earned (EL)</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] bg-indigo-500/20 text-indigo-300 font-mono font-bold">15 D/Yr</span>
+                </div>
+                <div class="text-sm font-bold text-white mt-1">Accrued Paid</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Carry forward up to 45d</div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+                <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+                  <span>Privilege (PL)</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] bg-purple-500/20 text-purple-300 font-mono font-bold">18 D/Yr</span>
+                </div>
+                <div class="text-sm font-bold text-white mt-1">Annual Vacation</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Planned annual off</div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-brand-surface border border-rose-500/30 bg-rose-500/5 hover:border-rose-500/60 transition-all">
+                <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+                  <span class="text-rose-300">LWP (Loss of Pay)</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] bg-rose-500/20 text-rose-300 font-mono font-bold">Uncapped</span>
+                </div>
+                <div class="text-sm font-bold text-rose-300 mt-1">Salary Deducted</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Direct Payroll LOP cut</div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-brand-surface border border-pink-500/30 bg-pink-500/5 hover:border-pink-500/60 transition-all">
+                <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+                  <span class="text-pink-300">Birthday Leave</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] bg-pink-500/20 text-pink-300 font-mono font-bold">1 Day</span>
+                </div>
+                <div class="text-sm font-bold text-pink-300 mt-1">Special Paid Off</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Annual birthday gift</div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-brand-surface border border-amber-500/30 bg-amber-500/5 hover:border-amber-500/60 transition-all">
+                <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+                  <span class="text-amber-300">Marriage Leave</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] bg-amber-500/20 text-amber-300 font-mono font-bold">5 Days</span>
+                </div>
+                <div class="text-sm font-bold text-amber-300 mt-1">Special Paid Gift</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Wedding celebration</div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-brand-surface border border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/60 transition-all">
+                <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+                  <span class="text-emerald-300">Comp-Off (CO)</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] bg-emerald-500/20 text-emerald-300 font-mono font-bold">As Earned</span>
+                </div>
+                <div class="text-sm font-bold text-emerald-300 mt-1">Weekend Duty Credit</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Valid within 60 days</div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+                <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+                  <span>Maternity / Paternity</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] bg-cyan-500/20 text-cyan-300 font-mono font-bold">26 Weeks</span>
+                </div>
+                <div class="text-sm font-bold text-white mt-1">Statutory Paid</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Parental care benefit</div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+                <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+                  <span>Bereavement</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] bg-neutral-500/20 text-neutral-300 font-mono font-bold">5 Days</span>
+                </div>
+                <div class="text-sm font-bold text-white mt-1">Compassionate</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Immediate family support</div>
+              </div>
             </div>
 
             <!-- Leave Requests Table -->
@@ -1785,6 +1966,20 @@
                 <i data-lucide="user-plus" class="w-4 h-4"></i>
                 <span>Add Candidate</span>
               </button>
+            </div>
+
+            <!-- 5-Stage ATS Pipeline Navigation Tabs (User Requirement 4) -->
+            <div class="flex flex-wrap items-center gap-2 bg-brand-surface p-2.5 rounded-2xl border border-brand-border text-xs">
+              <span class="text-neutral-400 font-semibold px-2 flex items-center gap-1.5">
+                <i data-lucide="git-branch" class="w-3.5 h-3.5 text-brand-amber"></i>
+                <span>Pipeline Stage:</span>
+              </span>
+              <button type="button" onclick="filterCandidateByStage('all')" id="btnCndStage-all" class="px-3 py-1.5 rounded-xl font-bold bg-brand-amber text-neutral-950 shadow transition-all">All (5)</button>
+              <button type="button" onclick="filterCandidateByStage('Applied')" id="btnCndStage-Applied" class="px-3 py-1.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-slate-400"></span> Applied</button>
+              <button type="button" onclick="filterCandidateByStage('Resume')" id="btnCndStage-Resume" class="px-3 py-1.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-sky-400"></span> Resume</button>
+              <button type="button" onclick="filterCandidateByStage('Interview')" id="btnCndStage-Interview" class="px-3 py-1.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Interview</button>
+              <button type="button" onclick="filterCandidateByStage('Offer Letter')" id="btnCndStage-Offer Letter" class="px-3 py-1.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-400"></span> Offer Letter</button>
+              <button type="button" onclick="filterCandidateByStage('Offer Letter Accepted')" id="btnCndStage-Offer Letter Accepted" class="px-3 py-1.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Offer Letter Accepted</button>
             </div>
 
             <!-- Candidates Table -->
@@ -4389,87 +4584,278 @@
     </div>
   </div>
 
-  <!-- MODAL 4: SALARY SLIP PDF VIEWER -->
+  <!-- MODAL 4: SALARY SLIP PDF VIEWER (WITH FROM & TO PAY PERIOD) -->
   <div id="modalSalarySlip" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white text-slate-900 rounded-3xl w-full max-w-2xl my-8 overflow-hidden shadow-2xl flex flex-col">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between no-print">
-        <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Salary Slip Document Preview</span>
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+          <span>Official Salary Slip Document &bull; Pay Period View</span>
+        </span>
         <div class="flex items-center gap-2">
           <button onclick="printSalarySlip()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-white flex items-center gap-1">
             <i data-lucide="printer" class="w-3.5 h-3.5"></i>
             <span>Print</span>
           </button>
-          <button onclick="downloadSalarySlipPDF()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-xs text-neutral-950 font-bold flex items-center gap-1">
+          <button onclick="downloadSalarySlipPDF()" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-xs text-neutral-950 font-bold flex items-center gap-1 shadow">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
             <span>Download PDF</span>
           </button>
-          <button onclick="closeModal('modalSalarySlip')" class="p-1.5 hover:bg-white/10 rounded-lg text-white">&times;</button>
+          <button onclick="closeModal('modalSalarySlip')" class="p-1.5 hover:bg-white/10 rounded-lg text-white text-lg">&times;</button>
         </div>
       </div>
 
       <!-- Printable Payslip Area -->
-      <div id="printablePayslip" class="p-8 sm:p-10 space-y-6 text-xs text-slate-800">
+      <div id="printablePayslip" class="p-8 sm:p-10 space-y-5 text-xs text-slate-800 bg-white">
         <!-- Header -->
-        <div class="flex justify-between items-start border-b border-slate-200 pb-4">
+        <div class="flex justify-between items-start border-b-2 border-slate-900 pb-4">
           <div>
-            <div class="text-xl font-black text-slate-900">Apex Global Technologies Pvt Ltd</div>
-            <div class="text-[11px] text-slate-500">BKC Cyber Park, Bandra East, Mumbai 400051</div>
-            <div class="text-[10px] text-slate-500 font-mono mt-0.5">PAN: AAACA9823P &bull; TAN: MUMM12345C</div>
+            <div class="text-xl font-black text-slate-900 tracking-tight">Apex Global Technologies Pvt Ltd</div>
+            <div class="text-[11px] text-slate-600 font-medium mt-0.5">Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051</div>
+            <div class="text-[10px] text-slate-500 font-mono mt-0.5">PAN: AAACA9823P &bull; TAN: MUMM12345C &bull; GSTIN: 27AAACA9823P1Z5</div>
           </div>
           <div class="text-right">
-            <div class="text-base font-extrabold text-amber-600 uppercase">Payslip for Oct 2026</div>
-            <div class="text-[11px] text-slate-500">Pay Date: 31-Oct-2026</div>
+            <div class="text-sm font-black text-amber-700 uppercase bg-amber-50 px-2.5 py-1 rounded border border-amber-200">
+              Payslip for <span id="slipPayMonth">October 2026</span>
+            </div>
+            <!-- User Requirement 1: FROM DATE & TO DATE IN SALARY SLIP -->
+            <div class="text-[11px] font-bold text-slate-800 mt-1.5 font-mono">
+              Pay Period: <span id="slipPayPeriodFrom" class="text-amber-800">01-Oct-2026</span> to <span id="slipPayPeriodTo" class="text-amber-800">31-Oct-2026</span>
+            </div>
+            <div class="text-[10px] text-slate-500 font-mono mt-0.5">Disbursal Date: <span id="slipPayDate">31-Oct-2026</span></div>
           </div>
         </div>
 
-        <!-- Employee Info Grid -->
-        <div class="grid grid-cols-2 gap-4 border-b border-slate-200 pb-4">
+        <!-- Employee Info & Attendance Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[11px]">
           <div>
-            <div>Name: <strong id="slipEmpName">Ananya Verma</strong></div>
-            <div>Employee ID: <strong id="slipEmpId">EMP-AGT-0102</strong></div>
-            <div>Department: <span id="slipEmpDept">Sales &amp; Marketing</span></div>
+            <div class="text-[10px] text-slate-500 uppercase font-semibold">Employee Details</div>
+            <div class="font-bold text-slate-900 text-xs mt-0.5" id="slipEmpName">Rohan Mehra</div>
+            <div class="font-mono text-slate-600 text-[10px]" id="slipEmpId">EMP-AGT-0103</div>
+            <div class="text-slate-600 truncate" id="slipEmpDesig">HR Director / Admin</div>
           </div>
           <div>
-            <div>Designation: <strong id="slipEmpDesig">Senior Account Executive</strong></div>
-            <div>Bank A/C: <span id="slipEmpBank">50100098234102 (HDFC)</span></div>
-            <div>Working Days: <strong>26 Days</strong> &bull; LOP: <strong>0</strong></div>
+            <div class="text-[10px] text-slate-500 uppercase font-semibold">Bank &amp; Statutory</div>
+            <div class="text-slate-800">Bank: <strong id="slipEmpBank">HDFC Bank (0103)</strong></div>
+            <div class="font-mono text-slate-600 text-[10px]">UAN: <span id="slipEmpUan">100982341031</span></div>
+            <div class="font-mono text-slate-600 text-[10px]">PAN: <span id="slipEmpPan">AAAPM8921K</span></div>
+          </div>
+          <div>
+            <!-- Attendance Summary in Salary Slip -->
+            <div class="text-[10px] text-slate-500 uppercase font-semibold">Attendance &amp; Days</div>
+            <div class="text-slate-800">Total Month Days: <strong id="slipWorkingDays">26 Days</strong></div>
+            <div class="text-slate-800 font-bold">Payable Days: <span id="slipPayableDays" class="text-emerald-700">26.0 Days</span></div>
+            <div class="text-slate-800">LOP / Absent: <span id="slipLopDays" class="text-rose-700 font-bold">0 Days</span> &bull; OT: <span id="slipOtHours" class="text-amber-700 font-bold">0h</span></div>
           </div>
         </div>
 
         <!-- Earnings & Deductions Table -->
-        <div class="grid grid-cols-2 gap-6 border-b border-slate-200 pb-4">
+        <div class="grid grid-cols-2 gap-5 border-t border-b border-slate-200 py-3">
+          <!-- Earnings Column -->
           <div>
-            <div class="font-bold text-slate-900 uppercase text-[10px] border-b border-slate-200 pb-1 mb-2">Earnings</div>
-            <div class="flex justify-between py-1"><span>Basic Salary:</span><span id="slipBasic">&#8377; 35,000</span></div>
-            <div class="flex justify-between py-1"><span>HRA:</span><span id="slipHra">&#8377; 17,500</span></div>
-            <div class="flex justify-between py-1"><span>Special Allowance:</span><span id="slipSpecial">&#8377; 12,500</span></div>
-            <div class="flex justify-between py-1 border-t border-slate-200 font-bold"><span>Total Earnings:</span><span id="slipTotalEarnings">&#8377; 65,000</span></div>
+            <div class="font-black text-slate-900 uppercase text-[10px] border-b border-slate-200 pb-1 mb-2 tracking-wider flex justify-between">
+              <span>Earnings</span>
+              <span>Amount (&#8377;)</span>
+            </div>
+            <div class="space-y-1.5 text-[11px]">
+              <div class="flex justify-between py-0.5"><span>Basic Salary (50%):</span><span id="slipBasic" class="font-mono font-semibold">&#8377; 42,500</span></div>
+              <div class="flex justify-between py-0.5"><span>HRA (House Rent):</span><span id="slipHra" class="font-mono font-semibold">&#8377; 21,250</span></div>
+              <div class="flex justify-between py-0.5"><span>Dearness Allowance (DA):</span><span id="slipDa" class="font-mono font-semibold">&#8377; 8,500</span></div>
+              <div class="flex justify-between py-0.5"><span>Special Allowance:</span><span id="slipSpecial" class="font-mono font-semibold">&#8377; 12,750</span></div>
+              <div class="flex justify-between py-0.5 text-amber-700 font-semibold"><span>Overtime Pay (OT):</span><span id="slipOtPay" class="font-mono">&#8377; 0</span></div>
+              <div class="flex justify-between py-1.5 border-t border-slate-300 font-black text-slate-900 text-xs">
+                <span>Gross Earnings:</span>
+                <span id="slipTotalEarnings" class="font-mono">&#8377; 85,000</span>
+              </div>
+            </div>
           </div>
+
+          <!-- Deductions Column -->
           <div>
-            <div class="font-bold text-slate-900 uppercase text-[10px] border-b border-slate-200 pb-1 mb-2">Deductions</div>
-            <div class="flex justify-between py-1"><span>Provident Fund (PF):</span><span id="slipPf">&#8377; 1,800</span></div>
-            <div class="flex justify-between py-1"><span>Professional Tax (PT):</span><span>&#8377; 200</span></div>
-            <div class="flex justify-between py-1"><span>TDS / Income Tax:</span><span id="slipTds">&#8377; 1,500</span></div>
-            <div class="flex justify-between py-1 border-t border-slate-200 font-bold"><span>Total Deductions:</span><span id="slipTotalDeductions">&#8377; 3,500</span></div>
+            <div class="font-black text-slate-900 uppercase text-[10px] border-b border-slate-200 pb-1 mb-2 tracking-wider flex justify-between">
+              <span>Deductions</span>
+              <span>Amount (&#8377;)</span>
+            </div>
+            <div class="space-y-1.5 text-[11px]">
+              <div class="flex justify-between py-0.5"><span>Provident Fund (PF 12%):</span><span id="slipPf" class="font-mono font-semibold">&#8377; 1,800</span></div>
+              <div class="flex justify-between py-0.5"><span>Professional Tax (PT):</span><span id="slipPt" class="font-mono font-semibold">&#8377; 200</span></div>
+              <div class="flex justify-between py-0.5"><span>ESIC Health Insurance:</span><span id="slipEsic" class="font-mono font-semibold">&#8377; 0</span></div>
+              <div class="flex justify-between py-0.5"><span>TDS / Income Tax:</span><span id="slipTds" class="font-mono font-semibold">&#8377; 3,200</span></div>
+              <div class="flex justify-between py-0.5 text-rose-700 font-semibold"><span>LOP / Short Hours Deduct:</span><span id="slipLopDeduct" class="font-mono">&#8377; 0</span></div>
+              <div class="flex justify-between py-1.5 border-t border-slate-300 font-black text-slate-900 text-xs">
+                <span>Total Deductions:</span>
+                <span id="slipTotalDeductions" class="font-mono text-rose-700">&#8377; 5,200</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Net Salary -->
-        <div class="p-4 bg-amber-50 rounded-2xl flex justify-between items-center border border-amber-200">
+        <!-- Net Take-Home Pay Banner -->
+        <div class="p-4 bg-amber-50 rounded-2xl flex justify-between items-center border border-amber-300 shadow-sm">
           <div>
-            <div class="text-[10px] uppercase font-bold text-amber-800">Net Take Home Pay:</div>
-            <div class="text-xs text-slate-600" id="slipInWords">Sixty-One Thousand Five Hundred Rupees Only</div>
+            <div class="text-[10px] uppercase font-black text-amber-900 tracking-wider">Net Take-Home Salary:</div>
+            <div class="text-xs font-semibold text-slate-700 mt-0.5" id="slipInWords">Seventy-Nine Thousand Eight Hundred Rupees Only</div>
+            <div class="text-[10px] text-slate-500 font-mono mt-0.5">Annual CTC: <span id="slipCtcDisplay" class="font-bold text-slate-800">&#8377; 11,20,000 / Year</span></div>
           </div>
-          <div class="text-2xl font-black text-amber-600 font-mono" id="slipNetPay">&#8377; 61,500</div>
+          <div class="text-right">
+            <div class="text-2xl font-black text-amber-700 font-mono" id="slipNetPay">&#8377; 79,800</div>
+            <div class="text-[10px] text-emerald-700 font-bold font-mono">Disbursed via Direct Bank NEFT</div>
+          </div>
         </div>
 
-        <div class="flex justify-between items-end pt-4 text-[10px] text-slate-400">
-          <div>This is a computer-generated payslip authenticated by SORA HR Technologies.</div>
-          <div class="text-center font-bold text-slate-700">
-            <div>Authorized Signatory</div>
-            <div class="text-slate-500 font-normal">Apex Global Technologies</div>
+        <!-- Payslip Footer Disclaimer & Signatory -->
+        <div class="flex justify-between items-end pt-3 text-[10px] text-slate-400">
+          <div>
+            <div>Computer generated salary slip authenticated by SORA HR Technologies.</div>
+            <div>Contains statutory PF, PT and income tax deductions per IT Act 1961.</div>
+          </div>
+          <div class="text-center font-bold text-slate-800">
+            <div class="text-[11px] text-slate-900">For Apex Global Technologies Pvt Ltd</div>
+            <div class="text-slate-500 font-normal text-[9px] mt-0.5">Authorized Signatory &bull; People &amp; Culture</div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- MODAL: COMPANY PAYROLL RULES & STATUTORY POLICY -->
+  <div id="modalPayrollRules" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark/40">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="sliders" class="w-4 h-4 text-brand-amber"></i>
+            <span>Company Payroll Rules &amp; Statutory Policy</span>
+          </h3>
+          <p class="text-xs text-neutral-400 mt-0.5">Har company ke rules alag hote hain: Month working days, Basic/HRA/DA ratio, PF ceiling, OT rate aur LOP formula configure karein.</p>
+        </div>
+        <button onclick="closeModal('modalPayrollRules')" class="text-neutral-400 hover:text-white text-xl p-1">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
+        <!-- Rule 1: Working Days in Month Base -->
+        <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border space-y-2">
+          <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
+            1. Monthly Working Days Calculation Base
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
+              <input type="radio" name="ruleWorkingDaysBase" value="26" checked class="text-brand-amber">
+              <div>
+                <div class="font-bold text-white">26 Days</div>
+                <div class="text-[10px] text-neutral-400">Statutory Indian rule (Sundays off)</div>
+              </div>
+            </label>
+            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
+              <input type="radio" name="ruleWorkingDaysBase" value="calendar" class="text-brand-amber">
+              <div>
+                <div class="font-bold text-white">Actual Calendar Days</div>
+                <div class="text-[10px] text-neutral-400">30 or 31 days in month</div>
+              </div>
+            </label>
+            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
+              <input type="radio" name="ruleWorkingDaysBase" value="22" class="text-brand-amber">
+              <div>
+                <div class="font-bold text-white">22 Days</div>
+                <div class="text-[10px] text-neutral-400">5-day corporate week</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Rule 2: Salary Component Splits (Basic, HRA, DA) -->
+        <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border space-y-3">
+          <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
+            2. Salary Component Percentages (% of Gross)
+          </label>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Basic Salary (%)</label>
+              <select id="ruleBasicPct" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs">
+                <option value="50" selected>50% (New Wage Code 2026)</option>
+                <option value="40">40% of Gross</option>
+                <option value="30">30% of Gross</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">HRA Ratio (%)</label>
+              <select id="ruleHraPct" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs">
+                <option value="25" selected>25% of Gross (50% of Basic)</option>
+                <option value="20">20% of Gross (40% of Basic)</option>
+                <option value="15">15% of Gross</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">DA (Dearness Allowance)</label>
+              <select id="ruleDaPct" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs">
+                <option value="10" selected>10% of Gross</option>
+                <option value="5">5% of Gross</option>
+                <option value="0">0% (Merged into Special)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule 3: Overtime Calculation Multiplier -->
+        <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border space-y-2">
+          <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
+            3. Overtime (OT) Hourly Rate Multiplier
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
+              <input type="radio" name="ruleOtMultiplier" value="1.5" checked class="text-brand-amber">
+              <div>
+                <div class="font-bold text-white">1.5x Hourly Rate</div>
+                <div class="text-[10px] text-neutral-400">Standard overtime rate</div>
+              </div>
+            </label>
+            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
+              <input type="radio" name="ruleOtMultiplier" value="2.0" class="text-brand-amber">
+              <div>
+                <div class="font-bold text-white">2.0x Double Rate</div>
+                <div class="text-[10px] text-neutral-400">Holiday &amp; rest-day work</div>
+              </div>
+            </label>
+            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
+              <input type="radio" name="ruleOtMultiplier" value="1.0" class="text-brand-amber">
+              <div>
+                <div class="font-bold text-white">1.0x Flat Rate</div>
+                <div class="text-[10px] text-neutral-400">Straight hourly conversion</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Rule 4: Statutory Deductions Policy (PF & PT) -->
+        <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Provident Fund (PF) Rule</label>
+            <select id="rulePfPolicy" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs">
+              <option value="cap15k" selected>Cap at &#8377;15,000 wage (&#8377;1,800/mo max)</option>
+              <option value="uncapped">Full 12% on actual basic</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Professional Tax (PT)</label>
+            <select id="rulePtPolicy" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs">
+              <option value="200" selected>&#8377;200 / Month (Standard Slab)</option>
+              <option value="0">Exempt (&#8377;0)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-brand-border bg-brand-dark/40 flex items-center justify-end gap-2.5">
+        <button type="button" onclick="closeModal('modalPayrollRules')" class="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white">
+          Cancel
+        </button>
+        <button type="button" onclick="saveCompanyPayrollRules()" class="px-5 py-2 rounded-xl bg-brand-amber text-neutral-950 hover:bg-amber-400 text-xs font-bold flex items-center gap-1.5 shadow">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Save &amp; Recalculate Payroll</span>
+        </button>
       </div>
     </div>
   </div>
@@ -4678,22 +5064,25 @@
       ],
       leaveTypes: [
         { id: 'lt_cl', name: 'Casual Leave (CL)', code: 'CL', quota: '12 Days/Year', type: 'Paid', carryForward: 'No', desc: 'Urgent personal matters & family functions' },
-        { id: 'lt_pl', name: 'Paid Leave (PL) / Earned Leave', code: 'PL', quota: '18 Days/Year', type: 'Paid', carryForward: 'Max 30 Days', desc: 'Planned vacations, leisure & extended personal time' },
         { id: 'lt_sl', name: 'Sick Leave (SL) / Medical Leave', code: 'SL', quota: '10 Days/Year', type: 'Paid', carryForward: 'No', desc: 'Illness, hospitalization & medical recovery' },
+        { id: 'lt_el', name: 'Earned Leave (EL)', code: 'EL', quota: '15 Days/Year', type: 'Paid', carryForward: 'Max 45 Days', desc: 'Accrued privilege leave for extended vacations' },
+        { id: 'lt_pl', name: 'Privilege Leave (PL)', code: 'PL', quota: '18 Days/Year', type: 'Paid', carryForward: 'Max 30 Days', desc: 'Planned annual vacations & leisure' },
+        { id: 'lt_lwp', name: 'Leave Without Pay (LWP / Loss of Pay)', code: 'LWP', quota: 'Uncapped', type: 'Unpaid / LOP', carryForward: 'No', desc: 'Unexcused leave or exhausted balances (deducted in payroll)' },
+        { id: 'lt_bday', name: 'Birthday Leave', code: 'BDL', quota: '1 Day/Year', type: 'Special Paid', carryForward: 'No', desc: '1 Day paid birthday holiday granted to each employee' },
+        { id: 'lt_marr', name: 'Marriage Leave', code: 'MRL', quota: '5 Days', type: 'Special Paid', carryForward: 'No', desc: '5 Days paid wedding leave celebration gift from company' },
         { id: 'lt_co', name: 'Compensatory Off (Comp-Off)', code: 'CO', quota: 'As Earned', type: 'Paid', carryForward: 'Within 60 Days', desc: 'Compensatory day-off for weekend or holiday duty' },
-        { id: 'lt_ml', name: 'Maternity / Parental Leave', code: 'MPL', quota: '26 Weeks', type: 'Statutory Paid', carryForward: 'No', desc: 'Childbirth, newborn bonding & parental care' }
+        { id: 'lt_ml', name: 'Maternity / Paternity Leave', code: 'MPL', quota: '26 Weeks', type: 'Statutory Paid', carryForward: 'No', desc: 'Childbirth, newborn bonding & parental care' },
+        { id: 'lt_berv', name: 'Bereavement Leave', code: 'BRL', quota: '5 Days', type: 'Compassionate Paid', carryForward: 'No', desc: 'Compassionate leave for immediate family bereavement' }
       ],
       pipelineStages: [
-        { id: 'stg_1', name: 'Initial Screening & Resume Shortlist', code: 'Screening', category: 'Sourcing & Screening', order: 1, desc: 'Recruiter phone screen & resume qualification' },
-        { id: 'stg_2', name: 'Interview Scheduled / Round 1', code: 'Interview 1', category: 'Interview & Evaluation', order: 2, desc: 'First round technical or domain interview' },
-        { id: 'stg_3', name: 'Technical Evaluation / Assignment', code: 'Tech Round', category: 'Interview & Evaluation', order: 3, desc: 'Take-home assessment, live coding or system design' },
-        { id: 'stg_4', name: 'Managerial & Team Fit Interview', code: 'Managerial', category: 'Interview & Evaluation', order: 4, desc: 'Hiring manager culture fit & alignment round' },
-        { id: 'stg_5', name: 'Final HR Round & Salary Discussion', code: 'Final HR', category: 'Interview & Evaluation', order: 5, desc: 'Compensation breakdown & background verification' },
-        { id: 'stg_6', name: '★ Candidate Selected / Ready for Offer', code: 'Selected', category: 'Selection & Offer', order: 6, desc: 'Panel approved hire, ready for appointment letter' },
-        { id: 'stg_7', name: 'Offer Released', code: 'Offer Released', category: 'Selection & Offer', order: 7, desc: 'Formal appointment letter issued and dispatched' },
-        { id: 'stg_8', name: 'Rejected / Kept in Talent Pool', code: 'Rejected', category: 'Talent Pool & Closed', order: 8, desc: 'Candidate archived for future opportunities' }
+        { id: 'stg_app', name: 'Applied', code: 'Applied', category: 'Sourcing & Inbound', order: 1, desc: 'Initial candidate inbound application received' },
+        { id: 'stg_res', name: 'Resume Screening', code: 'Resume', category: 'Screening & Shortlist', order: 2, desc: 'Resume evaluated, verified skills & recruiter shortlisted' },
+        { id: 'stg_int', name: 'Interview', code: 'Interview', category: 'Evaluation & Rounds', order: 3, desc: 'Active technical, managerial & culture fit rounds' },
+        { id: 'stg_off', name: 'Offer Letter', code: 'Offer Letter', category: 'Selection & Offer', order: 4, desc: 'Candidate selected, formal appointment letter issued' },
+        { id: 'stg_acc', name: 'Offer Letter Accepted', code: 'Offer Accepted', category: 'Onboarding & Joined', order: 5, desc: 'Signed offer received, ready for day-1 onboarding' },
+        { id: 'stg_rej', name: 'Rejected / Archived', code: 'Archived', category: 'Talent Pool', order: 6, desc: 'Candidate archived for future open opportunities' }
       ],
-      currentMasterTab: 'roles',
+            currentMasterTab: 'roles',
       locations: [
         { id: 'loc_bkc', name: 'Mumbai Head Office (BKC)', city: 'Mumbai', lat: 19.0657, lng: 72.8682, radius: 100 },
         { id: 'loc_blr', name: 'Bengaluru Tech Hub (Whitefield)', city: 'Bengaluru', lat: 12.9716, lng: 77.5946, radius: 150 },
@@ -4720,7 +5109,7 @@
           location: 'BKC Reception Standee',
           inTime: '09:05 AM',
           inStatus: 'On-Time',
-          inDelay: 'Punctual (within 15m grace)',
+          inDelay: 'Punctual',
           inLat: 19.0657,
           inLng: 72.8682,
           outTime: '06:35 PM',
@@ -4731,7 +5120,9 @@
           breakTime: '45 Min',
           hours: '9h 30m',
           workHours: '8h 45m',
-          deficit: '0h (Full Shift >= 8h)',
+          dayWeight: 1.0,
+          deficit: '0h',
+          otHours: '0h',
           status: 'Present',
           regularized: false,
           regNote: ''
@@ -4748,21 +5139,23 @@
           location: 'BKC Reception Standee',
           inTime: '09:02 AM',
           inStatus: 'On-Time',
-          inDelay: 'Punctual (within 15m grace)',
+          inDelay: 'Punctual',
           inLat: 19.0650,
           inLng: 72.8670,
-          outTime: '06:30 PM',
-          outStatus: 'Normal Exit',
-          outDiff: 'Exact Shift End',
+          outTime: '08:30 PM',
+          outStatus: 'Overtime Shift',
+          outDiff: '+2h 00m Approved OT',
           outLat: 19.0650,
           outLng: 72.8670,
           breakTime: '60 Min',
-          hours: '9h 28m',
-          workHours: '8h 28m',
-          deficit: '0h (Full Shift >= 8h)',
-          status: 'Present',
-          regularized: false,
-          regNote: ''
+          hours: '11h 28m',
+          workHours: '10h 28m',
+          dayWeight: 1.0,
+          deficit: '0h',
+          otHours: '+2h 00m',
+          status: 'Overtime',
+          regularized: true,
+          regNote: 'Approved Critical Production Release Overtime (+2.0h)'
         },
         {
           id: 'ATT-2026-003',
@@ -4787,7 +5180,9 @@
           breakTime: '45 Min',
           hours: '8h 25m',
           workHours: '7h 40m',
+          dayWeight: 1.0,
           deficit: '20m Deficit',
+          otHours: '0h',
           status: 'Late In',
           regularized: false,
           regNote: ''
@@ -4808,15 +5203,17 @@
           inLat: 19.1136,
           inLng: 72.8697,
           outTime: '04:30 PM',
-          outStatus: 'Early Exit',
+          outStatus: 'Early Out',
           outDiff: '-2h 00m Early Departure',
           outLat: 19.1150,
           outLng: 72.8710,
           breakTime: '30 Min',
           hours: '7h 10m',
           workHours: '6h 40m',
+          dayWeight: 1.0,
           deficit: '1h 20m Deficit',
-          status: 'Early Exit',
+          otHours: '0h',
+          status: 'Early Out',
           regularized: false,
           regNote: ''
         },
@@ -4836,17 +5233,19 @@
           inLat: 19.0655,
           inLng: 72.8680,
           outTime: '04:05 PM',
-          outStatus: 'Early Exit',
+          outStatus: 'Early Out',
           outDiff: '-2h 25m Early Departure',
           outLat: 19.0655,
           outLng: 72.8680,
           breakTime: '40 Min',
           hours: '5h 30m',
           workHours: '4h 50m',
+          dayWeight: 0.5,
           deficit: '3h 10m Deficit',
-          status: 'Short Hours',
+          otHours: '0h',
+          status: 'Half-Day',
           regularized: false,
-          regNote: ''
+          regNote: 'Short Hours converted to 0.5 Day attendance'
         },
         {
           id: 'ATT-2026-006',
@@ -4871,7 +5270,9 @@
           breakTime: '--',
           hours: '0h 00m',
           workHours: '0h 00m',
-          deficit: '8h 00m (Full Day Absent)',
+          dayWeight: 0.0,
+          deficit: '8h 00m',
+          otHours: '0h',
           status: 'Absent',
           regularized: false,
           regNote: 'Unexcused Absence (Loss of Pay)'
@@ -4899,22 +5300,27 @@
           breakTime: '45 Min',
           hours: '8h 30m',
           workHours: '7h 45m',
+          dayWeight: 1.0,
           deficit: '15m Deficit',
+          otHours: '0h',
           status: 'Present',
           regularized: true,
-          regNote: 'Pardoned by HR Director (Line 3 Metro Signal Delay)'
+          regNote: 'Pardoned by HR Director (Line 3 Metro Delay)'
         }
       ],
       leaves: [
         { id: 'L-101', name: 'Pooja Iyer', empId: 'EMP-AGT-0104', dept: 'Engineering & Technology', type: 'Casual Leave (CL)', mode: 'Full Day', dates: '03 Nov - 04 Nov 2026', days: 2, reason: 'Family Function in Pune with extended family gathering', status: 'Pending', clBalance: 8, plBalance: 14, slBalance: 6 },
-        { id: 'L-102', name: 'Vikram Joshi', empId: 'EMP-AGT-0101', dept: 'Sales & Business Development', type: 'Paid Leave (PL)', mode: 'Half-Day (Second Half)', dates: '02 Nov 2026', days: 0.5, reason: 'Personal Bank Errand and housing registration work', status: 'Pending', clBalance: 6, plBalance: 12, slBalance: 8 },
-        { id: 'L-103', name: 'Ananya Verma', empId: 'EMP-AGT-0102', dept: 'Sales & Business Development', type: 'Sick Leave (SL)', mode: 'Full Day', dates: '29 Oct 2026', days: 1, reason: 'Viral Fever & Doctor Visit with medical certificate', status: 'Approved', clBalance: 10, plBalance: 15, slBalance: 4 }
+        { id: 'L-102', name: 'Vikram Joshi', empId: 'EMP-AGT-0101', dept: 'Sales & Business Development', type: 'Birthday Leave', mode: 'Full Day', dates: '05 Nov 2026', days: 1, reason: 'Annual Birthday Special Leave granted by company policy', status: 'Approved', clBalance: 6, plBalance: 12, slBalance: 8 },
+        { id: 'L-103', name: 'Aditya Nair', empId: 'EMP-AGT-0105', dept: 'Engineering & Technology', type: 'Marriage Leave', mode: 'Full Day', dates: '10 Nov - 14 Nov 2026', days: 5, reason: 'Wedding ceremony celebration (5 Days paid wedding leave)', status: 'Approved', clBalance: 12, plBalance: 18, slBalance: 10 },
+        { id: 'L-104', name: 'Ananya Verma', empId: 'EMP-AGT-0102', dept: 'Sales & Business Development', type: 'Sick Leave (SL)', mode: 'Full Day', dates: '29 Oct 2026', days: 1, reason: 'Viral Fever & Doctor Visit with medical certificate', status: 'Approved', clBalance: 10, plBalance: 15, slBalance: 4 },
+        { id: 'L-105', name: 'Rohan Gupta', empId: 'EMP-AGT-0106', dept: 'Operations & Logistics', type: 'Leave Without Pay (LWP)', mode: 'Full Day', dates: '01 Nov 2026', days: 1, reason: 'Exhausted casual balance; recorded as LWP loss of pay in payroll', status: 'Approved', clBalance: 0, plBalance: 0, slBalance: 0 }
       ],
       candidates: [
-        { id: 'CND-8801', name: 'Kavita Sundaram', pos: 'Product Marketing Manager', candidateType: 'Experienced', dept: 'Marketing & Growth', exp: '6 Years', currentOrg: 'GrowthWave Tech', education: 'MBA in Marketing & Product Strategy (IIM Bangalore)', skills: 'B2B SaaS Positioning, Product Marketing, GTM Strategy, Analytics, Content Operations', ctc: '₹ 18,00,000', notice: '30 Days', stage: 'Final HR Round & Salary Discussion', score: '94%', notes: 'Strong presentation skills, deep B2B SaaS product positioning expertise.', resumeUrl: 'Kavita_Sundaram_Resume.pdf' },
-        { id: 'CND-8802', name: 'Aditya Nair', pos: 'DevOps & Cloud Engineer', candidateType: 'Experienced', dept: 'Engineering & Technology', exp: '4 Years', currentOrg: 'CloudNine Systems', education: 'B.Tech in Computer Engineering (VJTI Mumbai)', skills: 'Kubernetes, AWS Cloud, Terraform, Docker, CI/CD Pipelines, Linux SysAdmin', ctc: '₹ 14,50,000', notice: '15 Days', stage: 'Candidate Selected / Ready for Offer', score: '98%', notes: 'Exceptional Kubernetes, AWS CI/CD and Terraform infrastructure knowledge.', resumeUrl: 'Aditya_Nair_DevOps_CV.pdf' },
-        { id: 'CND-8803', name: 'Siddharth Rao', pos: 'Corporate Sales Specialist', candidateType: 'Experienced', dept: 'Sales & Business Development', exp: '3 Years', currentOrg: 'InnoSales India', education: 'B.Com & Advanced Enterprise Sales (Delhi University)', skills: 'Enterprise B2B Sales, CRM Salesforce, Lead Generation, Pipeline Velocity, Negotiation', ctc: '₹ 9,00,000', notice: '30 Days', stage: 'Interview Scheduled / Round 1', score: '82%', notes: 'Good enterprise communication, demonstrated quota attainment in past 4 quarters.', resumeUrl: 'Siddharth_Rao_CV.pdf' },
-        { id: 'CND-8804', name: 'Priya Sharma', pos: 'Associate Frontend Developer', candidateType: 'Fresher', dept: 'Engineering & Technology', exp: 'Fresher (0 Years)', currentOrg: 'IIT Roorkee (Campus)', education: 'B.Tech in Computer Science (Batch 2026)', skills: 'React.js, JavaScript (ES6+), HTML5/CSS3, Tailwind CSS, REST APIs, Git', ctc: '₹ 7,50,000', notice: 'Immediate', stage: 'Technical Evaluation / Assignment', score: '88%', notes: 'Strong algorithms foundation, built active open-source React dashboard projects.', resumeUrl: 'Priya_Sharma_Resume.pdf' }
+        { id: 'CND-8801', name: 'Kavita Sundaram', pos: 'Product Marketing Manager', candidateType: 'Experienced', dept: 'Marketing & Growth', exp: '6 Years', currentOrg: 'GrowthWave Tech', education: 'MBA in Marketing (IIM Bangalore)', skills: 'B2B SaaS Positioning, Product Marketing, GTM Strategy', ctc: '₹ 18,00,000', notice: '30 Days', stage: 'Offer Letter', score: '94%', notes: 'Strong presentation skills, deep B2B SaaS product positioning expertise.', resumeUrl: 'Kavita_Sundaram_Resume.pdf' },
+        { id: 'CND-8802', name: 'Aditya Nair', pos: 'DevOps & Cloud Engineer', candidateType: 'Experienced', dept: 'Engineering & Technology', exp: '4 Years', currentOrg: 'CloudNine Systems', education: 'B.Tech in Computer Engineering (VJTI Mumbai)', skills: 'Kubernetes, AWS Cloud, Terraform, Docker, CI/CD', ctc: '₹ 14,50,000', notice: '15 Days', stage: 'Offer Letter Accepted', score: '98%', notes: 'Exceptional Kubernetes, AWS CI/CD and Terraform infrastructure knowledge.', resumeUrl: 'Aditya_Nair_DevOps_CV.pdf' },
+        { id: 'CND-8803', name: 'Siddharth Rao', pos: 'Corporate Sales Specialist', candidateType: 'Experienced', dept: 'Sales & Business Development', exp: '3 Years', currentOrg: 'InnoSales India', education: 'B.Com & Enterprise Sales (Delhi University)', skills: 'Enterprise B2B Sales, CRM Salesforce, Lead Generation', ctc: '₹ 9,00,000', notice: '30 Days', stage: 'Interview', score: '82%', notes: 'Good enterprise communication, demonstrated quota attainment in past 4 quarters.', resumeUrl: 'Siddharth_Rao_CV.pdf' },
+        { id: 'CND-8804', name: 'Priya Sharma', pos: 'Associate Frontend Developer', candidateType: 'Fresher', dept: 'Engineering & Technology', exp: 'Fresher (0 Years)', currentOrg: 'IIT Roorkee (Campus)', education: 'B.Tech in Computer Science (Batch 2026)', skills: 'React.js, JavaScript (ES6+), HTML5/CSS3, Tailwind CSS', ctc: '₹ 7,50,000', notice: 'Immediate', stage: 'Resume', score: '88%', notes: 'Strong algorithms foundation, built active open-source React dashboard projects.', resumeUrl: 'Priya_Sharma_Resume.pdf' },
+        { id: 'CND-8805', name: 'Rohan Gupta', pos: 'Full Stack Node.js Engineer', candidateType: 'Experienced', dept: 'Engineering & Technology', exp: '2 Years', currentOrg: 'CodeCraft Solutions', education: 'B.E. in Information Technology (Pune University)', skills: 'Node.js, Express, PostgreSQL, Redis, Microservices', ctc: '₹ 11,00,000', notice: '30 Days', stage: 'Applied', score: '85%', notes: 'Applied via company careers portal; solid backend system design skills.', resumeUrl: 'Rohan_Gupta_CV.pdf' }
       ],
       offers: [
         {
@@ -6095,13 +6501,44 @@
     }
 
     // Step 2 Employee ID & Credential Generation Functions
-    let empIdCounter = 105;
-    function regenerateEmployeeId() {
-      empIdCounter++;
-      const padded = String(empIdCounter).padStart(4, '0');
-      const newId = `EMP-AGT-${padded}`;
-      document.getElementById('empCustomIdInput').value = newId;
-      showToast('Employee ID Generated', `Assigned sequential code: ${newId}`);
+    let empIdCounter = 1;
+
+    function onEmpWizardDeptChange() {
+      const modeEl = document.querySelector('input[name="empIdFormatMode"]:checked');
+      if (modeEl && modeEl.value === 'dept') {
+        regenerateEmployeeId(false);
+      }
+    }
+
+    function regenerateEmployeeId(increment = true) {
+      if (increment) empIdCounter++;
+      const modeEl = document.querySelector('input[name="empIdFormatMode"]:checked');
+      const mode = modeEl ? modeEl.value : 'company';
+      const input = document.getElementById('empCustomIdInput');
+      if (!input) return;
+
+      const count = (appState.employees.length + empIdCounter);
+      const padded3 = String(count).padStart(3, '0');
+      const padded4 = String(count).padStart(4, '0');
+
+      if (mode === 'company') {
+        // User example: TapiPe -> TP-001, Kofficode -> KF-0001, Apex Global -> AGT-001
+        // Default to TP-001 as TapiPe is the requested primary example
+        input.value = `TP-${padded3}`;
+        showToast('ID Generated (Company)', `Assigned Company Code: ${input.value} (e.g. TapiPe TP-001)`);
+      } else if (mode === 'dept') {
+        // User example: Department code auto-generated (ENG-001, SBD-001, HRT-001)
+        const deptSel = document.getElementById('empFormDeptSelect');
+        const deptName = deptSel ? deptSel.value : 'Engineering & Technology';
+        const deptObj = appState.departments.find(d => d.name === deptName);
+        const prefix = deptObj ? deptObj.code : 'ENG';
+        input.value = `${prefix}-${padded3}`;
+        showToast('ID Generated (Department)', `Assigned Department Code: ${input.value} (${deptName})`);
+      } else if (mode === 'simple') {
+        // User example: emp-001, emp-002
+        input.value = `EMP-${padded3}`;
+        showToast('ID Generated (Simple)', `Assigned Sequential Code: ${input.value}`);
+      }
     }
 
     function syncAutoGeneratedCreds() {
@@ -6824,65 +7261,397 @@
     }
 
     // ==========================================
-    // 4. PAYROLL & SALARY SLIPS
+    // 4. PAYROLL & SALARY SLIPS (COMPREHENSIVE GOVERNANCE ENGINE)
     // ==========================================
+    if (!appState.payrollRules) {
+      appState.payrollRules = {
+        workingDaysBase: '26',
+        basicPct: 50,
+        hraPct: 25,
+        daPct: 10,
+        otMultiplier: 1.5,
+        pfPolicy: 'cap15k',
+        ptAmount: 200
+      };
+    }
+
+    if (!appState.payrollAttendance) {
+      appState.payrollAttendance = {
+        'EMP-AGT-0103': { workingDays: 26, payableDays: 26.0, lopDays: 0, otHours: 4.5, deficitHours: 0, uan: '100982341031', pan: 'AAAPM8921K', bank: 'HDFC Bank (0103)' },
+        'EMP-AGT-0104': { workingDays: 26, payableDays: 25.5, lopDays: 0.5, otHours: 0, deficitHours: 0, uan: '100982341042', pan: 'BAKPI9012M', bank: 'ICICI Bank (0104)' },
+        'EMP-AGT-0101': { workingDays: 26, payableDays: 26.0, lopDays: 0, otHours: 8.0, deficitHours: 0.5, uan: '100982341019', pan: 'CAKPJ7714R', bank: 'Axis Bank (0101)' },
+        'EMP-AGT-0102': { workingDays: 26, payableDays: 24.5, lopDays: 1.5, otHours: 0, deficitHours: 1.5, uan: '100982341025', pan: 'DAKPV3319T', bank: 'HDFC Bank (0102)' },
+        'EMP-AGT-0105': { workingDays: 26, payableDays: 25.0, lopDays: 1.0, otHours: 0, deficitHours: 3.2, uan: '100982341058', pan: 'EAKPS5510Q', bank: 'SBI (0105)' },
+        'EMP-AGT-0106': { workingDays: 26, payableDays: 23.0, lopDays: 3.0, otHours: 0, deficitHours: 0, uan: '100982341064', pan: 'FAKPR6621L', bank: 'Kotak Bank (0106)' },
+        'EMP-AGT-0107': { workingDays: 26, payableDays: 26.0, lopDays: 0, otHours: 6.0, deficitHours: 0, uan: '100982341071', pan: 'GAKPN8812Y', bank: 'HDFC Bank (0107)' }
+      };
+    }
+
+    function calculateEmployeePayroll(emp) {
+      const rules = appState.payrollRules || { workingDaysBase: '26', basicPct: 50, hraPct: 25, daPct: 10, otMultiplier: 1.5, pfPolicy: 'cap15k', ptAmount: 200 };
+      const att = (appState.payrollAttendance && appState.payrollAttendance[emp.id]) || { workingDays: 26, payableDays: 26.0, lopDays: 0, otHours: 0, deficitHours: 0, uan: '100982341099', pan: 'PANXX0000X', bank: 'HDFC Bank' };
+
+      const workingDays = rules.workingDaysBase === 'calendar' ? 31 : (rules.workingDaysBase === '22' ? 22 : 26);
+      const gross = emp.salary || 65000;
+      const hourlyRate = gross / workingDays / 8;
+
+      // Components
+      const basic = Math.round(gross * (rules.basicPct / 100));
+      const hra = Math.round(gross * (rules.hraPct / 100));
+      const da = Math.round(gross * (rules.daPct / 100));
+      const special = Math.max(0, gross - basic - hra - da);
+
+      // Overtime Pay
+      const otPay = Math.round(att.otHours * hourlyRate * rules.otMultiplier);
+      const totalGrossEarned = gross + otPay;
+
+      // Deductions
+      const pf = rules.pfPolicy === 'cap15k' ? Math.min(1800, Math.round(basic * 0.12)) : Math.round(basic * 0.12);
+      const pt = rules.ptAmount || 200;
+      const esic = gross <= 21000 ? Math.round(gross * 0.0075) : 0;
+      const tds = Math.round(gross * 0.05);
+
+      // LOP & Short Hours Deductions
+      const lopDeduct = Math.round((gross / workingDays) * att.lopDays + (att.deficitHours * hourlyRate));
+      const totalDeductions = pf + pt + esic + tds + lopDeduct;
+      const netPay = Math.max(0, totalGrossEarned - totalDeductions);
+
+      // CTC (Cost to Company)
+      const emprPf = pf;
+      const gratuity = Math.round(basic * 0.0481);
+      const insurance = 1200;
+      const monthlyCtc = gross + emprPf + gratuity + insurance;
+      const annualCtc = monthlyCtc * 12;
+
+      return {
+        emp,
+        att,
+        workingDays,
+        gross,
+        hourlyRate,
+        basic,
+        hra,
+        da,
+        special,
+        otPay,
+        totalGrossEarned,
+        pf,
+        pt,
+        esic,
+        tds,
+        lopDeduct,
+        totalDeductions,
+        netPay,
+        monthlyCtc,
+        annualCtc
+      };
+    }
+
     function renderPayrollTable() {
       const tbody = document.getElementById('payrollTableTbody');
+      if (!tbody) return;
+
+      let totalGross = 0;
+      let totalOt = 0;
+      let totalDeductions = 0;
+      let totalNet = 0;
+
       tbody.innerHTML = appState.employees.map(emp => {
-        const pf = 1800;
-        const tds = Math.round(emp.salary * 0.05);
-        const pt = 200;
-        const net = emp.salary - pf - tds - pt;
+        const p = calculateEmployeePayroll(emp);
+        totalGross += p.gross;
+        totalOt += p.otPay;
+        totalDeductions += p.totalDeductions;
+        totalNet += p.netPay;
+
+        const initials = emp.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 
         return `
-          <tr class="hover:bg-brand-card/40">
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <!-- 1. Employee Profile -->
             <td class="py-3 px-4">
-              <div class="font-bold text-white text-xs">${emp.name}</div>
-              <div class="text-[10px] text-brand-amber font-mono">${emp.id}</div>
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-brand-surface border border-brand-border text-brand-amber font-bold text-xs flex items-center justify-center flex-shrink-0">
+                  ${initials}
+                </div>
+                <div>
+                  <div class="font-bold text-white text-xs">${emp.name}</div>
+                  <div class="text-[10px] text-brand-amber font-mono">${emp.id} &bull; <span class="text-neutral-400 font-sans">${emp.role}</span></div>
+                </div>
+              </div>
             </td>
-            <td class="py-3 px-4 text-neutral-400">${emp.dept}</td>
-            <td class="py-3 px-4 text-right font-mono font-semibold text-white">&#8377; ${emp.salary.toLocaleString('en-IN')}</td>
-            <td class="py-3 px-4 text-right font-mono text-amber-400">&#8377; ${pf + pt}</td>
-            <td class="py-3 px-4 text-right font-mono text-neutral-400">&#8377; ${tds}</td>
-            <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">&#8377; ${net.toLocaleString('en-IN')}</td>
+
+            <!-- 2. Department -->
+            <td class="py-3 px-4 text-neutral-400 text-xs">${emp.dept}</td>
+
+            <!-- 3. Attendance Summary (Days & OT) -->
             <td class="py-3 px-4 text-center">
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Generated</span>
+              <div class="font-bold text-white font-mono text-xs">${p.att.payableDays} / ${p.workingDays} <span class="text-neutral-400 text-[10px] font-normal">Days</span></div>
+              <div class="text-[10px] flex items-center justify-center gap-1.5 mt-0.5 font-mono">
+                ${p.att.lopDays > 0 ? `<span class="text-rose-400 font-bold">-${p.att.lopDays}d LOP</span>` : '<span class="text-emerald-400 font-semibold">0 LOP</span>'}
+                ${p.att.otHours > 0 ? `<span class="text-amber-400 font-bold">+${p.att.otHours}h OT</span>` : ''}
+              </div>
             </td>
+
+            <!-- 4. Basic Salary -->
+            <td class="py-3 px-4 text-right font-mono font-semibold text-white">&#8377; ${p.basic.toLocaleString('en-IN')}</td>
+
+            <!-- 5. HRA & DA -->
+            <td class="py-3 px-4 text-right font-mono text-neutral-300">
+              <div>&#8377; ${(p.hra + p.da).toLocaleString('en-IN')}</div>
+              <div class="text-[9px] text-neutral-500 font-mono">H: ${p.hra} &bull; D: ${p.da}</div>
+            </td>
+
+            <!-- 6. Overtime Pay -->
+            <td class="py-3 px-4 text-right font-mono ${p.otPay > 0 ? 'text-amber-400 font-bold' : 'text-neutral-500'}">
+              ${p.otPay > 0 ? `+&#8377; ${p.otPay.toLocaleString('en-IN')}` : '&#8377; 0'}
+            </td>
+
+            <!-- 7. Gross Salary -->
+            <td class="py-3 px-4 text-right font-mono font-bold text-white">&#8377; ${p.gross.toLocaleString('en-IN')}</td>
+
+            <!-- 8. PF & PT -->
+            <td class="py-3 px-4 text-right font-mono text-amber-300">
+              <div>&#8377; ${(p.pf + p.pt).toLocaleString('en-IN')}</div>
+              <div class="text-[9px] text-neutral-500 font-mono">PF: ${p.pf} &bull; PT: ${p.pt}</div>
+            </td>
+
+            <!-- 9. TDS & LOP Deduct -->
+            <td class="py-3 px-4 text-right font-mono ${p.lopDeduct > 0 ? 'text-rose-400 font-bold' : 'text-neutral-400'}">
+              <div>&#8377; ${(p.tds + p.lopDeduct).toLocaleString('en-IN')}</div>
+              ${p.lopDeduct > 0 ? `<div class="text-[9px] text-rose-500 font-mono">LOP: -&#8377; ${p.lopDeduct}</div>` : ''}
+            </td>
+
+            <!-- 10. Net Take-Home -->
+            <td class="py-3 px-4 text-right font-mono font-black text-emerald-400 text-xs">
+              &#8377; ${p.netPay.toLocaleString('en-IN')}
+            </td>
+
+            <!-- 11. Monthly CTC -->
+            <td class="py-3 px-4 text-right font-mono text-neutral-400 text-[11px]">
+              &#8377; ${p.monthlyCtc.toLocaleString('en-IN')}
+            </td>
+
+            <!-- 12. Actions: Payslip Viewer -->
             <td class="py-3 px-4 text-right">
-              <button onclick="viewEmployeePayslip('${emp.id}')" class="px-3 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-[11px] font-semibold transition-all">
-                View Slip
+              <button onclick="viewEmployeePayslip('${emp.id}')" title="View & Download Salary Slip with From-To Dates" class="px-2.5 py-1.5 rounded-xl bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs font-semibold transition-all flex items-center gap-1 ml-auto shadow-sm">
+                <i data-lucide="file-text" class="w-3.5 h-3.5 text-brand-amber"></i>
+                <span>Slip</span>
               </button>
             </td>
           </tr>
         `;
       }).join('');
+
+      // Update KPI banner numbers
+      const elGross = document.getElementById('kpiPayrollGross');
+      const elOt = document.getElementById('kpiPayrollOvertime');
+      const elDed = document.getElementById('kpiPayrollDeductions');
+      const elNet = document.getElementById('kpiPayrollNet');
+
+      if (elGross) elGross.innerText = `₹ ${totalGross.toLocaleString('en-IN')}`;
+      if (elOt) elOt.innerText = `₹ ${totalOt.toLocaleString('en-IN')}`;
+      if (elDed) elDed.innerText = `₹ ${totalDeductions.toLocaleString('en-IN')}`;
+      if (elNet) elNet.innerText = `₹ ${totalNet.toLocaleString('en-IN')}`;
+
       lucide.createIcons();
     }
 
     function viewEmployeePayslip(empId) {
       const emp = appState.employees.find(e => e.id === empId) || appState.employees[0];
-      const basic = Math.round(emp.salary * 0.50);
-      const hra = Math.round(emp.salary * 0.25);
-      const special = emp.salary - basic - hra;
-      const pf = 1800;
-      const tds = Math.round(emp.salary * 0.05);
-      const pt = 200;
-      const net = emp.salary - pf - tds - pt;
+      const p = calculateEmployeePayroll(emp);
 
-      document.getElementById('slipEmpName').innerText = emp.name;
-      document.getElementById('slipEmpId').innerText = emp.id;
-      document.getElementById('slipEmpDept').innerText = emp.dept;
-      document.getElementById('slipEmpDesig').innerText = emp.role;
-      document.getElementById('slipBasic').innerText = `₹ ${basic.toLocaleString('en-IN')}`;
-      document.getElementById('slipHra').innerText = `₹ ${hra.toLocaleString('en-IN')}`;
-      document.getElementById('slipSpecial').innerText = `₹ ${special.toLocaleString('en-IN')}`;
-      document.getElementById('slipTotalEarnings').innerText = `₹ ${emp.salary.toLocaleString('en-IN')}`;
-      document.getElementById('slipPf').innerText = `₹ ${pf}`;
-      document.getElementById('slipTds').innerText = `₹ ${tds}`;
-      document.getElementById('slipTotalDeductions').innerText = `₹ ${(pf + tds + pt).toLocaleString('en-IN')}`;
-      document.getElementById('slipNetPay').innerText = `₹ ${net.toLocaleString('en-IN')}`;
+      // User Requirement 1: From & To Dates in Salary Slip
+      const fromVal = document.getElementById('payrollFromDate')?.value || '2026-10-01';
+      const toVal = document.getElementById('payrollToDate')?.value || '2026-10-31';
+
+      const formatIsoDate = (iso) => {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      };
+
+      const fromFormatted = formatIsoDate(fromVal);
+      const toFormatted = formatIsoDate(toVal);
+
+      // Populate Header & Pay Period
+      const elFrom = document.getElementById('slipPayPeriodFrom');
+      const elTo = document.getElementById('slipPayPeriodTo');
+      const elPayDate = document.getElementById('slipPayDate');
+      const elPayMonth = document.getElementById('slipPayMonth');
+
+      if (elFrom) elFrom.innerText = fromFormatted;
+      if (elTo) elTo.innerText = toFormatted;
+      if (elPayDate) elPayDate.innerText = toFormatted;
+      if (elPayMonth) elPayMonth.innerText = document.getElementById('payrollMonthSelect')?.options[document.getElementById('payrollMonthSelect')?.selectedIndex]?.text || 'October 2026';
+
+      // Populate Employee Info
+      document.getElementById('slipEmpName').innerText = p.emp.name;
+      document.getElementById('slipEmpId').innerText = p.emp.id;
+      document.getElementById('slipEmpDesig').innerText = `${p.emp.role} • ${p.emp.dept}`;
+      document.getElementById('slipEmpBank').innerText = p.att.bank || 'HDFC Bank (0103)';
+      document.getElementById('slipEmpUan').innerText = p.att.uan || '100982341031';
+      document.getElementById('slipEmpPan').innerText = p.att.pan || 'AAAPM8921K';
+
+      // Populate Attendance Summary
+      document.getElementById('slipWorkingDays').innerText = `${p.workingDays} Days`;
+      document.getElementById('slipPayableDays').innerText = `${p.att.payableDays} Days`;
+      document.getElementById('slipLopDays').innerText = `${p.att.lopDays} Days`;
+      document.getElementById('slipOtHours').innerText = `${p.att.otHours}h`;
+
+      // Populate Earnings
+      document.getElementById('slipBasic').innerText = `₹ ${p.basic.toLocaleString('en-IN')}`;
+      document.getElementById('slipHra').innerText = `₹ ${p.hra.toLocaleString('en-IN')}`;
+      document.getElementById('slipDa').innerText = `₹ ${p.da.toLocaleString('en-IN')}`;
+      document.getElementById('slipSpecial').innerText = `₹ ${p.special.toLocaleString('en-IN')}`;
+      document.getElementById('slipOtPay').innerText = `₹ ${p.otPay.toLocaleString('en-IN')}`;
+      document.getElementById('slipTotalEarnings').innerText = `₹ ${p.totalGrossEarned.toLocaleString('en-IN')}`;
+
+      // Populate Deductions
+      document.getElementById('slipPf').innerText = `₹ ${p.pf.toLocaleString('en-IN')}`;
+      document.getElementById('slipPt').innerText = `₹ ${p.pt.toLocaleString('en-IN')}`;
+      document.getElementById('slipEsic').innerText = `₹ ${p.esic.toLocaleString('en-IN')}`;
+      document.getElementById('slipTds').innerText = `₹ ${p.tds.toLocaleString('en-IN')}`;
+      document.getElementById('slipLopDeduct').innerText = `₹ ${p.lopDeduct.toLocaleString('en-IN')}`;
+      document.getElementById('slipTotalDeductions').innerText = `₹ ${p.totalDeductions.toLocaleString('en-IN')}`;
+
+      // Populate Net Pay & CTC
+      document.getElementById('slipNetPay').innerText = `₹ ${p.netPay.toLocaleString('en-IN')}`;
+      document.getElementById('slipCtcDisplay').innerText = `₹ ${p.annualCtc.toLocaleString('en-IN')} / Year (₹ ${p.monthlyCtc.toLocaleString('en-IN')}/Mo)`;
+      
+      const inWordsEl = document.getElementById('slipInWords');
+      if (inWordsEl) {
+        inWordsEl.innerText = `${numberToIndianWords(p.netPay)} Rupees Only`;
+      }
 
       document.getElementById('modalSalarySlip').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function numberToIndianWords(num) {
+      if (!num || isNaN(num)) return 'Zero';
+      const a = ['', 'One ', 'Two ', 'Three ', 'Four ', 'Five ', 'Six ', 'Seven ', 'Eight ', 'Nine ', 'Ten ', 'Eleven ', 'Twelve ', 'Thirteen ', 'Fourteen ', 'Fifteen ', 'Sixteen ', 'Seventeen ', 'Eighteen ', 'Nineteen '];
+      const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+      function inWords(n) {
+        if ((n = n.toString()).length > 9) return 'overflow';
+        let nArray = ('000000000' + n).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+        if (!nArray) return '';
+        let str = '';
+        str += (Number(nArray[1]) != 0) ? (a[Number(nArray[1])] || b[nArray[1][0]] + ' ' + a[nArray[1][1]]) + 'Crore ' : '';
+        str += (Number(nArray[2]) != 0) ? (a[Number(nArray[2])] || b[nArray[2][0]] + ' ' + a[nArray[2][1]]) + 'Lakh ' : '';
+        str += (Number(nArray[3]) != 0) ? (a[Number(nArray[3])] || b[nArray[3][0]] + ' ' + a[nArray[3][1]]) + 'Thousand ' : '';
+        str += (Number(nArray[4]) != 0) ? (a[Number(nArray[4])] || b[nArray[4][0]] + ' ' + a[nArray[4][1]]) + 'Hundred ' : '';
+        str += (Number(nArray[5]) != 0) ? ((str != '') ? 'and ' : '') + (a[Number(nArray[5])] || b[nArray[5][0]] + ' ' + a[nArray[5][1]]) : '';
+        return str.trim();
+      }
+      return inWords(num);
+    }
+
+    function openCompanyPayrollRulesModal() {
+      const modal = document.getElementById('modalPayrollRules');
+      if (!modal) return;
+
+      const rules = appState.payrollRules || { workingDaysBase: '26', basicPct: 50, hraPct: 25, daPct: 10, otMultiplier: 1.5, pfPolicy: 'cap15k', ptAmount: 200 };
+
+      // Set radios & selects
+      const dayRadios = document.getElementsByName('ruleWorkingDaysBase');
+      for (let r of dayRadios) {
+        r.checked = (r.value === String(rules.workingDaysBase));
+      }
+
+      const otRadios = document.getElementsByName('ruleOtMultiplier');
+      for (let r of otRadios) {
+        r.checked = (r.value === String(rules.otMultiplier));
+      }
+
+      if (document.getElementById('ruleBasicPct')) document.getElementById('ruleBasicPct').value = String(rules.basicPct);
+      if (document.getElementById('ruleHraPct')) document.getElementById('ruleHraPct').value = String(rules.hraPct);
+      if (document.getElementById('ruleDaPct')) document.getElementById('ruleDaPct').value = String(rules.daPct);
+      if (document.getElementById('rulePfPolicy')) document.getElementById('rulePfPolicy').value = rules.pfPolicy;
+      if (document.getElementById('rulePtPolicy')) document.getElementById('rulePtPolicy').value = String(rules.ptAmount);
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveCompanyPayrollRules() {
+      let daysBase = '26';
+      const dayRadios = document.getElementsByName('ruleWorkingDaysBase');
+      for (let r of dayRadios) {
+        if (r.checked) { daysBase = r.value; break; }
+      }
+
+      let otMult = 1.5;
+      const otRadios = document.getElementsByName('ruleOtMultiplier');
+      for (let r of otRadios) {
+        if (r.checked) { otMult = parseFloat(r.value); break; }
+      }
+
+      const basicPct = parseInt(document.getElementById('ruleBasicPct')?.value || '50');
+      const hraPct = parseInt(document.getElementById('ruleHraPct')?.value || '25');
+      const daPct = parseInt(document.getElementById('ruleDaPct')?.value || '10');
+      const pfPolicy = document.getElementById('rulePfPolicy')?.value || 'cap15k';
+      const ptAmount = parseInt(document.getElementById('rulePtPolicy')?.value || '200');
+
+      appState.payrollRules = {
+        workingDaysBase: daysBase,
+        basicPct,
+        hraPct,
+        daPct,
+        otMultiplier: otMult,
+        pfPolicy,
+        ptAmount
+      };
+
+      // Update banner badge
+      const badge = document.getElementById('activePayrollRuleBadge');
+      if (badge) {
+        badge.innerText = `${daysBase === 'calendar' ? 'Calendar' : daysBase + ' Working'} Days • Basic ${basicPct}% • HRA ${hraPct}% • DA ${daPct}% • PF ${pfPolicy === 'cap15k' ? '15k Cap' : 'Uncapped'} • PT ₹${ptAmount} • ${otMult}x OT`;
+      }
+
+      closeModal('modalPayrollRules');
+      renderPayrollTable();
+      showToast('Payroll Rules Applied', 'Batch recalculated with updated company payroll configuration.');
+    }
+
+    function onPayrollMonthChange() {
+      const sel = document.getElementById('payrollMonthSelect');
+      if (!sel) return;
+      const val = sel.value; // e.g. "2026-10"
+      const [year, month] = val.split('-');
+      const lastDay = new Date(year, month, 0).getDate();
+
+      const fromInput = document.getElementById('payrollFromDate');
+      const toInput = document.getElementById('payrollToDate');
+
+      if (fromInput) fromInput.value = `${val}-01`;
+      if (toInput) toInput.value = `${val}-${lastDay}`;
+
+      recalculatePayrollFromDates();
+    }
+
+    function recalculatePayrollFromDates() {
+      const fromVal = document.getElementById('payrollFromDate')?.value || '2026-10-01';
+      const toVal = document.getElementById('payrollToDate')?.value || '2026-10-31';
+
+      const formatIsoDate = (iso) => {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      };
+
+      const displayEl = document.getElementById('displayPayPeriodDates');
+      if (displayEl) {
+        displayEl.innerText = `${formatIsoDate(fromVal)} – ${formatIsoDate(toVal)}`;
+      }
+
+      renderPayrollTable();
+      showToast('Pay Period Updated', `Calculated for period: ${formatIsoDate(fromVal)} to ${formatIsoDate(toVal)}`);
+    }
+
+    function processBatchPayroll() {
+      renderPayrollTable();
+      showToast('Batch Recalculated', 'All 104 employee records synchronized with latest attendance & overtime logs.');
     }
 
     function printSalarySlip() {
@@ -6892,25 +7661,25 @@
     function downloadSalarySlipPDF() {
       const el = document.getElementById('printablePayslip');
       const name = document.getElementById('slipEmpName').innerText.replace(' ', '_');
-      const opt = { margin: 10, filename: `Payslip_Oct2026_${name}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+      const opt = { margin: 10, filename: `Payslip_${name}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
       html2pdf().set(opt).from(el).save();
     }
 
     function dispatchAllPayslips() {
-      showToast('Dispatching Payslips...', `Sent ${appState.employees.length} payslips via encrypted Email & WhatsApp.`);
+      showToast('Dispatching Payslips...', `Sent ${appState.employees.length} payslips with pay period dates via encrypted Email & WhatsApp.`);
     }
 
     function exportBankSalarySheet() {
-      showToast('NEFT File Generated', 'Bank salary transfer sheet downloaded in Excel format.');
+      showToast('NEFT File Generated', 'Bank salary transfer sheet downloaded in Excel format with attendance & deduction details.');
     }
 
-    // ==========================================
+        // ==========================================
     // 5. ATTENDANCE & DUAL LAT-LONG MAP VIEWER
     // ==========================================
     let leafletMapInstance = null;
 
     let currentAttendanceFilter = 'all'; // punch method: all, qr, gps, web
-    let currentAttendanceStatusFilter = 'all'; // status: all, present, late, early, short, absent
+    let currentAttendanceStatusFilter = 'all'; // status: all, present, late, early, halfday, short, overtime, absent
     let currentRegEmpId = null;
 
     function filterAttendanceByMethod(filter) {
@@ -6933,7 +7702,7 @@
 
     function filterAttendanceByStatus(status) {
       currentAttendanceStatusFilter = status;
-      const statuses = ['all', 'present', 'late', 'early', 'short', 'absent'];
+      const statuses = ['all', 'present', 'late', 'early', 'halfday', 'short', 'overtime', 'absent'];
       
       const activeClass = "px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-amber text-neutral-950 shadow transition-all";
       const inactiveClass = "px-3 py-1.5 rounded-xl text-xs text-neutral-400 hover:text-white transition-all flex items-center gap-1.5";
@@ -6952,15 +7721,19 @@
       let presentCount = 0;
       let lateCount = 0;
       let earlyCount = 0;
+      let halfDayCount = 0;
       let shortCount = 0;
+      let overtimeCount = 0;
       let absentCount = 0;
 
       appState.attendance.forEach(att => {
         const st = (att.status || '').toLowerCase();
-        if (st.includes('present')) presentCount++;
+        if (st.includes('overtime') || (att.otHours && !att.otHours.includes('0h'))) overtimeCount++;
+        else if (st.includes('half')) halfDayCount++;
+        else if (st.includes('short')) shortCount++;
+        else if (st.includes('present')) presentCount++;
         else if (st.includes('late')) lateCount++;
         else if (st.includes('early')) earlyCount++;
-        else if (st.includes('short') || st.includes('half')) shortCount++;
         else if (st.includes('absent')) absentCount++;
       });
 
@@ -6968,14 +7741,16 @@
       const elPresent = document.getElementById('attKpiPresent');
       const elLate = document.getElementById('attKpiLate');
       const elEarly = document.getElementById('attKpiEarly');
-      const elShort = document.getElementById('attKpiShort');
+      const elHalfDay = document.getElementById('attKpiHalfDay');
+      const elOvertime = document.getElementById('attKpiOvertime');
       const elAbsent = document.getElementById('attKpiAbsent');
 
       if (elTotal) elTotal.innerText = '104';
-      if (elPresent) elPresent.innerText = String(80 + (presentCount > 2 ? presentCount - 2 : 0));
+      if (elPresent) elPresent.innerText = String(78 + presentCount);
       if (elLate) elLate.innerText = String(7 + lateCount);
       if (elEarly) elEarly.innerText = String(4 + earlyCount);
-      if (elShort) elShort.innerText = String(3 + shortCount);
+      if (elHalfDay) elHalfDay.innerText = String(2 + halfDayCount);
+      if (elOvertime) elOvertime.innerText = String(5 + overtimeCount);
       if (elAbsent) elAbsent.innerText = String(3 + absentCount);
     }
 
@@ -6991,12 +7766,14 @@
         if (currentAttendanceFilter === 'gps' && !(att.method || '').includes('GPS')) return false;
         if (currentAttendanceFilter === 'web' && !(att.method || '').includes('Web')) return false;
 
-        // Status filter
+        // Status filter (User Requirement 2: Present, absent, halfday, late in, early out, sort hour, overtime)
         const st = (att.status || '').toLowerCase();
         if (currentAttendanceStatusFilter === 'present' && !st.includes('present')) return false;
         if (currentAttendanceStatusFilter === 'late' && !st.includes('late')) return false;
         if (currentAttendanceStatusFilter === 'early' && !st.includes('early')) return false;
-        if (currentAttendanceStatusFilter === 'short' && !st.includes('short') && !st.includes('half') && !st.includes('deduct')) return false;
+        if (currentAttendanceStatusFilter === 'halfday' && !st.includes('half')) return false;
+        if (currentAttendanceStatusFilter === 'short' && !st.includes('short') && !st.includes('half')) return false;
+        if (currentAttendanceStatusFilter === 'overtime' && !st.includes('overtime') && (!att.otHours || att.otHours.includes('0h'))) return false;
         if (currentAttendanceStatusFilter === 'absent' && !st.includes('absent')) return false;
 
         return true;
@@ -7005,7 +7782,7 @@
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="8" class="py-12 text-center text-neutral-400">
+            <td colspan="9" class="py-12 text-center text-neutral-400">
               <div class="flex flex-col items-center justify-center gap-2">
                 <i data-lucide="inbox" class="w-8 h-8 text-neutral-600"></i>
                 <div class="text-sm font-semibold text-neutral-300">No attendance records match the selected filter</div>
@@ -7026,22 +7803,22 @@
         let methodBadge = '';
         if ((att.method || '').includes('QR')) {
           methodBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[10px] font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shadow-sm">
-              <i data-lucide="qr-code" class="w-3.5 h-3.5 text-cyan-400"></i>
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.8 rounded-xl text-[10px] font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shadow-sm">
+              <i data-lucide="qr-code" class="w-3 h-3 text-cyan-400"></i>
               <span>QR Standee</span>
             </span>
           `;
         } else if ((att.method || '').includes('GPS')) {
           methodBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-sm">
-              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-amber"></i>
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.8 rounded-xl text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-sm">
+              <i data-lucide="map-pin" class="w-3 h-3 text-brand-amber"></i>
               <span>Mobile GPS</span>
             </span>
           `;
         } else {
           methodBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm">
-              <i data-lucide="laptop" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.8 rounded-xl text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm">
+              <i data-lucide="laptop" class="w-3 h-3 text-emerald-400"></i>
               <span>Office Web</span>
             </span>
           `;
@@ -7063,19 +7840,75 @@
           outBadge = `<span class="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-neutral-500/15 text-neutral-400 border border-neutral-500/30">Shift In Progress</span>`;
         } else if ((att.outStatus || '').includes('Early')) {
           outBadge = `<span class="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-500/15 text-orange-400 border border-orange-500/30">${att.outDiff || 'Early Exit'}</span>`;
+        } else if ((att.outStatus || '').includes('Overtime')) {
+          outBadge = `<span class="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-yellow-500/15 text-yellow-300 border border-yellow-500/30">${att.outDiff || 'OT Shift'}</span>`;
         } else {
           outBadge = `<span class="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Shift End</span>`;
         }
 
-        // 5. Overall Status Badge
+        // 5. Day Weightage Column (User Requirement 2: Hour aur Day dono use hote hain)
+        let dayWeightBadge = '';
+        const dw = att.dayWeight !== undefined ? att.dayWeight : (att.status === 'Absent' ? 0.0 : (att.status === 'Half-Day' ? 0.5 : 1.0));
+        if (dw === 1.0) {
+          dayWeightBadge = `<span class="inline-flex items-center gap-1 font-mono font-bold text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">1.0 Day</span>`;
+        } else if (dw === 0.5) {
+          dayWeightBadge = `<span class="inline-flex items-center gap-1 font-mono font-bold text-xs text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">0.5 Day</span>`;
+        } else {
+          dayWeightBadge = `<span class="inline-flex items-center gap-1 font-mono font-bold text-xs text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">0.0 Day (LOP)</span>`;
+        }
+
+        // 6. Hours Breakdown Column
+        let hoursHtml = '';
+        if (att.status === 'Absent') {
+          hoursHtml = `<div class="font-bold text-rose-400 font-mono text-xs">0h 00m <span class="text-[10px] text-neutral-500">(8h Absent)</span></div>`;
+        } else if (att.otHours && !att.otHours.includes('0h')) {
+          hoursHtml = `
+            <div class="font-bold text-white font-mono text-xs">${att.workHours || att.hours}</div>
+            <div class="text-[10px] text-yellow-400 font-bold font-mono">${att.otHours} Overtime</div>
+          `;
+        } else if (att.deficit && !att.deficit.includes('0h')) {
+          hoursHtml = `
+            <div class="font-bold text-white font-mono text-xs">${att.workHours || att.hours}</div>
+            <div class="text-[10px] text-purple-400 font-bold font-mono">Short by ${att.deficit}</div>
+          `;
+        } else {
+          hoursHtml = `
+            <div class="font-bold text-white font-mono text-xs">${att.workHours || att.hours}</div>
+            <div class="text-[10px] text-emerald-400 font-mono">Full Shift &ge;8h</div>
+          `;
+        }
+
+        // 7. Overall Status Badge (Present, Absent, Halfday, Late In, Early Out, Sort Hour, Overtime)
         let statusBadge = '';
         const st = (att.status || '').toLowerCase();
-        if (st.includes('present')) {
+        if (st.includes('overtime') || (att.otHours && !att.otHours.includes('0h'))) {
           statusBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              <span>Present</span>
-              ${att.regularized ? '<span class="text-[9px] bg-blue-500/20 text-blue-300 px-1 py-0.2 rounded font-mono ml-0.5">Pardoned</span>' : ''}
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-yellow-500/15 text-yellow-300 border border-yellow-500/30 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
+              <span>Overtime</span>
+              <span class="text-[9px] bg-yellow-500/20 text-yellow-300 px-1 py-0.2 rounded font-mono ml-0.5">${att.otHours}</span>
+            </span>
+          `;
+        } else if (st.includes('half')) {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+              <span>Half-Day</span>
+              <span class="text-[9px] bg-indigo-500/20 text-indigo-200 px-1 py-0.2 rounded font-mono ml-0.5">0.5D</span>
+            </span>
+          `;
+        } else if (st.includes('short')) {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+              <span>Sort Hour</span>
+            </span>
+          `;
+        } else if (st.includes('early')) {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-orange-500/15 text-orange-400 border border-orange-500/30 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+              <span>Early Out</span>
             </span>
           `;
         } else if (st.includes('late')) {
@@ -7083,35 +7916,6 @@
             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-sm">
               <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
               <span>Late In</span>
-            </span>
-          `;
-        } else if (st.includes('early')) {
-          statusBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-orange-500/15 text-orange-400 border border-orange-500/30 shadow-sm">
-              <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
-              <span>Early Exit</span>
-            </span>
-          `;
-        } else if (st.includes('half')) {
-          statusBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/15 text-purple-400 border border-purple-500/30 shadow-sm">
-              <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-              <span>Half-Day</span>
-              <span class="text-[9px] bg-purple-500/20 text-purple-300 px-1 py-0.2 rounded font-mono ml-0.5">-0.5D</span>
-            </span>
-          `;
-        } else if (st.includes('deduct')) {
-          statusBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 shadow-sm">
-              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-              <span>Hourly Deduct</span>
-            </span>
-          `;
-        } else if (st.includes('short')) {
-          statusBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/15 text-purple-400 border border-purple-500/30 shadow-sm">
-              <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-              <span>Short Hours</span>
             </span>
           `;
         } else if (st.includes('absent')) {
@@ -7122,25 +7926,21 @@
             </span>
           `;
         } else {
-          statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] bg-neutral-800 text-neutral-300">${att.status || 'Active'}</span>`;
-        }
-
-        // 6. Deficit formatting
-        let deficitHtml = '';
-        if (att.deficit && !att.deficit.includes('0h')) {
-          deficitHtml = `<div class="text-[10px] text-purple-400 font-bold font-mono">${att.deficit}</div>`;
-        } else if (st.includes('absent')) {
-          deficitHtml = `<div class="text-[10px] text-rose-400 font-bold font-mono">Full Day Absent (LOP)</div>`;
-        } else {
-          deficitHtml = `<div class="text-[10px] text-emerald-400 font-mono">Full Shift >= 8h</div>`;
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span>Present</span>
+              ${att.regularized ? '<span class="text-[9px] bg-blue-500/20 text-blue-300 px-1 py-0.2 rounded font-mono ml-0.5">Pardoned</span>' : ''}
+            </span>
+          `;
         }
 
         return `
           <tr class="hover:bg-brand-card/40 transition-colors">
             <!-- 1. Employee Profile -->
             <td class="py-3 px-4">
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-brand-surface border border-brand-border text-brand-amber font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-brand-surface border border-brand-border text-brand-amber font-bold text-xs flex items-center justify-center flex-shrink-0">
                   ${initials}
                 </div>
                 <div>
@@ -7148,7 +7948,7 @@
                   <div class="text-[10px] text-neutral-400 font-mono flex items-center gap-1.5 mt-0.5">
                     <span class="text-brand-amber">${att.empId}</span>
                     <span>&bull;</span>
-                    <span class="truncate max-w-[120px]">${att.role || 'Staff'}</span>
+                    <span class="truncate max-w-[110px]">${att.role || 'Staff'}</span>
                   </div>
                 </div>
               </div>
@@ -7174,7 +7974,7 @@
             <!-- 4. Clock-Out Punch & Anomaly -->
             <td class="py-3 px-4">
               <div class="flex items-center gap-1.5">
-                <span class="${att.outTime === '--' ? 'text-neutral-500 font-mono' : 'text-rose-400 font-bold font-mono text-xs'}">${att.outTime || '--'}</span>
+                <span class="${att.outTime === '--' ? 'text-neutral-500 font-mono' : (att.outStatus && att.outStatus.includes('Overtime') ? 'text-yellow-300 font-bold font-mono text-xs' : 'text-rose-400 font-bold font-mono text-xs')}">${att.outTime || '--'}</span>
                 ${outBadge}
               </div>
               <div class="text-[10px] text-neutral-500 font-mono mt-0.5">
@@ -7182,31 +7982,35 @@
               </div>
             </td>
 
-            <!-- 5. Total & Work Hours + Deficit -->
+            <!-- 5. Day Weightage (Days Metric) -->
             <td class="py-3 px-4">
-              <div class="font-bold text-white font-mono text-xs">${att.hours || '--'} <span class="text-[10px] text-neutral-400 font-normal">(Break: ${att.breakTime || '0m'})</span></div>
-              ${deficitHtml}
+              ${dayWeightBadge}
             </td>
 
-            <!-- 6. Attendance Status -->
+            <!-- 6. Hours Breakdown (Hours Metric) -->
+            <td class="py-3 px-4">
+              ${hoursHtml}
+            </td>
+
+            <!-- 7. Attendance Status -->
             <td class="py-3 px-4">
               ${statusBadge}
-              ${att.regNote ? `<div class="text-[9px] text-neutral-400 italic mt-0.5 max-w-[140px] truncate" title="${att.regNote}">Note: ${att.regNote}</div>` : ''}
+              ${att.regNote ? `<div class="text-[9px] text-neutral-400 italic mt-0.5 max-w-[130px] truncate" title="${att.regNote}">Note: ${att.regNote}</div>` : ''}
             </td>
 
-            <!-- 7. Punch Method -->
+            <!-- 8. Punch Method -->
             <td class="py-3 px-4">
               ${methodBadge}
             </td>
 
-            <!-- 8. Actions (Route & Regularize) -->
+            <!-- 9. Actions -->
             <td class="py-3 px-4 text-right">
               <div class="flex items-center justify-end gap-1.5">
                 <button onclick="openDualLatLongMap('${att.empId}')" title="View GPS Route on Map" class="px-2.5 py-1.5 rounded-lg bg-brand-surface border border-brand-border text-neutral-300 hover:text-brand-amber hover:border-brand-amber text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
                   <i data-lucide="map" class="w-3.5 h-3.5 text-brand-amber"></i>
                   <span class="hidden sm:inline">Route</span>
                 </button>
-                <button onclick="openAttendanceRegularizeModal('${att.empId}')" title="Regularize Shift Anomaly / Pardon / Deduct" class="px-2.5 py-1.5 rounded-lg bg-brand-amber/15 border border-brand-amber/30 text-brand-amber hover:bg-brand-amber hover:text-neutral-950 text-xs font-bold transition-all flex items-center gap-1 shadow-sm">
+                <button onclick="openAttendanceRegularizeModal('${att.empId}')" title="Regularize Shift / Approve OT / Pardon" class="px-2.5 py-1.5 rounded-lg bg-brand-amber/15 border border-brand-amber/30 text-brand-amber hover:bg-brand-amber hover:text-neutral-950 text-xs font-bold transition-all flex items-center gap-1 shadow-sm">
                   <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
                   <span>Regularize</span>
                 </button>
@@ -7717,15 +8521,58 @@
     // ------------------------------------------
     let currentCandidateIdx = 0;
 
+    let currentCandidateStageFilter = 'all';
+
+    function filterCandidateByStage(stage) {
+      currentCandidateStageFilter = stage;
+      const stages = ['all', 'Applied', 'Resume', 'Interview', 'Offer Letter', 'Offer Letter Accepted'];
+      
+      const activeClass = "px-3 py-1.5 rounded-xl font-bold bg-brand-amber text-neutral-950 shadow transition-all";
+      const inactiveClass = "px-3 py-1.5 rounded-xl text-neutral-400 hover:text-white transition-all flex items-center gap-1.5";
+
+      stages.forEach(st => {
+        const btn = document.getElementById(`btnCndStage-${st}`);
+        if (btn) btn.className = st === stage ? activeClass : inactiveClass;
+      });
+
+      renderCandidateTable();
+    }
+
     function renderCandidateTable() {
       const tbody = document.getElementById('candidatesTableTbody');
       if (!tbody) return;
-      tbody.innerHTML = appState.candidates.map((c, idx) => {
-        let stageColor = 'bg-brand-dark border-brand-border text-neutral-300';
-        if (c.stage.includes('Selected') || c.stage === 'Selected') stageColor = 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-bold';
-        else if (c.stage.includes('Final') || c.stage.includes('HR')) stageColor = 'bg-amber-500/15 border-amber-500/30 text-amber-300 font-bold';
-        else if (c.stage.includes('Technical') || c.stage.includes('Interview') || c.stage.includes('Round')) stageColor = 'bg-sky-500/15 border-sky-500/30 text-sky-300 font-medium';
-        else if (c.stage.includes('Rejected')) stageColor = 'bg-rose-500/15 border-rose-500/30 text-rose-400 font-bold';
+
+      const filtered = appState.candidates.filter(c => {
+        if (currentCandidateStageFilter === 'all') return true;
+        return c.stage === currentCandidateStageFilter || (c.stage && c.stage.includes(currentCandidateStageFilter));
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-10 text-center text-neutral-400">
+              <div class="text-sm font-semibold text-neutral-300">No candidates in stage: "${currentCandidateStageFilter}"</div>
+              <div class="text-xs text-neutral-500 mt-1">Select "All" to view all active pipeline candidates</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((c, idx) => {
+        let stageBadge = '';
+        const st = c.stage || '';
+        if (st.includes('Accepted')) {
+          stageBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 w-max"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Offer Accepted</span>`;
+        } else if (st.includes('Offer')) {
+          stageBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30 flex items-center gap-1 w-max"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Offer Letter</span>`;
+        } else if (st.includes('Interview')) {
+          stageBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center gap-1 w-max"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Interview</span>`;
+        } else if (st.includes('Resume')) {
+          stageBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30 flex items-center gap-1 w-max"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Resume Vetted</span>`;
+        } else {
+          stageBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-500/15 text-slate-300 border border-slate-500/30 flex items-center gap-1 w-max"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Applied</span>`;
+        }
 
         const isFresher = c.candidateType === 'Fresher' || (c.exp && c.exp.toLowerCase().includes('fresh'));
         const typeBadge = isFresher
@@ -7739,35 +8586,24 @@
                 <span class="font-bold text-white text-xs">${c.name}</span>
                 ${typeBadge}
               </div>
-              <div class="text-[10px] text-neutral-400 flex items-center gap-1 mt-0.5">
-                <i data-lucide="graduation-cap" class="w-2.5 h-2.5 text-brand-amber"></i>
-                <span class="truncate max-w-[150px]">${c.education || 'Graduate'}</span>
-              </div>
+              <div class="text-[10px] text-brand-amber font-mono">${c.id}</div>
             </td>
             <td class="py-3 px-4">
-              <div class="text-neutral-200 font-medium">${c.pos}</div>
-              <div class="text-[10px] text-neutral-400 flex items-center gap-1 mt-0.5">
-                <i data-lucide="building" class="w-2.5 h-2.5 text-neutral-500"></i>
-                <span class="truncate max-w-[140px]">${c.currentOrg || 'Corporate Tech'}</span>
-              </div>
+              <div class="text-white text-xs">${c.pos}</div>
+              <div class="text-[10px] text-neutral-400">${c.dept}</div>
             </td>
-            <td class="py-3 px-4 font-mono text-neutral-300">${c.exp}</td>
-            <td class="py-3 px-4 font-mono font-bold text-emerald-400">&#8377; ${c.ctc.replace(/[^0-9,]/g, '')}</td>
-            <td class="py-3 px-4">
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] border ${stageColor}">
-                ${c.stage}
+            <td class="py-3 px-4 text-neutral-300 text-xs">${c.exp}</td>
+            <td class="py-3 px-4 font-mono text-white text-xs">${c.ctc}</td>
+            <td class="py-3 px-4">${stageBadge}</td>
+            <td class="py-3 px-4 text-neutral-400">
+              <span class="text-xs text-brand-amber font-mono flex items-center gap-1">
+                <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                <span>PDF CV</span>
               </span>
             </td>
-            <td class="py-3 px-4">
-              <button onclick="event.stopPropagation(); showToast('Candidate Resume', 'Viewing CV for ${c.name}')" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border text-[11px] text-neutral-300 hover:text-brand-amber hover:border-brand-amber/40 transition-all flex items-center gap-1">
-                <i data-lucide="file-text" class="w-3 h-3 text-brand-amber"></i>
-                <span>Resume</span>
-              </button>
-            </td>
             <td class="py-3 px-4 text-right">
-              <button onclick="event.stopPropagation(); openCandidateDetailModal(${idx})" class="px-2.5 py-1 rounded-lg bg-brand-amber/15 hover:bg-brand-amber text-brand-amber hover:text-neutral-950 border border-brand-amber/30 text-[11px] font-bold transition-all flex items-center gap-1 ml-auto shadow-sm">
-                <i data-lucide="sliders" class="w-3 h-3"></i>
-                <span>Manage Stage</span>
+              <button onclick="event.stopPropagation(); openCandidateDetailModal(${idx})" class="px-2.5 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs transition-all">
+                Review
               </button>
             </td>
           </tr>
@@ -7776,129 +8612,7 @@
       lucide.createIcons();
     }
 
-    let currentCandidateType = 'Experienced';
-
-    function setCandidateType(type) {
-      currentCandidateType = type;
-      const btnExp = document.getElementById('btnCndTypeExp');
-      const btnFresh = document.getElementById('btnCndTypeFresh');
-      const badge = document.getElementById('cndTypeBadge');
-      const expInput = document.getElementById('candidateExpInput');
-      const expLabel = document.getElementById('cndExpYearsLabel');
-      const compLabel = document.getElementById('cndCompanyLabel');
-      const compInput = document.getElementById('candidateCompanyInput');
-      const noticeInput = document.getElementById('candidateNoticeInput');
-
-      if (type === 'Fresher') {
-        if (btnFresh) {
-          btnFresh.className = 'py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 bg-emerald-500 text-neutral-950 shadow';
-        }
-        if (btnExp) {
-          btnExp.className = 'py-2 px-3 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2';
-        }
-        if (badge) {
-          badge.innerText = 'Fresher / College Graduate';
-          badge.className = 'text-[10px] text-emerald-400 font-mono font-bold';
-        }
-        if (expInput) {
-          expInput.value = 'Fresher (0 Years)';
-          expInput.readOnly = true;
-          expInput.classList.add('opacity-75');
-        }
-        if (expLabel) expLabel.innerText = 'Experience Status';
-        if (compLabel) compLabel.innerText = 'College / University / Campus *';
-        if (compInput) compInput.placeholder = 'e.g. IIT Bombay / Mumbai University / BITS Pilani';
-        if (noticeInput) noticeInput.value = 'Immediate';
-      } else {
-        if (btnExp) {
-          btnExp.className = 'py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 bg-brand-amber text-neutral-950 shadow';
-        }
-        if (btnFresh) {
-          btnFresh.className = 'py-2 px-3 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2';
-        }
-        if (badge) {
-          badge.innerText = 'Experienced Professional';
-          badge.className = 'text-[10px] text-brand-amber font-mono font-bold';
-        }
-        if (expInput) {
-          if (expInput.value === 'Fresher (0 Years)' || !expInput.value) expInput.value = '3.5 Years';
-          expInput.readOnly = false;
-          expInput.classList.remove('opacity-75');
-        }
-        if (expLabel) expLabel.innerText = 'Total Experience (Years) *';
-        if (compLabel) compLabel.innerText = 'Current / Previous Company *';
-        if (compInput) compInput.placeholder = 'e.g. GrowthWave Tech / TCS / Infosys';
-        if (noticeInput) noticeInput.value = '30 Days';
-      }
-      lucide.createIcons();
-    }
-
-    function openAddCandidateModal() {
-      setCandidateType('Experienced');
-      populateCandidateStagesDropdown();
-      populateDeptDropdown();
-      populateDesignationDropdown();
-      document.getElementById('candidateNameInput').value = '';
-      document.getElementById('candidateExpInput').value = '4 Years';
-      document.getElementById('candidateCompanyInput').value = '';
-      document.getElementById('candidateEducationInput').value = '';
-      document.getElementById('candidateSkillsInput').value = '';
-      document.getElementById('candidateCtcInput').value = '₹ 14,00,000';
-      document.getElementById('candidateNoticeInput').value = '30 Days';
-      document.getElementById('modalAddCandidate').classList.remove('hidden');
-      lucide.createIcons();
-    }
-
-    function submitCandidateModalAction() {
-      const name = document.getElementById('candidateNameInput').value.trim();
-      const pos = document.getElementById('candidatePosSelect')?.value || 'Senior Full Stack Engineer';
-      const dept = document.getElementById('candidateDeptSelect')?.value || 'Engineering & Technology';
-      const type = currentCandidateType || 'Experienced';
-      const exp = type === 'Fresher' ? 'Fresher (0 Years)' : (document.getElementById('candidateExpInput').value.trim() || '2 Years');
-      const company = document.getElementById('candidateCompanyInput').value.trim() || (type === 'Fresher' ? 'Fresher / College Graduate' : 'Corporate Enterprise');
-      const education = document.getElementById('candidateEducationInput').value.trim() || 'Graduate Degree';
-      const skills = document.getElementById('candidateSkillsInput').value.trim() || 'Domain Expertise, Team Collaboration';
-      const ctc = document.getElementById('candidateCtcInput').value.trim() || '₹ 12,00,000';
-      const notice = document.getElementById('candidateNoticeInput').value || (type === 'Fresher' ? 'Immediate' : '30 Days');
-      const stage = document.getElementById('candidateStageSelect').value || (appState.pipelineStages[0] ? appState.pipelineStages[0].name : 'Initial Screening');
-
-      if (!name) {
-        showToast('Required', 'Candidate Full Name is required.');
-        return;
-      }
-      if (!education) {
-        showToast('Required', 'Highest Qualification / Degree is required.');
-        return;
-      }
-      if (!skills) {
-        showToast('Required', 'Key Skills are required.');
-        return;
-      }
-
-      appState.candidates.unshift({
-        id: 'CND-' + Math.floor(1000 + Math.random() * 9000),
-        name: name,
-        pos: pos,
-        dept: dept,
-        candidateType: type,
-        exp: exp,
-        currentOrg: company,
-        education: education,
-        skills: skills,
-        ctc: ctc,
-        notice: notice,
-        stage: stage,
-        score: type === 'Fresher' ? '88%' : '93%',
-        notes: `Enrolled into ATS. Role: ${pos} (${dept}). Background: ${type} (${exp}). Education: ${education}. Organization/College: ${company}. Key Skills: ${skills}.`,
-        resumeUrl: `${name.replace(/\s+/g, '_')}_Resume.pdf`
-      });
-
-      renderCandidateTable();
-      closeModal('modalAddCandidate');
-      showToast('Candidate Enrolled', `${name} (${pos}) added to "${stage}" pipeline.`);
-    }
-
-    function openCandidateDetailModal(idx) {
+        function openCandidateDetailModal(idx) {
       currentCandidateIdx = idx;
       const c = appState.candidates[idx];
       if (!c) return;
@@ -9725,6 +10439,13 @@
       if (stFilter) filterAttendanceByStatus(stFilter);
       const regModalEmpId = urlParams.get('regModal');
       if (regModalEmpId) openAttendanceRegularizeModal(regModalEmpId);
+      const payslipEmp = urlParams.get('payslipModal');
+      if (payslipEmp) viewEmployeePayslip(payslipEmp);
+      if (urlParams.get('payrollRulesModal') === '1') openCompanyPayrollRulesModal();
+      const wizStep = urlParams.get('wizardStep');
+      if (wizStep) goToEmpWizardStep(parseInt(wizStep));
+      const cndStage = urlParams.get('cndStage');
+      if (cndStage) filterCandidateByStage(cndStage);
     });
   </script>
 <div id="offerPdfExportStaging" style="position: fixed; left: -99999px; top: 0; width: 210mm; background: #ffffff; z-index: -9999; pointer-events: none;"></div>
