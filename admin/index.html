@@ -2566,105 +2566,224 @@
     </div>
   </div>
 
-  <!-- MODAL: CREATE OFFER LETTER -->
-  <div id="modalCreateOffer" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
-      <div class="p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark">
-        <div>
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <i data-lucide="file-check-2" class="w-4 h-4 text-brand-amber"></i>
-            <span>Generate Official Offer Letter</span>
-          </h3>
-          <p class="text-[11px] text-neutral-400 mt-0.5">Select candidate from ATS pipeline to release appointment letter</p>
+  <!-- MODAL: CREATE OFFER LETTER (FULL DYNAMIC CORPORATE APPOINTMENT) -->
+  <div id="modalCreateOffer" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-brand-amber/15 border border-brand-amber/30 text-brand-amber flex items-center justify-center">
+            <i data-lucide="file-check-2" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 id="offerModalTitle" class="text-sm font-bold text-white flex items-center gap-2">
+              <span>Generate Official Offer Letter &amp; Annexure – I</span>
+            </h3>
+            <p class="text-[11px] text-neutral-400 mt-0.5">Configure candidate compensation, legal notice clauses &amp; letterhead details</p>
+          </div>
         </div>
-        <button onclick="closeModal('modalCreateOffer')" class="text-neutral-400 hover:text-white p-1 text-lg">&times;</button>
+        <button onclick="closeModal('modalCreateOffer')" class="text-neutral-400 hover:text-white p-1 text-xl leading-none">&times;</button>
       </div>
-      <div class="p-5 space-y-3.5 text-xs">
-        <!-- Candidate Selection Dropdown -->
-        <div>
-          <label class="block text-neutral-300 font-semibold mb-1 flex items-center justify-between">
-            <span>Select Candidate from ATS *</span>
-            <span class="text-[10px] text-brand-amber font-normal">Auto-fills details &amp; CTC</span>
-          </label>
-          <select id="offerCandidateSelect" onchange="syncOfferCandidateData()" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
-            <!-- Dynamically populated from appState.candidates -->
-          </select>
-        </div>
 
-        <!-- Optional custom manual candidate input if chosen -->
-        <div id="offerCustomCandidateContainer" class="hidden">
-          <label class="block text-neutral-300 font-semibold mb-1">Manual Candidate Full Name *</label>
-          <input type="text" id="offerCustomCandidateName" placeholder="Enter full candidate name" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
-        </div>
+      <!-- Scrollable Form Body -->
+      <div class="p-5 sm:p-6 space-y-5 text-xs overflow-y-auto max-h-[72vh]">
+        
+        <!-- SECTION 1: CANDIDATE & RECIPIENT PROFILE -->
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border/70 space-y-3.5">
+          <div class="flex items-center justify-between border-b border-brand-border/50 pb-2">
+            <span class="font-bold text-white text-xs flex items-center gap-2">
+              <i data-lucide="user" class="w-3.5 h-3.5 text-brand-amber"></i>
+              <span>1. Candidate &amp; Recipient Information</span>
+            </span>
+            <span class="text-[10px] text-brand-amber font-normal">Auto-fills from ATS Candidate Database</span>
+          </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="text-neutral-300 font-semibold text-xs">Designation Title *</label>
-              <button type="button" onclick="openCreateDesignationModal()" class="text-[10px] text-brand-amber hover:underline font-semibold flex items-center gap-0.5">
-                <i data-lucide="plus" class="w-2.5 h-2.5"></i>
-                <span>Add Desig</span>
-              </button>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="md:col-span-2">
+              <label class="block text-neutral-300 font-semibold mb-1">Select Candidate from ATS *</label>
+              <select id="offerCandidateSelect" onchange="syncOfferCandidateData()" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+                <!-- Dynamically populated from appState.candidates -->
+              </select>
             </div>
-            <select id="offerDesignation" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
-              <!-- Dynamically populated from appState.designations -->
-            </select>
-          </div>
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="text-neutral-300 font-semibold text-xs">Department *</label>
-              <button type="button" onclick="openCreateDeptModal()" class="text-[10px] text-brand-amber hover:underline font-semibold flex items-center gap-0.5">
-                <i data-lucide="plus" class="w-2.5 h-2.5"></i>
-                <span>Add Dept</span>
-              </button>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Salutation / Title *</label>
+              <select id="offerPrefixInput" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+                <option value="Mr.">Mr.</option>
+                <option value="Ms.">Ms.</option>
+                <option value="Dr.">Dr.</option>
+                <option value="Mrs.">Mrs.</option>
+              </select>
             </div>
-            <select id="offerDepartment" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
-              <!-- Dynamically populated from appState.departments -->
-            </select>
+          </div>
+
+          <div id="offerCustomCandidateContainer" class="hidden">
+            <label class="block text-neutral-300 font-semibold mb-1">Manual Candidate Full Name *</label>
+            <input type="text" id="offerCustomCandidateName" placeholder="Enter full candidate name" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Candidate Mobile Phone *</label>
+              <input type="text" id="offerPhoneInput" value="+91-98201 44219" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-mono focus:outline-none focus:border-brand-amber">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Candidate Email Address *</label>
+              <input type="email" id="offerEmailInput" value="kavita.sundaram@gmail.com" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Candidate Residence Address *</label>
+            <input type="text" id="offerAddressInput" value="Flat 402, Green Meadows, Powai, Mumbai - 400076" placeholder="Street, Village/City, State, Pincode" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Annual CTC Package (INR) *</label>
-            <input type="text" id="offerCtcInput" value="₹ 3,98,688" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+        <!-- SECTION 2: ROLE, DEPARTMENT & WORK LOCATION -->
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border/70 space-y-3.5">
+          <div class="flex items-center justify-between border-b border-brand-border/50 pb-2">
+            <span class="font-bold text-white text-xs flex items-center gap-2">
+              <i data-lucide="briefcase" class="w-3.5 h-3.5 text-brand-amber"></i>
+              <span>2. Role, Department &amp; Location</span>
+            </span>
           </div>
-          <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Official Joining Date *</label>
-            <input type="date" id="offerJoiningDate" value="2026-11-15" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-neutral-300 font-semibold text-xs">Designation Title *</label>
+                <button type="button" onclick="openCreateDesignationModal()" class="text-[10px] text-brand-amber hover:underline font-semibold flex items-center gap-0.5">
+                  <i data-lucide="plus" class="w-2.5 h-2.5"></i>
+                  <span>Add Desig</span>
+                </button>
+              </div>
+              <select id="offerDesignation" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
+                <!-- Dynamically populated from appState.designations -->
+              </select>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-neutral-300 font-semibold text-xs">Department *</label>
+                <button type="button" onclick="openCreateDeptModal()" class="text-[10px] text-brand-amber hover:underline font-semibold flex items-center gap-0.5">
+                  <i data-lucide="plus" class="w-2.5 h-2.5"></i>
+                  <span>Add Dept</span>
+                </button>
+              </div>
+              <select id="offerDepartment" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
+                <!-- Dynamically populated from appState.departments -->
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Reporting Manager (Name &amp; Role) *</label>
+              <input type="text" id="offerManagerInput" value="Aarav Sharma (VP People &amp; Culture)" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Work Area / Location *</label>
+              <input type="text" id="offerLocationInput" value="BKC, Mumbai" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Annual CTC Package (INR) *</label>
+              <input type="text" id="offerCtcInput" value="₹ 18,00,000" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white font-mono text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Official Joining Date *</label>
+              <input type="date" id="offerJoiningDate" value="2026-11-15" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Candidate Phone *</label>
-            <input type="text" id="offerPhoneInput" value="+91-7415374685" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs font-mono focus:outline-none focus:border-brand-amber">
+        <!-- SECTION 3: PROBATION, NOTICE & LEGAL GOVERNANCE CLAUSES -->
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border/70 space-y-3.5">
+          <div class="flex items-center justify-between border-b border-brand-border/50 pb-2">
+            <span class="font-bold text-white text-xs flex items-center gap-2">
+              <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-brand-amber"></i>
+              <span>3. Probation, Notice &amp; Governance Clauses</span>
+            </span>
           </div>
-          <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Candidate Email *</label>
-            <input type="email" id="offerEmailInput" value="sumitsingh741537@gmail.com" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Probation Period *</label>
+              <input type="text" id="offerProbationInput" value="3 Months (Performance Based)" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Notice (During Probation) *</label>
+              <input type="text" id="offerNoticeProbationInput" value="7 Days or Payment in Lieu off" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Notice (After Probation) *</label>
+              <input type="text" id="offerNoticeConfirmedInput" value="1 Month or Payment in Lieu off" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div class="sm:col-span-1">
+              <label class="block text-neutral-300 font-semibold mb-1">Absence Days *</label>
+              <input type="text" id="offerAbsenceDaysInput" value="six days" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+            <div class="sm:col-span-3">
+              <label class="block text-neutral-300 font-semibold mb-1">Variable Salary / Target Billing Clause</label>
+              <input type="text" id="offerVariableClauseInput" value="Your salary will be variable. You have to bill 1.5% of your monthly salary, if the billing target is not there, then the salary will also come in the same way." class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
           </div>
         </div>
 
-        <div>
-          <label class="block text-neutral-300 font-semibold mb-1">Candidate Address</label>
-          <input type="text" id="offerAddressInput" value="30, Ward No - 12, Gram Saur568, Post Doha, Rewa, Doha - M.P. - 486441" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+        <!-- SECTION 4: ISSUING ADMIN COMPANY & LETTERHEAD -->
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border/70 space-y-3.5">
+          <div class="flex items-center justify-between border-b border-brand-border/50 pb-2">
+            <span class="font-bold text-white text-xs flex items-center gap-2">
+              <i data-lucide="building-2" class="w-3.5 h-3.5 text-brand-amber"></i>
+              <span>4. Issuing Admin Company &amp; Letterhead Authority</span>
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Company Name *</label>
+              <input type="text" id="offerCompanyNameInput" value="Apex Global Technologies Private Limited" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Company Website *</label>
+              <input type="text" id="offerCompanyWebsiteInput" value="apextechnologies.com" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Official Phone *</label>
+              <input type="text" id="offerCompanyPhoneInput" value="+91-98200 12345" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-mono focus:outline-none focus:border-brand-amber">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Official Email *</label>
+              <input type="email" id="offerCompanyEmailInput" value="hr@apextechnologies.com" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1">Authorized Signatory *</label>
+              <input type="text" id="offerSignatoryInput" value="HR Department" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:outline-none focus:border-brand-amber">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Company Registered Address *</label>
+            <input type="text" id="offerCompanyAddressInput" value="Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051" class="w-full px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
+          </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Reporting Manager</label>
-            <input type="text" id="offerManagerInput" value="Bajranglal Tetarwal" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
-          </div>
-          <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Work Location</label>
-            <input type="text" id="offerLocationInput" value="Sachin, Surat" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber">
-          </div>
-        </div>
       </div>
-      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
-        <button onclick="closeModal('modalCreateOffer')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300">Cancel</button>
-        <button onclick="submitOfferModalAction()" class="px-5 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow">Generate &amp; Dispatch Letter</button>
+
+      <!-- Action Footer -->
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-between gap-3">
+        <button onclick="closeModal('modalCreateOffer')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:text-white">Cancel</button>
+        <button id="submitOfferBtn" onclick="submitOfferModalAction()" class="px-5 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-2 transition-all">
+          <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+          <span id="submitOfferBtnText">Generate &amp; Dispatch Letter</span>
+        </button>
       </div>
     </div>
   </div>
@@ -3195,19 +3314,16 @@
               <span id="offerPreviewHeaderTitle">Official Appointment Letter &amp; Annexure – I</span>
               <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">2 Pages (A4)</span>
             </h3>
-            <p class="text-[11px] text-neutral-400 mt-0.5">Corporate appointment letterhead with Annexure-I salary components table</p>
+            <p id="offerPreviewSubTitle" class="text-[11px] text-neutral-400 mt-0.5">Corporate appointment letterhead with Annexure-I salary components table</p>
           </div>
         </div>
 
         <div class="flex items-center gap-2">
-          <!-- Letterhead Company Selector -->
-          <div class="flex items-center gap-1.5 bg-brand-card/60 px-2.5 py-1.5 rounded-xl border border-brand-border">
-            <span class="text-[10px] text-neutral-400 font-semibold hidden md:inline">Letterhead:</span>
-            <select id="offerLetterCompanySelect" onchange="changeOfferLetterCompany(this.value)" class="bg-transparent text-brand-amber text-xs font-semibold focus:outline-none cursor-pointer">
-              <option value="tapipe" class="bg-neutral-900 text-white">TAPIPE FINTECH PVT LTD (Surat) [Sample Template]</option>
-              <option value="apex" class="bg-neutral-900 text-white">APEX GLOBAL TECHNOLOGIES PVT LTD (Mumbai / Gurugram)</option>
-            </select>
-          </div>
+          <!-- Edit Terms Button -->
+          <button type="button" onclick="editCurrentOfferLetter()" class="px-3 py-1.5 rounded-xl bg-brand-card hover:bg-brand-card/80 border border-brand-border text-xs text-brand-amber hover:text-white flex items-center gap-1.5 transition-all">
+            <i data-lucide="edit-3" class="w-3 h-3"></i>
+            <span>Edit Terms</span>
+          </button>
 
           <!-- Zoom Controls -->
           <div class="hidden sm:flex items-center gap-1 bg-brand-card/60 px-2 py-1 rounded-xl border border-brand-border">
@@ -4322,24 +4438,35 @@
       ],
       offers: [
         {
-          id: 'OFF-TP-088',
-          candidateId: 'CND-8810',
-          name: 'Sumit Singh',
-          prefix: 'Mr.',
-          desig: 'Accounting',
-          dept: 'Finance & Accounts',
-          ctc: '₹ 3,98,688',
-          doj: 'Aug 15, 2025',
-          date: 'Aug 15, 2025',
-          address: '30, Ward No - 12, Gram Saur568, Post Doha, Rewa, Doha - M.P. - 486441',
-          phone: '+91-7415374685',
-          email: 'sumitsingh741537@gmail.com',
-          manager: 'Bajranglal Tetarwal',
-          location: 'Sachin, Surat',
-          status: 'Accepted & Signed'
+          id: 'OFF-AGT-091',
+          candidateId: 'CND-8801',
+          name: 'Kavita Sundaram',
+          prefix: 'Ms.',
+          desig: 'Product Marketing Manager',
+          dept: 'Marketing & Growth',
+          ctc: '₹ 18,00,000',
+          doj: '15 Nov 2026',
+          date: '15 Nov 2026',
+          address: 'Flat 402, Green Meadows, Powai, Mumbai - 400076',
+          phone: '+91-98201 44219',
+          email: 'kavita.sundaram@gmail.com',
+          manager: 'Aarav Sharma (VP People & Culture)',
+          location: 'BKC, Mumbai',
+          probation: '3 Months (Performance Based)',
+          noticeProbation: '7 Days or Payment in Lieu off',
+          noticeConfirmed: '1 Month or Payment in Lieu off',
+          absenceDays: 'six days',
+          variableClause: 'Your salary will be variable. You have to bill 1.5% of your monthly salary, if the billing target is not there, then the salary will also come in the same way.',
+          companyName: 'Apex Global Technologies Private Limited',
+          companyWebsite: 'apextechnologies.com',
+          companyPhone: '+91-98200 12345',
+          companyEmail: 'hr@apextechnologies.com',
+          companyAddress: 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051',
+          signatory: 'HR Department',
+          status: 'Ready for Dispatch'
         },
         {
-          id: 'OFF-AGT-091',
+          id: 'OFF-AGT-088',
           candidateId: 'CND-8802',
           name: 'Aditya Nair',
           prefix: 'Mr.',
@@ -4347,13 +4474,52 @@
           dept: 'Engineering & Technology',
           ctc: '₹ 14,50,000',
           doj: '15 Nov 2026',
-          date: '28 Oct 2026',
-          address: 'Flat 402, Green Meadows, Powai, Mumbai - 400076',
-          phone: '+91-98201 44219',
-          email: 'aditya.nair@email.com',
-          manager: 'Aarav Sharma',
+          date: '15 Nov 2026',
+          address: 'B-14/2, VJTI Alumni Towers, Matunga, Mumbai - 400019',
+          phone: '+91-98334 11092',
+          email: 'aditya.nair@gmail.com',
+          manager: 'Aarav Sharma (VP People & Culture)',
           location: 'BKC, Mumbai',
-          status: 'Sent via Email'
+          probation: '3 Months (Performance Based)',
+          noticeProbation: '7 Days or Payment in Lieu off',
+          noticeConfirmed: '1 Month or Payment in Lieu off',
+          absenceDays: 'six days',
+          variableClause: 'Your salary will be variable. You have to bill 1.5% of your monthly salary, if the billing target is not there, then the salary will also come in the same way.',
+          companyName: 'Apex Global Technologies Private Limited',
+          companyWebsite: 'apextechnologies.com',
+          companyPhone: '+91-98200 12345',
+          companyEmail: 'hr@apextechnologies.com',
+          companyAddress: 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051',
+          signatory: 'HR Department',
+          status: 'Accepted & Signed'
+        },
+        {
+          id: 'OFF-AGT-075',
+          candidateId: 'CND-8810',
+          name: 'Sumit Singh',
+          prefix: 'Mr.',
+          desig: 'Accounting Specialist',
+          dept: 'Finance & Accounts',
+          ctc: '₹ 3,98,688',
+          doj: '15 Nov 2026',
+          date: '15 Nov 2026',
+          address: '30, Ward No - 12, Gram Saur568, Post Doha, Rewa, Doha - M.P. - 486441',
+          phone: '+91-7415374685',
+          email: 'sumitsingh741537@gmail.com',
+          manager: 'Rohan Mehra (Director of Finance)',
+          location: 'Sachin, Surat / Mumbai',
+          probation: '3 Months (Performance Based)',
+          noticeProbation: '7 Days or Payment in Lieu off',
+          noticeConfirmed: '1 Month or Payment in Lieu off',
+          absenceDays: 'six days',
+          variableClause: 'Your salary will be variable. You have to bill 1.5% of your monthly salary, if the billing target is not there, then the salary will also come in the same way.',
+          companyName: 'Apex Global Technologies Private Limited',
+          companyWebsite: 'apextechnologies.com',
+          companyPhone: '+91-98200 12345',
+          companyEmail: 'hr@apextechnologies.com',
+          companyAddress: 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051',
+          signatory: 'HR Department',
+          status: 'Accepted & Signed'
         }
       ],
       resignations: [
@@ -6988,40 +7154,11 @@
       openOfferGeneratorModal(c ? c.name : null);
     }
 
-        // ------------------------------------------
-    // 2-PAGE CORPORATE OFFER LETTER & ANNEXURE-I ENGINE
+            // ------------------------------------------
+    // 2-PAGE CORPORATE OFFER LETTER & ANNEXURE-I ENGINE (FULLY DYNAMIC)
     // ------------------------------------------
-    const companyOfferProfiles = {
-      tapipe: {
-        key: 'tapipe',
-        name: 'TAPIPE FINTECH PRIVATE LIMITED',
-        tagline: '"विश्वास की एक धारा"',
-        brandName: 'TapiPe',
-        website: 'tapipe.com',
-        phone: '+91-72111 67666',
-        email: 'support@tapipe.com',
-        address: 'Plot No 428/1, Road No-4, GIDC Sachin, Surat - 394230',
-        manager: 'Bajranglal Tetarwal',
-        location: 'Sachin, Surat',
-        stampCompany: 'TAPIPE FINTECH PRIVATE LIMITED'
-      },
-      apex: {
-        key: 'apex',
-        name: 'APEX GLOBAL TECHNOLOGIES PRIVATE LIMITED',
-        tagline: 'SMART HR. STRONGER PEOPLE.',
-        brandName: 'APEX GLOBAL',
-        website: 'apextechnologies.com',
-        phone: '+91-98200 12345',
-        email: 'hr@apextechnologies.com',
-        address: 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051',
-        manager: 'Aarav Sharma',
-        location: 'BKC, Mumbai',
-        stampCompany: 'APEX GLOBAL TECHNOLOGIES'
-      }
-    };
-
-    let currentOfferCompany = 'tapipe';
     let activeOfferPreviewIdx = 0;
+    let editingOfferIndex = null;
     let offerLetterZoomLevel = 1.0;
 
     function calculateOfferAnnexure(annualCtc) {
@@ -7083,7 +7220,7 @@
     }
 
     function renderCorporateStampSVG(companyName) {
-      const compUpper = (companyName || 'TAPIPE FINTECH PRIVATE LIMITED').toUpperCase();
+      const compUpper = (companyName || 'APEX GLOBAL TECHNOLOGIES PVT LTD').toUpperCase();
       return `
         <svg width="88" height="88" viewBox="0 0 100 100" style="display: inline-block; transform: rotate(-3.5deg); filter: drop-shadow(0 1px 2px rgba(29, 78, 216, 0.15)); user-select: none;">
           <circle cx="50" cy="50" r="47" fill="none" stroke="#1d4ed8" stroke-width="2.2" />
@@ -7092,14 +7229,14 @@
             <path id="stampArcTop" d="M 14 50 A 36 36 0 0 1 86 50" fill="none" />
             <path id="stampArcBottom" d="M 14 50 A 36 36 0 0 0 86 50" fill="none" />
           </defs>
-          <text font-size="5.2" font-family="'Arial', sans-serif" font-weight="900" fill="#1d4ed8" letter-spacing="0.5">
+          <text font-size="5" font-family="'Arial', sans-serif" font-weight="900" fill="#1d4ed8" letter-spacing="0.5">
             <textPath href="#stampArcTop" startOffset="50%" text-anchor="middle">
-              ${compUpper}
+              ${compUpper.length > 34 ? compUpper.substring(0, 32) + '...' : compUpper}
             </textPath>
           </text>
           <text font-size="5.5" font-family="'Arial', sans-serif" font-weight="900" fill="#1d4ed8" letter-spacing="0.8">
             <textPath href="#stampArcBottom" startOffset="50%" text-anchor="middle">
-              ★ HR OPERATIONS ★
+              ★ HR DEPARTMENT ★
             </textPath>
           </text>
           <circle cx="50" cy="50" r="23" fill="none" stroke="#1d4ed8" stroke-width="1.2" />
@@ -7112,100 +7249,85 @@
       `;
     }
 
-    function renderCorporateHeader(comp) {
-      let brandHtml = '';
-      if (comp.key === 'tapipe') {
-        brandHtml = `
-          <div style="display: inline-flex; border: 1.5px solid #005696; border-radius: 4px; overflow: hidden; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <div style="background: #0f3c6c; padding: 6px 8px; display: flex; align-items: center; justify-content: center;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="7" r="4" fill="#fbbf24"/>
-                <path d="M4 21v-2a6 6 0 0 1 12 0v2" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M16 11l4-2m0 0l-2 4m2-4l-4 4" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <div style="padding: 3px 10px 3px 8px; display: flex; flex-direction: column; justify-content: center;">
-              <div style="font-size: 20px; font-weight: 900; line-height: 1; font-family: 'Arial', sans-serif; letter-spacing: -0.5px;">
-                <span style="color: #0f3c6c;">Tapi</span><span style="color: #0284c7;">Pe</span>
-              </div>
-              <div style="font-size: 8.5px; font-weight: bold; color: #ea580c; font-family: 'Times New Roman', serif; margin-top: 2px;">
-                "विश्वास की एक धारा"
-              </div>
-            </div>
-          </div>
-        `;
-      } else {
-        brandHtml = `
-          <div style="display: inline-flex; align-items: center; gap: 8px;">
-            <img src="/sora-hr-logo-light.png" onerror="this.onerror=null; this.src='/sora-hr-logo.png';" style="height: 32px; object-fit: contain;">
-          </div>
-        `;
-      }
-
+    function renderCorporateHeader(compName, compWebsite) {
       return `
         <div style="margin-bottom: 2px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-            <div>${brandHtml}</div>
-            <div style="font-size: 12.5px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; padding-top: 8px;">
-              ${comp.website}
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <img src="/sora-hr-logo-light.svg" onerror="this.onerror=null; this.src='/sora-hr-logo-light.png';" style="height: 38px; max-width: 170px; object-fit: contain;">
+            </div>
+            <div style="font-size: 12.5px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif;">
+              ${compWebsite}
             </div>
           </div>
-          <div style="font-size: 13.5px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; letter-spacing: 0.3px; margin-bottom: 4px;">
-            ${comp.name}
+          <div style="font-size: 13.5px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; letter-spacing: 0.35px; margin-bottom: 4px;">
+            ${compName.toUpperCase()}
           </div>
-          <div style="border-top: 1.5px solid #003366; border-bottom: 1.5px solid #003366; height: 3px; margin-bottom: 12px;"></div>
+          <div style="border-top: 1.5px solid #003366; border-bottom: 1.5px solid #003366; height: 3px; margin-bottom: 14px;"></div>
         </div>
       `;
     }
 
-    function renderCorporateFooter(comp) {
+    function renderCorporateFooter(phone, email, address) {
       return `
         <div style="margin-top: auto; border-top: 2.5px solid #003366; padding-top: 6px; font-family: 'Times New Roman', serif; font-size: 10.5px; color: #111827;">
           <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 5px; white-space: nowrap;">
               <span style="font-size: 13px;">☎</span>
-              <strong>${comp.phone}</strong>
+              <strong>${phone}</strong>
             </div>
             <div style="display: flex; align-items: center; gap: 5px; white-space: nowrap;">
               <span style="font-size: 13px;">✉</span>
-              <span>${comp.email}</span>
+              <span>${email}</span>
             </div>
-            <div style="display: flex; align-items: center; gap: 5px; text-align: right; max-width: 310px; line-height: 1.25;">
+            <div style="display: flex; align-items: center; gap: 5px; text-align: right; max-width: 320px; line-height: 1.25;">
               <span style="font-size: 12px;">✏</span>
-              <span>${comp.address}</span>
+              <span>${address}</span>
             </div>
           </div>
         </div>
       `;
     }
 
-    function renderOfferLetterHTML(off, compKey) {
-      const comp = companyOfferProfiles[compKey || currentOfferCompany] || companyOfferProfiles.tapipe;
-      const name = off.name || 'Sumit Singh';
+    function renderOfferLetterHTML(off) {
+      const compName = off.companyName || 'Apex Global Technologies Private Limited';
+      const compWebsite = off.companyWebsite || 'apextechnologies.com';
+      const compPhone = off.companyPhone || '+91-98200 12345';
+      const compEmail = off.companyEmail || 'hr@apextechnologies.com';
+      const compAddress = off.companyAddress || 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051';
+      const signatory = off.signatory || 'HR Department';
+
+      const name = off.name || 'Candidate Name';
       const prefix = off.prefix || (name.toLowerCase().includes('kavita') || name.toLowerCase().includes('megha') || name.toLowerCase().includes('ananya') || name.toLowerCase().includes('priya') ? 'Ms.' : 'Mr.');
-      const desig = off.desig || 'Accounting';
-      const doj = off.doj || off.date || 'Aug 15, 2025';
-      const manager = off.manager || comp.manager;
-      const location = off.location || comp.location;
-      const address = off.address || '30, Ward No - 12, Gram Saur568, Post Doha, Rewa, Doha - M.P. - 486441';
-      const phone = off.phone || '+91-7415374685';
-      const email = off.email || 'sumitsingh741537@gmail.com';
-      
-      const annexure = calculateOfferAnnexure(off.ctc || '₹ 3,98,688');
+      const desig = off.desig || 'Senior Specialist';
+      const doj = off.doj || off.date || '15 Nov 2026';
+      const manager = off.manager || 'Aarav Sharma (VP People & Culture)';
+      const location = off.location || 'BKC, Mumbai';
+      const address = off.address || 'Flat 402, Green Meadows, Powai, Mumbai - 400076';
+      const phone = off.phone || '+91-98201 44219';
+      const email = off.email || `${name.toLowerCase().replace(/[^a-z]/g, '')}@gmail.com`;
+
+      const probation = off.probation || '3 Months (Performance Based)';
+      const noticeProbation = off.noticeProbation || '7 Days or Payment in Lieu off';
+      const noticeConfirmed = off.noticeConfirmed || '1 Month or Payment in Lieu off';
+      const absenceDays = off.absenceDays || 'six days';
+      const variableClause = off.variableClause || 'Your salary will be variable. You have to bill 1.5% of your monthly salary, if the billing target is not there, then the salary will also come in the same way.';
+
+      const annexure = calculateOfferAnnexure(off.ctc || '₹ 18,00,000');
 
       // PAGE 1: APPOINTMENT LETTER
       const page1 = `
         <div class="offer-pdf-page" style="width: 210mm; height: 297mm; min-height: 297mm; max-height: 297mm; box-sizing: border-box; padding: 12mm 16mm 12mm 16mm; position: relative; page-break-after: always; page-break-inside: avoid; background: #ffffff; color: #000000; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; font-family: 'Times New Roman', Times, serif;">
           
           <!-- Watermark Background -->
-          <div style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); opacity: 0.05; pointer-events: none; z-index: 0; text-align: center; width: 380px;">
-            <div style="font-size: 60px; font-weight: 900; color: #0284c7; letter-spacing: 2px;">${comp.brandName}</div>
-            <div style="font-size: 18px; font-weight: bold; color: #ea580c; margin-top: 4px;">${comp.tagline}</div>
+          <div style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); opacity: 0.045; pointer-events: none; z-index: 0; text-align: center; width: 380px;">
+            <img src="/sora-hr-logo-light.svg" onerror="this.onerror=null; this.src='/sora-hr-logo-light.png';" style="width: 280px; max-width: 100%; filter: grayscale(100%);">
+            <div style="font-size: 18px; font-weight: bold; color: #111827; letter-spacing: 1.5px; margin-top: 8px; font-family: 'Times New Roman', serif;">${compName.toUpperCase()}</div>
           </div>
 
           <div style="position: relative; z-index: 1;">
             <!-- Letterhead Header -->
-            ${renderCorporateHeader(comp)}
+            ${renderCorporateHeader(compName, compWebsite)}
 
             <!-- Recipient & Date Row -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; font-size: 12px; line-height: 1.4;">
@@ -7264,17 +7386,17 @@
               <div style="display: flex;">
                 <span style="width: 175px;">Probation Period</span>
                 <span style="width: 25px; text-align: center;">-</span>
-                <span style="flex: 1; font-weight: 500;">3 Months (Performance Based)</span>
+                <span style="flex: 1; font-weight: 500;">${probation}</span>
               </div>
               <div style="display: flex;">
                 <span style="width: 175px;">Notice Period</span>
                 <span style="width: 25px; text-align: center;">-</span>
-                <span style="flex: 1; font-weight: 500;">During Probation – 7 Days or Payment in Lieu off</span>
+                <span style="flex: 1; font-weight: 500;">During Probation – ${noticeProbation}</span>
               </div>
               <div style="display: flex;">
                 <span style="width: 175px;"></span>
                 <span style="width: 25px; text-align: center;"></span>
-                <span style="flex: 1; font-weight: 500;">After Probation – 1 Month or Payment in Lieu off</span>
+                <span style="flex: 1; font-weight: 500;">After Probation – ${noticeConfirmed}</span>
               </div>
             </div>
 
@@ -7283,7 +7405,7 @@
               Notice Period has to be in writing and from either side. Management reserves the right of waiving the notice period in case of resignation.
             </div>
             <div style="font-size: 11px; line-height: 1.45; text-align: justify; margin-bottom: 8px;">
-              If you absent yourself from duty for more than six days without informing it shall be considered as having voluntarily termination of your services without any notice period unless you give justification acceptable by management. Your salary will be variable. You have to bill 1.5% of your monthly salary, if the billing target is not there, then the salary will also come in the same way.
+              If you absent yourself from duty for more than ${absenceDays} without informing it shall be considered as having voluntarily termination of your services without any notice period unless you give justification acceptable by management. ${variableClause}
             </div>
             <div style="font-size: 11px; line-height: 1.45; text-align: justify; margin-bottom: 18px;">
               Kindly sign the document as your acceptance of the terms and conditions mentioned herein and return back to us to us at the earliest.
@@ -7295,9 +7417,9 @@
               <div>
                 <div style="font-size: 12px; margin-bottom: 6px;">Thanking you,</div>
                 <div style="margin: 2px 0 4px 0;">
-                  ${renderCorporateStampSVG(comp.stampCompany)}
+                  ${renderCorporateStampSVG(compName)}
                 </div>
-                <div style="font-size: 12.5px; font-weight: bold; margin-top: 4px;">HR Department</div>
+                <div style="font-size: 12.5px; font-weight: bold; margin-top: 4px;">${signatory}</div>
               </div>
 
               <!-- Right: Candidate Acceptance -->
@@ -7310,7 +7432,7 @@
 
           <!-- Letterhead Footer -->
           <div style="position: relative; z-index: 1;">
-            ${renderCorporateFooter(comp)}
+            ${renderCorporateFooter(compPhone, compEmail, compAddress)}
           </div>
         </div>
       `;
@@ -7320,14 +7442,14 @@
         <div class="offer-pdf-page" style="width: 210mm; height: 297mm; min-height: 297mm; max-height: 297mm; box-sizing: border-box; padding: 12mm 16mm 12mm 16mm; position: relative; page-break-after: avoid; page-break-inside: avoid; background: #ffffff; color: #000000; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; font-family: 'Times New Roman', Times, serif;">
           
           <!-- Watermark Background -->
-          <div style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); opacity: 0.05; pointer-events: none; z-index: 0; text-align: center; width: 380px;">
-            <div style="font-size: 60px; font-weight: 900; color: #0284c7; letter-spacing: 2px;">${comp.brandName}</div>
-            <div style="font-size: 18px; font-weight: bold; color: #ea580c; margin-top: 4px;">${comp.tagline}</div>
+          <div style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); opacity: 0.045; pointer-events: none; z-index: 0; text-align: center; width: 380px;">
+            <img src="/sora-hr-logo-light.svg" onerror="this.onerror=null; this.src='/sora-hr-logo-light.png';" style="width: 280px; max-width: 100%; filter: grayscale(100%);">
+            <div style="font-size: 18px; font-weight: bold; color: #111827; letter-spacing: 1.5px; margin-top: 8px; font-family: 'Times New Roman', serif;">${compName.toUpperCase()}</div>
           </div>
 
           <div style="position: relative; z-index: 1;">
             <!-- Letterhead Header -->
-            ${renderCorporateHeader(comp)}
+            ${renderCorporateHeader(compName, compWebsite)}
 
             <!-- Annexure – I Boxed Heading -->
             <div style="text-align: center; margin: 10px 0 12px 0;">
@@ -7376,13 +7498,11 @@
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3px 8px; text-align: right;">${annexure.bonus.m}</td>
                   <td style="border-bottom: 1px solid #000; padding: 3px 8px; text-align: right;">${annexure.bonus.a}</td>
                 </tr>
-                <!-- Spacer Row -->
                 <tr style="height: 14px;">
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                   <td style="border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                 </tr>
-                <!-- Gross Salary (Bold) -->
                 <tr style="font-weight: bold;">
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3.5px 8px;">Gross Salary</td>
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3.5px 8px; text-align: right;">${annexure.gross.m}</td>
@@ -7403,19 +7523,16 @@
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3px 8px; text-align: right;">${annexure.benefits.m}</td>
                   <td style="border-bottom: 1px solid #000; padding: 3px 8px; text-align: right;">${annexure.benefits.a}</td>
                 </tr>
-                <!-- Spacer Row -->
                 <tr style="height: 14px;">
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                   <td style="border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                 </tr>
-                <!-- Cost to Company (CTC) (Bold) -->
                 <tr style="font-weight: bold;">
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3.5px 8px;">Cost to Company (CTC)</td>
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3.5px 8px; text-align: right;">${annexure.ctc.m}</td>
                   <td style="border-bottom: 1px solid #000; padding: 3.5px 8px; text-align: right;">${annexure.ctc.a}</td>
                 </tr>
-                <!-- Spacer Row -->
                 <tr style="height: 14px;">
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
@@ -7441,25 +7558,21 @@
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3px 8px; text-align: right;">${annexure.esicEe.m}</td>
                   <td style="border-bottom: 1px solid #000; padding: 3px 8px; text-align: right;">${annexure.esicEe.a}</td>
                 </tr>
-                <!-- Spacer Row -->
                 <tr style="height: 14px;">
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                   <td style="border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                 </tr>
-                <!-- Total Deduction (Bold) -->
                 <tr style="font-weight: bold;">
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3.5px 8px;">Total Deduction</td>
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3.5px 8px; text-align: right;">${annexure.deductions.m}</td>
                   <td style="border-bottom: 1px solid #000; padding: 3.5px 8px; text-align: right;">${annexure.deductions.a}</td>
                 </tr>
-                <!-- Spacer Row -->
                 <tr style="height: 14px;">
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                   <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                   <td style="border-bottom: 1px solid #000; padding: 2px 8px;">&nbsp;</td>
                 </tr>
-                <!-- In Hand (Take Home Salary)* (Bold) -->
                 <tr style="font-weight: bold;">
                   <td style="border-right: 1px solid #000; padding: 3.5px 8px;">In Hand (Take Home Salary)*</td>
                   <td style="border-right: 1px solid #000; padding: 3.5px 8px; text-align: right;">${annexure.inHand.m}</td>
@@ -7471,7 +7584,7 @@
 
           <!-- Letterhead Footer -->
           <div style="position: relative; z-index: 1;">
-            ${renderCorporateFooter(comp)}
+            ${renderCorporateFooter(compPhone, compEmail, compAddress)}
           </div>
         </div>
       `;
@@ -7492,9 +7605,8 @@
           <td class="py-3 px-4">
             <div class="font-bold text-white flex items-center gap-2">
               <span>${off.name}</span>
-              ${idx === 0 ? '<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-brand-amber/20 text-brand-amber border border-brand-amber/30">Sample Match</span>' : ''}
             </div>
-            <div class="text-[10px] text-neutral-400">${off.email || 'candidate@domain.com'}</div>
+            <div class="text-[10px] text-neutral-400">${off.email || 'candidate@domain.com'} &bull; ${off.phone || '+91-98200 00000'}</div>
           </td>
           <td class="py-3 px-4 text-neutral-300">${off.desig}</td>
           <td class="py-3 px-4 text-neutral-400">${off.dept}</td>
@@ -7511,6 +7623,10 @@
                 <i data-lucide="eye" class="w-3 h-3"></i>
                 <span>Letter</span>
               </button>
+              <button onclick="openOfferGeneratorModal(null, ${idx})" class="px-2 py-1 rounded-lg bg-brand-surface hover:bg-white/10 border border-brand-border text-[11px] font-semibold text-neutral-400 hover:text-white transition-all flex items-center gap-1" title="Edit Offer Terms">
+                <i data-lucide="edit-2" class="w-3 h-3"></i>
+                <span>Edit</span>
+              </button>
               <button onclick="downloadOfferLetterPdf(${idx})" class="px-2.5 py-1 rounded-lg bg-brand-amber/15 text-brand-amber hover:bg-brand-amber hover:text-neutral-950 border border-brand-amber/30 text-[11px] font-bold transition-all flex items-center gap-1 shadow">
                 <i data-lucide="download" class="w-3 h-3"></i>
                 <span>PDF</span>
@@ -7522,9 +7638,11 @@
       lucide.createIcons();
     }
 
-    function openOfferGeneratorModal(preselectedName) {
+    function openOfferGeneratorModal(preselectedName, editIdx) {
       populateDeptDropdown();
       populateDesignationDropdown();
+
+      editingOfferIndex = (typeof editIdx === 'number') ? editIdx : null;
 
       const sel = document.getElementById('offerCandidateSelect');
       if (sel) {
@@ -7533,12 +7651,63 @@
         ).join('');
         opts += `<option value="__custom__">+ External / Manual Candidate Entry</option>`;
         sel.innerHTML = opts;
+      }
 
-        if (preselectedName) {
+      if (editingOfferIndex !== null && appState.offers[editingOfferIndex]) {
+        const off = appState.offers[editingOfferIndex];
+        const modalTitle = document.getElementById('offerModalTitle');
+        const submitBtnText = document.getElementById('submitOfferBtnText');
+        if (modalTitle) modalTitle.innerText = `Edit Offer Letter Terms • ${off.name}`;
+        if (submitBtnText) submitBtnText.innerText = 'Update & Save Offer Letter';
+
+        if (sel) {
+          sel.value = off.name;
+          if (sel.value !== off.name) {
+            sel.value = '__custom__';
+          }
+        }
+        if (document.getElementById('offerCustomCandidateContainer')) {
+          if (sel && sel.value === '__custom__') {
+            document.getElementById('offerCustomCandidateContainer').classList.remove('hidden');
+            document.getElementById('offerCustomCandidateName').value = off.name;
+          } else {
+            document.getElementById('offerCustomCandidateContainer').classList.add('hidden');
+          }
+        }
+
+        if (document.getElementById('offerPrefixInput')) document.getElementById('offerPrefixInput').value = off.prefix || 'Mr.';
+        if (document.getElementById('offerPhoneInput')) document.getElementById('offerPhoneInput').value = off.phone || '+91-98201 44219';
+        if (document.getElementById('offerEmailInput')) document.getElementById('offerEmailInput').value = off.email || '';
+        if (document.getElementById('offerAddressInput')) document.getElementById('offerAddressInput').value = off.address || '';
+        if (document.getElementById('offerDesignation')) document.getElementById('offerDesignation').value = off.desig || '';
+        if (document.getElementById('offerDepartment')) document.getElementById('offerDepartment').value = off.dept || '';
+        if (document.getElementById('offerManagerInput')) document.getElementById('offerManagerInput').value = off.manager || '';
+        if (document.getElementById('offerLocationInput')) document.getElementById('offerLocationInput').value = off.location || '';
+        if (document.getElementById('offerCtcInput')) document.getElementById('offerCtcInput').value = off.ctc || '₹ 18,00,000';
+        if (document.getElementById('offerJoiningDate')) document.getElementById('offerJoiningDate').value = off.doj || '2026-11-15';
+        if (document.getElementById('offerProbationInput')) document.getElementById('offerProbationInput').value = off.probation || '3 Months (Performance Based)';
+        if (document.getElementById('offerNoticeProbationInput')) document.getElementById('offerNoticeProbationInput').value = off.noticeProbation || '7 Days or Payment in Lieu off';
+        if (document.getElementById('offerNoticeConfirmedInput')) document.getElementById('offerNoticeConfirmedInput').value = off.noticeConfirmed || '1 Month or Payment in Lieu off';
+        if (document.getElementById('offerAbsenceDaysInput')) document.getElementById('offerAbsenceDaysInput').value = off.absenceDays || 'six days';
+        if (document.getElementById('offerVariableClauseInput')) document.getElementById('offerVariableClauseInput').value = off.variableClause || '';
+        if (document.getElementById('offerCompanyNameInput')) document.getElementById('offerCompanyNameInput').value = off.companyName || 'Apex Global Technologies Private Limited';
+        if (document.getElementById('offerCompanyWebsiteInput')) document.getElementById('offerCompanyWebsiteInput').value = off.companyWebsite || 'apextechnologies.com';
+        if (document.getElementById('offerCompanyPhoneInput')) document.getElementById('offerCompanyPhoneInput').value = off.companyPhone || '+91-98200 12345';
+        if (document.getElementById('offerCompanyEmailInput')) document.getElementById('offerCompanyEmailInput').value = off.companyEmail || 'hr@apextechnologies.com';
+        if (document.getElementById('offerSignatoryInput')) document.getElementById('offerSignatoryInput').value = off.signatory || 'HR Department';
+        if (document.getElementById('offerCompanyAddressInput')) document.getElementById('offerCompanyAddressInput').value = off.companyAddress || 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051';
+      } else {
+        const modalTitle = document.getElementById('offerModalTitle');
+        const submitBtnText = document.getElementById('submitOfferBtnText');
+        if (modalTitle) modalTitle.innerText = 'Generate Official Offer Letter & Annexure – I';
+        if (submitBtnText) submitBtnText.innerText = 'Generate & Dispatch Letter';
+
+        if (preselectedName && sel) {
           sel.value = preselectedName;
         }
+        syncOfferCandidateData();
       }
-      syncOfferCandidateData();
+
       document.getElementById('modalCreateOffer').classList.remove('hidden');
       lucide.createIcons();
     }
@@ -7591,17 +7760,28 @@
             }
           }
 
+          const prefixSel = document.getElementById('offerPrefixInput');
+          if (prefixSel) {
+            prefixSel.value = (c.name.toLowerCase().includes('kavita') || c.name.toLowerCase().includes('megha') || c.name.toLowerCase().includes('ananya') || c.name.toLowerCase().includes('priya')) ? 'Ms.' : 'Mr.';
+          }
+
           if (document.getElementById('offerCtcInput')) {
-            document.getElementById('offerCtcInput').value = `₹ ${String(c.ctc || '3,98,688').replace(/[^0-9,]/g, '')}`;
+            document.getElementById('offerCtcInput').value = `₹ ${String(c.ctc || '18,00,000').replace(/[^0-9,]/g, '')}`;
           }
           if (document.getElementById('offerPhoneInput')) {
-            document.getElementById('offerPhoneInput').value = c.phone || '+91-7415374685';
+            document.getElementById('offerPhoneInput').value = c.phone || '+91-98201 44219';
           }
           if (document.getElementById('offerEmailInput')) {
             document.getElementById('offerEmailInput').value = c.email || `${c.name.toLowerCase().replace(/[^a-z]/g, '')}@gmail.com`;
           }
           if (document.getElementById('offerAddressInput')) {
-            document.getElementById('offerAddressInput').value = c.address || '30, Ward No - 12, Gram Saur568, Post Doha, Rewa, Doha - M.P. - 486441';
+            document.getElementById('offerAddressInput').value = c.address || 'Flat 402, Green Meadows, Powai, Mumbai - 400076';
+          }
+          if (document.getElementById('offerManagerInput')) {
+            document.getElementById('offerManagerInput').value = 'Aarav Sharma (VP People & Culture)';
+          }
+          if (document.getElementById('offerLocationInput')) {
+            document.getElementById('offerLocationInput').value = 'BKC, Mumbai';
           }
         }
       }
@@ -7615,24 +7795,40 @@
       } else {
         name = selVal;
       }
-      const desig = document.getElementById('offerDesignation').value || 'Accounting';
-      const dept = document.getElementById('offerDepartment').value || 'Finance & Accounts';
-      const ctc = document.getElementById('offerCtcInput').value.trim() || '₹ 3,98,688';
-      const doj = document.getElementById('offerJoiningDate').value || '2026-11-15';
-      const phone = (document.getElementById('offerPhoneInput') ? document.getElementById('offerPhoneInput').value.trim() : '+91-7415374685') || '+91-7415374685';
-      const email = (document.getElementById('offerEmailInput') ? document.getElementById('offerEmailInput').value.trim() : 'sumitsingh741537@gmail.com') || 'sumitsingh741537@gmail.com';
-      const address = (document.getElementById('offerAddressInput') ? document.getElementById('offerAddressInput').value.trim() : '30, Ward No - 12, Gram Saur568, Post Doha, Rewa, Doha - M.P. - 486441') || '30, Ward No - 12, Gram Saur568, Post Doha, Rewa, Doha - M.P. - 486441';
-      const manager = (document.getElementById('offerManagerInput') ? document.getElementById('offerManagerInput').value.trim() : 'Bajranglal Tetarwal') || 'Bajranglal Tetarwal';
-      const location = (document.getElementById('offerLocationInput') ? document.getElementById('offerLocationInput').value.trim() : 'Sachin, Surat') || 'Sachin, Surat';
       
       if (!name) {
         showToast('Required', 'Please select or enter candidate name.');
         return;
       }
 
-      const newOffer = {
-        id: 'OFF-AGT-' + Math.floor(100 + Math.random() * 900),
+      const prefix = document.getElementById('offerPrefixInput') ? document.getElementById('offerPrefixInput').value : 'Mr.';
+      const desig = document.getElementById('offerDesignation').value || 'Senior Specialist';
+      const dept = document.getElementById('offerDepartment').value || 'Engineering & Technology';
+      const ctc = document.getElementById('offerCtcInput').value.trim() || '₹ 18,00,000';
+      const doj = document.getElementById('offerJoiningDate').value || '2026-11-15';
+      const phone = (document.getElementById('offerPhoneInput') ? document.getElementById('offerPhoneInput').value.trim() : '+91-98201 44219') || '+91-98201 44219';
+      const email = (document.getElementById('offerEmailInput') ? document.getElementById('offerEmailInput').value.trim() : 'candidate@gmail.com') || 'candidate@gmail.com';
+      const address = (document.getElementById('offerAddressInput') ? document.getElementById('offerAddressInput').value.trim() : 'Flat 402, Green Meadows, Powai, Mumbai - 400076') || 'Flat 402, Green Meadows, Powai, Mumbai - 400076';
+      const manager = (document.getElementById('offerManagerInput') ? document.getElementById('offerManagerInput').value.trim() : 'Aarav Sharma (VP People & Culture)') || 'Aarav Sharma (VP People & Culture)';
+      const location = (document.getElementById('offerLocationInput') ? document.getElementById('offerLocationInput').value.trim() : 'BKC, Mumbai') || 'BKC, Mumbai';
+
+      const probation = (document.getElementById('offerProbationInput') ? document.getElementById('offerProbationInput').value.trim() : '3 Months (Performance Based)') || '3 Months (Performance Based)';
+      const noticeProbation = (document.getElementById('offerNoticeProbationInput') ? document.getElementById('offerNoticeProbationInput').value.trim() : '7 Days or Payment in Lieu off') || '7 Days or Payment in Lieu off';
+      const noticeConfirmed = (document.getElementById('offerNoticeConfirmedInput') ? document.getElementById('offerNoticeConfirmedInput').value.trim() : '1 Month or Payment in Lieu off') || '1 Month or Payment in Lieu off';
+      const absenceDays = (document.getElementById('offerAbsenceDaysInput') ? document.getElementById('offerAbsenceDaysInput').value.trim() : 'six days') || 'six days';
+      const variableClause = (document.getElementById('offerVariableClauseInput') ? document.getElementById('offerVariableClauseInput').value.trim() : 'Your salary will be variable. You have to bill 1.5% of your monthly salary, if the billing target is not there, then the salary will also come in the same way.') || 'Your salary will be variable. You have to bill 1.5% of your monthly salary, if the billing target is not there, then the salary will also come in the same way.';
+
+      const compName = (document.getElementById('offerCompanyNameInput') ? document.getElementById('offerCompanyNameInput').value.trim() : 'Apex Global Technologies Private Limited') || 'Apex Global Technologies Private Limited';
+      const compWebsite = (document.getElementById('offerCompanyWebsiteInput') ? document.getElementById('offerCompanyWebsiteInput').value.trim() : 'apextechnologies.com') || 'apextechnologies.com';
+      const compPhone = (document.getElementById('offerCompanyPhoneInput') ? document.getElementById('offerCompanyPhoneInput').value.trim() : '+91-98200 12345') || '+91-98200 12345';
+      const compEmail = (document.getElementById('offerCompanyEmailInput') ? document.getElementById('offerCompanyEmailInput').value.trim() : 'hr@apextechnologies.com') || 'hr@apextechnologies.com';
+      const compAddress = (document.getElementById('offerCompanyAddressInput') ? document.getElementById('offerCompanyAddressInput').value.trim() : 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051') || 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051';
+      const signatory = (document.getElementById('offerSignatoryInput') ? document.getElementById('offerSignatoryInput').value.trim() : 'HR Department') || 'HR Department';
+
+      const offerData = {
+        id: (editingOfferIndex !== null && appState.offers[editingOfferIndex]) ? appState.offers[editingOfferIndex].id : ('OFF-AGT-' + Math.floor(100 + Math.random() * 900)),
         name: name,
+        prefix: prefix,
         desig: desig,
         dept: dept,
         ctc: ctc,
@@ -7643,16 +7839,36 @@
         address: address,
         manager: manager,
         location: location,
-        status: 'Sent via Email'
+        probation: probation,
+        noticeProbation: noticeProbation,
+        noticeConfirmed: noticeConfirmed,
+        absenceDays: absenceDays,
+        variableClause: variableClause,
+        companyName: compName,
+        companyWebsite: compWebsite,
+        companyPhone: compPhone,
+        companyEmail: compEmail,
+        companyAddress: compAddress,
+        signatory: signatory,
+        status: (editingOfferIndex !== null && appState.offers[editingOfferIndex]) ? appState.offers[editingOfferIndex].status : 'Sent via Email'
       };
 
-      appState.offers.unshift(newOffer);
+      if (editingOfferIndex !== null && appState.offers[editingOfferIndex]) {
+        appState.offers[editingOfferIndex] = offerData;
+        showToast('Offer Updated', `Offer letter terms updated for ${name}.`);
+        activeOfferPreviewIdx = editingOfferIndex;
+      } else {
+        appState.offers.unshift(offerData);
+        showToast('Offer Letter Issued', `Official appointment letter generated for ${name} (${desig}).`);
+        activeOfferPreviewIdx = 0;
+      }
+
+      editingOfferIndex = null;
       renderOfferTable();
       closeModal('modalCreateOffer');
-      showToast('Offer Letter Issued', `Official appointment letter dispatched to ${name} for ${desig}.`);
       
       // Auto open preview modal
-      viewOfferLetterModal(0);
+      viewOfferLetterModal(activeOfferPreviewIdx);
     }
 
     function viewOfferLetterModal(idx) {
@@ -7660,27 +7876,25 @@
       const off = appState.offers[activeOfferPreviewIdx] || appState.offers[0];
       const body = document.getElementById('offerLetterDocumentBody');
       const headerTitle = document.getElementById('offerPreviewHeaderTitle');
-      const compSelect = document.getElementById('offerLetterCompanySelect');
-      
-      if (compSelect) {
-        compSelect.value = currentOfferCompany;
-      }
+      const subTitle = document.getElementById('offerPreviewSubTitle');
 
       if (headerTitle && off) {
         headerTitle.innerText = `Official Offer Letter & Annexure – I • ${off.name}`;
       }
+      if (subTitle && off) {
+        subTitle.innerText = `Issued by ${off.companyName || 'Apex Global Technologies Private Limited'}`;
+      }
 
       if (body && off) {
-        body.innerHTML = renderOfferLetterHTML(off, currentOfferCompany);
+        body.innerHTML = renderOfferLetterHTML(off);
       }
 
       document.getElementById('modalOfferPreview').classList.remove('hidden');
       lucide.createIcons();
     }
 
-    function changeOfferLetterCompany(compKey) {
-      currentOfferCompany = compKey;
-      viewOfferLetterModal(activeOfferPreviewIdx);
+    function editCurrentOfferLetter() {
+      openOfferGeneratorModal(null, activeOfferPreviewIdx);
     }
 
     function setOfferPreviewZoom(level) {
@@ -7713,7 +7927,7 @@
       const staging = document.getElementById('offerPdfExportStaging');
       if (!staging) return;
 
-      staging.innerHTML = renderOfferLetterHTML(off, currentOfferCompany);
+      staging.innerHTML = renderOfferLetterHTML(off);
 
       const candName = (off.name || 'Candidate').replace(/\s+/g, '_');
       const opt = {
