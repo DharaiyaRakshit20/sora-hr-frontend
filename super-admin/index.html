@@ -117,7 +117,7 @@
       }
 
       /* Hide all UI elements, sidebars, headers, footers and navigation */
-      aside, header, footer, #publicHeader, #adminHeader, #mainFooter, .no-print, #adminWizardStep1, #adminWizardStep2, #adminPage-dashboard, #adminPage-admin-list, #adminPage-pricing-master, #adminPage-cms {
+      aside, header, footer, #publicHeader, #adminHeader, #mainFooter, .no-print, #adminWizardStep1, #adminWizardStep2, #adminPage-dashboard, #adminPage-admin-list, #adminPage-pricing-master, #adminPage-cms, #adminPage-master-management {
         display: none !important;
       }
 
@@ -489,6 +489,16 @@
               <span id="sidebarAdminCount" class="sidebar-badge text-[10px] bg-brand-amber text-neutral-950 font-bold px-1.5 py-0.2 rounded-full flex-shrink-0">4</span>
             </button>
 
+            <!-- 3. Master Management (Organization Masters: Department & Role Levels) -->
+            <!-- User requested: "or side me master option bhi chiaye ye" -->
+            <button onclick="showAdminPage('portal-master-management')" id="sideNavMasterManagement" title="Master Management" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3 min-w-0">
+                <i data-lucide="database" class="w-4 h-4 text-brand-amber flex-shrink-0"></i>
+                <span class="sidebar-text tracking-wide truncate">Master Management</span>
+              </div>
+              <span id="sidebarMasterBadge" class="sidebar-badge text-[10px] bg-brand-amber/15 text-brand-amber border border-brand-amber/30 px-1.5 py-0.5 rounded font-mono flex-shrink-0">Masters</span>
+            </button>
+
             <!-- 3. Website CMS (Collapsible Submenu) -->
             <div>
               <button onclick="handleSuperCmsClick()" title="Website CMS" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
@@ -614,6 +624,10 @@
                   <button onclick="showAdminPage('portal-pricing-master')" class="px-6 py-3 rounded-full bg-brand-dark border border-brand-border text-neutral-200 font-semibold text-xs uppercase tracking-wider hover:border-brand-amber/50 transition-all flex items-center gap-2">
                     <i data-lucide="sliders" class="w-4 h-4 text-brand-amber"></i>
                     <span>Module Pricing Master</span>
+                  </button>
+                  <button onclick="showAdminPage('portal-master-management')" class="px-6 py-3 rounded-full bg-brand-dark border border-brand-border text-neutral-200 font-semibold text-xs uppercase tracking-wider hover:border-brand-amber/50 transition-all flex items-center gap-2">
+                    <i data-lucide="database" class="w-4 h-4 text-brand-amber"></i>
+                    <span>Organization Masters</span>
                   </button>
                   <button onclick="showAdminPage('portal-quotation-invoice')" class="px-6 py-3 rounded-full bg-brand-dark border border-brand-border text-neutral-200 font-semibold text-xs uppercase tracking-wider hover:border-brand-amber/50 transition-all flex items-center gap-2">
                     <i data-lucide="receipt" class="w-4 h-4 text-brand-amber"></i>
@@ -751,29 +765,65 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <!-- Dynamic Department Selection with Quick Add Button -->
                   <div>
-                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Department *</label>
-                    <select id="wizardDept" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
-                      <option value="Core Human Resources">Core Human Resources</option>
-                      <option value="Talent Acquisition (ATS)">Talent Acquisition (ATS)</option>
-                      <option value="Payroll &amp; Compensation">Payroll &amp; Compensation</option>
-                      <option value="HR Operations &amp; Attendance">HR Operations &amp; Attendance</option>
-                      <option value="Statutory &amp; Compliance">Statutory &amp; Compliance</option>
-                    </select>
+                    <div class="flex items-center justify-between mb-1">
+                      <label class="block text-xs text-neutral-300 font-semibold">Department *</label>
+                      <button type="button" onclick="openDeptModal(-1, true)" class="text-[11px] text-brand-amber hover:text-brand-amberLight font-semibold flex items-center gap-1 hover:underline transition-colors" title="Add New Department">
+                        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                        <span>+ Add Dept</span>
+                      </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <select id="wizardDept" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                        <!-- Populated dynamically via renderDepartmentDropdowns() - Zero static values -->
+                      </select>
+                      <button type="button" onclick="openDeptModal(-1, true)" title="Add Department to Master" class="p-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-brand-amber hover:bg-brand-amber/10 transition-all flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                    <div class="text-[10px] text-neutral-500 mt-1 flex items-center justify-between">
+                      <span id="wizardDeptCountLabel">Dynamic master options</span>
+                      <button type="button" onclick="showAdminPage('portal-master-management')" class="text-brand-amber hover:underline flex items-center gap-0.5">
+                        <span>Masters</span>
+                        <i data-lucide="arrow-up-right" class="w-2.5 h-2.5"></i>
+                      </button>
+                    </div>
                   </div>
+
+                  <!-- Designation Title -->
                   <div>
-                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Designation Title</label>
+                    <div class="flex items-center justify-between mb-1">
+                      <label class="block text-xs text-neutral-300 font-semibold">Designation Title</label>
+                    </div>
                     <input type="text" id="wizardDesignation" placeholder="e.g. Lead HR Business Partner" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                    <div class="text-[10px] text-neutral-500 mt-1">Specific employee job title</div>
                   </div>
+
+                  <!-- Dynamic Role Level Selection with Quick Add Button -->
                   <div>
-                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Role Level *</label>
-                    <select id="wizardRole" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
-                      <option value="HR Administrator">HR Administrator</option>
-                      <option value="Super Administrator">Super Administrator</option>
-                      <option value="Payroll Officer">Payroll Officer</option>
-                      <option value="Talent Recruiter">Talent Recruiter</option>
-                      <option value="Auditor (Read-Only)">Auditor (Read-Only)</option>
-                    </select>
+                    <div class="flex items-center justify-between mb-1">
+                      <label class="block text-xs text-neutral-300 font-semibold">Role Level *</label>
+                      <button type="button" onclick="openRoleModal(-1, true)" class="text-[11px] text-brand-amber hover:text-brand-amberLight font-semibold flex items-center gap-1 hover:underline transition-colors" title="Add New Role Level">
+                        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                        <span>+ Add Role</span>
+                      </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <select id="wizardRole" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                        <!-- Populated dynamically via renderRoleDropdowns() - Zero static values -->
+                      </select>
+                      <button type="button" onclick="openRoleModal(-1, true)" title="Add Role Level to Master" class="p-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-brand-amber hover:bg-brand-amber/10 transition-all flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                    <div class="text-[10px] text-neutral-500 mt-1 flex items-center justify-between">
+                      <span id="wizardRoleCountLabel">Dynamic RBAC tiers</span>
+                      <button type="button" onclick="showAdminPage('portal-master-management')" class="text-brand-amber hover:underline flex items-center gap-0.5">
+                        <span>Masters</span>
+                        <i data-lucide="arrow-up-right" class="w-2.5 h-2.5"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -870,6 +920,182 @@
                 </button>
               </div>
 
+            </div>
+
+          </div>
+
+          <!-- ----------------------------------------- -->
+          <!-- ADMIN PAGE: ORGANIZATION MASTER MANAGEMENT -->
+          <!-- User requested: "isme e jo Department , Role Level e jo do hai usme dropdown hai usme na koi bhi static vlaue nahi aiye gi to uski vajah se na mujhe add ka button chiaye taki me add kar saku or side me master option bhi chiaye ye" -->
+          <!-- ----------------------------------------- -->
+          <div id="adminPage-master-management" class="admin-page hidden space-y-6 w-full">
+            
+            <div class="border-b border-brand-border pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center gap-3">
+                  <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                    <span>Organization Master Management</span>
+                  </h2>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-amber/10 text-brand-amber border border-brand-amber/20">Dynamic Masters</span>
+                </div>
+                <p class="text-xs text-neutral-400 mt-1">Configure and manage corporate departments and RBAC role levels dynamically. All updates sync directly into the Administrator Enrollment Wizard and data tables.</p>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openDeptModal(-1, false)" class="px-4 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow transition-all">
+                  <i data-lucide="building-2" class="w-4 h-4"></i>
+                  <span>+ Add Department</span>
+                </button>
+                <button type="button" onclick="openRoleModal(-1, false)" class="px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-200 hover:text-white font-bold text-xs flex items-center gap-2 transition-all">
+                  <i data-lucide="shield-plus" class="w-4 h-4 text-brand-amber"></i>
+                  <span>+ Add Role Level</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Master KPI Overview Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+              <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border">
+                <div class="flex items-center justify-between text-neutral-400 mb-2">
+                  <span class="text-xs font-medium">Departments Master</span>
+                  <i data-lucide="building-2" class="w-4 h-4 text-brand-amber"></i>
+                </div>
+                <div class="text-2xl font-bold text-white" id="masterKpiDeptCount">0</div>
+                <div class="text-[11px] text-neutral-400 mt-1">Configured in Master Data</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border">
+                <div class="flex items-center justify-between text-neutral-400 mb-2">
+                  <span class="text-xs font-medium">Role Levels Master</span>
+                  <i data-lucide="shield-check" class="w-4 h-4 text-brand-amber"></i>
+                </div>
+                <div class="text-2xl font-bold text-white" id="masterKpiRoleCount">0</div>
+                <div class="text-[11px] text-neutral-400 mt-1">RBAC Authority Levels</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border">
+                <div class="flex items-center justify-between text-neutral-400 mb-2">
+                  <span class="text-xs font-medium">Active Administrators</span>
+                  <i data-lucide="users" class="w-4 h-4 text-brand-amber"></i>
+                </div>
+                <div class="text-2xl font-bold text-white" id="masterKpiAdminCount">0</div>
+                <div class="text-[11px] text-neutral-400 mt-1">Allocated to Depts &amp; Roles</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border">
+                <div class="flex items-center justify-between text-neutral-400 mb-2">
+                  <span class="text-xs font-medium">Data Storage Engine</span>
+                  <i data-lucide="database" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div class="text-sm font-bold text-emerald-400 flex items-center gap-1.5 mt-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>Dynamic &amp; Persistent</span>
+                </div>
+                <div class="text-[11px] text-neutral-400 mt-1">Stored in LocalStorage</div>
+              </div>
+            </div>
+
+            <!-- Master Tabs Switcher -->
+            <div class="flex items-center gap-2 border-b border-brand-border pb-1">
+              <button id="masterTabBtnDepts" onclick="switchMasterTab('depts')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brand-amber text-neutral-950 shadow flex items-center gap-2">
+                <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                <span>Department Master</span>
+                <span id="masterTabBadgeDepts" class="text-[10px] bg-neutral-950/20 text-neutral-950 px-1.5 py-0.2 rounded-full font-mono">0</span>
+              </button>
+              <button id="masterTabBtnRoles" onclick="switchMasterTab('roles')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-neutral-400 hover:text-white hover:bg-brand-surface flex items-center gap-2">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                <span>Role Level Master</span>
+                <span id="masterTabBadgeRoles" class="text-[10px] bg-brand-dark px-1.5 py-0.2 rounded-full font-mono text-neutral-300">0</span>
+              </button>
+            </div>
+
+            <!-- TAB 1 CONTENT: DEPARTMENT MASTER -->
+            <div id="masterTabContentDepts" class="space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="relative flex-1 max-w-sm">
+                  <i data-lucide="search" class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                  <input type="text" id="deptMasterSearch" oninput="filterDeptMasterTable()" placeholder="Search department name, code..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-brand-amber transition-all">
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="openDeptModal(-1, false)" class="px-4 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow transition-all">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Add Department</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Department Table -->
+              <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-xl w-full">
+                <div class="overflow-x-auto w-full">
+                  <table class="w-full text-left text-xs">
+                    <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border">
+                      <tr>
+                        <th class="py-3.5 px-4">Code</th>
+                        <th class="py-3.5 px-4">Department Name</th>
+                        <th class="py-3.5 px-4">Scope / Description</th>
+                        <th class="py-3.5 px-4">Assigned Administrators</th>
+                        <th class="py-3.5 px-4">Status</th>
+                        <th class="py-3.5 px-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="deptMasterTbody" class="divide-y divide-brand-border/60 text-neutral-300">
+                      <!-- Populated dynamically via JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2 CONTENT: ROLE LEVEL MASTER -->
+            <div id="masterTabContentRoles" class="space-y-4 hidden">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="relative flex-1 max-w-sm">
+                  <i data-lucide="search" class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                  <input type="text" id="roleMasterSearch" oninput="filterRoleMasterTable()" placeholder="Search role title, level..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-brand-amber transition-all">
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="openRoleModal(-1, false)" class="px-4 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow transition-all">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Add Role Level</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Role Level Table -->
+              <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-xl w-full">
+                <div class="overflow-x-auto w-full">
+                  <table class="w-full text-left text-xs">
+                    <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border">
+                      <tr>
+                        <th class="py-3.5 px-4">Role Code</th>
+                        <th class="py-3.5 px-4">Role Level Title</th>
+                        <th class="py-3.5 px-4">Hierarchy Tier</th>
+                        <th class="py-3.5 px-4">Authority &amp; Duties</th>
+                        <th class="py-3.5 px-4">Assigned Administrators</th>
+                        <th class="py-3.5 px-4">Status</th>
+                        <th class="py-3.5 px-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="roleMasterTbody" class="divide-y divide-brand-border/60 text-neutral-300">
+                      <!-- Populated dynamically via JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enrollment CTA Banner -->
+            <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-brand-amber/15 text-brand-amber flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="user-plus" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="font-bold text-white text-sm">Enroll New Administrator with Dynamic Master Data</div>
+                  <div class="text-xs text-neutral-400 mt-0.5">All departments and role levels created here appear automatically in the enrollment dropdowns with immediate selection.</div>
+                </div>
+              </div>
+              <button onclick="startAdminCreationWizard()" class="px-5 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow transition-all whitespace-nowrap">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Create New HR Administrator &rarr;</span>
+              </button>
             </div>
 
           </div>
@@ -1319,6 +1545,122 @@
     </div>
   </div>
 
+  <!-- MODAL: ADD / EDIT DEPARTMENT MASTER -->
+  <!-- User requested: "isme e jo Department , Role Level e jo do hai usme dropdown hai usme na koi bhi static vlaue nahi aiye gi to uski vajah se na mujhe add ka button chiaye taki me add kar saku" -->
+  <div id="deptMasterModal" class="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-md w-full p-6 space-y-4 text-xs shadow-2xl">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-brand-amber/15 text-brand-amber flex items-center justify-center flex-shrink-0">
+            <i data-lucide="building-2" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 id="deptModalTitle" class="text-sm font-bold text-white uppercase tracking-wider">Add New Department</h3>
+            <p class="text-[11px] text-neutral-400">Dynamic organizational department master</p>
+          </div>
+        </div>
+        <button onclick="closeDeptModal()" class="text-neutral-400 hover:text-white text-xl leading-none">&times;</button>
+      </div>
+
+      <input type="hidden" id="deptModalEditIndex" value="-1">
+      <input type="hidden" id="deptModalIsFromWizard" value="false">
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Department Name *</label>
+          <input type="text" id="deptModalName" placeholder="e.g. Employee Relations & Governance" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber transition-colors">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Department Code *</label>
+            <input type="text" id="deptModalCode" placeholder="e.g. ERG" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono uppercase focus:outline-none focus:border-brand-amber transition-colors">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Status</label>
+            <select id="deptModalStatus" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Scope / Description</label>
+          <textarea id="deptModalDesc" rows="2" placeholder="Brief outline of responsibilities and organizational functions..." class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber"></textarea>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-brand-border flex items-center justify-between">
+        <span class="text-[10px] text-neutral-500 flex items-center gap-1">
+          <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-400"></i>
+          <span>Auto-syncs across system</span>
+        </span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeDeptModal()" class="px-4 py-2 rounded-xl border border-brand-border text-neutral-400 hover:text-white transition-colors">Cancel</button>
+          <button type="button" onclick="submitDeptModal()" class="px-5 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold hover:bg-brand-amberLight shadow transition-all">Save Department</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT ROLE LEVEL MASTER -->
+  <!-- User requested: "isme e jo Department , Role Level e jo do hai usme dropdown hai usme na koi bhi static vlaue nahi aiye gi to uski vajah se na mujhe add ka button chiaye taki me add kar saku" -->
+  <div id="roleMasterModal" class="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-md w-full p-6 space-y-4 text-xs shadow-2xl">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-brand-amber/15 text-brand-amber flex items-center justify-center flex-shrink-0">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 id="roleModalTitle" class="text-sm font-bold text-white uppercase tracking-wider">Add New Role Level</h3>
+            <p class="text-[11px] text-neutral-400">Dynamic RBAC authority & permission tier</p>
+          </div>
+        </div>
+        <button onclick="closeRoleModal()" class="text-neutral-400 hover:text-white text-xl leading-none">&times;</button>
+      </div>
+
+      <input type="hidden" id="roleModalEditIndex" value="-1">
+      <input type="hidden" id="roleModalIsFromWizard" value="false">
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Role Level Title *</label>
+          <input type="text" id="roleModalName" placeholder="e.g. Senior HR Business Partner" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber transition-colors">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Role Code</label>
+            <input type="text" id="roleModalCode" placeholder="e.g. ROLE-SHRBP" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono uppercase focus:outline-none focus:border-brand-amber transition-colors">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Hierarchy Tier *</label>
+            <select id="roleModalTier" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+              <option value="Level 1 - Executive">Level 1 - Executive</option>
+              <option value="Level 2 - Operations">Level 2 - Operations</option>
+              <option value="Level 3 - Functional" selected>Level 3 - Functional</option>
+              <option value="Level 4 - Read-Only">Level 4 - Read-Only</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1">Authority &amp; Duties Description</label>
+          <textarea id="roleModalDesc" rows="2" placeholder="Brief definition of role responsibilities and authority scope..." class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber"></textarea>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-brand-border flex items-center justify-between">
+        <span class="text-[10px] text-neutral-500 flex items-center gap-1">
+          <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-400"></i>
+          <span>Auto-syncs across system</span>
+        </span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeRoleModal()" class="px-4 py-2 rounded-xl border border-brand-border text-neutral-400 hover:text-white transition-colors">Cancel</button>
+          <button type="button" onclick="submitRoleModal()" class="px-5 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold hover:bg-brand-amberLight shadow transition-all">Save Role Level</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   
   <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
     <div class="bg-brand-surface border border-brand-amber/50 px-4 py-3 rounded-2xl shadow-amber-glow flex items-center gap-3">
@@ -1383,6 +1725,66 @@
       { id: 'mod_performance', name: 'Performance & 360 Appraisals', code: 'MOD-PERF', price: 2400, selected: false, desc: 'Quarterly OKRs, KPI reviews & peer feedback cycles' },
       { id: 'mod_compliance', name: 'Statutory Compliance & TDS Vault', code: 'MOD-STAT', price: 2000, selected: false, desc: 'Labor law registers, Form 16 generator & audit logs' }
     ];
+
+    // ------------------------------------------
+    // DYNAMIC ORGANIZATION MASTER LISTS (DEPARTMENT & ROLE LEVELS)
+    // Zero static values in dropdowns - all dynamically loaded and managed
+    // ------------------------------------------
+    const defaultDepartmentMaster = [
+      { id: 'dept_1', name: 'Core Human Resources', code: 'CHR', desc: 'Employee onboarding, lifecycle & general HR administration', status: 'Active' },
+      { id: 'dept_2', name: 'Talent Acquisition (ATS)', code: 'ATS', desc: 'Sourcing, screening, interviewing & campus recruitment', status: 'Active' },
+      { id: 'dept_3', name: 'Payroll & Compensation', code: 'PAY', desc: 'Salary disbursement, tax deductions & statutory compliance', status: 'Active' },
+      { id: 'dept_4', name: 'HR Operations & Attendance', code: 'OPS', desc: 'Shift scheduling, biometric leaves & daily workforce tracking', status: 'Active' },
+      { id: 'dept_5', name: 'Statutory & Compliance', code: 'COMP', desc: 'Labor law compliance, PF/ESIC audit & regulatory registers', status: 'Active' },
+      { id: 'dept_6', name: 'Executive People Office', code: 'EXEC', desc: 'Strategic people leadership, culture & executive governance', status: 'Active' }
+    ];
+
+    const defaultRoleMaster = [
+      { id: 'role_1', name: 'Super Administrator', code: 'ROLE-SA', tier: 'Level 1 - Executive', desc: 'Full platform unrestricted access, billing & user management', status: 'Active' },
+      { id: 'role_2', name: 'HR Administrator', code: 'ROLE-HRA', tier: 'Level 2 - Operations', desc: 'Standard HR operations, employee management & permissions', status: 'Active' },
+      { id: 'role_3', name: 'Payroll Officer', code: 'ROLE-PO', tier: 'Level 3 - Functional', desc: 'Payroll processing, tax statements & compensation management', status: 'Active' },
+      { id: 'role_4', name: 'Talent Recruiter', code: 'ROLE-TR', tier: 'Level 3 - Functional', desc: 'Job posting, candidate pipeline management & hiring decisions', status: 'Active' },
+      { id: 'role_5', name: 'Auditor (Read-Only)', code: 'ROLE-AUD', tier: 'Level 4 - Read-Only', desc: 'View-only access for compliance inspection & financial audits', status: 'Active' }
+    ];
+
+    let departmentMasterList = [];
+    let roleMasterList = [];
+
+    function loadMasterData() {
+      try {
+        const savedDepts = localStorage.getItem('sora_master_departments');
+        departmentMasterList = savedDepts ? JSON.parse(savedDepts) : JSON.parse(JSON.stringify(defaultDepartmentMaster));
+      } catch (e) {
+        departmentMasterList = JSON.parse(JSON.stringify(defaultDepartmentMaster));
+      }
+
+      try {
+        const savedRoles = localStorage.getItem('sora_master_roles');
+        roleMasterList = savedRoles ? JSON.parse(savedRoles) : JSON.parse(JSON.stringify(defaultRoleMaster));
+      } catch (e) {
+        roleMasterList = JSON.parse(JSON.stringify(defaultRoleMaster));
+      }
+
+      updateSidebarMasterBadge();
+    }
+
+    function saveDepartmentMaster() {
+      localStorage.setItem('sora_master_departments', JSON.stringify(departmentMasterList));
+      updateSidebarMasterBadge();
+    }
+
+    function saveRoleMaster() {
+      localStorage.setItem('sora_master_roles', JSON.stringify(roleMasterList));
+      updateSidebarMasterBadge();
+    }
+
+    function updateSidebarMasterBadge() {
+      const badge = document.getElementById('sidebarMasterBadge');
+      if (badge) {
+        const total = (departmentMasterList?.length || 0) + (roleMasterList?.length || 0);
+        badge.innerText = `${total} Masters`;
+      }
+    }
 
     const appData = {
       isLoggedIn: false,
@@ -1847,6 +2249,11 @@
         document.getElementById('adminPage-admin-create').classList.remove('hidden');
         breadcrumb.innerText = 'Create New Administrator';
         goToWizardStep1();
+      } else if (pageId === 'portal-master-management') {
+        document.getElementById('adminPage-master-management').classList.remove('hidden');
+        document.getElementById('sideNavMasterManagement').className = "sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-brand-surface text-brand-amber border border-brand-amber/30 font-semibold text-left transition-all";
+        breadcrumb.innerText = 'Organization Master Management';
+        renderMasterManagementPage();
       } else if (pageId === 'portal-pricing-master') {
         document.getElementById('adminPage-pricing-master').classList.remove('hidden');
         document.getElementById('sideNavPricingMaster').className = "sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-brand-surface text-brand-amber border border-brand-amber/30 font-semibold text-left transition-all";
@@ -1989,6 +2396,8 @@
 
       document.getElementById('stepBadge1').className = "px-3 py-1 rounded-full bg-brand-amber text-neutral-950 flex items-center gap-1.5 shadow font-bold";
       document.getElementById('stepBadge2').className = "px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-neutral-400 flex items-center gap-1.5";
+      renderDepartmentDropdowns();
+      renderRoleDropdowns();
       lucide.createIcons();
     }
 
@@ -2112,6 +2521,452 @@
       appData.admins.unshift(newAdmin);
       showToast('Admin Created!', `${data.name} has been enrolled with ${modulePerms.length} module permissions.`);
       showAdminPage('portal-admin-list');
+    }
+
+    // ------------------------------------------
+    // ORGANIZATION MASTER MANAGEMENT LOGIC
+    // Departments & Role Levels - 100% Dynamic with LocalStorage persistence
+    // ------------------------------------------
+    let currentMasterTab = 'depts';
+
+    function renderDepartmentDropdowns(selectedVal = null) {
+      const select = document.getElementById('wizardDept');
+      if (!select) return;
+      const currentVal = selectedVal || select.value;
+
+      if (!departmentMasterList || departmentMasterList.length === 0) {
+        select.innerHTML = '<option value="" disabled selected>No departments defined - Click "+ Add Dept"</option>';
+      } else {
+        select.innerHTML = departmentMasterList
+          .filter(d => d.status !== 'Inactive')
+          .map(d => `<option value="${d.name}">${d.name} (${d.code})</option>`)
+          .join('');
+
+        if (currentVal && departmentMasterList.some(d => d.name === currentVal)) {
+          select.value = currentVal;
+        } else if (departmentMasterList.length > 0) {
+          select.value = departmentMasterList[0].name;
+        }
+      }
+
+      const countLabel = document.getElementById('wizardDeptCountLabel');
+      if (countLabel) {
+        const activeCount = departmentMasterList.filter(d => d.status !== 'Inactive').length;
+        countLabel.innerText = `${activeCount} department${activeCount === 1 ? '' : 's'} available`;
+      }
+    }
+
+    function renderRoleDropdowns(selectedVal = null) {
+      const select = document.getElementById('wizardRole');
+      if (!select) return;
+      const currentVal = selectedVal || select.value;
+
+      if (!roleMasterList || roleMasterList.length === 0) {
+        select.innerHTML = '<option value="" disabled selected>No role levels defined - Click "+ Add Role"</option>';
+      } else {
+        select.innerHTML = roleMasterList
+          .filter(r => r.status !== 'Inactive')
+          .map(r => `<option value="${r.name}">${r.name} &bull; ${r.tier ? r.tier.split(' - ')[0] : 'Role'}</option>`)
+          .join('');
+
+        if (currentVal && roleMasterList.some(r => r.name === currentVal)) {
+          select.value = currentVal;
+        } else if (roleMasterList.length > 0) {
+          select.value = roleMasterList[0].name;
+        }
+      }
+
+      const countLabel = document.getElementById('wizardRoleCountLabel');
+      if (countLabel) {
+        const activeCount = roleMasterList.filter(r => r.status !== 'Inactive').length;
+        countLabel.innerText = `${activeCount} role level${activeCount === 1 ? '' : 's'} available`;
+      }
+    }
+
+    function openDeptModal(index = -1, fromWizard = false) {
+      const modal = document.getElementById('deptMasterModal');
+      const title = document.getElementById('deptModalTitle');
+      const editIndex = document.getElementById('deptModalEditIndex');
+      const fromWiz = document.getElementById('deptModalIsFromWizard');
+
+      editIndex.value = index;
+      fromWiz.value = fromWizard ? 'true' : 'false';
+
+      if (index === -1) {
+        title.innerText = 'Add New Department';
+        document.getElementById('deptModalName').value = '';
+        document.getElementById('deptModalCode').value = '';
+        document.getElementById('deptModalDesc').value = '';
+        document.getElementById('deptModalStatus').value = 'Active';
+      } else {
+        const item = departmentMasterList[index];
+        title.innerText = 'Edit Department';
+        document.getElementById('deptModalName').value = item.name;
+        document.getElementById('deptModalCode').value = item.code;
+        document.getElementById('deptModalDesc').value = item.desc || '';
+        document.getElementById('deptModalStatus').value = item.status || 'Active';
+      }
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+      setTimeout(() => document.getElementById('deptModalName').focus(), 50);
+    }
+
+    function closeDeptModal() {
+      document.getElementById('deptMasterModal').classList.add('hidden');
+    }
+
+    function submitDeptModal() {
+      const name = document.getElementById('deptModalName').value.trim();
+      let code = document.getElementById('deptModalCode').value.trim().toUpperCase();
+      const desc = document.getElementById('deptModalDesc').value.trim();
+      const status = document.getElementById('deptModalStatus').value;
+      const index = parseInt(document.getElementById('deptModalEditIndex').value);
+      const fromWizard = document.getElementById('deptModalIsFromWizard').value === 'true';
+
+      if (!name) {
+        showToast('Required Field', 'Department name is mandatory.');
+        return;
+      }
+      if (!code) {
+        code = name.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase() || 'DEPT';
+      }
+
+      if (index === -1) {
+        if (departmentMasterList.some(d => d.name.toLowerCase() === name.toLowerCase())) {
+          showToast('Duplicate Notice', `Department "${name}" already exists.`);
+          return;
+        }
+        const newDept = {
+          id: 'dept_' + Date.now().toString().slice(-4),
+          name,
+          code,
+          desc: desc || 'Organizational operational department',
+          status
+        };
+        departmentMasterList.push(newDept);
+        saveDepartmentMaster();
+        renderDepartmentDropdowns(name);
+        showToast('Department Added!', `"${name}" (${code}) is now active.`);
+      } else {
+        departmentMasterList[index].name = name;
+        departmentMasterList[index].code = code;
+        departmentMasterList[index].desc = desc;
+        departmentMasterList[index].status = status;
+        saveDepartmentMaster();
+        renderDepartmentDropdowns(name);
+        showToast('Department Updated', `"${name}" updated successfully.`);
+      }
+
+      closeDeptModal();
+      renderMasterManagementPage();
+
+      if (fromWizard) {
+        const select = document.getElementById('wizardDept');
+        if (select) select.value = name;
+      }
+    }
+
+    function deleteDepartment(index) {
+      const dept = departmentMasterList[index];
+      if (!dept) return;
+
+      const assignedAdmins = appData.admins.filter(a => a.department === dept.name);
+      let msg = `Are you sure you want to remove the department "${dept.name}"?`;
+      if (assignedAdmins.length > 0) {
+        msg = `Notice: ${assignedAdmins.length} administrator(s) (${assignedAdmins.map(a => a.name).join(', ')}) are currently designated to "${dept.name}". Deleting it will remove it from future enrollment. Proceed?`;
+      }
+
+      if (confirm(msg)) {
+        departmentMasterList.splice(index, 1);
+        saveDepartmentMaster();
+        renderDepartmentDropdowns();
+        renderMasterManagementPage();
+        showToast('Department Removed', `"${dept.name}" was deleted from Master.`);
+      }
+    }
+
+    function openRoleModal(index = -1, fromWizard = false) {
+      const modal = document.getElementById('roleMasterModal');
+      const title = document.getElementById('roleModalTitle');
+      const editIndex = document.getElementById('roleModalEditIndex');
+      const fromWiz = document.getElementById('roleModalIsFromWizard');
+
+      editIndex.value = index;
+      fromWiz.value = fromWizard ? 'true' : 'false';
+
+      if (index === -1) {
+        title.innerText = 'Add New Role Level';
+        document.getElementById('roleModalName').value = '';
+        document.getElementById('roleModalCode').value = '';
+        document.getElementById('roleModalTier').value = 'Level 3 - Functional';
+        document.getElementById('roleModalDesc').value = '';
+      } else {
+        const item = roleMasterList[index];
+        title.innerText = 'Edit Role Level';
+        document.getElementById('roleModalName').value = item.name;
+        document.getElementById('roleModalCode').value = item.code;
+        document.getElementById('roleModalTier').value = item.tier;
+        document.getElementById('roleModalDesc').value = item.desc || '';
+      }
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+      setTimeout(() => document.getElementById('roleModalName').focus(), 50);
+    }
+
+    function closeRoleModal() {
+      document.getElementById('roleMasterModal').classList.add('hidden');
+    }
+
+    function submitRoleModal() {
+      const name = document.getElementById('roleModalName').value.trim();
+      let code = document.getElementById('roleModalCode').value.trim().toUpperCase();
+      const tier = document.getElementById('roleModalTier').value;
+      const desc = document.getElementById('roleModalDesc').value.trim();
+      const index = parseInt(document.getElementById('roleModalEditIndex').value);
+      const fromWizard = document.getElementById('roleModalIsFromWizard').value === 'true';
+
+      if (!name) {
+        showToast('Required Field', 'Role Level title is mandatory.');
+        return;
+      }
+      if (!code) {
+        code = 'ROLE-' + (name.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase() || 'LVL');
+      }
+
+      if (index === -1) {
+        if (roleMasterList.some(r => r.name.toLowerCase() === name.toLowerCase())) {
+          showToast('Duplicate Notice', `Role level "${name}" already exists.`);
+          return;
+        }
+        const newRole = {
+          id: 'role_' + Date.now().toString().slice(-4),
+          name,
+          code,
+          tier,
+          desc: desc || 'RBAC authority tier with custom access rights',
+          status: 'Active'
+        };
+        roleMasterList.push(newRole);
+        saveRoleMaster();
+        renderRoleDropdowns(name);
+        showToast('Role Level Added!', `"${name}" is now active.`);
+      } else {
+        roleMasterList[index].name = name;
+        roleMasterList[index].code = code;
+        roleMasterList[index].tier = tier;
+        roleMasterList[index].desc = desc;
+        saveRoleMaster();
+        renderRoleDropdowns(name);
+        showToast('Role Level Updated', `"${name}" updated successfully.`);
+      }
+
+      closeRoleModal();
+      renderMasterManagementPage();
+
+      if (fromWizard) {
+        const select = document.getElementById('wizardRole');
+        if (select) select.value = name;
+      }
+    }
+
+    function deleteRole(index) {
+      const role = roleMasterList[index];
+      if (!role) return;
+
+      const assignedAdmins = appData.admins.filter(a => a.role === role.name);
+      let msg = `Are you sure you want to remove the role level "${role.name}"?`;
+      if (assignedAdmins.length > 0) {
+        msg = `Notice: ${assignedAdmins.length} administrator(s) currently hold the role "${role.name}". Deleting it will remove it from future enrollment. Proceed?`;
+      }
+
+      if (confirm(msg)) {
+        roleMasterList.splice(index, 1);
+        saveRoleMaster();
+        renderRoleDropdowns();
+        renderMasterManagementPage();
+        showToast('Role Level Removed', `"${role.name}" was deleted from Master.`);
+      }
+    }
+
+    function switchMasterTab(tab) {
+      currentMasterTab = tab;
+      const btnDepts = document.getElementById('masterTabBtnDepts');
+      const btnRoles = document.getElementById('masterTabBtnRoles');
+      const contentDepts = document.getElementById('masterTabContentDepts');
+      const contentRoles = document.getElementById('masterTabContentRoles');
+
+      if (tab === 'depts') {
+        btnDepts.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brand-amber text-neutral-950 shadow flex items-center gap-2";
+        btnRoles.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all text-neutral-400 hover:text-white hover:bg-brand-surface flex items-center gap-2";
+        contentDepts.classList.remove('hidden');
+        contentRoles.classList.add('hidden');
+      } else {
+        btnRoles.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brand-amber text-neutral-950 shadow flex items-center gap-2";
+        btnDepts.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all text-neutral-400 hover:text-white hover:bg-brand-surface flex items-center gap-2";
+        contentRoles.classList.remove('hidden');
+        contentDepts.classList.add('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    function renderMasterManagementPage() {
+      // Update KPIs
+      const deptCountEl = document.getElementById('masterKpiDeptCount');
+      const roleCountEl = document.getElementById('masterKpiRoleCount');
+      const adminCountEl = document.getElementById('masterKpiAdminCount');
+      const badgeDepts = document.getElementById('masterTabBadgeDepts');
+      const badgeRoles = document.getElementById('masterTabBadgeRoles');
+
+      if (deptCountEl) deptCountEl.innerText = departmentMasterList.length;
+      if (roleCountEl) roleCountEl.innerText = roleMasterList.length;
+      if (adminCountEl) adminCountEl.innerText = appData.admins.length;
+      if (badgeDepts) badgeDepts.innerText = departmentMasterList.length;
+      if (badgeRoles) badgeRoles.innerText = roleMasterList.length;
+
+      filterDeptMasterTable();
+      filterRoleMasterTable();
+      updateSidebarMasterBadge();
+      lucide.createIcons();
+    }
+
+    function filterDeptMasterTable() {
+      const q = (document.getElementById('deptMasterSearch')?.value || '').toLowerCase().trim();
+      const tbody = document.getElementById('deptMasterTbody');
+      if (!tbody) return;
+
+      const filtered = departmentMasterList.filter(d => 
+        d.name.toLowerCase().includes(q) || 
+        d.code.toLowerCase().includes(q) || 
+        (d.desc && d.desc.toLowerCase().includes(q))
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-8 text-center text-neutral-500">
+              <i data-lucide="building-2" class="w-8 h-8 mx-auto mb-2 opacity-40"></i>
+              <div>No departments found ${q ? `matching "${q}"` : ''}</div>
+              <button onclick="openDeptModal(-1, false)" class="mt-2 text-xs text-brand-amber hover:underline font-semibold">+ Add First Department</button>
+            </td>
+          </tr>
+        `;
+      } else {
+        tbody.innerHTML = filtered.map(dept => {
+          const originalIdx = departmentMasterList.findIndex(d => d.id === dept.id);
+          const assignedAdmins = appData.admins.filter(a => a.department === dept.name);
+          return `
+            <tr class="hover:bg-brand-card/30 transition-colors">
+              <td class="py-3.5 px-4">
+                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-brand-dark border border-brand-amber/30 text-brand-amber">${dept.code}</span>
+              </td>
+              <td class="py-3.5 px-4 font-semibold text-white">
+                ${dept.name}
+              </td>
+              <td class="py-3.5 px-4 text-neutral-400 text-xs max-w-xs">
+                ${dept.desc || '&mdash;'}
+              </td>
+              <td class="py-3.5 px-4">
+                <div class="flex items-center gap-1.5">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] ${assignedAdmins.length > 0 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-neutral-800 text-neutral-400'} font-semibold">
+                    ${assignedAdmins.length} Admin${assignedAdmins.length === 1 ? '' : 's'}
+                  </span>
+                  ${assignedAdmins.length > 0 ? `<span class="text-[11px] text-neutral-400 truncate max-w-[140px]">${assignedAdmins.map(a => a.name.split(' ')[0]).join(', ')}</span>` : ''}
+                </div>
+              </td>
+              <td class="py-3.5 px-4">
+                <span class="px-2 py-0.5 rounded-full text-[10px] ${dept.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-neutral-800 text-neutral-400'} font-bold">
+                  ${dept.status || 'Active'}
+                </span>
+              </td>
+              <td class="py-3.5 px-4 text-right">
+                <div class="flex items-center justify-end gap-1.5">
+                  <button type="button" onclick="openDeptModal(${originalIdx}, false)" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-brand-amber transition-all" title="Edit Department">
+                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button type="button" onclick="deleteDepartment(${originalIdx})" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-red-500/50 text-neutral-400 hover:text-red-400 transition-all" title="Delete Department">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+      lucide.createIcons();
+    }
+
+    function filterRoleMasterTable() {
+      const q = (document.getElementById('roleMasterSearch')?.value || '').toLowerCase().trim();
+      const tbody = document.getElementById('roleMasterTbody');
+      if (!tbody) return;
+
+      const filtered = roleMasterList.filter(r => 
+        r.name.toLowerCase().includes(q) || 
+        r.code.toLowerCase().includes(q) || 
+        (r.tier && r.tier.toLowerCase().includes(q)) ||
+        (r.desc && r.desc.toLowerCase().includes(q))
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-8 text-center text-neutral-500">
+              <i data-lucide="shield-check" class="w-8 h-8 mx-auto mb-2 opacity-40"></i>
+              <div>No role levels found ${q ? `matching "${q}"` : ''}</div>
+              <button onclick="openRoleModal(-1, false)" class="mt-2 text-xs text-brand-amber hover:underline font-semibold">+ Add First Role Level</button>
+            </td>
+          </tr>
+        `;
+      } else {
+        tbody.innerHTML = filtered.map(role => {
+          const originalIdx = roleMasterList.findIndex(r => r.id === role.id);
+          const assignedAdmins = appData.admins.filter(a => a.role === role.name);
+          return `
+            <tr class="hover:bg-brand-card/30 transition-colors">
+              <td class="py-3.5 px-4">
+                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-brand-dark border border-brand-amber/30 text-brand-amber">${role.code}</span>
+              </td>
+              <td class="py-3.5 px-4 font-semibold text-white">
+                ${role.name}
+              </td>
+              <td class="py-3.5 px-4">
+                <span class="px-2 py-0.5 rounded-md text-[10px] bg-brand-dark border border-brand-border text-neutral-300 font-medium">
+                  ${role.tier || 'Standard'}
+                </span>
+              </td>
+              <td class="py-3.5 px-4 text-neutral-400 text-xs max-w-xs">
+                ${role.desc || '&mdash;'}
+              </td>
+              <td class="py-3.5 px-4">
+                <div class="flex items-center gap-1.5">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] ${assignedAdmins.length > 0 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-neutral-800 text-neutral-400'} font-semibold">
+                    ${assignedAdmins.length} Admin${assignedAdmins.length === 1 ? '' : 's'}
+                  </span>
+                  ${assignedAdmins.length > 0 ? `<span class="text-[11px] text-neutral-400 truncate max-w-[140px]">${assignedAdmins.map(a => a.name.split(' ')[0]).join(', ')}</span>` : ''}
+                </div>
+              </td>
+              <td class="py-3.5 px-4">
+                <span class="px-2 py-0.5 rounded-full text-[10px] ${role.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-neutral-800 text-neutral-400'} font-bold">
+                  ${role.status || 'Active'}
+                </span>
+              </td>
+              <td class="py-3.5 px-4 text-right">
+                <div class="flex items-center justify-end gap-1.5">
+                  <button type="button" onclick="openRoleModal(${originalIdx}, false)" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-brand-amber transition-all" title="Edit Role Level">
+                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button type="button" onclick="deleteRole(${originalIdx})" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-red-500/50 text-neutral-400 hover:text-red-400 transition-all" title="Delete Role Level">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+      lucide.createIcons();
     }
 
     // ------------------------------------------
@@ -2957,6 +3812,9 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      loadMasterData();
+      renderDepartmentDropdowns();
+      renderRoleDropdowns();
       renderAdminListTable();
       renderInvoiceModuleSelectors();
       syncInvoiceData();
