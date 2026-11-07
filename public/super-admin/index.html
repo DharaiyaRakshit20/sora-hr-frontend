@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SORA | HR — Super Admin Portal</title>
-  <link rel="icon" type="image/svg+xml" href="public/sora-hr-icon.svg">
+  <link rel="icon" type="image/svg+xml" href="/sora-hr-logo.svg">
   
   <!-- Google Fonts: Fraunces + Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -231,7 +231,7 @@
   </header>
 
   <main class="flex-grow flex flex-col">
-    <div id="view-login" class="hidden page-container min-h-screen w-full flex flex-col lg:flex-row bg-[#08080b]">
+    <div id="view-login" class="page-container min-h-screen w-full flex flex-col lg:flex-row bg-[#08080b]">
       
       <!-- LEFT HALF: FULL HEIGHT SLIDER -->
       <div class="w-full lg:w-1/2 min-h-[420px] lg:min-h-screen relative bg-[#0d0d12] p-8 sm:p-14 lg:p-16 flex flex-col justify-between overflow-hidden border-b lg:border-b-0 lg:border-r border-brand-border/60">
@@ -1477,18 +1477,17 @@
       const adminHeader = document.getElementById('adminHeader');
       const mainFooter = document.getElementById('mainFooter');
 
-      if (route === 'home' || route.startsWith('page-')) {
-        publicHeader.classList.remove('hidden');
-        adminHeader.classList.add('hidden');
-        mainFooter.classList.remove('hidden');
-      } else if (route === 'login') {
-        publicHeader.classList.add('hidden');
-        adminHeader.classList.add('hidden');
-        mainFooter.classList.add('hidden');
-      } else if (route.startsWith('portal')) {
-        publicHeader.classList.add('hidden');
-        adminHeader.classList.remove('hidden');
-        mainFooter.classList.add('hidden');
+      if (publicHeader) {
+        if (route === 'home' || route.startsWith('page-')) publicHeader.classList.remove('hidden');
+        else publicHeader.classList.add('hidden');
+      }
+      if (adminHeader) {
+        if (route.startsWith('portal')) adminHeader.classList.remove('hidden');
+        else adminHeader.classList.add('hidden');
+      }
+      if (mainFooter) {
+        if (route === 'home' || route.startsWith('page-')) mainFooter.classList.remove('hidden');
+        else mainFooter.classList.add('hidden');
       }
 
       if (route === 'home') {
@@ -2965,7 +2964,8 @@
       renderAdminListTable();
       renderInvoiceModuleSelectors();
       syncInvoiceData();
-      lucide.createIcons();
+      navigateTo('login');
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     });
   
   </script>
