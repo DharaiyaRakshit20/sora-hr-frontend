@@ -122,18 +122,23 @@
       #adminSidebar.is-collapsed .sidebar-collapse-hide {
         display: none !important;
       }
-      #adminSidebar.is-collapsed .sidebar-btn {
+      #adminSidebar.is-collapsed .sidebar-btn,
+      #adminSidebar.is-collapsed #adminSidebarToggleBtn,
+      #adminSidebar.is-collapsed button[onclick*="adminLogout"] {
         justify-content: center !important;
         padding-left: 0.5rem !important;
         padding-right: 0.5rem !important;
         gap: 0 !important;
       }
-      #adminSidebar.is-collapsed .sidebar-btn > div {
+      #adminSidebar.is-collapsed .sidebar-btn > div,
+      #adminSidebar.is-collapsed #adminSidebarToggleBtn > div {
         justify-content: center !important;
         margin: 0 auto !important;
         gap: 0 !important;
       }
-      #adminSidebar.is-collapsed .sidebar-btn i {
+      #adminSidebar.is-collapsed .sidebar-btn i,
+      #adminSidebar.is-collapsed #adminSidebarToggleBtn i,
+      #adminSidebar.is-collapsed button[onclick*="adminLogout"] i {
         margin: 0 auto !important;
       }
     }
@@ -445,14 +450,17 @@
           </div>
         </div>
 
-        <!-- END: Admin Profile (Flush Right) -->
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-brand-amber text-neutral-950 font-extrabold text-xs flex items-center justify-center shadow">
-            RM
+        <!-- END: Admin Profile (Flush Right & Clickable to edit profile/avatar) -->
+        <div id="adminHeaderProfileBtn" onclick="openAdminProfileModal()" class="flex items-center gap-3 cursor-pointer p-1.5 rounded-xl hover:bg-brand-surface border border-transparent hover:border-brand-border/80 transition-all group" title="Click to view & edit admin profile">
+          <div id="headerAdminAvatarContainer" class="w-9 h-9 rounded-full bg-brand-amber text-neutral-950 font-extrabold text-xs flex items-center justify-center shadow overflow-hidden flex-shrink-0 group-hover:scale-105 transition-transform border border-brand-amber/30">
+            <span id="headerAdminInitials">RM</span>
           </div>
-          <div class="text-left">
-            <div class="text-xs font-bold text-white leading-tight">Rohan Mehra</div>
-            <div class="text-[10px] font-semibold text-brand-amber">HR Director / Admin</div>
+          <div class="text-left hidden sm:block">
+            <div id="headerAdminName" class="text-xs font-bold text-white leading-tight group-hover:text-brand-amber transition-colors">Rohan Mehra</div>
+            <div id="headerAdminRole" class="text-[10px] font-semibold text-brand-amber flex items-center gap-1">
+              <span>HR Director / Admin</span>
+              <i data-lucide="edit-3" class="w-2.5 h-2.5 opacity-60 group-hover:opacity-100"></i>
+            </div>
           </div>
         </div>
 
@@ -473,9 +481,11 @@
           <nav class="space-y-1 text-xs sm:text-sm font-medium">
             
             <!-- 1. Dashboard -->
-            <button onclick="switchTab('dashboard')" id="nav-dashboard" title="Dashboard Overview" class="sidebar-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-brand-amber bg-brand-surface border border-brand-amber/30 font-semibold text-left transition-all">
-              <i data-lucide="layout-dashboard" class="w-4 h-4 text-brand-amber flex-shrink-0"></i>
-              <span class="sidebar-text truncate">Dashboard Overview</span>
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" title="Dashboard Overview" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-brand-amber bg-brand-surface border border-brand-amber/30 font-semibold text-left transition-all">
+              <div class="flex items-center gap-3 min-w-0">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 text-brand-amber flex-shrink-0"></i>
+                <span class="sidebar-text truncate">Dashboard Overview</span>
+              </div>
             </button>
 
             <!-- 2. Employee Management (Accordion with Indicator) -->
@@ -656,13 +666,13 @@
         <!-- Sidebar Bottom: Collapse/Expand Toggle + LOGOUT BUTTON (Pinned) -->
         <div class="p-3 border-t border-brand-border/60 bg-brand-dark flex-shrink-0 space-y-2">
           <!-- Desktop Collapse / Expand Toggle Button -->
-          <button id="adminSidebarToggleBtn" onclick="toggleAdminSidebar()" class="sidebar-btn w-full flex items-center gap-2.5 py-2 px-3 rounded-xl border border-brand-border/60 text-neutral-400 hover:text-brand-amber hover:bg-brand-surface text-xs font-semibold transition-all group" title="Collapse / Expand Sidebar">
+          <button id="adminSidebarToggleBtn" onclick="toggleAdminSidebar()" class="w-full flex items-center gap-2.5 py-2 px-3 rounded-xl border border-brand-border/60 text-neutral-400 hover:text-brand-amber hover:bg-brand-surface text-xs font-semibold transition-all group" title="Collapse / Expand Sidebar">
             <i data-lucide="panel-left-close" class="w-4 h-4 flex-shrink-0 text-brand-amber group-hover:scale-110 transition-transform" id="adminSidebarToggleIcon"></i>
             <span class="sidebar-text truncate">Collapse Sidebar</span>
           </button>
 
           <!-- Logout Button -->
-          <button onclick="adminLogout()" title="Logout" class="sidebar-btn w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-rose-500/30 text-rose-300 hover:bg-rose-500/10 hover:border-rose-500/60 font-semibold text-xs transition-all shadow-sm">
+          <button onclick="adminLogout()" title="Logout" class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-rose-500/30 text-rose-300 hover:bg-rose-500/10 hover:border-rose-500/60 font-semibold text-xs transition-all shadow-sm">
             <i data-lucide="log-out" class="w-4 h-4 flex-shrink-0"></i>
             <span class="sidebar-text">Logout</span>
           </button>
@@ -1477,49 +1487,67 @@
           <!-- TAB 6: PAYROLL & SALARY SLIPS                  -->
           <!-- ============================================== -->
           <div id="tab-payroll" class="tab-content hidden space-y-6">
-            <!-- Header with Title, From-To Pay Period, Company Rules, & Bulk Actions -->
+            <!-- Header with Title, Dates (Period, Gen Date, Disbursal Date), Company Structure & Slip Actions -->
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-brand-border pb-4">
               <div>
                 <h1 class="text-2xl font-bold text-white flex items-center gap-2.5">
                   <span>Payroll &amp; Salary Disbursal Master</span>
                   <span class="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">Oct '26 Active</span>
                 </h1>
-                <p class="text-xs text-neutral-400 mt-0.5">Pay period (From &ndash; To Date), attendance day/hour integration, Basic/HRA/DA salary splits, overtime, and statutory deductions.</p>
+                <p class="text-xs text-neutral-400 mt-0.5">Company salary structure builder, dynamic overtime &amp; balance calculation, and 2-step slip generation &amp; dispatch workflow.</p>
               </div>
 
-              <!-- Controls: Pay Period Range + Month Quick Select + Company Rules -->
-              <div class="flex flex-wrap items-center gap-2.5">
+              <!-- Controls: Pay Period, Generation Date, Disbursal Date, Structure & Actions -->
+              <div class="flex flex-wrap items-center gap-2">
                 <!-- Quick Month Select -->
-                <select id="payrollMonthSelect" onchange="onPayrollMonthChange()" class="px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber font-semibold shadow-sm">
+                <select id="payrollMonthSelect" onchange="onPayrollMonthChange()" class="px-2.5 py-1.5 rounded-xl bg-brand-surface border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber font-semibold shadow-sm">
                   <option value="2026-10">October 2026</option>
                   <option value="2026-09">September 2026</option>
                   <option value="2026-08">August 2026</option>
                 </select>
 
                 <!-- Pay Period From & To Date Pickers -->
-                <div class="flex items-center gap-1.5 bg-brand-surface px-3 py-1 rounded-xl border border-brand-border text-xs">
-                  <span class="text-neutral-400 text-[11px] font-semibold">From:</span>
-                  <input type="date" id="payrollFromDate" value="2026-10-01" onchange="recalculatePayrollFromDates()" class="bg-brand-dark px-2 py-1 rounded-lg border border-brand-border text-white text-xs font-mono focus:border-brand-amber outline-none">
-                  <span class="text-neutral-400 text-[11px] font-semibold ml-1">To:</span>
-                  <input type="date" id="payrollToDate" value="2026-10-31" onchange="recalculatePayrollFromDates()" class="bg-brand-dark px-2 py-1 rounded-lg border border-brand-border text-white text-xs font-mono focus:border-brand-amber outline-none">
+                <div class="flex items-center gap-1.5 bg-brand-surface px-2.5 py-1 rounded-xl border border-brand-border text-xs">
+                  <span class="text-neutral-400 text-[10px] font-semibold">Period:</span>
+                  <input type="date" id="payrollFromDate" value="2026-10-01" onchange="recalculatePayrollFromDates()" class="bg-brand-dark px-1.5 py-0.5 rounded border border-brand-border text-white text-[11px] font-mono focus:border-brand-amber outline-none">
+                  <span class="text-neutral-500 text-[10px]">&ndash;</span>
+                  <input type="date" id="payrollToDate" value="2026-10-31" onchange="recalculatePayrollFromDates()" class="bg-brand-dark px-1.5 py-0.5 rounded border border-brand-border text-white text-[11px] font-mono focus:border-brand-amber outline-none">
                 </div>
 
-                <!-- Company Payroll Rules Modal Trigger Button -->
-                <button type="button" onclick="openCompanyPayrollRulesModal()" title="Configure Company Payroll Calculation Rules" class="px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-brand-amber hover:text-white font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm">
+                <!-- Salary Slip Generation Date -->
+                <div class="flex items-center gap-1.5 bg-brand-surface px-2.5 py-1 rounded-xl border border-brand-border text-xs" title="Date on which salary slips are generated">
+                  <span class="text-amber-400 text-[10px] font-semibold flex items-center gap-1">
+                    <i data-lucide="file-check" class="w-3 h-3 text-amber-400"></i>
+                    <span>Gen Date:</span>
+                  </span>
+                  <input type="date" id="payrollGenDate" value="2026-10-31" onchange="updatePayrollDatesBanner()" class="bg-brand-dark px-1.5 py-0.5 rounded border border-brand-border text-white text-[11px] font-mono focus:border-brand-amber outline-none">
+                </div>
+
+                <!-- Salary Disbursal Date -->
+                <div class="flex items-center gap-1.5 bg-brand-surface px-2.5 py-1 rounded-xl border border-brand-border text-xs" title="Date on which salary is credited to employee bank accounts">
+                  <span class="text-emerald-400 text-[10px] font-semibold flex items-center gap-1">
+                    <i data-lucide="banknote" class="w-3 h-3 text-emerald-400"></i>
+                    <span>Disbursal:</span>
+                  </span>
+                  <input type="date" id="payrollDisbursalDate" value="2026-11-05" onchange="updatePayrollDatesBanner()" class="bg-brand-dark px-1.5 py-0.5 rounded border border-brand-border text-white text-[11px] font-mono focus:border-brand-amber outline-none">
+                </div>
+
+                <!-- Company Salary Structure Modal Trigger Button -->
+                <button type="button" onclick="openCompanyPayrollRulesModal()" title="Configure Company Salary Structure & Assign to Employees" class="px-3 py-1.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-brand-amber hover:text-white font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm">
                   <i data-lucide="sliders" class="w-3.5 h-3.5 text-brand-amber"></i>
-                  <span>Payroll Rules</span>
+                  <span>Salary Structure</span>
                 </button>
 
-                <!-- Recalculate Batch -->
-                <button type="button" onclick="processBatchPayroll()" class="px-3.5 py-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber/50 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-all">
-                  <i data-lucide="calculator" class="w-3.5 h-3.5 text-brand-amber"></i>
-                  <span>Recalculate</span>
+                <!-- Step 1: Generate Slips (Draft -> Generated) -->
+                <button type="button" onclick="generateAllPayslips()" title="Generate Oct '26 salary slips for all employees (Locks calculation)" class="px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-300 font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all">
+                  <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                  <span>1. Generate Slips</span>
                 </button>
 
-                <!-- Send All Payslips -->
-                <button type="button" onclick="dispatchAllPayslips()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow transition-all">
+                <!-- Step 2: Send All Payslips (Generated -> Sent) -->
+                <button type="button" onclick="dispatchAllPayslips()" title="Send generated salary slips to all employees via Email & WhatsApp" class="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow transition-all">
                   <i data-lucide="send" class="w-3.5 h-3.5"></i>
-                  <span>Send Payslips</span>
+                  <span>2. Send All Payslips</span>
                 </button>
               </div>
             </div>
@@ -1553,15 +1581,28 @@
               </div>
             </div>
 
-            <!-- Active Company Payroll Policy Banner -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border/80 text-xs text-neutral-400 font-mono">
+            <!-- Active Company Payroll Structure & Key Dates Banner -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border/80 text-xs text-neutral-400 font-mono">
               <div class="flex flex-wrap items-center gap-2 text-[11px]">
-                <span class="text-brand-amber font-bold flex items-center gap-1"><i data-lucide="check-check" class="w-3.5 h-3.5"></i> Applied Company Rule:</span>
-                <span id="activePayrollRuleBadge" class="text-white">26 Working Days &bull; Basic 50% &bull; HRA 25% &bull; DA 10% &bull; PF 12% &bull; PT &#8377;200 &bull; 1.5x Overtime</span>
+                <span class="text-brand-amber font-bold flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Assigned Structure:</span>
+                <span id="activePayrollRuleBadge" class="text-white font-semibold">Apex Global Standard Structure &bull; 26 Working Days &bull; Basic 50% &bull; HRA 25% &bull; DA 10% &bull; Special 15% &bull; PF 12% &bull; PT &#8377;200 &bull; 1.5x Overtime</span>
               </div>
-              <div class="text-[11px] text-amber-300 font-bold flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Pay Period: <span id="displayPayPeriodDates">01 Oct 2026 &ndash; 31 Oct 2026</span></span>
+              <div class="flex flex-wrap items-center gap-3 text-[11px]">
+                <div class="text-neutral-300 flex items-center gap-1">
+                  <span class="text-neutral-500">Period:</span>
+                  <span id="displayPayPeriodDates" class="text-white font-bold">01 Oct 2026 &ndash; 31 Oct 2026</span>
+                </div>
+                <div class="text-amber-300 flex items-center gap-1">
+                  <span class="text-neutral-500">Gen:</span>
+                  <span id="displayPayGenDate" class="text-amber-400 font-bold">31 Oct 2026</span>
+                </div>
+                <div class="text-emerald-300 flex items-center gap-1">
+                  <span class="text-neutral-500">Disbursal:</span>
+                  <span id="displayPayDisbursalDate" class="text-emerald-400 font-bold">05 Nov 2026</span>
+                </div>
+                <div id="payrollSlipsStatusPill" class="px-2 py-0.5 rounded-full bg-brand-surface border border-brand-border text-brand-amber font-bold text-[10px]">
+                  Slips: Ready
+                </div>
               </div>
             </div>
 
@@ -1573,16 +1614,16 @@
                     <tr>
                       <th class="py-3.5 px-4">Employee Profile</th>
                       <th class="py-3.5 px-4">Department</th>
-                      <th class="py-3.5 px-4 text-center">Attendance Summary (Days &amp; OT)</th>
+                      <th class="py-3.5 px-4 text-center">Attendance (Days &amp; OT)</th>
                       <th class="py-3.5 px-4 text-right">Basic Salary</th>
                       <th class="py-3.5 px-4 text-right">HRA &amp; DA</th>
                       <th class="py-3.5 px-4 text-right">Overtime Pay</th>
-                      <th class="py-3.5 px-4 text-right">Gross Salary</th>
+                      <th class="py-3.5 px-4 text-right">Total Gross</th>
                       <th class="py-3.5 px-4 text-right">PF &amp; PT</th>
                       <th class="py-3.5 px-4 text-right">TDS &amp; LOP Deduct</th>
-                      <th class="py-3.5 px-4 text-right font-bold text-emerald-400">Net Take-Home</th>
-                      <th class="py-3.5 px-4 text-right">CTC (Cost)</th>
-                      <th class="py-3.5 px-4 text-right">Payslip</th>
+                      <th class="py-3.5 px-4 text-right font-bold text-emerald-400">Net Take-Home (Balance)</th>
+                      <th class="py-3.5 px-4 text-center">Slip Status</th>
+                      <th class="py-3.5 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="payrollTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -4594,6 +4635,11 @@
           <span>Official Salary Slip Document &bull; Pay Period View</span>
         </span>
         <div class="flex items-center gap-2">
+          <!-- Single Send from Modal -->
+          <button id="modalSlipSendBtn" onclick="dispatchSinglePayslipFromModal()" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs flex items-center gap-1 shadow transition-all">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            <span id="modalSlipSendBtnText">Send to Employee</span>
+          </button>
           <button onclick="printSalarySlip()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-white flex items-center gap-1">
             <i data-lucide="printer" class="w-3.5 h-3.5"></i>
             <span>Print</span>
@@ -4619,11 +4665,16 @@
             <div class="text-sm font-black text-amber-700 uppercase bg-amber-50 px-2.5 py-1 rounded border border-amber-200">
               Payslip for <span id="slipPayMonth">October 2026</span>
             </div>
-            <!-- User Requirement 1: FROM DATE & TO DATE IN SALARY SLIP -->
-            <div class="text-[11px] font-bold text-slate-800 mt-1.5 font-mono">
+            <!-- Pay Period, Gen Date & Disbursal Date -->
+            <div class="text-[11px] font-bold text-slate-800 mt-1 font-mono">
               Pay Period: <span id="slipPayPeriodFrom" class="text-amber-800">01-Oct-2026</span> to <span id="slipPayPeriodTo" class="text-amber-800">31-Oct-2026</span>
             </div>
-            <div class="text-[10px] text-slate-500 font-mono mt-0.5">Disbursal Date: <span id="slipPayDate">31-Oct-2026</span></div>
+            <div class="text-[10px] text-slate-600 font-mono mt-0.5">
+              Gen Date: <span id="slipGenDateDisplay" class="font-semibold text-slate-800">31-Oct-2026</span> &bull; Disbursal: <span id="slipPayDate" class="font-semibold text-slate-800">05-Nov-2026</span>
+            </div>
+            <div class="text-[9px] text-amber-800 font-mono mt-0.5">
+              Assigned Structure: <span id="slipStructureDisplay" class="font-semibold">Apex Global Standard 2026</span>
+            </div>
           </div>
         </div>
 
@@ -4719,25 +4770,58 @@
     </div>
   </div>
 
-    <!-- MODAL: COMPANY PAYROLL RULES & STATUTORY POLICY -->
+    <!-- MODAL: COMPANY SALARY STRUCTURE & STATUTORY RULES BUILDER -->
   <div id="modalPayrollRules" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-150">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-150">
       <!-- Modal Header -->
       <div class="p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark/40">
-        <div>
-          <h3 class="text-base font-bold text-white flex items-center gap-2">
-            <i data-lucide="sliders" class="w-4 h-4 text-brand-amber"></i>
-            <span>Company Payroll Rules &amp; Statutory Policy</span>
-          </h3>
-          <p class="text-xs text-neutral-400 mt-0.5">Har company ke rules alag hote hain: Month working days, Basic/HRA/DA ratio, PF ceiling, OT rate aur LOP formula configure karein.</p>
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-brand-amber/10 border border-brand-amber/30 text-brand-amber flex items-center justify-center font-bold">
+            <i data-lucide="calculator" class="w-4 h-4 text-brand-amber"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <span>Company Salary Structure &amp; Compensation Policy</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Auto-Assign Active</span>
+            </h3>
+            <p class="text-xs text-neutral-400 mt-0.5">Configure company-wide salary breakdown, PF/ESIC/PT deductions, and overtime calculation.</p>
+          </div>
         </div>
-        <button onclick="closeModal('modalPayrollRules')" class="text-neutral-400 hover:text-white text-xl p-1">&times;</button>
+        <button onclick="closeModal('modalPayrollRules')" class="text-neutral-400 hover:text-white text-xl p-1 leading-none">&times;</button>
       </div>
 
       <!-- Modal Body -->
       <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
-        <!-- Rule 1: Working Days in Month Base -->
-        <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border space-y-2">
+        
+        <!-- Structure Name & Auto-Assignment Section -->
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex-grow">
+              <label class="block font-bold text-white uppercase text-[11px] tracking-wider mb-1">
+                Structure Name &amp; Description
+              </label>
+              <input type="text" id="ruleStructureName" value="Apex Global Standard Corporate Structure 2026" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+            </div>
+            <div class="w-full sm:w-48">
+              <label class="block font-bold text-neutral-300 uppercase text-[11px] tracking-wider mb-1">
+                Effective Period
+              </label>
+              <input type="text" id="ruleStructurePeriod" value="Oct 2026 – Ongoing" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-brand-amber text-xs font-mono font-bold outline-none">
+            </div>
+          </div>
+
+          <!-- Assignment to all employees -->
+          <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-brand-surface/60 border border-brand-border/60 cursor-pointer hover:border-brand-amber/50 transition-colors">
+            <input type="checkbox" id="ruleAssignAllEmployees" checked class="w-4 h-4 rounded text-brand-amber bg-brand-dark border-brand-border focus:ring-0">
+            <div>
+              <span class="text-white font-semibold">Assign this salary structure to all company employees automatically</span>
+              <p class="text-[10px] text-neutral-400">All 104 employees will inherit this Basic/HRA/DA breakdown, overtime formula and statutory deduction policy.</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- Section 1: Monthly Working Days Base -->
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-2">
           <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
             1. Monthly Working Days Calculation Base
           </label>
@@ -4766,96 +4850,256 @@
           </div>
         </div>
 
-        <!-- Rule 2: Salary Component Splits (Basic, HRA, DA) -->
-        <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border space-y-3">
-          <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
-            2. Salary Component Percentages (% of Gross)
-          </label>
-          <div class="grid grid-cols-3 gap-3">
+        <!-- Section 2: Salary Component Splits (% of Gross Salary) -->
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-white uppercase text-[11px] tracking-wider">
+              2. Salary Component Percentages (% of Gross Salary)
+            </label>
+            <span id="ruleComponentsTotalBadge" class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-brand-amber/15 text-brand-amber border border-brand-amber/30">Total: 100% Gross</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
-              <label class="block text-neutral-300 font-semibold mb-1">Basic Salary (%)</label>
-              <select id="ruleBasicPct" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs">
-                <option value="50" selected>50% (New Wage Code 2026)</option>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Basic Salary (%)</label>
+              <select id="ruleBasicPct" onchange="updateSalaryStructurePreview()" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+                <option value="50" selected>50% (New Wage Code)</option>
                 <option value="40">40% of Gross</option>
+                <option value="35">35% of Gross</option>
                 <option value="30">30% of Gross</option>
               </select>
             </div>
             <div>
-              <label class="block text-neutral-300 font-semibold mb-1">HRA Ratio (%)</label>
-              <select id="ruleHraPct" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs">
-                <option value="25" selected>25% of Gross (50% of Basic)</option>
-                <option value="20">20% of Gross (40% of Basic)</option>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">HRA Ratio (%)</label>
+              <select id="ruleHraPct" onchange="updateSalaryStructurePreview()" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+                <option value="25" selected>25% of Gross (Metro)</option>
+                <option value="20">20% of Gross</option>
                 <option value="15">15% of Gross</option>
+                <option value="10">10% of Gross</option>
               </select>
             </div>
             <div>
-              <label class="block text-neutral-300 font-semibold mb-1">DA (Dearness Allowance)</label>
-              <select id="ruleDaPct" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs">
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">DA (Dearness) (%)</label>
+              <select id="ruleDaPct" onchange="updateSalaryStructurePreview()" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
                 <option value="10" selected>10% of Gross</option>
                 <option value="5">5% of Gross</option>
                 <option value="0">0% (Merged into Special)</option>
               </select>
             </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Special / Balancing (%)</label>
+              <input type="text" id="ruleSpecialPctDisplay" value="15% (Remaining)" readonly class="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-brand-border/60 text-brand-amber text-xs font-mono font-bold cursor-not-allowed">
+            </div>
+          </div>
+
+          <!-- Dynamic Component Formula Display -->
+          <div class="p-2.5 rounded-xl bg-brand-surface/70 border border-brand-border text-[11px] text-neutral-300 flex items-center justify-between font-mono">
+            <span>Breakdown Formula:</span>
+            <span id="ruleBreakdownEquation" class="text-white font-bold">Gross = 50% Basic + 25% HRA + 10% DA + 15% Special Allowance</span>
           </div>
         </div>
 
-        <!-- Rule 3: Overtime Calculation Multiplier -->
-        <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border space-y-2">
+        <!-- Section 3: Overtime (OT) Hourly Calculation Rules -->
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
           <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
-            3. Overtime (OT) Hourly Rate Multiplier
+            3. Overtime (OT) Calculation Formula &amp; Multiplier
           </label>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
-              <input type="radio" name="ruleOtMultiplier" value="1.5" checked class="text-brand-amber">
-              <div>
-                <div class="font-bold text-white">1.5x Hourly Rate</div>
-                <div class="text-[10px] text-neutral-400">Standard overtime rate</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Daily Shift Work Hours</label>
+              <select id="ruleDailyHours" onchange="updateSalaryStructurePreview()" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+                <option value="8" selected>8 Hours / Day (Standard Corporate)</option>
+                <option value="9">9 Hours / Day (Including 1 hr break)</option>
+                <option value="8.5">8.5 Hours / Day</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Overtime Hourly Multiplier</label>
+              <div class="grid grid-cols-3 gap-1.5">
+                <label class="p-2 rounded-lg bg-brand-surface border border-brand-border cursor-pointer text-center has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
+                  <input type="radio" name="ruleOtMultiplier" value="1.0" class="sr-only">
+                  <div class="font-bold text-white">1.0x</div>
+                  <div class="text-[9px] text-neutral-400">Flat Rate</div>
+                </label>
+                <label class="p-2 rounded-lg bg-brand-surface border border-brand-border cursor-pointer text-center has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
+                  <input type="radio" name="ruleOtMultiplier" value="1.5" checked class="sr-only">
+                  <div class="font-bold text-white">1.5x</div>
+                  <div class="text-[9px] text-neutral-400">Standard 1.5x</div>
+                </label>
+                <label class="p-2 rounded-lg bg-brand-surface border border-brand-border cursor-pointer text-center has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
+                  <input type="radio" name="ruleOtMultiplier" value="2.0" class="sr-only">
+                  <div class="font-bold text-white">2.0x</div>
+                  <div class="text-[9px] text-neutral-400">Double Time</div>
+                </label>
               </div>
-            </label>
-            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
-              <input type="radio" name="ruleOtMultiplier" value="2.0" class="text-brand-amber">
-              <div>
-                <div class="font-bold text-white">2.0x Double Rate</div>
-                <div class="text-[10px] text-neutral-400">Holiday &amp; rest-day work</div>
-              </div>
-            </label>
-            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
-              <input type="radio" name="ruleOtMultiplier" value="1.0" class="text-brand-amber">
-              <div>
-                <div class="font-bold text-white">1.0x Flat Rate</div>
-                <div class="text-[10px] text-neutral-400">Straight hourly conversion</div>
-              </div>
-            </label>
+            </div>
+          </div>
+
+          <!-- Formula & Example OT Calculator -->
+          <div class="p-2.5 rounded-xl bg-brand-surface/70 border border-brand-border text-[11px] space-y-1">
+            <div class="text-neutral-300 font-mono flex items-center justify-between">
+              <span>Hourly Rate Formula:</span>
+              <span class="text-brand-amber font-bold">Gross Salary &divide; Working Days &divide; Daily Hours</span>
+            </div>
+            <div class="text-neutral-400 font-mono text-[10px] flex items-center justify-between border-t border-brand-border/40 pt-1">
+              <span>Example (&#8377;65,000 Gross @ 26 days &amp; 8 hrs):</span>
+              <span class="text-emerald-400 font-bold">&#8377;312.50 / hr &bull; 1.5x OT = &#8377;468.75 / hr</span>
+            </div>
           </div>
         </div>
 
-        <!-- Rule 4: Statutory Deductions Policy (PF & PT) -->
-        <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Provident Fund (PF) Rule</label>
-            <select id="rulePfPolicy" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs">
-              <option value="cap15k" selected>Cap at &#8377;15,000 wage (&#8377;1,800/mo max)</option>
-              <option value="uncapped">Full 12% on actual basic</option>
-            </select>
+        <!-- Section 4: Statutory Social Security Deductions (PF, ESIC, PT, TDS) -->
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
+          <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
+            4. Statutory &amp; Social Security Deductions
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Provident Fund (PF)</label>
+              <select id="rulePfPolicy" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+                <option value="cap15k" selected>Cap at &#8377;1,800/mo (&#8377;15k Basic)</option>
+                <option value="uncapped">Full 12% on Basic (Uncapped)</option>
+                <option value="exempt">Exempt (0%)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">ESIC Health (0.75%)</label>
+              <select id="ruleEsicPolicy" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+                <option value="statutory" selected>Auto: 0.75% for Gross &le; &#8377;21k</option>
+                <option value="exempt">Exempt (0%)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Professional Tax (PT)</label>
+              <select id="rulePtPolicy" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+                <option value="200" selected>&#8377;200 / Month (Standard Slab)</option>
+                <option value="0">Exempt (&#8377;0)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">TDS / Income Tax</label>
+              <select id="ruleTdsPct" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+                <option value="5" selected>5% Standard Estimate</option>
+                <option value="10">10% Higher Bracket</option>
+                <option value="0">0% (Exempt / Form 12BB)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-brand-border bg-brand-dark/40 flex items-center justify-between">
+        <div class="text-[11px] text-neutral-400 flex items-center gap-1.5">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-brand-amber"></i>
+          <span>Applies to all employee salary slips &amp; remaining balance calculations</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeModal('modalPayrollRules')" class="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white transition-colors">
+            Cancel
+          </button>
+          <button type="button" onclick="saveCompanyPayrollRules()" class="px-5 py-2 rounded-xl bg-brand-amber text-neutral-950 hover:bg-amber-400 text-xs font-bold flex items-center gap-1.5 shadow transition-all">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            <span>Save Structure &amp; Assign to All</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADMIN PROFILE SETTINGS -->
+  <div id="modalAdminProfile" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark/40">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-brand-amber/10 border border-brand-amber/30 text-brand-amber flex items-center justify-center font-bold">
+            <i data-lucide="user-check" class="w-4 h-4 text-brand-amber"></i>
           </div>
           <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Professional Tax (PT)</label>
-            <select id="rulePtPolicy" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs">
-              <option value="200" selected>&#8377;200 / Month (Standard Slab)</option>
-              <option value="0">Exempt (&#8377;0)</option>
-            </select>
+            <h3 class="text-base font-bold text-white">Administrator Profile</h3>
+            <p class="text-xs text-neutral-400 mt-0.5">Manage your profile identity, avatar photo and contact details.</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalAdminProfile')" class="text-neutral-400 hover:text-white text-xl p-1 leading-none">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-5 text-xs max-h-[75vh] overflow-y-auto">
+        <!-- Avatar Photo Section -->
+        <div class="p-4 rounded-2xl bg-brand-dark/70 border border-brand-border flex flex-col sm:flex-row items-center gap-4">
+          <div class="relative group flex-shrink-0">
+            <div id="adminModalAvatarPreview" class="w-20 h-20 rounded-full bg-brand-amber text-neutral-950 font-black text-2xl flex items-center justify-center border-2 border-brand-amber/50 overflow-hidden shadow-md">
+              <span id="adminModalAvatarInitials">RM</span>
+            </div>
+            <label for="adminAvatarFileInput" class="absolute bottom-0 right-0 p-1.5 rounded-full bg-brand-amber text-neutral-950 cursor-pointer shadow hover:scale-110 transition-transform" title="Upload new photo">
+              <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+            </label>
+            <input type="file" id="adminAvatarFileInput" accept="image/*" class="hidden" onchange="handleAdminAvatarUpload(event)">
+          </div>
+
+          <div class="space-y-1.5 text-center sm:text-left flex-grow">
+            <div class="font-bold text-white text-sm">Profile Avatar Photo</div>
+            <p class="text-[11px] text-neutral-400">Upload a professional high-resolution avatar photo. PNG, JPG or WebP up to 2MB.</p>
+            <div class="flex items-center justify-center sm:justify-start gap-2 pt-1">
+              <button type="button" onclick="document.getElementById('adminAvatarFileInput').click()" class="px-3 py-1.5 rounded-lg bg-brand-surface hover:bg-brand-card border border-brand-border text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all">
+                <i data-lucide="upload" class="w-3.5 h-3.5 text-brand-amber"></i>
+                <span>Upload Photo</span>
+              </button>
+              <button type="button" onclick="removeAdminAvatarPhoto()" class="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-1.5 transition-all">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                <span>Remove</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Identity Fields Form -->
+        <div class="space-y-3.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Full Name *</label>
+              <input type="text" id="adminProfileName" value="Rohan Mehra" placeholder="e.g. Rohan Mehra" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber font-medium">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Official Work Email *</label>
+              <input type="email" id="adminProfileEmail" value="rohan.mehra@apextech.com" placeholder="e.g. rohan.m@apextech.com" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber font-mono">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Contact Phone</label>
+              <input type="tel" id="adminProfilePhone" value="+91 98765 43210" placeholder="+91 98765 43210" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber font-mono">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Employee / Admin Code</label>
+              <input type="text" id="adminProfileCode" value="EMP-AGT-0103" readonly class="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-brand-border/60 text-neutral-400 text-xs font-mono cursor-not-allowed">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Designation / Role Title</label>
+              <input type="text" id="adminProfileDesignation" value="HR Director / Admin" placeholder="HR Director / Admin" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber font-medium">
+            </div>
+            <div>
+              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Department</label>
+              <input type="text" id="adminProfileDepartment" value="Human Resources & Talent" placeholder="Human Resources" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:outline-none focus:border-brand-amber font-medium">
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Modal Footer -->
       <div class="p-4 border-t border-brand-border bg-brand-dark/40 flex items-center justify-end gap-2.5">
-        <button type="button" onclick="closeModal('modalPayrollRules')" class="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white">
+        <button type="button" onclick="closeModal('modalAdminProfile')" class="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white transition-colors">
           Cancel
         </button>
-        <button type="button" onclick="saveCompanyPayrollRules()" class="px-5 py-2 rounded-xl bg-brand-amber text-neutral-950 hover:bg-amber-400 text-xs font-bold flex items-center gap-1.5 shadow">
+        <button type="button" onclick="saveAdminProfile()" class="px-5 py-2 rounded-xl bg-brand-amber text-neutral-950 hover:bg-amber-400 text-xs font-bold flex items-center gap-1.5 shadow transition-all">
           <i data-lucide="check" class="w-3.5 h-3.5"></i>
-          <span>Save &amp; Recalculate Payroll</span>
+          <span>Save Changes</span>
         </button>
       </div>
     </div>
@@ -5094,8 +5338,11 @@
       employees: [
         { id: 'EMP-AGT-0101', name: 'Vikram Joshi', role: 'Field Sales Lead', dept: 'Sales & Business Development', email: 'vikram.j@apextech.com', phone: '+91 98201 12345', salary: 75000, status: 'Active', noticeDays: 30, lwd: '', resignationDate: '', exitReason: '' },
         { id: 'EMP-AGT-0102', name: 'Ananya Verma', role: 'Senior Account Executive', dept: 'Sales & Business Development', email: 'ananya.v@apextech.com', phone: '+91 98202 23456', salary: 65000, status: 'Active', noticeDays: 30, lwd: '', resignationDate: '', exitReason: '' },
-        { id: 'EMP-AGT-0103', name: 'Rohan Mehra', role: 'HR Executive', dept: 'Human Resources & Talent', email: 'rohan.m@apextech.com', phone: '+91 98203 34567', salary: 85000, status: 'Active', noticeDays: 60, lwd: '', resignationDate: '', exitReason: '' },
-        { id: 'EMP-AGT-0104', name: 'Pooja Iyer', role: 'Full Stack Engineer', dept: 'Engineering & Technology', email: 'pooja.i@apextech.com', phone: '+91 98204 45678', salary: 95000, status: 'Active', noticeDays: 60, lwd: '', resignationDate: '', exitReason: '' }
+        { id: 'EMP-AGT-0103', name: 'Rohan Mehra', role: 'HR Director / Admin', dept: 'Human Resources & Talent', email: 'rohan.m@apextech.com', phone: '+91 98203 34567', salary: 85000, status: 'Active', noticeDays: 60, lwd: '', resignationDate: '', exitReason: '' },
+        { id: 'EMP-AGT-0104', name: 'Pooja Iyer', role: 'Full Stack Engineer', dept: 'Engineering & Technology', email: 'pooja.i@apextech.com', phone: '+91 98204 45678', salary: 95000, status: 'Active', noticeDays: 60, lwd: '', resignationDate: '', exitReason: '' },
+        { id: 'EMP-AGT-0105', name: 'Kabir Mehta', role: 'DevOps Architect', dept: 'Engineering & Technology', email: 'kabir.m@apextech.com', phone: '+91 98205 56789', salary: 88000, status: 'Active', noticeDays: 60, lwd: '', resignationDate: '', exitReason: '' },
+        { id: 'EMP-AGT-0106', name: 'Simran Kaur', role: 'Product Marketing Manager', dept: 'Marketing & Growth', email: 'simran.k@apextech.com', phone: '+91 98206 67890', salary: 70000, status: 'Active', noticeDays: 45, lwd: '', resignationDate: '', exitReason: '' },
+        { id: 'EMP-AGT-0107', name: 'Arjun Reddy', role: 'Finance Analyst', dept: 'Finance & Accounts', email: 'arjun.r@apextech.com', phone: '+91 98207 78901', salary: 60000, status: 'Active', noticeDays: 30, lwd: '', resignationDate: '', exitReason: '' }
       ],
       attendance: [
         {
@@ -7264,17 +7511,23 @@
     // ==========================================
     // 4. PAYROLL & SALARY SLIPS (COMPREHENSIVE GOVERNANCE ENGINE)
     // ==========================================
-    if (!appState.payrollRules) {
-      appState.payrollRules = {
-        workingDaysBase: '26',
-        basicPct: 50,
-        hraPct: 25,
-        daPct: 10,
-        otMultiplier: 1.5,
-        pfPolicy: 'cap15k',
-        ptAmount: 200
-      };
-    }
+    // Load Company Salary Structure & Rules from localStorage
+    const savedStructure = localStorage.getItem('sora_payroll_structure');
+    appState.payrollRules = savedStructure ? JSON.parse(savedStructure) : {
+      structureName: 'Apex Global Standard Corporate Structure 2026',
+      effectivePeriod: 'Oct 2026 – Ongoing',
+      workingDaysBase: '26',
+      dailyHours: 8,
+      basicPct: 50,
+      hraPct: 25,
+      daPct: 10,
+      otMultiplier: 1.5,
+      pfPolicy: 'cap15k',
+      esicPolicy: 'statutory',
+      ptAmount: 200,
+      tdsPct: 5,
+      assignAll: true
+    };
 
     if (!appState.payrollAttendance) {
       appState.payrollAttendance = {
@@ -7288,33 +7541,82 @@
       };
     }
 
+    // Slip Status Storage (Draft -> Generated -> Sent)
+    function getPayrollSlipsStorageKey() {
+      const month = document.getElementById('payrollMonthSelect')?.value || '2026-10';
+      return `sora_payroll_slips_${month}`;
+    }
+
+    function loadPayrollSlips() {
+      const key = getPayrollSlipsStorageKey();
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        try { return JSON.parse(raw); } catch(e) {}
+      }
+      // Initial default: all generated ready for Oct 2026
+      const initial = {};
+      appState.employees.forEach(e => {
+        initial[e.id] = { status: 'Generated', genDate: '2026-10-31', sentDate: '' };
+      });
+      localStorage.setItem(key, JSON.stringify(initial));
+      return initial;
+    }
+
+    let currentModalSlipEmpId = 'EMP-AGT-0103';
+
     function calculateEmployeePayroll(emp) {
-      const rules = appState.payrollRules || { workingDaysBase: '26', basicPct: 50, hraPct: 25, daPct: 10, otMultiplier: 1.5, pfPolicy: 'cap15k', ptAmount: 200 };
-      const att = (appState.payrollAttendance && appState.payrollAttendance[emp.id]) || { workingDays: 26, payableDays: 26.0, lopDays: 0, otHours: 0, deficitHours: 0, uan: '100982341099', pan: 'PANXX0000X', bank: 'HDFC Bank' };
+      const rules = appState.payrollRules || {
+        workingDaysBase: '26',
+        dailyHours: 8,
+        basicPct: 50,
+        hraPct: 25,
+        daPct: 10,
+        otMultiplier: 1.5,
+        pfPolicy: 'cap15k',
+        esicPolicy: 'statutory',
+        ptAmount: 200,
+        tdsPct: 5
+      };
+      const att = (appState.payrollAttendance && appState.payrollAttendance[emp.id]) || {
+        workingDays: 26, payableDays: 26.0, lopDays: 0, otHours: 0, deficitHours: 0,
+        uan: '100982341099', pan: 'PANXX0000X', bank: 'HDFC Bank'
+      };
 
       const workingDays = rules.workingDaysBase === 'calendar' ? 31 : (rules.workingDaysBase === '22' ? 22 : 26);
       const gross = emp.salary || 65000;
-      const hourlyRate = gross / workingDays / 8;
+      const dailyHours = rules.dailyHours || 8;
+      const hourlyRate = gross / workingDays / dailyHours;
 
-      // Components
+      // Salary Component Breakdown (% of Gross)
       const basic = Math.round(gross * (rules.basicPct / 100));
       const hra = Math.round(gross * (rules.hraPct / 100));
       const da = Math.round(gross * (rules.daPct / 100));
       const special = Math.max(0, gross - basic - hra - da);
 
-      // Overtime Pay
-      const otPay = Math.round(att.otHours * hourlyRate * rules.otMultiplier);
+      // Overtime Pay (Based on structure hourly formula & multiplier)
+      const otMultiplier = rules.otMultiplier !== undefined ? rules.otMultiplier : 1.5;
+      const otPay = Math.round(att.otHours * hourlyRate * otMultiplier);
       const totalGrossEarned = gross + otPay;
 
-      // Deductions
-      const pf = rules.pfPolicy === 'cap15k' ? Math.min(1800, Math.round(basic * 0.12)) : Math.round(basic * 0.12);
-      const pt = rules.ptAmount || 200;
-      const esic = gross <= 21000 ? Math.round(gross * 0.0075) : 0;
-      const tds = Math.round(gross * 0.05);
+      // Statutory & Tax Deductions
+      let pf = 0;
+      if (rules.pfPolicy === 'cap15k') {
+        pf = Math.min(1800, Math.round(basic * 0.12));
+      } else if (rules.pfPolicy === 'uncapped') {
+        pf = Math.round(basic * 0.12);
+      } else {
+        pf = 0; // exempt
+      }
+
+      const pt = rules.ptAmount !== undefined ? rules.ptAmount : 200;
+      const esic = (rules.esicPolicy !== 'exempt' && gross <= 21000) ? Math.round(gross * 0.0075) : 0;
+      const tds = Math.round(gross * ((rules.tdsPct || 5) / 100));
 
       // LOP & Short Hours Deductions
       const lopDeduct = Math.round((gross / workingDays) * att.lopDays + (att.deficitHours * hourlyRate));
       const totalDeductions = pf + pt + esic + tds + lopDeduct;
+
+      // Net Take-Home Remaining Balance
       const netPay = Math.max(0, totalGrossEarned - totalDeductions);
 
       // CTC (Cost to Company)
@@ -7328,12 +7630,14 @@
         emp,
         att,
         workingDays,
+        dailyHours,
         gross,
         hourlyRate,
         basic,
         hra,
         da,
         special,
+        otMultiplier,
         otPay,
         totalGrossEarned,
         pf,
@@ -7352,10 +7656,13 @@
       const tbody = document.getElementById('payrollTableTbody');
       if (!tbody) return;
 
+      const slips = loadPayrollSlips();
       let totalGross = 0;
       let totalOt = 0;
       let totalDeductions = 0;
       let totalNet = 0;
+      let countReady = 0;
+      let countSent = 0;
 
       tbody.innerHTML = appState.employees.map(emp => {
         const p = calculateEmployeePayroll(emp);
@@ -7364,7 +7671,12 @@
         totalDeductions += p.totalDeductions;
         totalNet += p.netPay;
 
+        const slipInfo = slips[emp.id] || { status: 'Generated', genDate: '2026-10-31', sentDate: '' };
+        if (slipInfo.status === 'Sent') countSent++;
+        else countReady++;
+
         const initials = emp.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        const isSent = slipInfo.status === 'Sent';
 
         return `
           <tr class="hover:bg-brand-card/40 transition-colors">
@@ -7405,10 +7717,11 @@
             <!-- 6. Overtime Pay -->
             <td class="py-3 px-4 text-right font-mono ${p.otPay > 0 ? 'text-amber-400 font-bold' : 'text-neutral-500'}">
               ${p.otPay > 0 ? `+&#8377; ${p.otPay.toLocaleString('en-IN')}` : '&#8377; 0'}
+              ${p.otPay > 0 ? `<div class="text-[9px] text-neutral-500 font-mono">${p.otMultiplier}x rate</div>` : ''}
             </td>
 
-            <!-- 7. Gross Salary -->
-            <td class="py-3 px-4 text-right font-mono font-bold text-white">&#8377; ${p.gross.toLocaleString('en-IN')}</td>
+            <!-- 7. Total Gross -->
+            <td class="py-3 px-4 text-right font-mono font-bold text-white">&#8377; ${p.totalGrossEarned.toLocaleString('en-IN')}</td>
 
             <!-- 8. PF & PT -->
             <td class="py-3 px-4 text-right font-mono text-amber-300">
@@ -7422,22 +7735,38 @@
               ${p.lopDeduct > 0 ? `<div class="text-[9px] text-rose-500 font-mono">LOP: -&#8377; ${p.lopDeduct}</div>` : ''}
             </td>
 
-            <!-- 10. Net Take-Home -->
+            <!-- 10. Net Take-Home (Remaining Balance) -->
             <td class="py-3 px-4 text-right font-mono font-black text-emerald-400 text-xs">
               &#8377; ${p.netPay.toLocaleString('en-IN')}
             </td>
 
-            <!-- 11. Monthly CTC -->
-            <td class="py-3 px-4 text-right font-mono text-neutral-400 text-[11px]">
-              &#8377; ${p.monthlyCtc.toLocaleString('en-IN')}
+            <!-- 11. Slip Status -->
+            <td class="py-3 px-4 text-center">
+              ${isSent ? `
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" title="Dispatched via Email & WhatsApp">
+                  <i data-lucide="check-circle-2" class="w-3 h-3"></i>
+                  <span>Sent</span>
+                </span>
+              ` : `
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30" title="Slip generated on ${slipInfo.genDate || '31-Oct-2026'}. Ready to review or send.">
+                  <i data-lucide="file-check" class="w-3 h-3"></i>
+                  <span>Ready</span>
+                </span>
+              `}
             </td>
 
-            <!-- 12. Actions: Payslip Viewer -->
+            <!-- 12. Actions: Slip View + Single Send -->
             <td class="py-3 px-4 text-right">
-              <button onclick="viewEmployeePayslip('${emp.id}')" title="View & Download Salary Slip with From-To Dates" class="px-2.5 py-1.5 rounded-xl bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs font-semibold transition-all flex items-center gap-1 ml-auto shadow-sm">
-                <i data-lucide="file-text" class="w-3.5 h-3.5 text-brand-amber"></i>
-                <span>Slip</span>
-              </button>
+              <div class="flex items-center justify-end gap-1.5">
+                <button onclick="viewEmployeePayslip('${emp.id}')" title="View & Download Official Salary Slip" class="px-2.5 py-1.5 rounded-xl bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-brand-amber"></i>
+                  <span>Slip</span>
+                </button>
+                <button onclick="dispatchSinglePayslip('${emp.id}')" title="Send Salary Slip to ${emp.name} via Email & WhatsApp" class="px-2.5 py-1.5 rounded-xl ${isSent ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20' : 'bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold'} text-xs transition-all flex items-center gap-1 shadow-sm">
+                  <i data-lucide="${isSent ? 'refresh-cw' : 'send'}" class="w-3 h-3"></i>
+                  <span>${isSent ? 'Resend' : 'Send'}</span>
+                </button>
+              </div>
             </td>
           </tr>
         `;
@@ -7454,36 +7783,158 @@
       if (elDed) elDed.innerText = `₹ ${totalDeductions.toLocaleString('en-IN')}`;
       if (elNet) elNet.innerText = `₹ ${totalNet.toLocaleString('en-IN')}`;
 
+      // Update Status Pill in Banner
+      const statusPill = document.getElementById('payrollSlipsStatusPill');
+      if (statusPill) {
+        statusPill.innerHTML = `<span class="text-emerald-400">${countSent} Sent</span> &bull; <span class="text-sky-400">${countReady} Ready</span>`;
+      }
+
       lucide.createIcons();
     }
 
-    function viewEmployeePayslip(empId) {
-      const emp = appState.employees.find(e => e.id === empId) || appState.employees[0];
-      const p = calculateEmployeePayroll(emp);
+    // Step 1: Generate All Payslips (Locks calculations, sets status to 'Generated')
+    function generateAllPayslips() {
+      const genVal = document.getElementById('payrollGenDate')?.value || '2026-10-31';
+      const key = getPayrollSlipsStorageKey();
+      const slips = loadPayrollSlips();
 
-      // User Requirement 1: From & To Dates in Salary Slip
-      const fromVal = document.getElementById('payrollFromDate')?.value || '2026-10-01';
-      const toVal = document.getElementById('payrollToDate')?.value || '2026-10-31';
+      appState.employees.forEach(emp => {
+        if (!slips[emp.id] || slips[emp.id].status !== 'Sent') {
+          slips[emp.id] = { status: 'Generated', genDate: genVal, sentDate: '' };
+        }
+      });
 
-      const formatIsoDate = (iso) => {
-        const d = new Date(iso);
-        if (isNaN(d.getTime())) return iso;
-        return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      localStorage.setItem(key, JSON.stringify(slips));
+      renderPayrollTable();
+      showToast('Salary Slips Generated', `All ${appState.employees.length} payslips generated for date: ${formatDateDisplay(genVal)}. Ready to review or dispatch.`);
+    }
+
+    // Step 2: Send All Payslips (Dispatches all generated slips via Email & WhatsApp)
+    function dispatchAllPayslips() {
+      const genVal = document.getElementById('payrollGenDate')?.value || '2026-10-31';
+      const key = getPayrollSlipsStorageKey();
+      const slips = loadPayrollSlips();
+      const nowIso = new Date().toISOString();
+
+      appState.employees.forEach(emp => {
+        slips[emp.id] = {
+          status: 'Sent',
+          genDate: slips[emp.id]?.genDate || genVal,
+          sentDate: nowIso
+        };
+      });
+
+      localStorage.setItem(key, JSON.stringify(slips));
+      renderPayrollTable();
+      showToast('All Payslips Dispatched!', `Sent ${appState.employees.length} payslips via encrypted Email & WhatsApp with download links.`);
+    }
+
+    // Send Single Payslip (From table row or modal preview)
+    function dispatchSinglePayslip(empId) {
+      const emp = appState.employees.find(e => e.id === empId);
+      if (!emp) return;
+
+      const genVal = document.getElementById('payrollGenDate')?.value || '2026-10-31';
+      const key = getPayrollSlipsStorageKey();
+      const slips = loadPayrollSlips();
+
+      slips[empId] = {
+        status: 'Sent',
+        genDate: slips[empId]?.genDate || genVal,
+        sentDate: new Date().toISOString()
       };
 
-      const fromFormatted = formatIsoDate(fromVal);
-      const toFormatted = formatIsoDate(toVal);
+      localStorage.setItem(key, JSON.stringify(slips));
+      renderPayrollTable();
 
-      // Populate Header & Pay Period
+      // Update button text in modal if open
+      const modalBtnText = document.getElementById('modalSlipSendBtnText');
+      if (modalBtnText && currentModalSlipEmpId === empId) {
+        modalBtnText.innerText = 'Sent (Resend)';
+      }
+
+      showToast('Payslip Sent!', `Salary slip dispatched to ${emp.name} (${emp.email}) via Email & WhatsApp.`);
+    }
+
+    function dispatchSinglePayslipFromModal() {
+      if (currentModalSlipEmpId) {
+        dispatchSinglePayslip(currentModalSlipEmpId);
+      }
+    }
+
+    function formatDateDisplay(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return iso;
+      return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function updatePayrollDatesBanner() {
+      const fromVal = document.getElementById('payrollFromDate')?.value || '2026-10-01';
+      const toVal = document.getElementById('payrollToDate')?.value || '2026-10-31';
+      const genVal = document.getElementById('payrollGenDate')?.value || '2026-10-31';
+      const disbursalVal = document.getElementById('payrollDisbursalDate')?.value || '2026-11-05';
+
+      const elPeriod = document.getElementById('displayPayPeriodDates');
+      const elGen = document.getElementById('displayPayGenDate');
+      const elDisbursal = document.getElementById('displayPayDisbursalDate');
+
+      if (elPeriod) elPeriod.innerText = `${formatDateDisplay(fromVal)} – ${formatDateDisplay(toVal)}`;
+      if (elGen) elGen.innerText = formatDateDisplay(genVal);
+      if (elDisbursal) elDisbursal.innerText = formatDateDisplay(disbursalVal);
+
+      // Save to localStorage
+      const datesObj = { from: fromVal, to: toVal, gen: genVal, disbursal: disbursalVal };
+      localStorage.setItem('sora_payroll_dates', JSON.stringify(datesObj));
+    }
+
+    function loadPayrollDates() {
+      const raw = localStorage.getItem('sora_payroll_dates');
+      if (raw) {
+        try {
+          const d = JSON.parse(raw);
+          if (d.from && document.getElementById('payrollFromDate')) document.getElementById('payrollFromDate').value = d.from;
+          if (d.to && document.getElementById('payrollToDate')) document.getElementById('payrollToDate').value = d.to;
+          if (d.gen && document.getElementById('payrollGenDate')) document.getElementById('payrollGenDate').value = d.gen;
+          if (d.disbursal && document.getElementById('payrollDisbursalDate')) document.getElementById('payrollDisbursalDate').value = d.disbursal;
+        } catch(e) {}
+      }
+      updatePayrollDatesBanner();
+    }
+
+    function viewEmployeePayslip(empId) {
+      currentModalSlipEmpId = empId;
+      const emp = appState.employees.find(e => e.id === empId) || appState.employees[0];
+      const p = calculateEmployeePayroll(emp);
+      const rules = appState.payrollRules;
+
+      const fromVal = document.getElementById('payrollFromDate')?.value || '2026-10-01';
+      const toVal = document.getElementById('payrollToDate')?.value || '2026-10-31';
+      const genVal = document.getElementById('payrollGenDate')?.value || '2026-10-31';
+      const disbursalVal = document.getElementById('payrollDisbursalDate')?.value || '2026-11-05';
+
+      // Populate Dates & Structure
       const elFrom = document.getElementById('slipPayPeriodFrom');
       const elTo = document.getElementById('slipPayPeriodTo');
+      const elGen = document.getElementById('slipGenDateDisplay');
       const elPayDate = document.getElementById('slipPayDate');
       const elPayMonth = document.getElementById('slipPayMonth');
+      const elStructure = document.getElementById('slipStructureDisplay');
 
-      if (elFrom) elFrom.innerText = fromFormatted;
-      if (elTo) elTo.innerText = toFormatted;
-      if (elPayDate) elPayDate.innerText = toFormatted;
+      if (elFrom) elFrom.innerText = formatDateDisplay(fromVal);
+      if (elTo) elTo.innerText = formatDateDisplay(toVal);
+      if (elGen) elGen.innerText = formatDateDisplay(genVal);
+      if (elPayDate) elPayDate.innerText = formatDateDisplay(disbursalVal);
       if (elPayMonth) elPayMonth.innerText = document.getElementById('payrollMonthSelect')?.options[document.getElementById('payrollMonthSelect')?.selectedIndex]?.text || 'October 2026';
+      if (elStructure) elStructure.innerText = rules.structureName || 'Apex Global Standard 2026';
+
+      // Update Modal Send Button Text based on current status
+      const slips = loadPayrollSlips();
+      const slipInfo = slips[empId];
+      const modalBtnText = document.getElementById('modalSlipSendBtnText');
+      if (modalBtnText) {
+        modalBtnText.innerText = (slipInfo && slipInfo.status === 'Sent') ? 'Sent (Resend)' : 'Send to Employee';
+      }
 
       // Populate Employee Info
       document.getElementById('slipEmpName').innerText = p.emp.name;
@@ -7497,9 +7948,9 @@
       document.getElementById('slipWorkingDays').innerText = `${p.workingDays} Days`;
       document.getElementById('slipPayableDays').innerText = `${p.att.payableDays} Days`;
       document.getElementById('slipLopDays').innerText = `${p.att.lopDays} Days`;
-      document.getElementById('slipOtHours').innerText = `${p.att.otHours}h`;
+      document.getElementById('slipOtHours').innerText = `${p.att.otHours}h (${p.otMultiplier}x)`;
 
-      // Populate Earnings
+      // Populate Earnings (Calculated dynamically)
       document.getElementById('slipBasic').innerText = `₹ ${p.basic.toLocaleString('en-IN')}`;
       document.getElementById('slipHra').innerText = `₹ ${p.hra.toLocaleString('en-IN')}`;
       document.getElementById('slipDa').innerText = `₹ ${p.da.toLocaleString('en-IN')}`;
@@ -7548,29 +7999,60 @@
       return inWords(num);
     }
 
+    // Dynamic Special Allowance Balancing in Structure Builder
+    function updateSalaryStructurePreview() {
+      const basic = parseInt(document.getElementById('ruleBasicPct')?.value || '50');
+      const hra = parseInt(document.getElementById('ruleHraPct')?.value || '25');
+      const da = parseInt(document.getElementById('ruleDaPct')?.value || '10');
+      const special = Math.max(0, 100 - basic - hra - da);
+
+      const elSpecial = document.getElementById('ruleSpecialPctDisplay');
+      if (elSpecial) elSpecial.value = `${special}% (Remaining)`;
+
+      const elEquation = document.getElementById('ruleBreakdownEquation');
+      if (elEquation) {
+        elEquation.innerText = `Gross = ${basic}% Basic + ${hra}% HRA + ${da}% DA + ${special}% Special Allowance`;
+      }
+    }
+
     function openCompanyPayrollRulesModal() {
       const modal = document.getElementById('modalPayrollRules');
       if (!modal) return;
 
-      const rules = appState.payrollRules || { workingDaysBase: '26', basicPct: 50, hraPct: 25, daPct: 10, otMultiplier: 1.5, pfPolicy: 'cap15k', ptAmount: 200 };
+      const rules = appState.payrollRules || {};
 
-      // Set radios & selects
+      if (document.getElementById('ruleStructureName')) {
+        document.getElementById('ruleStructureName').value = rules.structureName || 'Apex Global Standard Corporate Structure 2026';
+      }
+      if (document.getElementById('ruleStructurePeriod')) {
+        document.getElementById('ruleStructurePeriod').value = rules.effectivePeriod || 'Oct 2026 – Ongoing';
+      }
+      if (document.getElementById('ruleAssignAllEmployees')) {
+        document.getElementById('ruleAssignAllEmployees').checked = rules.assignAll !== false;
+      }
+
+      // Working Days Base
       const dayRadios = document.getElementsByName('ruleWorkingDaysBase');
       for (let r of dayRadios) {
-        r.checked = (r.value === String(rules.workingDaysBase));
+        r.checked = (r.value === String(rules.workingDaysBase || '26'));
       }
 
+      // OT Multiplier
       const otRadios = document.getElementsByName('ruleOtMultiplier');
       for (let r of otRadios) {
-        r.checked = (r.value === String(rules.otMultiplier));
+        r.checked = (r.value === String(rules.otMultiplier || '1.5'));
       }
 
-      if (document.getElementById('ruleBasicPct')) document.getElementById('ruleBasicPct').value = String(rules.basicPct);
-      if (document.getElementById('ruleHraPct')) document.getElementById('ruleHraPct').value = String(rules.hraPct);
-      if (document.getElementById('ruleDaPct')) document.getElementById('ruleDaPct').value = String(rules.daPct);
-      if (document.getElementById('rulePfPolicy')) document.getElementById('rulePfPolicy').value = rules.pfPolicy;
-      if (document.getElementById('rulePtPolicy')) document.getElementById('rulePtPolicy').value = String(rules.ptAmount);
+      if (document.getElementById('ruleDailyHours')) document.getElementById('ruleDailyHours').value = String(rules.dailyHours || 8);
+      if (document.getElementById('ruleBasicPct')) document.getElementById('ruleBasicPct').value = String(rules.basicPct || 50);
+      if (document.getElementById('ruleHraPct')) document.getElementById('ruleHraPct').value = String(rules.hraPct || 25);
+      if (document.getElementById('ruleDaPct')) document.getElementById('ruleDaPct').value = String(rules.daPct || 10);
+      if (document.getElementById('rulePfPolicy')) document.getElementById('rulePfPolicy').value = rules.pfPolicy || 'cap15k';
+      if (document.getElementById('ruleEsicPolicy')) document.getElementById('ruleEsicPolicy').value = rules.esicPolicy || 'statutory';
+      if (document.getElementById('rulePtPolicy')) document.getElementById('rulePtPolicy').value = String(rules.ptAmount !== undefined ? rules.ptAmount : 200);
+      if (document.getElementById('ruleTdsPct')) document.getElementById('ruleTdsPct').value = String(rules.tdsPct || 5);
 
+      updateSalaryStructurePreview();
       modal.classList.remove('hidden');
       lucide.createIcons();
     }
@@ -7588,31 +8070,48 @@
         if (r.checked) { otMult = parseFloat(r.value); break; }
       }
 
+      const structName = document.getElementById('ruleStructureName')?.value.trim() || 'Apex Global Standard Corporate Structure';
+      const structPeriod = document.getElementById('ruleStructurePeriod')?.value.trim() || 'Oct 2026 – Ongoing';
+      const assignAll = document.getElementById('ruleAssignAllEmployees')?.checked ?? true;
+      const dailyHours = parseFloat(document.getElementById('ruleDailyHours')?.value || '8');
       const basicPct = parseInt(document.getElementById('ruleBasicPct')?.value || '50');
       const hraPct = parseInt(document.getElementById('ruleHraPct')?.value || '25');
       const daPct = parseInt(document.getElementById('ruleDaPct')?.value || '10');
       const pfPolicy = document.getElementById('rulePfPolicy')?.value || 'cap15k';
+      const esicPolicy = document.getElementById('ruleEsicPolicy')?.value || 'statutory';
       const ptAmount = parseInt(document.getElementById('rulePtPolicy')?.value || '200');
+      const tdsPct = parseInt(document.getElementById('ruleTdsPct')?.value || '5');
+      const specialPct = Math.max(0, 100 - basicPct - hraPct - daPct);
 
       appState.payrollRules = {
+        structureName: structName,
+        effectivePeriod: structPeriod,
         workingDaysBase: daysBase,
+        dailyHours,
         basicPct,
         hraPct,
         daPct,
+        specialPct,
         otMultiplier: otMult,
         pfPolicy,
-        ptAmount
+        esicPolicy,
+        ptAmount,
+        tdsPct,
+        assignAll
       };
+
+      // Persist in localStorage
+      localStorage.setItem('sora_payroll_structure', JSON.stringify(appState.payrollRules));
 
       // Update banner badge
       const badge = document.getElementById('activePayrollRuleBadge');
       if (badge) {
-        badge.innerText = `${daysBase === 'calendar' ? 'Calendar' : daysBase + ' Working'} Days • Basic ${basicPct}% • HRA ${hraPct}% • DA ${daPct}% • PF ${pfPolicy === 'cap15k' ? '15k Cap' : 'Uncapped'} • PT ₹${ptAmount} • ${otMult}x OT`;
+        badge.innerText = `${structName} • ${daysBase === 'calendar' ? 'Calendar' : daysBase + ' Working'} Days • Basic ${basicPct}% • HRA ${hraPct}% • DA ${daPct}% • Special ${specialPct}% • PF ${pfPolicy === 'cap15k' ? '15k Cap' : 'Uncapped'} • PT ₹${ptAmount} • ${otMult}x OT`;
       }
 
       closeModal('modalPayrollRules');
       renderPayrollTable();
-      showToast('Payroll Rules Applied', 'Batch recalculated with updated company payroll configuration.');
+      showToast('Salary Structure Assigned!', `Assigned "${structName}" to all company employees. Batch payroll recalculated.`);
     }
 
     function onPayrollMonthChange() {
@@ -7624,35 +8123,32 @@
 
       const fromInput = document.getElementById('payrollFromDate');
       const toInput = document.getElementById('payrollToDate');
+      const genInput = document.getElementById('payrollGenDate');
+      const disbursalInput = document.getElementById('payrollDisbursalDate');
 
       if (fromInput) fromInput.value = `${val}-01`;
       if (toInput) toInput.value = `${val}-${lastDay}`;
+      if (genInput) genInput.value = `${val}-${lastDay}`;
 
-      recalculatePayrollFromDates();
+      // Disbursal typically 5th of next month
+      const nextMonthNum = parseInt(month) % 12 + 1;
+      const nextYearNum = nextMonthNum === 1 ? parseInt(year) + 1 : parseInt(year);
+      const nextMonthStr = String(nextMonthNum).padStart(2, '0');
+      if (disbursalInput) disbursalInput.value = `${nextYearNum}-${nextMonthStr}-05`;
+
+      updatePayrollDatesBanner();
+      renderPayrollTable();
     }
 
     function recalculatePayrollFromDates() {
-      const fromVal = document.getElementById('payrollFromDate')?.value || '2026-10-01';
-      const toVal = document.getElementById('payrollToDate')?.value || '2026-10-31';
-
-      const formatIsoDate = (iso) => {
-        const d = new Date(iso);
-        if (isNaN(d.getTime())) return iso;
-        return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-      };
-
-      const displayEl = document.getElementById('displayPayPeriodDates');
-      if (displayEl) {
-        displayEl.innerText = `${formatIsoDate(fromVal)} – ${formatIsoDate(toVal)}`;
-      }
-
+      updatePayrollDatesBanner();
       renderPayrollTable();
-      showToast('Pay Period Updated', `Calculated for period: ${formatIsoDate(fromVal)} to ${formatIsoDate(toVal)}`);
+      showToast('Pay Period Updated', `Calculated for period: ${document.getElementById('displayPayPeriodDates')?.innerText}`);
     }
 
     function processBatchPayroll() {
       renderPayrollTable();
-      showToast('Batch Recalculated', 'All 104 employee records synchronized with latest attendance & overtime logs.');
+      showToast('Batch Recalculated', `Synchronized ${appState.employees.length} employee records with attendance and company salary structure.`);
     }
 
     function printSalarySlip() {
@@ -7661,17 +8157,148 @@
 
     function downloadSalarySlipPDF() {
       const el = document.getElementById('printablePayslip');
-      const name = document.getElementById('slipEmpName').innerText.replace(' ', '_');
+      const name = document.getElementById('slipEmpName').innerText.replace(/\s+/g, '_');
       const opt = { margin: 10, filename: `Payslip_${name}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
       html2pdf().set(opt).from(el).save();
     }
 
-    function dispatchAllPayslips() {
-      showToast('Dispatching Payslips...', `Sent ${appState.employees.length} payslips with pay period dates via encrypted Email & WhatsApp.`);
+    function exportBankSalarySheet() {
+      showToast('NEFT File Generated', 'Bank salary transfer sheet downloaded in Excel format with attendance, overtime & net salary.');
     }
 
-    function exportBankSalarySheet() {
-      showToast('NEFT File Generated', 'Bank salary transfer sheet downloaded in Excel format with attendance & deduction details.');
+    // ==========================================
+    // ADMIN PROFILE MANAGEMENT (AVATAR, NAME, EMAIL)
+    // ==========================================
+    let adminProfileState = {
+      name: 'Rohan Mehra',
+      email: 'rohan.mehra@apextech.com',
+      phone: '+91 98765 43210',
+      designation: 'HR Director / Admin',
+      department: 'Human Resources & Talent',
+      code: 'EMP-AGT-0103',
+      avatarUrl: ''
+    };
+    let tempAdminAvatarUrl = undefined;
+
+    function loadAdminProfile() {
+      const saved = localStorage.getItem('sora_admin_profile');
+      if (saved) {
+        try {
+          adminProfileState = { ...adminProfileState, ...JSON.parse(saved) };
+        } catch(e) {}
+      }
+
+      // Update Header
+      const headerName = document.getElementById('headerAdminName');
+      const headerRole = document.getElementById('headerAdminRole');
+      const headerInitials = document.getElementById('headerAdminInitials');
+      const avatarContainer = document.getElementById('headerAdminAvatarContainer');
+
+      if (headerName) headerName.innerText = adminProfileState.name;
+      if (headerRole) {
+        headerRole.innerHTML = `<span>${adminProfileState.designation}</span><i data-lucide="edit-3" class="w-2.5 h-2.5 opacity-60 group-hover:opacity-100"></i>`;
+      }
+
+      const initials = adminProfileState.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'RM';
+      if (avatarContainer) {
+        if (adminProfileState.avatarUrl) {
+          avatarContainer.innerHTML = `<img src="${adminProfileState.avatarUrl}" alt="${adminProfileState.name}" class="w-full h-full object-cover">`;
+        } else {
+          avatarContainer.innerHTML = `<span id="headerAdminInitials">${initials}</span>`;
+        }
+      }
+      lucide.createIcons();
+    }
+
+    function openAdminProfileModal() {
+      tempAdminAvatarUrl = undefined;
+      const modal = document.getElementById('modalAdminProfile');
+      if (!modal) return;
+
+      const nameInput = document.getElementById('adminProfileName');
+      const emailInput = document.getElementById('adminProfileEmail');
+      const phoneInput = document.getElementById('adminProfilePhone');
+      const desigInput = document.getElementById('adminProfileDesignation');
+      const deptInput = document.getElementById('adminProfileDepartment');
+      const codeInput = document.getElementById('adminProfileCode');
+
+      if (nameInput) nameInput.value = adminProfileState.name;
+      if (emailInput) emailInput.value = adminProfileState.email;
+      if (phoneInput) phoneInput.value = adminProfileState.phone;
+      if (desigInput) desigInput.value = adminProfileState.designation;
+      if (deptInput) deptInput.value = adminProfileState.department;
+      if (codeInput) codeInput.value = adminProfileState.code;
+
+      const preview = document.getElementById('adminModalAvatarPreview');
+      const initials = adminProfileState.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'RM';
+      if (preview) {
+        if (adminProfileState.avatarUrl) {
+          preview.innerHTML = `<img src="${adminProfileState.avatarUrl}" class="w-full h-full object-cover">`;
+        } else {
+          preview.innerHTML = `<span id="adminModalAvatarInitials">${initials}</span>`;
+        }
+      }
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function handleAdminAvatarUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Image Too Large', 'Please select an image file under 2MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        tempAdminAvatarUrl = e.target.result;
+        const preview = document.getElementById('adminModalAvatarPreview');
+        if (preview) {
+          preview.innerHTML = `<img src="${tempAdminAvatarUrl}" class="w-full h-full object-cover">`;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeAdminAvatarPhoto() {
+      tempAdminAvatarUrl = '';
+      const preview = document.getElementById('adminModalAvatarPreview');
+      const name = document.getElementById('adminProfileName')?.value || adminProfileState.name;
+      const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'RM';
+      if (preview) {
+        preview.innerHTML = `<span id="adminModalAvatarInitials">${initials}</span>`;
+      }
+    }
+
+    function saveAdminProfile() {
+      const name = document.getElementById('adminProfileName')?.value.trim();
+      const email = document.getElementById('adminProfileEmail')?.value.trim();
+      const phone = document.getElementById('adminProfilePhone')?.value.trim();
+      const designation = document.getElementById('adminProfileDesignation')?.value.trim();
+      const department = document.getElementById('adminProfileDepartment')?.value.trim();
+
+      if (!name || !email) {
+        showToast('Validation Error', 'Name and Official Email are required.');
+        return;
+      }
+
+      adminProfileState.name = name;
+      adminProfileState.email = email;
+      adminProfileState.phone = phone || adminProfileState.phone;
+      adminProfileState.designation = designation || adminProfileState.designation;
+      adminProfileState.department = department || adminProfileState.department;
+
+      if (tempAdminAvatarUrl !== undefined) {
+        adminProfileState.avatarUrl = tempAdminAvatarUrl;
+      }
+
+      localStorage.setItem('sora_admin_profile', JSON.stringify(adminProfileState));
+      loadAdminProfile();
+      closeModal('modalAdminProfile');
+      showToast('Profile Saved', 'Your admin profile and avatar photo have been updated.');
     }
 
         // ==========================================
@@ -10415,6 +11042,8 @@
     updateLiveServerClock();
 
     document.addEventListener('DOMContentLoaded', () => {
+      loadAdminProfile();
+      loadPayrollDates();
       populateAllDropdowns();
       renderEmployeeTable();
       renderPayrollTable();
