@@ -7,6 +7,7 @@ echo.
 echo Starting server at http://localhost:5173 ...
 echo Public Landing Page: http://localhost:5173/
 echo Admin Portal:       http://localhost:5173/admin/
+echo Employee App (React): http://localhost:5173/user/
 echo.
 start http://localhost:5173
 python -m http.server 5173 --bind 127.0.0.1
