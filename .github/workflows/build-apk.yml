@@ -23,10 +23,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Flutter SDK
+      - name: Set up Flutter SDK (Latest Stable)
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.x'
           channel: 'stable'
           cache: true
 
@@ -34,16 +33,22 @@ jobs:
         run: |
           cd sora_mobile_flutter
           flutter create --platforms=android --org com.sorahr .
-          # Upgrade Kotlin version to 1.9.22
-          sed -i "s/ext.kotlin_version = ['\"][^'\"]*['\"]/ext.kotlin_version = '1.9.22'/g" android/build.gradle
+          
+          # Fix Kotlin version in modern settings.gradle
+          sed -i 's/org.jetbrains.kotlin.android" version "[^"]*"/org.jetbrains.kotlin.android" version "1.9.22"/g' android/settings.gradle || true
+          
+          # Fix Kotlin version in classic build.gradle
+          sed -i "s/ext.kotlin_version = .*/ext.kotlin_version = '1.9.22'/g" android/build.gradle || true
+          
           flutter pub get
+          
           # Inject Camera & GPS permissions into AndroidManifest.xml
           sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />' android/app/src/main/AndroidManifest.xml
 
       - name: Build Android Release APK
         run: |
           cd sora_mobile_flutter
-          flutter build apk --release
+          flutter build apk --release --no-tree-shake-icons
           cp build/app/outputs/flutter-apk/app-release.apk ../SORA-HR-Employee-App.apk
 
       - name: Upload APK as Downloadable Artifact

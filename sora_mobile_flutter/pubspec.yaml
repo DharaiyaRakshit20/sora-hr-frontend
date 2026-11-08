@@ -11,8 +11,6 @@ dependencies:
     sdk: flutter
   webview_flutter: ^4.7.0
   permission_handler: ^11.3.1
-  geolocator: ^11.0.0
-  image_picker: ^1.1.0
   cupertino_icons: ^1.0.6
 
 dev_dependencies:
