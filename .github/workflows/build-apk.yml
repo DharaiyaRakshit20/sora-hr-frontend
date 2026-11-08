@@ -29,7 +29,66 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Get Dependencies
+      - name: Rebuild Android Platform Files
+        run: |
+          cd sora_mobile_flutter
+          
+          # Backup lib & pubspec
+          mkdir -p /tmp/sora_backup
+          cp -r lib /tmp/sora_backup/lib
+          cp pubspec.yaml /tmp/sora_backup/pubspec.yaml
+          
+          # Wipe existing manual android folder completely
+          rm -rf android
+          
+          # Re-create clean Android platform project using the runner's Flutter version
+          flutter create --platforms=android --org com.sorahr --project-name sora_hr_mobile .
+          
+          # Restore exact lib and pubspec
+          rm -rf lib
+          cp -r /tmp/sora_backup/lib lib
+          cp /tmp/sora_backup/pubspec.yaml pubspec.yaml
+          
+          # Inject Camera, Location & Internet permissions into AndroidManifest.xml
+          python3 - << 'EOF'
+          manifest = 'android/app/src/main/AndroidManifest.xml'
+          with open(manifest, 'r') as f:
+              code = f.read()
+
+          perms = """
+              <uses-permission android:name="android.permission.INTERNET" />
+              <uses-permission android:name="android.permission.CAMERA" />
+              <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+              <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+              <uses-feature android:name="android.hardware.camera" android:required="false" />
+              <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+          """
+          if '<uses-permission android:name="android.permission.CAMERA"' not in code:
+              code = code.replace('<application', perms + '\n    <application')
+          
+          # Enable cleartext HTTP traffic for local server testing
+          code = code.replace('<application', '<application android:usesCleartextTraffic="true"')
+          
+          with open(manifest, 'w') as f:
+              f.write(code)
+          print("Updated AndroidManifest.xml successfully")
+          EOF
+
+          # Ensure minSdk is 21 for webview_flutter compatibility
+          python3 - << 'EOF'
+          gradle_file = 'android/app/build.gradle'
+          try:
+              with open(gradle_file, 'r') as f:
+                  gcode = f.read()
+              gcode = gcode.replace('flutter.minSdkVersion', '21')
+              with open(gradle_file, 'w') as f:
+                  f.write(gcode)
+              print("Updated build.gradle with minSdk 21")
+          except Exception as e:
+              print(f"Notice during build.gradle update: {e}")
+          EOF
+
+      - name: Fetch Flutter Dependencies
         run: |
           cd sora_mobile_flutter
           flutter pub get
@@ -45,3 +104,18 @@ jobs:
         with:
           name: SORA-HR-Employee-App-APK
           path: SORA-HR-Employee-App.apk
+          retention-days: 14
+
+      - name: Publish Direct APK to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        continue-on-error: true
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: SORA HR Mobile App v1.0.${{ github.run_number }}
+          body: |
+            ## 📱 SORA HR — Employee Mobile App
+            Android APK built by GitHub Actions.
+            Download the file directly to install on Android phone or upload to Google Drive.
+          files: SORA-HR-Employee-App.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

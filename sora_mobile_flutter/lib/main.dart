@@ -47,13 +47,14 @@ class SoraWebViewScreen extends StatefulWidget {
 }
 
 class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
-  late final WebViewController _controller;
+  late WebViewController _controller;
   bool _isLoading = true;
+  bool _hasError = false;
+  String _errorMessage = '';
   double _loadingProgress = 0.0;
 
-  // Change this to your local IP or deployed link (e.g. Vercel/Netlify)
-  // For local Wi-Fi testing: 'http://192.168.31.192:8080/user/'
-  final String appUrl = 'http://192.168.31.192:8080/user/';
+  // Default server address (can be updated via in-app settings if IP changes)
+  String appUrl = 'http://192.168.31.192:8080/user/';
 
   @override
   void initState() {
@@ -64,11 +65,15 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
 
   // Request Camera & GPS Permissions for Geofencing & Selfie attendance
   Future<void> _requestAppPermissions() async {
-    await [
-      Permission.camera,
-      Permission.locationWhenInUse,
-      Permission.microphone,
-    ].request();
+    try {
+      await [
+        Permission.camera,
+        Permission.locationWhenInUse,
+        Permission.microphone,
+      ].request();
+    } catch (e) {
+      debugPrint("Permission request error: $e");
+    }
   }
 
   void _initWebView() {
@@ -85,6 +90,7 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
           onPageStarted: (url) {
             setState(() {
               _isLoading = true;
+              _hasError = false;
             });
           },
           onPageFinished: (url) {
@@ -93,11 +99,87 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
             });
           },
           onWebResourceError: (error) {
-            debugPrint("WebView Error: ${error.description}");
+            setState(() {
+              _isLoading = false;
+              _hasError = true;
+              _errorMessage = error.description;
+            });
           },
         ),
       )
       ..loadRequest(Uri.parse(appUrl));
+  }
+
+  void _changeServerUrl() {
+    final textController = TextEditingController(text: appUrl);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF17171D),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Row(
+          children: [
+            Icon(Icons.settings_ethernet, color: Color(0xFFF59E0B)),
+            SizedBox(width: 8),
+            Text('Server Address', style: TextStyle(color: Colors.white, fontSize: 18)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Enter the SORA HR portal IP or public domain:',
+              style: TextStyle(color: Colors.grey, fontSize: 13),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: textController,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color(0xFF09090C),
+                hintText: 'http://192.168.31.192:8080/user/',
+                hintStyle: const TextStyle(color: Colors.grey),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Color(0xFF2E2E38)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Color(0xFFF59E0B)),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFF59E0B),
+              foregroundColor: Colors.black,
+            ),
+            onPressed: () {
+              final newUrl = textController.text.trim();
+              if (newUrl.isNotEmpty) {
+                setState(() {
+                  appUrl = newUrl;
+                  _hasError = false;
+                  _isLoading = true;
+                });
+                Navigator.pop(ctx);
+                _controller.loadRequest(Uri.parse(appUrl));
+              }
+            },
+            child: const Text('Connect', style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -115,15 +197,97 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
         body: SafeArea(
           child: Stack(
             children: [
+              // WebView
               WebViewWidget(controller: _controller),
-              if (_isLoading)
+
+              // Offline / Error screen
+              if (_hasError)
+                Container(
+                  color: const Color(0xFF09090C),
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF17171D),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.redAccent.withOpacity(0.5)),
+                          ),
+                          child: const Center(
+                            child: Icon(Icons.wifi_off_rounded, size: 32, color: Colors.redAccent),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          "Cannot Connect to Server",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          appUrl,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 12, color: Color(0xFFF59E0B)),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _errorMessage.isNotEmpty ? _errorMessage : "Please make sure your computer server is running and both devices are on the same Wi-Fi.",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        const SizedBox(height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(color: Color(0xFFF59E0B)),
+                                foregroundColor: const Color(0xFFF59E0B),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _hasError = false;
+                                  _isLoading = true;
+                                });
+                                _controller.loadRequest(Uri.parse(appUrl));
+                              },
+                              icon: const Icon(Icons.refresh, size: 18),
+                              label: const Text('Retry'),
+                            ),
+                            const SizedBox(width: 12),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF59E0B),
+                                foregroundColor: Colors.black,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              ),
+                              onPressed: _changeServerUrl,
+                              icon: const Icon(Icons.edit, size: 18),
+                              label: const Text('Change IP/URL'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+              // Loading Screen
+              if (_isLoading && !_hasError)
                 Container(
                   color: const Color(0xFF09090C),
                   child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // SORA HR Animated Logo Indicator
                         Container(
                           width: 64,
                           height: 64,
