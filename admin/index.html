@@ -5888,6 +5888,53 @@
     };
 
     // ==========================================
+    // FRONTEND STATE PERSISTENCE & MOCK BACKEND ENGINE
+    // ==========================================
+    const PERSISTED_ENTITIES = [
+      'employees', 'candidates', 'offers', 'promotions', 'leaves', 
+      'attendance', 'resignations', 'policies', 'roles', 'departments', 
+      'designations', 'locations', 'shifts', 'assets', 'employmentTypes', 
+      'leaveTypes', 'pipelineStages'
+    ];
+
+    function saveAppState(entity) {
+      try {
+        if (entity && appState[entity]) {
+          localStorage.setItem(`sora_app_${entity}`, JSON.stringify(appState[entity]));
+        } else {
+          PERSISTED_ENTITIES.forEach(k => {
+            if (appState[k]) {
+              localStorage.setItem(`sora_app_${k}`, JSON.stringify(appState[k]));
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('Frontend persistence warning:', err);
+      }
+    }
+
+    function loadPersistedAppState() {
+      try {
+        PERSISTED_ENTITIES.forEach(k => {
+          const raw = localStorage.getItem(`sora_app_${k}`);
+          if (raw) {
+            try {
+              const data = JSON.parse(raw);
+              if (Array.isArray(data) && data.length > 0) {
+                appState[k] = data;
+              }
+            } catch (e) {}
+          }
+        });
+      } catch (err) {
+        console.warn('Frontend restore warning:', err);
+      }
+    }
+
+    // Immediately restore persisted state on load so memory state mirrors client storage
+    loadPersistedAppState();
+
+    // ==========================================
     // ROUTING & TAB NAVIGATION
     // ==========================================
     
@@ -6373,6 +6420,7 @@
       const dSelect = document.getElementById('empFormDeptSelect');
       if (dSelect) dSelect.value = name;
       closeModal('modalCreateDept');
+      saveAppState('departments');
       renderMasterTable();
       updateMasterBadges();
       currentEditingEntity = null;
@@ -6424,6 +6472,7 @@
       const dSelect = document.getElementById('empFormDesignationSelect');
       if (dSelect) dSelect.value = title;
       closeModal('modalCreateDesignation');
+      saveAppState('designations');
       renderMasterTable();
       updateMasterBadges();
       currentEditingEntity = null;
@@ -6481,6 +6530,7 @@
       const lSelect = document.getElementById('empFormBranchSelect');
       if (lSelect) lSelect.value = name;
       closeModal('modalCreateLocation');
+      saveAppState('locations');
       renderMasterTable();
       updateMasterBadges();
       currentEditingEntity = null;
@@ -6736,6 +6786,7 @@
       const sSelect = document.getElementById('empFormShiftSelect');
       if (sSelect) sSelect.value = name;
       closeModal('modalCreateShift');
+      saveAppState('shifts');
       renderMasterTable();
       updateMasterBadges();
       currentEditingEntity = null;
@@ -6764,6 +6815,7 @@
       const aSelect = document.getElementById('empFormAssetSelect');
       if (aSelect) aSelect.value = name;
       closeModal('modalCreateAsset');
+      saveAppState('assets');
       showToast('Asset Registered', `${name} [${category}] registered in inventory.`);
       renderMasterTable();
     }
@@ -6788,6 +6840,7 @@
       const tSelect = document.getElementById('empFormTypeSelect');
       if (tSelect) tSelect.value = name;
       closeModal('modalCreateEmploymentType');
+      saveAppState('employmentTypes');
       showToast('Employment Type Added', `${name} with ${notice} notice period added.`);
       renderMasterTable();
     }
@@ -6846,6 +6899,7 @@
       const lSelect = document.getElementById('leaveTypeSelect');
       if (lSelect) lSelect.value = name;
       closeModal('modalCreateLeaveType');
+      saveAppState('leaveTypes');
       renderMasterTable();
       updateMasterBadges();
       currentEditingEntity = null;
@@ -6906,6 +6960,7 @@
         onCandidateStageDropdownChange();
       }
       closeModal('modalCreatePipelineStage');
+      saveAppState('pipelineStages');
       renderMasterTable();
       renderCandidateTable();
       updateMasterBadges();
@@ -7341,6 +7396,7 @@
           `Are you sure you want to delete "${name}" from ${entity}? This will permanently remove it from system dropdowns.`,
           () => {
             appState[entity].splice(idx, 1);
+            saveAppState(entity);
             populateAllDropdowns();
             renderMasterTable();
             showToast('Item Deleted', `"${name}" removed from master configuration.`);
@@ -7591,6 +7647,9 @@
         salary: salary,
         status: 'Active'
       });
+      saveAppState('employees');
+      renderEmployeeTable();
+      renderPayrollTable();
 
       showToast('Employee Enrolled!', `${first} ${last} added as ${empId}`);
       switchTab('employee-list');
@@ -7628,6 +7687,7 @@
       appState.roles.push(newRole);
       populateRoleDropdown();
       document.getElementById('empFormRoleSelect').value = title;
+      saveAppState('roles');
       closeModal('modalCreateRole');
       showToast('Role Created', `${title} saved with custom permissions matrix.`);
     }
@@ -9330,6 +9390,7 @@
       const l = appState.leaves[currentLeaveIdx];
       if (!l) return;
       l.status = decision;
+      saveAppState('leaves');
       renderLeaveTable();
       closeModal('modalLeaveDetail');
       showToast(`Leave ${decision}`, `Application for ${l.name} marked as ${decision}.`);
@@ -9337,12 +9398,14 @@
 
     function approveLeaveQuick(idx) {
       appState.leaves[idx].status = 'Approved';
+      saveAppState('leaves');
       renderLeaveTable();
       showToast('Leave Approved', `Approved leave for ${appState.leaves[idx].name}`);
     }
 
     function rejectLeaveQuick(idx) {
       appState.leaves[idx].status = 'Rejected';
+      saveAppState('leaves');
       renderLeaveTable();
       showToast('Leave Rejected', `Rejected leave application for ${appState.leaves[idx].name}`);
     }
@@ -9466,6 +9529,7 @@
       };
 
       appState.candidates.unshift(newCand);
+      saveAppState('candidates');
       renderCandidateTable();
       closeModal('modalAddCandidate');
       showToast('Candidate Enrolled', `${name} successfully added to ATS pipeline [${newId}].`);
@@ -9479,6 +9543,7 @@
         `Are you sure you want to remove candidate "${c.name}" (${c.pos}) from the recruitment pipeline? This will permanently delete their application and interview scorecards.`,
         () => {
           appState.candidates.splice(idx, 1);
+          saveAppState('candidates');
           renderCandidateTable();
           showToast('Candidate Deleted', `${c.name} has been removed from ATS.`);
         }
@@ -9681,6 +9746,7 @@
       if (!c) return;
       c.stage = document.getElementById('cndDetailStageSelect').value;
       c.notes = document.getElementById('cndDetailNotes').value.trim();
+      saveAppState('candidates');
       renderCandidateTable();
       closeModal('modalCandidateDetail');
       showToast('Stage Updated', `${c.name} updated to "${c.stage}".`);
@@ -10439,6 +10505,7 @@
       }
 
       editingOfferIndex = null;
+      saveAppState('offers');
       renderOfferTable();
       closeModal('modalCreateOffer');
       
@@ -10657,6 +10724,7 @@
       emp.salary = salary;
       emp.status = status;
 
+      saveAppState('employees');
       renderEmployeeTable();
       renderPayrollTable();
       closeModal('modalEditEmployee');
@@ -10806,6 +10874,8 @@
         }
       }
 
+      saveAppState('employees');
+      saveAppState('resignations');
       renderEmployeeTable();
       renderResignationTable();
       closeModal('modalEmployeeStatusUpdate');
@@ -11140,6 +11210,7 @@
         pages: pagesToSave
       });
 
+      saveAppState('policies');
       renderPolicyCards();
       closeModal('modalCreatePolicy');
       showToast('Policy Published &amp; Broadcasted', `"${title}" (${pagesToSave.length} Pages) broadcasted to ${scope}.`);
@@ -11280,6 +11351,8 @@
         hike: hike,
         status: 'Approved'
       });
+      saveAppState('promotions');
+      saveAppState('employees');
       renderPromotionTable();
       renderEmployeeTable();
       closeModal('modalCreatePromotion');
@@ -11349,21 +11422,27 @@
       const empId = document.getElementById('simScannerEmpSelect').value;
       const emp = appState.employees.find(e => e.id === empId) || appState.employees[0];
       
+      const locKey = document.getElementById('standeeLocationSelect')?.value || 'mumbai';
+      const loc = standeeLocations[locKey] || standeeLocations.mumbai;
+      
       const statusOverlay = document.getElementById('simScannerStatusOverlay');
-      statusOverlay.innerText = "Target Locked! Verifying BKC Geofence...";
+      statusOverlay.innerText = `Connecting to Reception Standee [${loc.token}] • Probing GPS Telemetry...`;
       statusOverlay.className = "absolute bottom-2 inset-x-3 py-1 px-2 rounded-lg bg-amber-500/80 text-black font-bold text-center text-[10px] font-mono shadow-md animate-pulse";
 
       setTimeout(() => {
-        // Log attendance punch directly with Punch Method = QR Standee Scanner
         const now = new Date();
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        // Realistic Haversine Geofence Verification Simulation (14.2m vs 50m allowable radius)
+        const distanceMeters = 14;
+        const isVerified = distanceMeters <= loc.radius;
 
         appState.attendance.unshift({
           empId: emp.id,
           name: emp.name,
-          date: 'Today (31 Oct 2026)',
+          date: 'Today (' + now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ')',
           method: 'QR Standee Scanner',
-          location: 'BKC Reception Standee',
+          location: `${loc.title} (Kiosk #${loc.token})`,
           inTime: timeStr,
           inLat: 19.0657,
           inLng: 72.8682,
@@ -11371,20 +11450,30 @@
           outLat: 19.0657,
           outLng: 72.8682,
           breakTime: '--',
-          hours: 'Active Shift'
+          hours: 'Active Shift',
+          status: 'Present',
+          regularized: false
         });
 
+        saveAppState('attendance');
         renderAttendanceTable();
 
-        statusOverlay.innerText = "Verified 100%! Attendance Logged.";
+        statusOverlay.innerText = `Verified 100%! Geofence: ${distanceMeters}m/${loc.geofence} (PASS) • Token: ${loc.token}`;
         statusOverlay.className = "absolute bottom-2 inset-x-3 py-1 px-2 rounded-lg bg-emerald-500 text-black font-bold text-center text-[10px] font-mono shadow-md";
         document.getElementById('simScannerLaser').classList.add('hidden');
 
         document.getElementById('simScannerActionArea').classList.add('hidden');
         document.getElementById('simScannerSuccessCard').classList.remove('hidden');
-        document.getElementById('simScannerSuccessMeta').innerHTML = `<strong>${emp.name}</strong> clocked-in at ${timeStr}. Logged under <span class="text-cyan-400 font-bold font-mono">"QR Standee Scanner"</span> in Attendance.`;
+        document.getElementById('simScannerSuccessMeta').innerHTML = `
+          <strong>${emp.name}</strong> clocked-in at ${timeStr}.<br>
+          <div class="mt-1.5 p-2 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-[10px] text-emerald-300 font-mono text-left">
+            <div>&bull; GPS Verification: <strong>${distanceMeters}m</strong> (Allowed: ${loc.geofence}) &bull; <span class="text-emerald-400 font-bold">GEOFENCE MATCH</span></div>
+            <div>&bull; Kiosk Token Check: <strong>${loc.token}</strong> &bull; <span class="text-emerald-400 font-bold">AES-256 VALID</span></div>
+            <div>&bull; Logged under: <span class="text-cyan-300 font-bold">"QR Standee Scanner"</span> in Attendance Register</div>
+          </div>
+        `;
         
-        showToast('Touchless Punch Logged', `${emp.name} clocked in via Reception Standee at ${timeStr}.`);
+        showToast('Touchless Punch Logged', `${emp.name} verified via Reception Standee at ${timeStr}.`);
         lucide.createIcons();
       }, 900);
     }
@@ -11432,6 +11521,7 @@
     updateLiveServerClock();
 
     document.addEventListener('DOMContentLoaded', () => {
+      loadPersistedAppState();
       loadAdminProfile();
       loadPayrollDates();
       populateAllDropdowns();
@@ -11442,6 +11532,7 @@
       renderCandidateTable();
       renderOfferTable();
       renderResignationTable();
+      saveAppState('policies');
       renderPolicyCards();
       renderPromotionTable();
       renderZipAuditTable();
