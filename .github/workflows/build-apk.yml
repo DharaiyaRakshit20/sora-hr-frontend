@@ -23,27 +23,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Flutter SDK (Latest Stable)
+      - name: Set up Flutter SDK
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
-      - name: Initialize & Configure Flutter Android Project
+      - name: Get Dependencies
         run: |
           cd sora_mobile_flutter
-          flutter create --platforms=android --org com.sorahr .
-          
-          # Fix Kotlin version in modern settings.gradle
-          sed -i 's/org.jetbrains.kotlin.android" version "[^"]*"/org.jetbrains.kotlin.android" version "1.9.22"/g' android/settings.gradle || true
-          
-          # Fix Kotlin version in classic build.gradle
-          sed -i "s/ext.kotlin_version = .*/ext.kotlin_version = '1.9.22'/g" android/build.gradle || true
-          
           flutter pub get
-          
-          # Inject Camera & GPS permissions into AndroidManifest.xml
-          sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />' android/app/src/main/AndroidManifest.xml
 
       - name: Build Android Release APK
         run: |
