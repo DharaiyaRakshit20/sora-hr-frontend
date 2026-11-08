@@ -1,32 +1,28 @@
-name: Build & Upload SORA HR APK to Google Drive & Releases
+name: Build & Upload SORA HR APK
 
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch: # Allows manual 1-click trigger from GitHub Actions
+  workflow_dispatch:
 
 jobs:
   build-and-upload:
-    name: Build Flutter APK & Auto-Upload
+    name: Build Flutter APK
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
 
     steps:
-      # Step 1: Check out the code
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up Java JDK 17
-      - name: Set up Java JDK
+      - name: Set up Java JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
 
-      # Step 3: Set up Flutter SDK
       - name: Set up Flutter SDK
         uses: subosito/flutter-action@v2
         with:
@@ -34,24 +30,29 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # Step 4: Install Flutter Dependencies & Ensure Android Structure
-      - name: Prepare Flutter Android App
+      - name: Initialize & Configure Flutter Android Project
         run: |
           cd sora_mobile_flutter
           flutter create --platforms=android --org com.sorahr .
           flutter pub get
+          # Inject Camera & GPS permissions into AndroidManifest.xml
+          sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />' android/app/src/main/AndroidManifest.xml
 
-      # Step 5: Build Release APK
       - name: Build Android Release APK
         run: |
           cd sora_mobile_flutter
           flutter build apk --release
-          # Rename for clean sharing
           cp build/app/outputs/flutter-apk/app-release.apk ../SORA-HR-Employee-App.apk
 
-      # Step 6: Upload to Google Drive (If GDRIVE secrets are configured)
-      - name: Upload APK to Google Drive
-        if: env.HAS_GDRIVE_SECRETS == 'true'
+      - name: Upload APK as Downloadable Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SORA-HR-Employee-App-APK
+          path: SORA-HR-Employee-App.apk
+
+      # Optional Google Drive Upload (Only runs if GDRIVE_CREDENTIALS and GDRIVE_FOLDER_ID are set)
+      - name: Upload to Google Drive (Optional)
+        if: "${{ secrets.GDRIVE_CREDENTIALS != '' && secrets.GDRIVE_FOLDER_ID != '' }}"
         uses: adityak74/google-drive-upload-git-action@main
         with:
           credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
@@ -59,36 +60,3 @@ jobs:
           folderId: ${{ secrets.GDRIVE_FOLDER_ID }}
           name: "SORA-HR-Employee-App.apk"
           overwrite: "true"
-        env:
-          HAS_GDRIVE_SECRETS: ${{ secrets.GDRIVE_CREDENTIALS != '' && secrets.GDRIVE_FOLDER_ID != '' }}
-
-      # Step 7: Create Public Shareable Release Link (Works 100% out of the box!)
-      - name: Create Public Shareable Link on GitHub Releases
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: SORA HR Mobile App (v1.0.${{ github.run_number }})
-          body: |
-            ## 📱 SORA HR — Android APK Download
-            
-            This is the latest production build of the SORA HR Employee Self-Service Mobile App.
-            
-            - **Download File**: `SORA-HR-Employee-App.apk`
-            - **Features**: Touchless Clock In/Out, Break Stopwatch, Geo Attendance, Selfie Verification, Leave Management, Salary Slips.
-            
-            ### How to Install on Android:
-            1. Download `SORA-HR-Employee-App.apk` below.
-            2. Open the file on your Android phone.
-            3. Tap **Install** (Allow install from this source if prompted).
-          files: SORA-HR-Employee-App.apk
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Step 8: Upload Artifact to GitHub Action Run
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: SORA-HR-Employee-App-APK
-          path: SORA-HR-Employee-App.apk
