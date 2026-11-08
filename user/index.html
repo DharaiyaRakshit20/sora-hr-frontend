@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SORA HR — Employee Self-Service (ESS) Portal</title>
+  <link rel="icon" type="image/svg+xml" href="/sora-hr-icon.svg">
+  <link rel="alternate icon" type="image/png" href="/sora-hr-icon.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['Fraunces', 'serif'],
+          },
+          colors: {
+            brand: {
+              black: '#09090c',
+              dark: '#101014',
+              surface: '#17171d',
+              card: '#1e1e26',
+              border: '#2b2b36',
+              amber: '#f59e0b',
+              amberLight: '#fbbf24',
+              amberDark: '#d97706',
+              glow: 'rgba(245, 158, 11, 0.25)',
+              cream: '#fdfbf7',
+              muted: '#a3a3b2'
+            }
+          },
+          boxShadow: {
+            'amber-glow': '0 0 35px -5px rgba(245, 158, 11, 0.30)',
+            'amber-glow-lg': '0 0 60px -10px rgba(245, 158, 11, 0.40)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Leaflet CSS & JS for Interactive Field Lat-Long Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- html2pdf.js for Salary Slip PDF Downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #101014; }
+    ::-webkit-scrollbar-thumb { background: #2b2b36; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+
+    /* Pulsing animations */
+    @keyframes subtlePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.02); }
+    }
+    .punch-active-pulse { animation: subtlePulse 2.5s infinite ease-in-out; }
+
+    /* Leaflet dark styling */
+    .leaflet-container {
+      background: #101014 !important;
+      font-family: inherit;
+    }
+  </style>
+</head>
+<body class="bg-brand-black text-neutral-100 font-sans antialiased min-h-screen selection:bg-brand-amber selection:text-neutral-950">
+
+  <!-- ======================================================= -->
+  <!-- 1. LOGIN SCREEN (ZERO 2FA • SIMPLE & INSTANT ACCESS)   -->
+  <!-- ======================================================= -->
+  <div id="loginScreen" class="fixed inset-0 z-50 bg-brand-black flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <!-- Atmospheric subtle background glow -->
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-brand-amber/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="w-full max-w-md relative z-10 space-y-5 my-auto">
+      <!-- Portal Brand Card -->
+      <div class="bg-brand-surface border border-brand-border rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+        
+        <!-- Header & Logo -->
+        <div class="text-center space-y-2">
+          <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-brand-dark border border-brand-border mb-1 shadow-inner">
+            <img src="/sora-hr-logo.svg" alt="SORA HR" class="h-8 w-auto">
+          </div>
+          <div class="flex items-center justify-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">Employee Portal</h1>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-amber/15 text-brand-amber border border-brand-amber/30 uppercase tracking-wider">ESS</span>
+          </div>
+          <p class="text-xs text-neutral-400">Direct Employee Self-Service • Clock In, Leaves, Slips &amp; Team Management</p>
+        </div>
+
+        <!-- Role Permissions Highlights Pill -->
+        <div class="p-3 rounded-2xl bg-brand-dark/80 border border-brand-border text-[11px] text-neutral-300 flex items-center gap-2.5">
+          <div class="w-6 h-6 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          </div>
+          <div class="leading-tight">
+            <strong class="text-white">Role-Based Dynamic Access:</strong>
+            <span class="text-neutral-400"> Views and permissions adapt dynamically to your assigned employee designation.</span>
+          </div>
+        </div>
+
+        <!-- Direct Login Form (NO 2FA REQUIRED) -->
+        <form onsubmit="handleDirectLogin(event)" class="space-y-4">
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-neutral-300 flex items-center justify-between">
+              <span>Employee ID / Official Email</span>
+              <span class="text-[10px] text-neutral-400 font-normal">e.g. EMP-AGT-0104</span>
+            </label>
+            <div class="relative">
+              <i data-lucide="user" class="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="loginEmployeeInput" required value="pooja.i@apextech.com" placeholder="name@apextech.com or EMP-ID" class="w-full bg-brand-dark border border-brand-border focus:border-brand-amber rounded-xl py-2.5 pl-10 pr-4 text-xs text-white placeholder-neutral-500 outline-none transition-all">
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold text-neutral-300">Account Password</label>
+              <a href="javascript:void(0)" onclick="showToast('Password Hint', 'Any password is accepted for testing. Default is: sora123')" class="text-[11px] text-brand-amber hover:underline font-medium">Forgot?</a>
+            </div>
+            <div class="relative">
+              <i data-lucide="lock" class="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input type="password" id="loginPasswordInput" value="sora123" placeholder="••••••••" class="w-full bg-brand-dark border border-brand-border focus:border-brand-amber rounded-xl py-2.5 pl-10 pr-10 text-xs text-white placeholder-neutral-500 outline-none transition-all">
+              <button type="button" onclick="togglePasswordVisibility('loginPasswordInput', this)" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember me & No 2FA notice -->
+          <div class="flex items-center justify-between text-xs text-neutral-400 pt-0.5">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" checked class="rounded border-brand-border bg-brand-dark text-brand-amber focus:ring-0">
+              <span>Remember this session</span>
+            </label>
+            <span class="text-[10px] text-emerald-400 font-mono font-semibold flex items-center gap-1">
+              <i data-lucide="check-circle-2" class="w-3 h-3"></i>
+              <span>Direct Sign-In (No 2FA)</span>
+            </span>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="w-full py-3 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow-lg shadow-brand-amber/20 flex items-center justify-center gap-2 transition-all group">
+            <span>Sign In to Employee Portal</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+          </button>
+        </form>
+
+        <!-- Divider with Quick Demo Employee Switcher -->
+        <div class="pt-2 border-t border-brand-border/60 space-y-3">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-neutral-400 font-semibold uppercase tracking-wider text-[10px]">Quick Demo Profiles (Instant Login)</span>
+            <span class="text-brand-amber text-[10px] font-mono">1-Click Switch</span>
+          </div>
+
+          <!-- 4 Preset Employee Role Cards -->
+          <div class="grid grid-cols-2 gap-2 text-left">
+            <!-- 1. Pooja Iyer (Full Stack Engineer - Individual Contributor) -->
+            <button type="button" onclick="quickLoginAs('EMP-AGT-0104')" class="p-2.5 rounded-xl bg-brand-dark hover:bg-brand-card border border-brand-border hover:border-brand-amber/50 transition-all text-left group">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs text-white group-hover:text-brand-amber transition-colors">Pooja Iyer</span>
+                <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+              </div>
+              <div class="text-[10px] text-neutral-400 mt-0.5 truncate">Full Stack Engineer</div>
+              <div class="text-[9px] text-sky-400 font-mono mt-1 font-semibold">Standard ESS</div>
+            </button>
+
+            <!-- 2. Vikram Joshi (Field Sales Lead - Manager + GPS Map) -->
+            <button type="button" onclick="quickLoginAs('EMP-AGT-0101')" class="p-2.5 rounded-xl bg-brand-dark hover:bg-brand-card border border-brand-border hover:border-brand-amber/50 transition-all text-left group">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs text-white group-hover:text-brand-amber transition-colors">Vikram Joshi</span>
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              </div>
+              <div class="text-[10px] text-neutral-400 mt-0.5 truncate">Field Sales Lead</div>
+              <div class="text-[9px] text-amber-400 font-mono mt-1 font-semibold">Manager + Field GPS</div>
+            </button>
+
+            <!-- 3. Rohan Mehra (HR Director - HR Admin) -->
+            <button type="button" onclick="quickLoginAs('EMP-AGT-0103')" class="p-2.5 rounded-xl bg-brand-dark hover:bg-brand-card border border-brand-border hover:border-brand-amber/50 transition-all text-left group">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs text-white group-hover:text-brand-amber transition-colors">Rohan Mehra</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              </div>
+              <div class="text-[10px] text-neutral-400 mt-0.5 truncate">HR Director / Admin</div>
+              <div class="text-[9px] text-emerald-400 font-mono mt-1 font-semibold">HR Admin Access</div>
+            </button>
+
+            <!-- 4. Simran Kaur (Product Marketing Manager - Team Lead) -->
+            <button type="button" onclick="quickLoginAs('EMP-AGT-0106')" class="p-2.5 rounded-xl bg-brand-dark hover:bg-brand-card border border-brand-border hover:border-brand-amber/50 transition-all text-left group">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs text-white group-hover:text-brand-amber transition-colors">Simran Kaur</span>
+                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+              </div>
+              <div class="text-[10px] text-neutral-400 mt-0.5 truncate">Marketing Manager</div>
+              <div class="text-[9px] text-purple-400 font-mono mt-1 font-semibold">Team Approver</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Cross portal navigation link -->
+        <div class="pt-2 text-center text-xs text-neutral-500">
+          <span>Company Administrator? </span>
+          <a href="/admin/" class="text-brand-amber hover:underline font-semibold">Open HR Admin Console &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================= -->
+  <!-- 2. MAIN APPLICATION WORKSPACE (POST-LOGIN)             -->
+  <!-- ======================================================= -->
+  <div id="appWorkspace" class="hidden min-h-screen flex flex-col bg-brand-black">
+
+    <!-- TOP GLOBAL HEADER BAR -->
+    <header class="sticky top-0 z-40 bg-brand-surface/95 backdrop-blur-md border-b border-brand-border px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4">
+      
+      <!-- Left: Logo & Portal Switcher -->
+      <div class="flex items-center gap-3">
+        <a href="/user/" class="flex items-center gap-2.5 group">
+          <img src="/sora-hr-logo.svg" alt="SORA HR" class="h-6 sm:h-7 w-auto">
+          <span class="hidden sm:inline-block px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-brand-amber/15 text-brand-amber border border-brand-amber/30 uppercase tracking-wider">ESS Portal</span>
+        </a>
+
+        <div class="h-5 w-px bg-brand-border hidden md:block"></div>
+
+        <!-- Company Name & Branch Badge -->
+        <div class="hidden lg:flex items-center gap-2 text-xs">
+          <span class="font-bold text-white" id="headerCompanyName">Apex Global Technologies</span>
+          <span class="text-neutral-400">&bull;</span>
+          <span class="text-neutral-400 text-[11px]" id="headerShiftName">General Shift (09:30 AM - 06:30 PM)</span>
+        </div>
+      </div>
+
+      <!-- Center: Live Shift Clock & Status Pill -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Live IST Clock Ticker -->
+        <div class="px-2.5 py-1 rounded-xl bg-brand-dark border border-brand-border text-center">
+          <span class="text-[9px] text-neutral-400 uppercase font-mono block leading-none">Indian Time</span>
+          <span id="headerLiveClock" class="text-xs font-mono font-bold text-white">--:--:--</span>
+        </div>
+
+        <!-- Current Shift Status Pill -->
+        <div id="headerShiftStatusPill" class="px-3 py-1 rounded-full text-xs font-bold bg-neutral-800 text-neutral-400 border border-neutral-700 flex items-center gap-1.5 whitespace-nowrap">
+          <span class="w-2 h-2 rounded-full bg-neutral-500"></span>
+          <span id="headerShiftStatusText">Not Clocked In</span>
+        </div>
+      </div>
+
+      <!-- Right: Role Switcher Dropdown, Profile Pill, Logout -->
+      <div class="flex items-center gap-2.5">
+        
+        <!-- Live Role Switcher (For testing permissions instantly) -->
+        <div class="hidden md:flex items-center gap-1.5 bg-brand-dark px-2.5 py-1 rounded-xl border border-brand-border">
+          <i data-lucide="sliders" class="w-3.5 h-3.5 text-brand-amber"></i>
+          <span class="text-[10px] text-neutral-400 font-semibold uppercase">Role:</span>
+          <select id="userRoleSwitcherSelect" onchange="switchUserRole(this.value)" class="bg-transparent text-xs font-bold text-brand-amber outline-none cursor-pointer">
+            <option value="EMP-AGT-0104" class="bg-brand-surface text-white">Pooja (Engineer)</option>
+            <option value="EMP-AGT-0101" class="bg-brand-surface text-white">Vikram (Field Sales Lead)</option>
+            <option value="EMP-AGT-0103" class="bg-brand-surface text-white">Rohan (HR Director)</option>
+            <option value="EMP-AGT-0106" class="bg-brand-surface text-white">Simran (Marketing Lead)</option>
+          </select>
+        </div>
+
+        <!-- HR Admin Console Quick Switch (Visible for HR Admins) -->
+        <a id="linkSwitchToAdminConsole" href="/admin/" title="Switch to HR Administrator Console" class="hidden px-2.5 py-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-neutral-950 font-bold text-[11px] transition-all flex items-center gap-1">
+          <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Admin Console</span>
+        </a>
+
+        <!-- User Profile Pill -->
+        <div class="flex items-center gap-2 pl-1 cursor-pointer" onclick="switchUserTab('profile')">
+          <div id="headerUserAvatar" class="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-amber to-amber-600 text-neutral-950 font-extrabold flex items-center justify-center text-xs shadow-md">
+            PI
+          </div>
+          <div class="hidden xl:block text-left leading-tight">
+            <div id="headerUserName" class="text-xs font-bold text-white truncate max-w-[120px]">Pooja Iyer</div>
+            <div id="headerUserRole" class="text-[10px] text-brand-amber truncate max-w-[120px]">Full Stack Engineer</div>
+          </div>
+        </div>
+
+        <!-- Logout Button -->
+        <button onclick="handleUserLogout()" title="Sign Out of ESS" class="p-2 rounded-xl bg-brand-dark hover:bg-rose-500/15 text-neutral-400 hover:text-rose-400 border border-brand-border transition-all">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </header>
+
+
+    <!-- BODY CONTAINER: SIDEBAR + MAIN WORKSPACE -->
+    <div class="flex-grow flex flex-col md:flex-row overflow-hidden">
+
+      <!-- LEFT SIDEBAR NAVIGATION -->
+      <aside class="w-full md:w-64 bg-brand-surface border-r border-brand-border shrink-0 flex flex-col justify-between p-3 sm:p-4 space-y-4">
+        
+        <!-- Navigation Menu Items -->
+        <div class="space-y-1">
+          <div class="px-3 py-1.5 text-[10px] font-bold text-neutral-400 uppercase tracking-wider font-mono">
+            Employee Workspace
+          </div>
+
+          <!-- 1. Dashboard Overview -->
+          <button onclick="switchUserTab('dashboard')" id="nav-btn-dashboard" class="user-nav-btn w-full px-3 py-2.5 rounded-xl font-bold text-xs flex items-center gap-3 transition-all bg-brand-amber text-neutral-950 shadow-md">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            <span>Overview Dashboard</span>
+          </button>
+
+          <!-- 2. Attendance & Daily Clock (CORE FEATURE) -->
+          <button onclick="switchUserTab('attendance')" id="nav-btn-attendance" class="user-nav-btn w-full px-3 py-2.5 rounded-xl font-semibold text-xs text-neutral-300 hover:text-white hover:bg-brand-card flex items-center justify-between transition-all">
+            <div class="flex items-center gap-3">
+              <i data-lucide="clock" class="w-4 h-4 text-brand-amber"></i>
+              <span>Daily Clock &amp; Punch</span>
+            </div>
+            <span id="navAttendanceBadge" class="w-2 h-2 rounded-full bg-neutral-600"></span>
+          </button>
+
+          <!-- 3. Leave Management (Dynamic Quotas) -->
+          <button onclick="switchUserTab('leaves')" id="nav-btn-leaves" class="user-nav-btn w-full px-3 py-2.5 rounded-xl font-semibold text-xs text-neutral-300 hover:text-white hover:bg-brand-card flex items-center justify-between transition-all">
+            <div class="flex items-center gap-3">
+              <i data-lucide="calendar-days" class="w-4 h-4 text-sky-400"></i>
+              <span>My Leaves &amp; Quotas</span>
+            </div>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-sky-500/15 text-sky-300 border border-sky-500/30">10 Policies</span>
+          </button>
+
+          <!-- 4. Salary & Payslips -->
+          <button onclick="switchUserTab('payslips')" id="nav-btn-payslips" class="user-nav-btn w-full px-3 py-2.5 rounded-xl font-semibold text-xs text-neutral-300 hover:text-white hover:bg-brand-card flex items-center gap-3 transition-all">
+            <i data-lucide="receipt" class="w-4 h-4 text-emerald-400"></i>
+            <span>Salary &amp; Payslips</span>
+          </button>
+
+          <!-- 5. Company Policies & Handbook -->
+          <button onclick="switchUserTab('policies')" id="nav-btn-policies" class="user-nav-btn w-full px-3 py-2.5 rounded-xl font-semibold text-xs text-neutral-300 hover:text-white hover:bg-brand-card flex items-center gap-3 transition-all">
+            <i data-lucide="book-open" class="w-4 h-4 text-purple-400"></i>
+            <span>Policies &amp; Code</span>
+          </button>
+
+          <!-- 6. Assigned Assets -->
+          <button onclick="switchUserTab('assets')" id="nav-btn-assets" class="user-nav-btn w-full px-3 py-2.5 rounded-xl font-semibold text-xs text-neutral-300 hover:text-white hover:bg-brand-card flex items-center gap-3 transition-all">
+            <i data-lucide="laptop" class="w-4 h-4 text-cyan-400"></i>
+            <span>Assigned Assets</span>
+          </button>
+
+          <!-- DYNAMIC ROLE-BASED SECTION (VISIBLE ONLY FOR LEADS / MANAGERS / FIELD ROLES) -->
+          <div id="sidebarManagerSection" class="pt-3 border-t border-brand-border space-y-1">
+            <div class="px-3 py-1.5 text-[10px] font-bold text-brand-amber uppercase tracking-wider font-mono flex items-center justify-between">
+              <span>Management Tools</span>
+              <span class="text-[9px] bg-brand-amber/20 px-1.5 py-0.2 rounded text-brand-amber">Lead</span>
+            </div>
+
+            <!-- Team Approvals & Roster -->
+            <button onclick="switchUserTab('team-approvals')" id="nav-btn-team-approvals" class="user-nav-btn w-full px-3 py-2.5 rounded-xl font-semibold text-xs text-neutral-300 hover:text-white hover:bg-brand-card flex items-center justify-between transition-all">
+              <div class="flex items-center gap-3">
+                <i data-lucide="users-check" class="w-4 h-4 text-amber-400"></i>
+                <span>Team Approvals</span>
+              </div>
+              <span id="navPendingApprovalsCount" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-amber-500/20 text-amber-300 font-bold">2</span>
+            </button>
+
+            <!-- Field GPS Tracker (Visible for Field Sales Lead) -->
+            <button onclick="switchUserTab('field-gps')" id="nav-btn-field-gps" class="user-nav-btn w-full px-3 py-2.5 rounded-xl font-semibold text-xs text-neutral-300 hover:text-white hover:bg-brand-card flex items-center gap-3 transition-all">
+              <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
+              <span>Field GPS Tracker</span>
+            </button>
+          </div>
+
+          <!-- 7. Profile -->
+          <div class="pt-3 border-t border-brand-border">
+            <button onclick="switchUserTab('profile')" id="nav-btn-profile" class="user-nav-btn w-full px-3 py-2.5 rounded-xl font-semibold text-xs text-neutral-300 hover:text-white hover:bg-brand-card flex items-center gap-3 transition-all">
+              <i data-lucide="user-check" class="w-4 h-4 text-neutral-400"></i>
+              <span>My Profile &amp; KYC</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom Employee Card in Sidebar -->
+        <div class="p-3 rounded-2xl bg-brand-dark border border-brand-border space-y-2">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-neutral-400">Role Authority</span>
+            <span id="sidebarRolePill" class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-sky-500/15 text-sky-400 font-mono">Individual Contributor</span>
+          </div>
+          <div class="text-[11px] text-neutral-300">
+            <span class="font-bold text-white" id="sidebarEmpCode">EMP-AGT-0104</span> &bull; <span id="sidebarDeptName">Engineering &amp; Technology</span>
+          </div>
+          <div class="pt-1 flex items-center justify-between text-[10px] text-neutral-400">
+            <span>Next Holiday:</span>
+            <strong class="text-brand-amber">Diwali (12 Nov)</strong>
+          </div>
+        </div>
+      </aside>
+
+
+      <!-- MAIN CONTENT WORKSPACE -->
+      <main class="flex-grow bg-brand-black p-4 sm:p-6 lg:p-8 overflow-y-auto max-h-[calc(100vh-60px)]">
+
+        <!-- ============================================== -->
+        <!-- TAB 1: OVERVIEW DASHBOARD                     -->
+        <!-- ============================================== -->
+        <div id="tab-dashboard" class="user-tab-content space-y-6">
+          
+          <!-- Welcome Banner with Live Clock & Quick Actions -->
+          <div class="p-6 rounded-3xl bg-gradient-to-r from-brand-surface via-brand-dark to-brand-surface border border-brand-border relative overflow-hidden shadow-xl">
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="space-y-1.5">
+                <div class="flex items-center gap-2">
+                  <h2 class="text-xl sm:text-2xl font-black text-white">Welcome, <span id="dashWelcomeName">Pooja</span> 👋</h2>
+                  <span id="dashRoleBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30">L3 &bull; Senior Engineering</span>
+                </div>
+                <p class="text-xs text-neutral-400 max-w-xl">
+                  General Day Shift &bull; Apex Global Technologies Headquarters (BKC Mumbai). Your shift timer, leave balances, and latest payslip are updated in real-time.
+                </p>
+              </div>
+
+              <!-- Quick Punch CTA Button -->
+              <div class="flex items-center gap-3">
+                <button onclick="switchUserTab('attendance')" class="px-4 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow-lg shadow-brand-amber/20 flex items-center gap-2 transition-all">
+                  <i data-lucide="clock" class="w-4 h-4"></i>
+                  <span>Go to Daily Clock</span>
+                </button>
+                <button onclick="openUserApplyLeaveModal()" class="px-4 py-2.5 rounded-xl bg-brand-surface hover:bg-brand-card border border-brand-border text-white font-semibold text-xs flex items-center gap-2 transition-all">
+                  <i data-lucide="plus" class="w-4 h-4 text-sky-400"></i>
+                  <span>Apply Leave</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Key Stat Metrics Cards -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            
+            <!-- 1. Today's Working Hours -->
+            <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-1">
+              <div class="flex items-center justify-between text-neutral-400 text-xs font-semibold">
+                <span>Today's Work Timer</span>
+                <i data-lucide="timer" class="w-4 h-4 text-brand-amber"></i>
+              </div>
+              <div class="text-xl sm:text-2xl font-black font-mono text-white" id="dashTodayWorkTimer">00:00:00</div>
+              <div class="text-[10px] text-neutral-400 flex items-center gap-1">
+                <span>Shift Target:</span>
+                <strong class="text-neutral-200">8.0 Hours</strong>
+              </div>
+            </div>
+
+            <!-- 2. Casual & Medical Leave Balances -->
+            <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-1">
+              <div class="flex items-center justify-between text-neutral-400 text-xs font-semibold">
+                <span>Available Leaves</span>
+                <i data-lucide="calendar" class="w-4 h-4 text-sky-400"></i>
+              </div>
+              <div class="text-xl sm:text-2xl font-black font-mono text-sky-300" id="dashTotalLeaveBal">14 Days</div>
+              <div class="text-[10px] text-neutral-400 flex items-center gap-1.5">
+                <span>CL: <strong class="text-white">8</strong></span>
+                <span>&bull;</span>
+                <span>SL: <strong class="text-white">6</strong></span>
+                <span>&bull;</span>
+                <span>EL: <strong class="text-white">14</strong></span>
+              </div>
+            </div>
+
+            <!-- 3. October Net Take-Home Salary -->
+            <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-1">
+              <div class="flex items-center justify-between text-neutral-400 text-xs font-semibold">
+                <span>October Take-Home</span>
+                <i data-lucide="receipt" class="w-4 h-4 text-emerald-400"></i>
+              </div>
+              <div class="text-xl sm:text-2xl font-black font-mono text-emerald-400" id="dashTakeHomeAmount">&#8377; 69,737</div>
+              <div class="text-[10px] text-emerald-400/80 font-medium">Disbursed on 31 Oct &bull; HDFC</div>
+            </div>
+
+            <!-- 4. Next Company Holiday -->
+            <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-1">
+              <div class="flex items-center justify-between text-neutral-400 text-xs font-semibold">
+                <span>Upcoming Holiday</span>
+                <i data-lucide="sparkles" class="w-4 h-4 text-purple-400"></i>
+              </div>
+              <div class="text-base sm:text-lg font-bold text-white truncate">Diwali Festival</div>
+              <div class="text-[10px] text-purple-300 font-mono">12 Nov 2026 (Statutory Off)</div>
+            </div>
+          </div>
+
+          <!-- Middle Split: Live Clock Mini Widget + Recent Activity & Announcements -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left 2 Cols: Punch Clock Quick Center -->
+            <div class="lg:col-span-2 p-5 rounded-3xl bg-brand-surface border border-brand-border space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i data-lucide="activity" class="w-4 h-4 text-brand-amber"></i>
+                    <span>Shift Attendance &amp; Live Timer Control</span>
+                  </h3>
+                  <p class="text-[11px] text-neutral-400">Record touchless clock in, start meal/tea break, or clock out.</p>
+                </div>
+                <button onclick="switchUserTab('attendance')" class="text-xs text-brand-amber hover:underline font-semibold flex items-center gap-1">
+                  <span>Full Screen Clock</span>
+                  <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+
+              <!-- Interactive Quick Punch Row -->
+              <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border grid grid-cols-1 sm:grid-cols-4 gap-3 text-center">
+                
+                <!-- 1. Clock In -->
+                <button id="quickBtnClockIn" onclick="triggerClockInAction()" class="p-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-extrabold text-xs flex flex-col items-center justify-center gap-1.5 transition-all shadow-md">
+                  <i data-lucide="log-in" class="w-5 h-5"></i>
+                  <span>Clock In</span>
+                  <span class="text-[9px] font-mono font-normal opacity-80" id="quickClockInTime">Not In</span>
+                </button>
+
+                <!-- 2. Start / Stop Break -->
+                <button id="quickBtnBreak" onclick="triggerBreakAction()" class="p-3 rounded-xl bg-brand-card hover:bg-brand-surface border border-brand-border text-neutral-300 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition-all">
+                  <i data-lucide="coffee" class="w-5 h-5 text-amber-400"></i>
+                  <span id="quickBreakBtnText">Start Break</span>
+                  <span class="text-[9px] font-mono text-neutral-400" id="quickBreakTimer">00:00</span>
+                </button>
+
+                <!-- 3. Clock Out -->
+                <button id="quickBtnClockOut" onclick="triggerClockOutAction()" disabled class="p-3 rounded-xl bg-brand-card opacity-50 cursor-not-allowed border border-brand-border text-neutral-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition-all">
+                  <i data-lucide="log-out" class="w-5 h-5 text-rose-400"></i>
+                  <span>Clock Out</span>
+                  <span class="text-[9px] font-mono text-neutral-400" id="quickClockOutTime">--</span>
+                </button>
+
+                <!-- 4. Geotag / Verification Status -->
+                <div class="p-3 rounded-xl bg-brand-surface/70 border border-brand-border flex flex-col items-center justify-center text-center">
+                  <span class="text-[10px] text-neutral-400 font-semibold uppercase">Geofence</span>
+                  <span class="text-xs font-bold text-emerald-400 flex items-center gap-1 mt-0.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>BKC Office</span>
+                  </span>
+                  <span class="text-[9px] text-neutral-500 font-mono mt-0.5">14m / 50m radius</span>
+                </div>
+              </div>
+
+              <!-- Today Punch Trail -->
+              <div class="text-[11px] text-neutral-400 flex flex-wrap items-center justify-between gap-2 px-1">
+                <span id="dashPunchTrail">Punches today: <strong class="text-neutral-300 font-mono">0 Logged</strong></span>
+                <span class="text-neutral-400">Statutory Shift: <strong class="text-neutral-200">9h (including 1h meal break)</strong></span>
+              </div>
+            </div>
+
+            <!-- Right 1 Col: Corporate Announcements & Team Presence -->
+            <div class="p-5 rounded-3xl bg-brand-surface border border-brand-border space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                  <i data-lucide="bell" class="w-4 h-4 text-brand-amber"></i>
+                  <span>Announcements</span>
+                </h3>
+                <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded-full border border-emerald-500/30">Active</span>
+              </div>
+
+              <div class="space-y-2.5 text-xs">
+                <!-- Announcement 1 -->
+                <div class="p-3 rounded-xl bg-brand-dark border border-brand-border space-y-1">
+                  <div class="flex items-center justify-between font-semibold text-neutral-200">
+                    <span class="truncate">Diwali Bonus &amp; Holiday Schedule</span>
+                    <span class="text-[10px] text-brand-amber font-mono shrink-0">HR Office</span>
+                  </div>
+                  <p class="text-[11px] text-neutral-400">Statutory Diwali bonus has been credited. Corporate offices will observe holiday from Nov 12 - 14.</p>
+                </div>
+
+                <!-- Announcement 2 -->
+                <div class="p-3 rounded-xl bg-brand-dark border border-brand-border space-y-1">
+                  <div class="flex items-center justify-between font-semibold text-neutral-200">
+                    <span class="truncate">Annual Health Insurance Open Enrollment</span>
+                    <span class="text-[10px] text-sky-400 font-mono shrink-0">Benefits</span>
+                  </div>
+                  <p class="text-[11px] text-neutral-400">Please verify family dependents under Group Mediclaim by 15 November.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom: Recent Leave Requests & Monthly Attendance Summary -->
+          <div class="p-5 rounded-3xl bg-brand-surface border border-brand-border space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i data-lucide="calendar-check" class="w-4 h-4 text-sky-400"></i>
+                <span>My Recent Leave Applications</span>
+              </h3>
+              <button onclick="openUserApplyLeaveModal()" class="text-xs text-brand-amber hover:underline font-semibold flex items-center gap-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Apply New Leave</span>
+              </button>
+            </div>
+
+            <!-- Table of recent leaves -->
+            <div class="overflow-x-auto rounded-2xl border border-brand-border">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-brand-dark text-neutral-400 text-[10px] font-semibold uppercase border-b border-brand-border">
+                  <tr>
+                    <th class="py-2.5 px-3">Leave Type</th>
+                    <th class="py-2.5 px-3">Duration &amp; Mode</th>
+                    <th class="py-2.5 px-3">Date(s)</th>
+                    <th class="py-2.5 px-3">Reason</th>
+                    <th class="py-2.5 px-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="dashRecentLeavesTbody" class="divide-y divide-brand-border/60">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- TAB 2: ATTENDANCE & DAILY PUNCH CLOCK (CORE)   -->
+        <!-- ============================================== -->
+        <div id="tab-attendance" class="user-tab-content hidden space-y-6">
+          
+          <!-- Punch Card Centerpiece -->
+          <div class="p-6 sm:p-8 rounded-3xl bg-brand-surface border border-brand-border shadow-2xl relative overflow-hidden space-y-6">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-brand-amber font-bold">Touchless Biometric &amp; Geofenced Shift Tracker</span>
+                <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2 mt-0.5">
+                  <span>Daily Shift Attendance &amp; Punch Clock</span>
+                  <span id="shiftPunchStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-neutral-800 text-neutral-400 border border-neutral-700">Not Clocked In</span>
+                </h2>
+              </div>
+
+              <!-- Shift Schedule Pill -->
+              <div class="px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-left sm:text-right">
+                <div class="text-[10px] text-neutral-400 uppercase font-mono">Assigned Shift</div>
+                <div class="text-xs font-bold text-white" id="clockShiftName">General Shift (09:30 AM - 06:30 PM)</div>
+              </div>
+            </div>
+
+            <!-- Big Live Display: Shift Timer & Real-Time Clock -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+              
+              <!-- 1. Real-Time Current Time -->
+              <div class="p-5 rounded-2xl bg-brand-dark border border-brand-border text-center space-y-1">
+                <span class="text-[11px] text-neutral-400 font-semibold uppercase tracking-wider font-mono">Current Local Time</span>
+                <div class="text-3xl sm:text-4xl font-black font-mono text-white" id="clockCurrentTime">--:--:--</div>
+                <div class="text-xs text-brand-amber font-medium" id="clockCurrentDate">Today</div>
+              </div>
+
+              <!-- 2. Active Shift Work Timer (Ticks during working hours) -->
+              <div class="p-5 rounded-2xl bg-brand-dark border border-brand-border text-center space-y-1 relative overflow-hidden">
+                <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 via-brand-amber to-emerald-500"></div>
+                <span class="text-[11px] text-emerald-400 font-semibold uppercase tracking-wider font-mono flex items-center justify-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>Effective Shift Work Timer</span>
+                </span>
+                <div class="text-3xl sm:text-4xl font-black font-mono text-emerald-400" id="clockWorkTimer">00:00:00</div>
+                <div class="text-[11px] text-neutral-400">Total Net Productive Work Time</div>
+              </div>
+
+              <!-- 3. Break Timer (Ticks during lunch/tea breaks) -->
+              <div class="p-5 rounded-2xl bg-brand-dark border border-brand-border text-center space-y-1">
+                <span class="text-[11px] text-amber-400 font-semibold uppercase tracking-wider font-mono flex items-center justify-center gap-1.5">
+                  <i data-lucide="coffee" class="w-3.5 h-3.5"></i>
+                  <span>Break Time Consumed</span>
+                </span>
+                <div class="text-3xl sm:text-4xl font-black font-mono text-amber-300" id="clockBreakTimer">00:00:00</div>
+                <div class="text-[11px] text-neutral-400">Statutory Meal Allowance: <strong class="text-white">45m</strong></div>
+              </div>
+            </div>
+
+            <!-- CORE PUNCH BUTTONS BAR (Clock In, Start Break, Stop Break, Clock Out) -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-brand-dark/90 border border-brand-border space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-neutral-300 font-bold uppercase tracking-wider text-[11px]">Attendance Actions:</span>
+                <span class="text-[11px] text-neutral-400 font-mono" id="punchGeotagDisplay">Geofence: BKC Reception Standee &bull; 14m / 50m</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                
+                <!-- BUTTON 1: CLOCK IN -->
+                <button id="btnMainClockIn" onclick="triggerClockInAction()" class="py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-neutral-950 font-black text-sm shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2.5 transition-all">
+                  <i data-lucide="log-in" class="w-5 h-5"></i>
+                  <span>Clock In for Today</span>
+                </button>
+
+                <!-- BUTTON 2: START / STOP BREAK -->
+                <button id="btnMainBreak" onclick="triggerBreakAction()" disabled class="py-4 px-6 rounded-2xl bg-brand-card opacity-50 cursor-not-allowed border border-brand-border text-neutral-300 font-bold text-sm flex items-center justify-center gap-2.5 transition-all">
+                  <i data-lucide="coffee" class="w-5 h-5 text-brand-amber"></i>
+                  <span id="btnMainBreakText">Start Break (Lunch / Tea)</span>
+                </button>
+
+                <!-- BUTTON 3: CLOCK OUT -->
+                <button id="btnMainClockOut" onclick="triggerClockOutAction()" disabled class="py-4 px-6 rounded-2xl bg-brand-card opacity-50 cursor-not-allowed border border-brand-border text-neutral-400 font-bold text-sm flex items-center justify-center gap-2.5 transition-all">
+                  <i data-lucide="log-out" class="w-5 h-5 text-rose-400"></i>
+                  <span>Clock Out &amp; Complete Shift</span>
+                </button>
+              </div>
+
+              <!-- Micro status message under buttons -->
+              <div class="pt-1 flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-neutral-400 gap-2">
+                <div class="flex items-center gap-1.5" id="punchAuditSummary">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                  <span>Touchless punch verified with AES-256 token and GPS lat-long geofencing.</span>
+                </div>
+                <button type="button" onclick="openRegularizeModal()" class="text-brand-amber hover:underline font-semibold flex items-center gap-1">
+                  <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                  <span>Missed a punch? Request Regularization</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Today's Punch Timeline Strip -->
+            <div class="p-4 rounded-2xl bg-brand-dark/50 border border-brand-border grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
+              <div>
+                <span class="text-neutral-400 text-[10px] block">Clock In Time:</span>
+                <strong class="text-white font-mono text-sm" id="stripInTime">--:--</strong>
+              </div>
+              <div>
+                <span class="text-neutral-400 text-[10px] block">Break Started:</span>
+                <strong class="text-neutral-300 font-mono text-sm" id="stripBreakStart">--:--</strong>
+              </div>
+              <div>
+                <span class="text-neutral-400 text-[10px] block">Break Ended:</span>
+                <strong class="text-neutral-300 font-mono text-sm" id="stripBreakEnd">--:--</strong>
+              </div>
+              <div>
+                <span class="text-neutral-400 text-[10px] block">Clock Out Time:</span>
+                <strong class="text-white font-mono text-sm" id="stripOutTime">--:--</strong>
+              </div>
+              <div>
+                <span class="text-neutral-400 text-[10px] block">Total Productive Hours:</span>
+                <strong class="text-emerald-400 font-mono text-sm" id="stripTotalHours">--</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monthly Attendance History Table -->
+          <div class="p-6 rounded-3xl bg-brand-surface border border-brand-border space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                  <i data-lucide="calendar" class="w-4 h-4 text-brand-amber"></i>
+                  <span>Monthly Attendance Register &amp; Shift Logs</span>
+                </h3>
+                <p class="text-xs text-neutral-400">View In Time, Out Time, Break Duration, and Daily Status.</p>
+              </div>
+
+              <!-- Filter Month / Regularize Button -->
+              <div class="flex items-center gap-2">
+                <select class="bg-brand-dark border border-brand-border rounded-xl px-3 py-1.5 text-xs text-white font-semibold outline-none">
+                  <option>October 2026 (Current Cycle)</option>
+                  <option>September 2026</option>
+                  <option>August 2026</option>
+                </select>
+                <button onclick="openRegularizeModal()" class="px-3.5 py-1.5 rounded-xl bg-brand-dark hover:bg-brand-card border border-brand-border text-xs text-brand-amber font-semibold flex items-center gap-1.5 transition-all">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                  <span>Request Regularize</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Attendance Table -->
+            <div class="overflow-x-auto rounded-2xl border border-brand-border">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-brand-dark text-neutral-400 font-semibold uppercase text-[10px] border-b border-brand-border">
+                  <tr>
+                    <th class="py-3 px-3.5">Date</th>
+                    <th class="py-3 px-3.5">Clock In</th>
+                    <th class="py-3 px-3.5">Clock Out</th>
+                    <th class="py-3 px-3.5">Break</th>
+                    <th class="py-3 px-3.5">Productive Hours</th>
+                    <th class="py-3 px-3.5">Status</th>
+                    <th class="py-3 px-3.5">Location / Geotag</th>
+                    <th class="py-3 px-3.5 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="userAttendanceLogsTbody" class="divide-y divide-brand-border/60">
+                  <!-- Dynamically populated from attendance records -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- TAB 3: LEAVES & DYNAMIC QUOTAS                 -->
+        <!-- ============================================== -->
+        <div id="tab-leaves" class="user-tab-content hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+                <span>Leave Balances &amp; Allocation Policies</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30">10 Categories</span>
+              </h2>
+              <p class="text-xs text-neutral-400 mt-0.5">Real-time entitlement balances synchronized with company statutory HR quotas.</p>
+            </div>
+            
+            <button onclick="openUserApplyLeaveModal()" class="px-4 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow-lg shadow-brand-amber/20 flex items-center gap-2 transition-all">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Apply for Leave</span>
+            </button>
+          </div>
+
+          <!-- Dynamic 10 Leave Quotas Grid -->
+          <div id="userLeaveQuotasGrid" class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <!-- Dynamically populated from sora_app_leaveTypes -->
+          </div>
+
+          <!-- Leaves Applied Table -->
+          <div class="p-6 rounded-3xl bg-brand-surface border border-brand-border space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                  <i data-lucide="history" class="w-4 h-4 text-brand-amber"></i>
+                  <span>My Leave Application History</span>
+                </h3>
+                <p class="text-xs text-neutral-400">Track pending, approved, and rejected leave requests.</p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-brand-border">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-brand-dark text-neutral-400 font-semibold uppercase text-[10px] border-b border-brand-border">
+                  <tr>
+                    <th class="py-3 px-3.5">Application ID</th>
+                    <th class="py-3 px-3.5">Leave Category</th>
+                    <th class="py-3 px-3.5">Mode</th>
+                    <th class="py-3 px-3.5">Date(s)</th>
+                    <th class="py-3 px-3.5">Total Days</th>
+                    <th class="py-3 px-3.5">Reason</th>
+                    <th class="py-3 px-3.5">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="userLeavesHistoryTbody" class="divide-y divide-brand-border/60">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- TAB 4: SALARY & PAYSLIPS                      -->
+        <!-- ============================================== -->
+        <div id="tab-payslips" class="user-tab-content hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+                <span>Compensation, Salary &amp; Official Payslips</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Verified Direct Deposit</span>
+              </h2>
+              <p class="text-xs text-neutral-400 mt-0.5">Download official digitally signed PDF salary slips with full statutory PF &amp; ESIC breakup.</p>
+            </div>
+
+            <!-- Download latest PDF button -->
+            <button onclick="downloadUserPayslipPdf('Oct-2026')" class="px-4 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow-lg shadow-brand-amber/20 flex items-center gap-2 transition-all">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>Download October Slip (PDF)</span>
+            </button>
+          </div>
+
+          <!-- Latest Month Salary Breakdown Showcase Card -->
+          <div class="p-6 sm:p-8 rounded-3xl bg-brand-surface border border-brand-border shadow-xl space-y-6">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-brand-border pb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold">
+                  &#8377;
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-white">Monthly Salary Breakdown &bull; October 2026</h3>
+                  <p class="text-xs text-neutral-400">Disbursed into HDFC Bank Account Ending with <strong class="text-neutral-200">••••4409</strong> on 31 Oct 2026</p>
+                </div>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 self-start sm:self-center">
+                &bull; PAID &amp; SETTLED
+              </span>
+            </div>
+
+            <!-- 3-Column Financial Grid: Earnings, Deductions, Net In-Hand -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+              <!-- 1. Earnings (Gross) -->
+              <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
+                <div class="flex items-center justify-between text-xs font-semibold text-neutral-300">
+                  <span>Gross Earnings</span>
+                  <span class="text-emerald-400 font-mono font-bold" id="psGrossDisplay">&#8377; 75,000</span>
+                </div>
+                <div class="space-y-1.5 text-xs">
+                  <div class="flex justify-between text-neutral-400">
+                    <span>Basic Salary (50%):</span>
+                    <strong class="text-neutral-200 font-mono" id="psBasicDisplay">&#8377; 37,500</strong>
+                  </div>
+                  <div class="flex justify-between text-neutral-400">
+                    <span>House Rent Allowance (25%):</span>
+                    <strong class="text-neutral-200 font-mono" id="psHraDisplay">&#8377; 18,750</strong>
+                  </div>
+                  <div class="flex justify-between text-neutral-400">
+                    <span>Dearness Allowance (10%):</span>
+                    <strong class="text-neutral-200 font-mono" id="psDaDisplay">&#8377; 7,500</strong>
+                  </div>
+                  <div class="flex justify-between text-neutral-400">
+                    <span>Special Allowance (15%):</span>
+                    <strong class="text-neutral-200 font-mono" id="psSplDisplay">&#8377; 11,250</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. Deductions -->
+              <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
+                <div class="flex items-center justify-between text-xs font-semibold text-neutral-300">
+                  <span>Statutory Deductions</span>
+                  <span class="text-rose-400 font-mono font-bold" id="psTotalDeductDisplay">&#8377; 5,263</span>
+                </div>
+                <div class="space-y-1.5 text-xs">
+                  <div class="flex justify-between text-neutral-400">
+                    <span>Employee PF (12%):</span>
+                    <strong class="text-rose-300 font-mono" id="psPfDisplay">&#8377; 4,500</strong>
+                  </div>
+                  <div class="flex justify-between text-neutral-400">
+                    <span>ESIC (0.75%):</span>
+                    <strong class="text-rose-300 font-mono" id="psEsicDisplay">&#8377; 563</strong>
+                  </div>
+                  <div class="flex justify-between text-neutral-400">
+                    <span>Professional Tax (PT):</span>
+                    <strong class="text-rose-300 font-mono">&#8377; 200</strong>
+                  </div>
+                  <div class="flex justify-between text-neutral-400">
+                    <span>Income Tax (TDS):</span>
+                    <strong class="text-neutral-400 font-mono">&#8377; 0</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. Net Take-Home -->
+              <div class="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/40 flex flex-col justify-between space-y-3">
+                <div>
+                  <span class="text-[10px] text-emerald-400 font-mono uppercase font-semibold">Net Disbursed Take-Home</span>
+                  <div class="text-2xl sm:text-3xl font-black font-mono text-emerald-300 mt-1" id="psTakeHomeBigDisplay">&#8377; 69,737</div>
+                  <p class="text-[11px] text-emerald-400/80 mt-1">Sixty-Nine Thousand Seven Hundred Thirty-Seven Rupees Only</p>
+                </div>
+                <button onclick="viewDetailedPayslipModal()" class="w-full py-2 rounded-xl bg-emerald-500 text-neutral-950 font-bold text-xs flex items-center justify-center gap-1.5 shadow">
+                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                  <span>View Full Slip Breakdown</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past Payslips Archive -->
+          <div class="p-6 rounded-3xl bg-brand-surface border border-brand-border space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i data-lucide="archive" class="w-4 h-4 text-brand-amber"></i>
+              <span>Salary Slips Archive &amp; Download Center</span>
+            </h3>
+
+            <div class="overflow-x-auto rounded-2xl border border-brand-border">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-brand-dark text-neutral-400 font-semibold uppercase text-[10px] border-b border-brand-border">
+                  <tr>
+                    <th class="py-3 px-3.5">Pay Period</th>
+                    <th class="py-3 px-3.5">Gross Earnings</th>
+                    <th class="py-3 px-3.5">Deductions</th>
+                    <th class="py-3 px-3.5">Net Take-Home</th>
+                    <th class="py-3 px-3.5">Disbursement Date</th>
+                    <th class="py-3 px-3.5">Status</th>
+                    <th class="py-3 px-3.5 text-right">Download</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-brand-border/60">
+                  <tr class="hover:bg-brand-card/40 transition-colors">
+                    <td class="py-3 px-3.5 font-bold text-white">October 2026</td>
+                    <td class="py-3 px-3.5 font-mono text-neutral-300">&#8377; 75,000</td>
+                    <td class="py-3 px-3.5 font-mono text-rose-300">&#8377; 5,263</td>
+                    <td class="py-3 px-3.5 font-mono font-bold text-emerald-400">&#8377; 69,737</td>
+                    <td class="py-3 px-3.5 text-neutral-400">31 Oct 2026</td>
+                    <td class="py-3 px-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-400">Paid</span></td>
+                    <td class="py-3 px-3.5 text-right">
+                      <button onclick="downloadUserPayslipPdf('Oct-2026')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs text-brand-amber font-semibold transition-all">
+                        PDF
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-brand-card/40 transition-colors">
+                    <td class="py-3 px-3.5 font-bold text-white">September 2026</td>
+                    <td class="py-3 px-3.5 font-mono text-neutral-300">&#8377; 75,000</td>
+                    <td class="py-3 px-3.5 font-mono text-rose-300">&#8377; 5,263</td>
+                    <td class="py-3 px-3.5 font-mono font-bold text-emerald-400">&#8377; 69,737</td>
+                    <td class="py-3 px-3.5 text-neutral-400">30 Sep 2026</td>
+                    <td class="py-3 px-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-400">Paid</span></td>
+                    <td class="py-3 px-3.5 text-right">
+                      <button onclick="downloadUserPayslipPdf('Sep-2026')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs text-brand-amber font-semibold transition-all">
+                        PDF
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-brand-card/40 transition-colors">
+                    <td class="py-3 px-3.5 font-bold text-white">August 2026</td>
+                    <td class="py-3 px-3.5 font-mono text-neutral-300">&#8377; 75,000</td>
+                    <td class="py-3 px-3.5 font-mono text-rose-300">&#8377; 5,263</td>
+                    <td class="py-3 px-3.5 font-mono font-bold text-emerald-400">&#8377; 69,737</td>
+                    <td class="py-3 px-3.5 text-neutral-400">31 Aug 2026</td>
+                    <td class="py-3 px-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-400">Paid</span></td>
+                    <td class="py-3 px-3.5 text-right">
+                      <button onclick="downloadUserPayslipPdf('Aug-2026')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs text-brand-amber font-semibold transition-all">
+                        PDF
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- TAB 5: COMPANY POLICIES & CODE                -->
+        <!-- ============================================== -->
+        <div id="tab-policies" class="user-tab-content hidden space-y-6">
+          
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <span>Company Policies &amp; Governance Handbook</span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-500/15 text-purple-400 border border-purple-500/30">Official</span>
+            </h2>
+            <p class="text-xs text-neutral-400 mt-0.5">Corporate code of ethics, attendance rules, information security, and employee standards.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="userPoliciesContainer">
+            <!-- Dynamically populated from sora_app_policies -->
+          </div>
+
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- TAB 6: ASSIGNED ASSETS                        -->
+        <!-- ============================================== -->
+        <div id="tab-assets" class="user-tab-content hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+                <span>Assigned Corporate Hardware &amp; IT Assets</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">Secured</span>
+              </h2>
+              <p class="text-xs text-neutral-400 mt-0.5">Track hardware laptops, monitors, accessories, and submit repair or replacement tickets.</p>
+            </div>
+
+            <button onclick="openReportAssetModal()" class="px-4 py-2.5 rounded-xl bg-brand-surface hover:bg-brand-card border border-brand-border text-xs text-white font-semibold flex items-center gap-2 transition-all">
+              <i data-lucide="wrench" class="w-4 h-4 text-brand-amber"></i>
+              <span>Report Hardware Issue</span>
+            </button>
+          </div>
+
+          <!-- Assets Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="userAssetsContainer">
+            <!-- Dynamically populated -->
+          </div>
+
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- TAB 7: TEAM APPROVALS (FOR MANAGERS / LEADS)   -->
+        <!-- ============================================== -->
+        <div id="tab-team-approvals" class="user-tab-content hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+                <span>Team Attendance &amp; Leave Approvals Console</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">Manager Level</span>
+              </h2>
+              <p class="text-xs text-neutral-400 mt-0.5">Review and authorize team members' leave applications and missed punch regularizations.</p>
+            </div>
+          </div>
+
+          <!-- Pending Team Leave Requests -->
+          <div class="p-6 rounded-3xl bg-brand-surface border border-brand-border space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i data-lucide="calendar-check" class="w-4 h-4 text-amber-400"></i>
+              <span>Pending Team Leave Applications</span>
+            </h3>
+
+            <div class="overflow-x-auto rounded-2xl border border-brand-border">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-brand-dark text-neutral-400 font-semibold uppercase text-[10px] border-b border-brand-border">
+                  <tr>
+                    <th class="py-3 px-3.5">Employee</th>
+                    <th class="py-3 px-3.5">Leave Type</th>
+                    <th class="py-3 px-3.5">Dates &amp; Duration</th>
+                    <th class="py-3 px-3.5">Reason</th>
+                    <th class="py-3 px-3.5 text-right">Decision</th>
+                  </tr>
+                </thead>
+                <tbody id="teamLeaveApprovalsTbody" class="divide-y divide-brand-border/60">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Team Today Attendance Roster -->
+          <div class="p-6 rounded-3xl bg-brand-surface border border-brand-border space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i data-lucide="users" class="w-4 h-4 text-sky-400"></i>
+              <span>Team Members Shift Presence Today</span>
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" id="teamPresenceGrid">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- TAB 8: FIELD GPS TRACKER (FOR FIELD SALES)     -->
+        <!-- ============================================== -->
+        <div id="tab-field-gps" class="user-tab-content hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+                <span>Field Attendance &amp; Live Lat-Long GPS Tracker</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">Field Geofence</span>
+              </h2>
+              <p class="text-xs text-neutral-400 mt-0.5">Captures high-accuracy mobile GPS lat-long coordinates for field sales client visits and travel allowance calculation.</p>
+            </div>
+
+            <button onclick="refreshUserFieldGps()" class="px-3.5 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-2 shadow">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>Refresh Live Location</span>
+            </button>
+          </div>
+
+          <!-- Interactive Leaflet Map Container -->
+          <div class="p-4 rounded-3xl bg-brand-surface border border-brand-border space-y-3">
+            <div id="userFieldMap" class="w-full h-80 rounded-2xl z-0"></div>
+            <div class="flex flex-wrap items-center justify-between text-xs text-neutral-400 px-1 pt-1">
+              <span id="fieldGpsCoordsDisplay">Lat: 19.0657° N &bull; Long: 72.8682° E (BKC Head Office Perimeter)</span>
+              <span class="text-emerald-400 font-mono font-semibold">14m within 50m allowable kiosk geofence &bull; PASS</span>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- TAB 9: PROFILE & KYC DETAILS                  -->
+        <!-- ============================================== -->
+        <div id="tab-profile" class="user-tab-content hidden space-y-6">
+          
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <span>My Profile, Bank Account &amp; KYC Verification</span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">KYC Verified</span>
+            </h2>
+            <p class="text-xs text-neutral-400 mt-0.5">Review personal details, emergency contacts, and statutory PF/ESIC account credentials.</p>
+          </div>
+
+          <!-- Profile Form Card -->
+          <div class="p-6 sm:p-8 rounded-3xl bg-brand-surface border border-brand-border shadow-xl space-y-6">
+            
+            <div class="flex items-center gap-4 border-b border-brand-border pb-6">
+              <div id="profileBigAvatar" class="w-16 h-16 rounded-3xl bg-gradient-to-br from-brand-amber to-amber-600 text-neutral-950 font-black text-xl flex items-center justify-center shadow-lg">
+                PI
+              </div>
+              <div class="space-y-1">
+                <h3 class="text-lg font-bold text-white" id="profileFullName">Pooja Iyer</h3>
+                <div class="text-xs text-neutral-400 flex items-center gap-2">
+                  <span id="profileDesig">Full Stack Engineer</span>
+                  <span>&bull;</span>
+                  <span id="profileDept">Engineering &amp; Technology</span>
+                </div>
+                <div class="text-[11px] font-mono text-brand-amber" id="profileEmpCode">EMP-AGT-0104</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div class="space-y-1">
+                <label class="text-neutral-400">Official Work Email</label>
+                <input type="text" id="profEmail" readonly class="w-full bg-brand-dark border border-brand-border rounded-xl px-3 py-2 text-white text-xs outline-none">
+              </div>
+              <div class="space-y-1">
+                <label class="text-neutral-400">Primary Phone</label>
+                <input type="text" id="profPhone" class="w-full bg-brand-dark border border-brand-border focus:border-brand-amber rounded-xl px-3 py-2 text-white text-xs outline-none">
+              </div>
+              <div class="space-y-1">
+                <label class="text-neutral-400">Emergency Contact Person</label>
+                <input type="text" id="profEmergName" value="Ramesh Iyer (Father)" class="w-full bg-brand-dark border border-brand-border focus:border-brand-amber rounded-xl px-3 py-2 text-white text-xs outline-none">
+              </div>
+              <div class="space-y-1">
+                <label class="text-neutral-400">Emergency Contact Phone</label>
+                <input type="text" id="profEmergPhone" value="+91-98200 99887" class="w-full bg-brand-dark border border-brand-border focus:border-brand-amber rounded-xl px-3 py-2 text-white text-xs outline-none">
+              </div>
+              <div class="space-y-1 sm:col-span-2">
+                <label class="text-neutral-400">Residential Address</label>
+                <input type="text" id="profAddress" value="Flat 402, Green Meadows, Powai, Mumbai - 400076" class="w-full bg-brand-dark border border-brand-border focus:border-brand-amber rounded-xl px-3 py-2 text-white text-xs outline-none">
+              </div>
+            </div>
+
+            <!-- Statutory & Bank Details -->
+            <div class="pt-4 border-t border-brand-border space-y-3">
+              <h4 class="text-xs font-bold text-white uppercase tracking-wider text-neutral-300">Bank &amp; Statutory Credentials</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div class="p-3 rounded-xl bg-brand-dark border border-brand-border">
+                  <span class="text-neutral-400 text-[10px] block">Bank Name &amp; IFSC</span>
+                  <strong class="text-white">HDFC Bank &bull; HDFC0001823</strong>
+                </div>
+                <div class="p-3 rounded-xl bg-brand-dark border border-brand-border">
+                  <span class="text-neutral-400 text-[10px] block">Account Number</span>
+                  <strong class="text-white font-mono">•••• •••• 4409</strong>
+                </div>
+                <div class="p-3 rounded-xl bg-brand-dark border border-brand-border">
+                  <span class="text-neutral-400 text-[10px] block">PF UAN &amp; ESIC</span>
+                  <strong class="text-white font-mono">UAN-100984129012</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+              <button onclick="saveUserProfileChanges()" class="px-5 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow transition-all">
+                Save Profile Changes
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+
+  <!-- ======================================================= -->
+  <!-- MODALS                                                  -->
+  <!-- ======================================================= -->
+
+  <!-- 1. APPLY LEAVE MODAL -->
+  <div id="modalUserApplyLeave" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="p-4 sm:p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center">
+            <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+          </div>
+          <h3 class="text-sm font-bold text-white">Apply for Leave</h3>
+        </div>
+        <button onclick="closeModal('modalUserApplyLeave')" class="text-neutral-400 hover:text-white p-1 text-xl leading-none">&times;</button>
+      </div>
+
+      <form onsubmit="handleUserSubmitLeave(event)" class="p-5 overflow-y-auto space-y-4 text-xs">
+        <div class="space-y-1">
+          <label class="text-neutral-300 font-semibold">Select Leave Category *</label>
+          <select id="userLeaveTypeSelect" required class="w-full bg-brand-dark border border-brand-border rounded-xl px-3 py-2 text-white outline-none">
+            <!-- Dynamically populated from sora_app_leaveTypes -->
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-neutral-300 font-semibold">Leave Mode</label>
+            <select id="userLeaveModeSelect" class="w-full bg-brand-dark border border-brand-border rounded-xl px-3 py-2 text-white outline-none">
+              <option value="Full Day">Full Day</option>
+              <option value="First Half (Half-Day)">First Half (Half-Day)</option>
+              <option value="Second Half (Half-Day)">Second Half (Half-Day)</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="text-neutral-300 font-semibold">Total Days</label>
+            <input type="number" id="userLeaveDaysInput" value="1" min="0.5" step="0.5" class="w-full bg-brand-dark border border-brand-border rounded-xl px-3 py-2 text-white font-mono outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-neutral-300 font-semibold">From Date *</label>
+            <input type="date" id="userLeaveStartDate" required class="w-full bg-brand-dark border border-brand-border rounded-xl px-3 py-2 text-white outline-none">
+          </div>
+          <div class="space-y-1">
+            <label class="text-neutral-300 font-semibold">To Date *</label>
+            <input type="date" id="userLeaveEndDate" required class="w-full bg-brand-dark border border-brand-border rounded-xl px-3 py-2 text-white outline-none">
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-neutral-300 font-semibold">Reason for Leave *</label>
+          <textarea id="userLeaveReasonInput" required rows="3" placeholder="Brief reason for your manager and HR..." class="w-full bg-brand-dark border border-brand-border focus:border-brand-amber rounded-xl p-3 text-white outline-none"></textarea>
+        </div>
+
+        <div class="p-3 rounded-xl bg-brand-dark border border-brand-border text-[11px] text-neutral-400 flex items-center gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-brand-amber shrink-0"></i>
+          <span>Leaves are routed to your designated reporting manager and HR office automatically.</span>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2 border-t border-brand-border">
+          <button type="button" onclick="closeModal('modalUserApplyLeave')" class="px-4 py-2 rounded-xl border border-brand-border text-neutral-300 hover:text-white">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold shadow">Submit Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- 2. REGULARIZATION REQUEST MODAL -->
+  <div id="modalUserRegularize" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="p-4 sm:p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+            <i data-lucide="edit-3" class="w-4 h-4"></i>
+          </div>
+          <h3 class="text-sm font-bold text-white">Attendance Regularization Request</h3>
+        </div>
+        <button onclick="closeModal('modalUserRegularize')" class="text-neutral-400 hover:text-white p-1 text-xl leading-none">&times;</button>
+      </div>
+
+      <form onsubmit="handleUserSubmitRegularize(event)" class="p-5 overflow-y-auto space-y-4 text-xs">
+        <div class="space-y-1">
+          <label class="text-neutral-300 font-semibold">Date to Regularize *</label>
+          <input type="date" id="regDateInput" required class="w-full bg-brand-dark border border-brand-border rounded-xl px-3 py-2 text-white outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-neutral-300 font-semibold">Corrected In Time *</label>
+            <input type="time" id="regInTimeInput" value="09:30" required class="w-full bg-brand-dark border border-brand-border rounded-xl px-3 py-2 text-white outline-none">
+          </div>
+          <div class="space-y-1">
+            <label class="text-neutral-300 font-semibold">Corrected Out Time *</label>
+            <input type="time" id="regOutTimeInput" value="18:30" required class="w-full bg-brand-dark border border-brand-border rounded-xl px-3 py-2 text-white outline-none">
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-neutral-300 font-semibold">Reason for Missed / Delayed Punch *</label>
+          <select id="regReasonSelect" class="w-full bg-brand-dark border border-brand-border rounded-xl px-3 py-2 text-white outline-none">
+            <option>Client Visit / Off-Site Meeting</option>
+            <option>Kiosk Biometric Scanner Error</option>
+            <option>Office Network / GPS Signal Latency</option>
+            <option>Work From Home / Authorized Remote Duty</option>
+            <option>Forgot to Punch Out</option>
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-neutral-300 font-semibold">Detailed Justification</label>
+          <textarea id="regDetailsInput" rows="2" placeholder="Brief note explaining the circumstances..." class="w-full bg-brand-dark border border-brand-border focus:border-brand-amber rounded-xl p-3 text-white outline-none"></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2 border-t border-brand-border">
+          <button type="button" onclick="closeModal('modalUserRegularize')" class="px-4 py-2 rounded-xl border border-brand-border text-neutral-300 hover:text-white">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold shadow">Send for Approval</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- 3. DETAILED PAYSLIP MODAL & PDF EXPORT WRAPPER -->
+  <div id="modalUserPayslipDetail" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+      <div class="p-4 sm:p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="receipt" class="w-4 h-4"></i>
+          </div>
+          <h3 class="text-sm font-bold text-white">Official Salary Slip &bull; October 2026</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="downloadUserPayslipPdf('Oct-2026')" class="px-3 py-1 rounded-lg bg-brand-amber text-neutral-950 font-bold text-xs flex items-center gap-1 shadow">
+            <i data-lucide="download" class="w-3 h-3"></i>
+            <span>PDF</span>
+          </button>
+          <button onclick="closeModal('modalUserPayslipDetail')" class="text-neutral-400 hover:text-white p-1 text-xl leading-none">&times;</button>
+        </div>
+      </div>
+
+      <!-- Printable Slip Body (A4 styled) -->
+      <div class="p-6 overflow-y-auto space-y-5 bg-white text-neutral-900 text-xs font-sans" id="payslipPrintArea">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-start border-b-2 border-neutral-800 pb-3">
+          <div>
+            <div class="text-base font-black text-[#003366] uppercase" id="slipCompTitle">APEX GLOBAL TECHNOLOGIES PRIVATE LIMITED</div>
+            <div class="text-[10px] text-neutral-600">Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051</div>
+            <div class="text-[10px] text-neutral-600">ISO 9001:2015 &bull; CIN: U72900MH2020PTC189211</div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs font-bold text-neutral-900 uppercase">PAYSLIP &bull; OCT 2026</div>
+            <div class="text-[10px] text-neutral-500 font-mono">CONFIDENTIAL &bull; ESS</div>
+          </div>
+        </div>
+
+        <!-- Employee Info Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] p-3 rounded-lg bg-neutral-100 border border-neutral-300">
+          <div>
+            <span class="text-neutral-500 block text-[9px] uppercase">Employee Name:</span>
+            <strong id="slipEmpName">Pooja Iyer</strong>
+          </div>
+          <div>
+            <span class="text-neutral-500 block text-[9px] uppercase">Employee ID:</span>
+            <strong id="slipEmpId">EMP-AGT-0104</strong>
+          </div>
+          <div>
+            <span class="text-neutral-500 block text-[9px] uppercase">Department:</span>
+            <strong id="slipDept">Engineering</strong>
+          </div>
+          <div>
+            <span class="text-neutral-500 block text-[9px] uppercase">Designation:</span>
+            <strong id="slipDesig">Full Stack Engineer</strong>
+          </div>
+          <div>
+            <span class="text-neutral-500 block text-[9px] uppercase">Bank Account:</span>
+            <strong>HDFC Bank &bull; ••••4409</strong>
+          </div>
+          <div>
+            <span class="text-neutral-500 block text-[9px] uppercase">PF UAN:</span>
+            <strong>100984129012</strong>
+          </div>
+          <div>
+            <span class="text-neutral-500 block text-[9px] uppercase">Paid Days:</span>
+            <strong>26 Days (Statutory)</strong>
+          </div>
+          <div>
+            <span class="text-neutral-500 block text-[9px] uppercase">Loss of Pay (LOP):</span>
+            <strong>0 Days</strong>
+          </div>
+        </div>
+
+        <!-- Breakdown Table: Earnings vs Deductions -->
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Earnings -->
+          <table class="w-full text-left text-xs border border-neutral-300">
+            <thead class="bg-neutral-200 text-neutral-800 font-bold border-b border-neutral-300">
+              <tr>
+                <th class="p-2">Earnings Component</th>
+                <th class="p-2 text-right">Amount (&#8377;)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-200">
+              <tr><td class="p-2">Basic Salary (50%)</td><td class="p-2 text-right font-mono" id="slipBasic">&#8377; 37,500</td></tr>
+              <tr><td class="p-2">House Rent Allowance (25%)</td><td class="p-2 text-right font-mono" id="slipHra">&#8377; 18,750</td></tr>
+              <tr><td class="p-2">Dearness Allowance (10%)</td><td class="p-2 text-right font-mono" id="slipDa">&#8377; 7,500</td></tr>
+              <tr><td class="p-2">Special Allowance (15%)</td><td class="p-2 text-right font-mono" id="slipSpl">&#8377; 11,250</td></tr>
+              <tr class="font-bold bg-neutral-100"><td class="p-2">Gross Earnings</td><td class="p-2 text-right font-mono" id="slipGross">&#8377; 75,000</td></tr>
+            </tbody>
+          </table>
+
+          <!-- Deductions -->
+          <table class="w-full text-left text-xs border border-neutral-300">
+            <thead class="bg-neutral-200 text-neutral-800 font-bold border-b border-neutral-300">
+              <tr>
+                <th class="p-2">Deduction Component</th>
+                <th class="p-2 text-right">Amount (&#8377;)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-200">
+              <tr><td class="p-2">Provident Fund (PF - 12%)</td><td class="p-2 text-right font-mono" id="slipPf">&#8377; 4,500</td></tr>
+              <tr><td class="p-2">ESIC Contribution (0.75%)</td><td class="p-2 text-right font-mono" id="slipEsic">&#8377; 563</td></tr>
+              <tr><td class="p-2">Professional Tax (PT)</td><td class="p-2 text-right font-mono">&#8377; 200</td></tr>
+              <tr><td class="p-2">Income Tax / TDS</td><td class="p-2 text-right font-mono">&#8377; 0</td></tr>
+              <tr class="font-bold bg-neutral-100"><td class="p-2">Total Deductions</td><td class="p-2 text-right font-mono" id="slipDeductions">&#8377; 5,263</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Net Take Home Strip -->
+        <div class="p-3 rounded-lg bg-neutral-900 text-white flex items-center justify-between">
+          <div>
+            <div class="text-[9px] uppercase font-mono text-neutral-400">Net Take-Home Pay (In Words: Sixty-Nine Thousand Seven Hundred Thirty-Seven)</div>
+            <div class="text-xl font-bold font-mono text-emerald-400" id="slipNetTakeHome">&#8377; 69,737</div>
+          </div>
+          <div class="text-right text-[10px] text-neutral-400 font-mono">
+            Direct Credit &bull; Ref: AGT-HDFC-882190
+          </div>
+        </div>
+
+        <!-- Corporate Stamp & Disclaimer -->
+        <div class="flex justify-between items-end pt-2 text-[10px] text-neutral-500">
+          <div>
+            <div>This is a computer-generated official document. No physical signature required.</div>
+            <div>Authorized by Human Resources &amp; People Operations &bull; SORA HR Platform</div>
+          </div>
+          <div class="text-center">
+            <div class="w-16 h-16 rounded-full border-2 border-dashed border-[#1d4ed8] text-[#1d4ed8] flex flex-col items-center justify-center font-bold text-[8px] mx-auto mb-1">
+              <span>OFFICIAL</span>
+              <span class="text-[7px]">VERIFIED</span>
+            </div>
+            <strong>HR Department</strong>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 4. BREAK SELECTION POPUP MODAL -->
+  <div id="modalBreakSelection" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-sm shadow-2xl p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="coffee" class="w-4 h-4 text-brand-amber"></i>
+          <span>Choose Break Type</span>
+        </h3>
+        <button onclick="closeModal('modalBreakSelection')" class="text-neutral-400 hover:text-white p-1 text-xl leading-none">&times;</button>
+      </div>
+
+      <div class="space-y-2">
+        <button onclick="startSpecificBreak('Lunch Break (45 Mins)', 45)" class="w-full p-3 rounded-2xl bg-brand-dark hover:bg-brand-card border border-brand-border hover:border-brand-amber text-left transition-all">
+          <div class="font-bold text-xs text-white">🥗 Lunch Break (45 Mins)</div>
+          <div class="text-[10px] text-neutral-400 mt-0.5">Statutory meal time &bull; Pauses shift work timer</div>
+        </button>
+
+        <button onclick="startSpecificBreak('Tea / Coffee Break (15 Mins)', 15)" class="w-full p-3 rounded-2xl bg-brand-dark hover:bg-brand-card border border-brand-border hover:border-brand-amber text-left transition-all">
+          <div class="font-bold text-xs text-white">☕ Tea / Coffee Break (15 Mins)</div>
+          <div class="text-[10px] text-neutral-400 mt-0.5">Quick refreshment break</div>
+        </button>
+
+        <button onclick="startSpecificBreak('Short Personal Break', 10)" class="w-full p-3 rounded-2xl bg-brand-dark hover:bg-brand-card border border-brand-border hover:border-brand-amber text-left transition-all">
+          <div class="font-bold text-xs text-white">🚶 Short Personal Break</div>
+          <div class="text-[10px] text-neutral-400 mt-0.5">Stepping away from workstation</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="userToast" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-brand-surface border border-brand-amber/40 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm pointer-events-auto">
+      <div class="w-7 h-7 rounded-xl bg-brand-amber/20 text-brand-amber flex items-center justify-center shrink-0">
+        <i data-lucide="check" class="w-4 h-4"></i>
+      </div>
+      <div>
+        <div id="userToastTitle" class="text-xs font-bold text-white">Success</div>
+        <div id="userToastMsg" class="text-[11px] text-neutral-400 mt-0.5">Operation finished.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================= -->
+  <!-- JAVASCRIPT: USER ENGINE & APPLICATION STATE             -->
+  <!-- ======================================================= -->
+  <script>
+    // -----------------------------------------------------
+    // APP STATE & EMPLOYEES DIRECTORY
+    // -----------------------------------------------------
+    const ESS_APP = {
+      currentUser: null,
+      currentTab: 'dashboard',
+      clockState: {
+        status: 'not_in', // 'not_in' | 'working' | 'on_break' | 'completed'
+        clockInTime: null,
+        clockOutTime: null,
+        breakStartTime: null,
+        totalBreakSeconds: 0,
+        activeBreakType: '',
+        workSeconds: 0,
+        timerInterval: null
+      },
+      employees: [
+        {
+          id: 'EMP-AGT-0104',
+          name: 'Pooja Iyer',
+          email: 'pooja.i@apextech.com',
+          role: 'Full Stack Engineer',
+          dept: 'Engineering & Technology',
+          roleLevel: 'employee', // 'employee' | 'manager' | 'field_lead' | 'hr_admin'
+          phone: '+91 98204 45678',
+          salary: 75000,
+          shift: 'General Day Shift (09:30 AM - 06:30 PM)',
+          manager: 'Kabir Mehta (DevOps Architect)',
+          emergencyName: 'Ramesh Iyer (Father)',
+          emergencyPhone: '+91 98200 99887',
+          address: 'Flat 402, Green Meadows, Powai, Mumbai - 400076',
+          bankAccount: 'HDFC Bank ••••••4409',
+          uan: '100984129012'
+        },
+        {
+          id: 'EMP-AGT-0101',
+          name: 'Vikram Joshi',
+          email: 'vikram.j@apextech.com',
+          role: 'Field Sales Lead',
+          dept: 'Sales & Business Development',
+          roleLevel: 'field_lead',
+          phone: '+91 98201 12345',
+          salary: 85000,
+          shift: 'General Day Shift (09:30 AM - 06:30 PM)',
+          manager: 'Aarav Sharma (VP Business)',
+          emergencyName: 'Sunita Joshi (Spouse)',
+          emergencyPhone: '+91 98200 11223',
+          address: 'Tower 4, Horizon Park, Thane West - 400607',
+          bankAccount: 'ICICI Bank ••••••9012',
+          uan: '100984129099'
+        },
+        {
+          id: 'EMP-AGT-0103',
+          name: 'Rohan Mehra',
+          email: 'rohan.m@apextech.com',
+          role: 'HR Director / Admin',
+          dept: 'Human Resources & Talent',
+          roleLevel: 'hr_admin',
+          phone: '+91 98203 34567',
+          salary: 110000,
+          shift: 'General Day Shift (09:30 AM - 06:30 PM)',
+          manager: 'Board of Directors',
+          emergencyName: 'Meera Mehra (Spouse)',
+          emergencyPhone: '+91 98200 44556',
+          address: 'Bandra West, Mumbai - 400050',
+          bankAccount: 'Axis Bank ••••••1192',
+          uan: '100984129088'
+        },
+        {
+          id: 'EMP-AGT-0106',
+          name: 'Simran Kaur',
+          email: 'simran.k@apextech.com',
+          role: 'Product Marketing Manager',
+          dept: 'Marketing & Growth',
+          roleLevel: 'manager',
+          phone: '+91 98206 67890',
+          salary: 80000,
+          shift: 'General Day Shift (09:30 AM - 06:30 PM)',
+          manager: 'Aarav Sharma',
+          emergencyName: 'Jaspreet Kaur (Mother)',
+          emergencyPhone: '+91 98200 77889',
+          address: 'Andheri East, Mumbai - 400069',
+          bankAccount: 'Kotak Bank ••••••3319',
+          uan: '100984129077'
+        }
+      ],
+      leaveTypes: [
+        { id: 'lt_cl', name: 'Casual Leave (CL)', code: 'CL', quota: '12 Days/Year', userBal: 8, type: 'Paid' },
+        { id: 'lt_sl', name: 'Sick Leave (SL)', code: 'SL', quota: '10 Days/Year', userBal: 6, type: 'Paid' },
+        { id: 'lt_el', name: 'Earned Leave (EL)', code: 'EL', quota: '15 Days/Year', userBal: 14, type: 'Paid' },
+        { id: 'lt_pl', name: 'Privilege Leave (PL)', code: 'PL', quota: '18 Days/Year', userBal: 18, type: 'Paid' },
+        { id: 'lt_lwp', name: 'Leave Without Pay', code: 'LWP', quota: 'Uncapped', userBal: '--', type: 'Unpaid / LOP' },
+        { id: 'lt_bday', name: 'Birthday Leave', code: 'BDL', quota: '1 Day/Year', userBal: 1, type: 'Special Paid' },
+        { id: 'lt_marr', name: 'Marriage Leave', code: 'MRL', quota: '5 Days', userBal: 5, type: 'Special Paid' },
+        { id: 'lt_co', name: 'Compensatory Off', code: 'CO', quota: 'As Earned', userBal: 1, type: 'Paid' },
+        { id: 'lt_ml', name: 'Maternity / Paternity', code: 'MPL', quota: '26 Weeks', userBal: 26, type: 'Statutory Paid' },
+        { id: 'lt_berv', name: 'Bereavement Leave', code: 'BRL', quota: '5 Days', userBal: 5, type: 'Compassionate' }
+      ],
+      userLeaves: [
+        { id: 'LV-2026-901', type: 'Casual Leave (CL)', mode: 'Full Day', dates: '24 Oct 2026', days: 1, reason: 'Family Function & Personal Work', status: 'Approved' },
+        { id: 'LV-2026-842', type: 'Sick Leave (SL)', mode: 'First Half', dates: '12 Oct 2026', days: 0.5, reason: 'Dental appointment & checkup', status: 'Approved' },
+        { id: 'LV-2026-988', type: 'Earned Leave (EL)', mode: 'Full Day', dates: '18 Nov - 20 Nov 2026', days: 3, reason: 'Annual planned vacation trip', status: 'Pending' }
+      ],
+      attendanceLogs: [
+        { date: '30 Oct 2026 (Fri)', inTime: '09:12 AM', outTime: '06:35 PM', breakTime: '45m', hours: '8h 38m', status: 'Present', location: 'BKC Reception Standee' },
+        { date: '29 Oct 2026 (Thu)', inTime: '09:05 AM', outTime: '06:30 PM', breakTime: '40m', hours: '8h 45m', status: 'Present', location: 'BKC Reception Standee' },
+        { date: '28 Oct 2026 (Wed)', inTime: '09:28 AM', outTime: '07:15 PM', breakTime: '50m', hours: '8h 57m', status: 'Present', location: 'BKC Reception Standee' },
+        { date: '27 Oct 2026 (Tue)', inTime: '09:15 AM', outTime: '06:30 PM', breakTime: '45m', hours: '8h 30m', status: 'Present', location: 'BKC Reception Standee' },
+        { date: '24 Oct 2026 (Fri)', inTime: '--', outTime: '--', breakTime: '--', hours: '0h', status: 'Approved Leave', location: 'Casual Leave' }
+      ],
+      teamLeaveRequests: [
+        { id: 'LV-TEAM-101', name: 'Rahul Sharma', role: 'Frontend Engineer', type: 'Casual Leave (CL)', dates: '11 Nov 2026', days: 1, reason: 'Home renovation work' },
+        { id: 'LV-TEAM-102', name: 'Aditi Deshmukh', role: 'QA Automation Lead', type: 'Sick Leave (SL)', dates: '06 Nov 2026', days: 1, reason: 'Viral fever recovery' }
+      ],
+      teamPresence: [
+        { name: 'Rahul Sharma', role: 'Frontend Engineer', status: 'Working', inTime: '09:05 AM', avatar: 'RS' },
+        { name: 'Aditi Deshmukh', role: 'QA Lead', status: 'Working', inTime: '09:18 AM', avatar: 'AD' },
+        { name: 'Sameer Khan', role: 'Backend Dev', status: 'On Lunch Break', inTime: '09:22 AM', avatar: 'SK' },
+        { name: 'Kavita Sundaram', role: 'DevOps Specialist', status: 'On Leave', inTime: '--', avatar: 'KS' }
+      ],
+      assets: [
+        { name: 'MacBook Pro M3 Max (16-inch)', category: 'Laptop / Workstation', serial: 'MBP-2026-9021', status: 'Active Assigned', date: '15 Jan 2026' },
+        { name: 'Dell UltraSharp 27" 4K Monitor', category: 'External Display', serial: 'DELL-4K-8812', status: 'Active Assigned', date: '20 Jan 2026' },
+        { name: 'Corporate RFID NFC Access Card', category: 'Office Security', serial: 'AGT-RFID-0104', status: 'Active Verified', date: '15 Jan 2026' }
+      ],
+      policies: [
+        { id: 'POL-01', title: 'SORA HR Code of Conduct & Corporate Ethics', cat: 'Corporate Governance', desc: 'Standard operating principles, integrity, non-disclosure, anti-bribery, and workplace professionalism.' },
+        { id: 'POL-02', title: 'Prevention of Sexual Harassment (POSH)', cat: 'Statutory Compliance', desc: 'Zero tolerance anti-harassment policy, Internal Complaints Committee (ICC), and safety guidelines.' },
+        { id: 'POL-03', title: 'Leave Allocation, Accrual & Attendance Rules', cat: 'People Operations', desc: 'Governing statutory casual, sick, earned leaves, compensatory off, and biometric clock-in discipline.' },
+        { id: 'POL-04', title: 'Information Security & Data Privacy Policy', cat: 'IT & Security', desc: 'Acceptable use of laptops, password standards, VPN encryption, and clean-desk cybersecurity.' },
+        { id: 'POL-05', title: 'Remote Work & Field Travel Reimbursement', cat: 'Finance & Admin', desc: 'Guidelines for work from home approvals, client travel per-diem allowances, and expense settlement.' }
+      ]
+    };
+
+    // -----------------------------------------------------
+    // LOGIN & AUTH ENGINE (ZERO 2FA)
+    // -----------------------------------------------------
+    function handleDirectLogin(e) {
+      if (e) e.preventDefault();
+      const inputVal = (document.getElementById('loginEmployeeInput')?.value || '').trim().toLowerCase();
+      
+      // Match by email or ID or default to first employee
+      const matched = ESS_APP.employees.find(emp => 
+        emp.email.toLowerCase() === inputVal || 
+        emp.id.toLowerCase() === inputVal ||
+        emp.name.toLowerCase().includes(inputVal)
+      ) || ESS_APP.employees[0];
+
+      loginUserSession(matched);
+    }
+
+    function quickLoginAs(empId) {
+      const emp = ESS_APP.employees.find(e => e.id === empId) || ESS_APP.employees[0];
+      loginUserSession(emp);
+    }
+
+    function loginUserSession(emp) {
+      ESS_APP.currentUser = emp;
+      
+      // Hide login, show workspace
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('appWorkspace').classList.remove('hidden');
+
+      // Populate UI with employee profile
+      applyUserProfileAndRole(emp);
+
+      // Start global clock ticker
+      startLiveClockTicker();
+
+      // Show toast
+      showToast('Welcome to ESS', `Logged in as ${emp.name} (${emp.role})`);
+      lucide.createIcons();
+    }
+
+    function handleUserLogout() {
+      if (ESS_APP.clockState.timerInterval) {
+        clearInterval(ESS_APP.clockState.timerInterval);
+      }
+      ESS_APP.currentUser = null;
+      document.getElementById('appWorkspace').classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
+      showToast('Logged Out', 'You have securely signed out of Employee Self-Service.');
+    }
+
+    // -----------------------------------------------------
+    // DYNAMIC ROLE & PERMISSION ENGINE
+    // -----------------------------------------------------
+    function applyUserProfileAndRole(emp) {
+      if (!emp) return;
+
+      // Header info
+      const initials = emp.name.split(' ').map(n=>n[0]).join('').slice(0, 2).toUpperCase();
+      document.getElementById('headerUserAvatar').innerText = initials;
+      document.getElementById('headerUserName').innerText = emp.name;
+      document.getElementById('headerUserRole').innerText = emp.role;
+      document.getElementById('dashWelcomeName').innerText = emp.name.split(' ')[0];
+      document.getElementById('dashRoleBadge').innerText = `${emp.dept} • ${emp.role}`;
+
+      // Sidebar info
+      document.getElementById('sidebarEmpCode').innerText = emp.id;
+      document.getElementById('sidebarDeptName').innerText = emp.dept;
+      const roleSwitcherSel = document.getElementById('userRoleSwitcherSelect');
+      if (roleSwitcherSel) roleSwitcherSel.value = emp.id;
+
+      // Profile Tab Info
+      document.getElementById('profileBigAvatar').innerText = initials;
+      document.getElementById('profileFullName').innerText = emp.name;
+      document.getElementById('profileDesig').innerText = emp.role;
+      document.getElementById('profileDept').innerText = emp.dept;
+      document.getElementById('profileEmpCode').innerText = emp.id;
+      document.getElementById('profEmail').value = emp.email;
+      document.getElementById('profPhone').value = emp.phone;
+      document.getElementById('profEmergName').value = emp.emergencyName;
+      document.getElementById('profEmergPhone').value = emp.emergencyPhone;
+      document.getElementById('profAddress').value = emp.address;
+
+      // Payslip info
+      document.getElementById('slipEmpName').innerText = emp.name;
+      document.getElementById('slipEmpId').innerText = emp.id;
+      document.getElementById('slipDept').innerText = emp.dept;
+      document.getElementById('slipDesig').innerText = emp.role;
+
+      // Dynamic Salary Calculation
+      calculateUserSalaryComponents(emp.salary);
+
+      // Dynamic Role Permissions Check
+      const roleLevel = emp.roleLevel; // 'employee', 'manager', 'field_lead', 'hr_admin'
+      const sidebarManagerSection = document.getElementById('sidebarManagerSection');
+      const sidebarRolePill = document.getElementById('sidebarRolePill');
+      const navBtnFieldGps = document.getElementById('nav-btn-field-gps');
+      const linkSwitchToAdminConsole = document.getElementById('linkSwitchToAdminConsole');
+
+      if (roleLevel === 'employee') {
+        sidebarRolePill.innerText = 'Individual Contributor';
+        sidebarRolePill.className = 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-sky-500/15 text-sky-400 font-mono';
+        sidebarManagerSection.classList.add('hidden');
+        linkSwitchToAdminConsole.classList.add('hidden');
+      } else if (roleLevel === 'manager') {
+        sidebarRolePill.innerText = 'Team Approver / Lead';
+        sidebarRolePill.className = 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-500/15 text-purple-400 font-mono';
+        sidebarManagerSection.classList.remove('hidden');
+        navBtnFieldGps.classList.add('hidden');
+        linkSwitchToAdminConsole.classList.add('hidden');
+      } else if (roleLevel === 'field_lead') {
+        sidebarRolePill.innerText = 'Field Sales Lead (GPS)';
+        sidebarRolePill.className = 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/15 text-amber-400 font-mono';
+        sidebarManagerSection.classList.remove('hidden');
+        navBtnFieldGps.classList.remove('hidden');
+        linkSwitchToAdminConsole.classList.add('hidden');
+      } else if (roleLevel === 'hr_admin') {
+        sidebarRolePill.innerText = 'HR Administrator';
+        sidebarRolePill.className = 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/15 text-emerald-400 font-mono';
+        sidebarManagerSection.classList.remove('hidden');
+        navBtnFieldGps.classList.remove('hidden');
+        linkSwitchToAdminConsole.classList.remove('hidden');
+      }
+
+      // Render Dynamic Grids
+      renderUserLeaveQuotas();
+      renderUserRecentLeaves();
+      renderUserAttendanceLogs();
+      renderTeamApprovals();
+      renderTeamPresence();
+      renderUserAssets();
+      renderUserPolicies();
+      lucide.createIcons();
+    }
+
+    function switchUserRole(empId) {
+      const emp = ESS_APP.employees.find(e => e.id === empId);
+      if (emp) {
+        applyUserProfileAndRole(emp);
+        showToast('Switched Persona', `Active session switched to ${emp.name} (${emp.role})`);
+      }
+    }
+
+    // -----------------------------------------------------
+    // SALARY & PAYSLIP CALCULATOR
+    // -----------------------------------------------------
+    function calculateUserSalaryComponents(gross) {
+      const g = gross || 75000;
+      const basic = Math.round(g * 0.50);
+      const hra = Math.round(g * 0.25);
+      const da = Math.round(g * 0.10);
+      const special = g - (basic + hra + da);
+      
+      const pf = Math.round(basic * 0.12);
+      const esic = Math.round(g * 0.0075);
+      const pt = 200;
+      const totalDeduct = pf + esic + pt;
+      const takeHome = g - totalDeduct;
+
+      const fmt = n => '₹ ' + n.toLocaleString('en-IN');
+
+      document.getElementById('dashTakeHomeAmount').innerText = fmt(takeHome);
+      document.getElementById('psGrossDisplay').innerText = fmt(g);
+      document.getElementById('psBasicDisplay').innerText = fmt(basic);
+      document.getElementById('psHraDisplay').innerText = fmt(hra);
+      document.getElementById('psDaDisplay').innerText = fmt(da);
+      document.getElementById('psSplDisplay').innerText = fmt(special);
+      document.getElementById('psTotalDeductDisplay').innerText = fmt(totalDeduct);
+      document.getElementById('psPfDisplay').innerText = fmt(pf);
+      document.getElementById('psEsicDisplay').innerText = fmt(esic);
+      document.getElementById('psTakeHomeBigDisplay').innerText = fmt(takeHome);
+
+      // Payslip detailed table
+      document.getElementById('slipBasic').innerText = fmt(basic);
+      document.getElementById('slipHra').innerText = fmt(hra);
+      document.getElementById('slipDa').innerText = fmt(da);
+      document.getElementById('slipSpl').innerText = fmt(special);
+      document.getElementById('slipGross').innerText = fmt(g);
+      document.getElementById('slipPf').innerText = fmt(pf);
+      document.getElementById('slipEsic').innerText = fmt(esic);
+      document.getElementById('slipDeductions').innerText = fmt(totalDeduct);
+      document.getElementById('slipNetTakeHome').innerText = fmt(takeHome);
+    }
+
+    // -----------------------------------------------------
+    // ATTENDANCE PUNCH ENGINE: CLOCK IN / BREAK / OUT
+    // -----------------------------------------------------
+    function startLiveClockTicker() {
+      function tick() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+        const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+
+        const hClock = document.getElementById('headerLiveClock');
+        const cTime = document.getElementById('clockCurrentTime');
+        const cDate = document.getElementById('clockCurrentDate');
+
+        if (hClock) hClock.innerText = timeStr;
+        if (cTime) cTime.innerText = timeStr;
+        if (cDate) cDate.innerText = dateStr;
+
+        // Ticking working seconds
+        if (ESS_APP.clockState.status === 'working') {
+          ESS_APP.clockState.workSeconds++;
+          updateTimerDisplays();
+        } else if (ESS_APP.clockState.status === 'on_break') {
+          ESS_APP.clockState.totalBreakSeconds++;
+          updateTimerDisplays();
+        }
+      }
+
+      if (ESS_APP.clockState.timerInterval) clearInterval(ESS_APP.clockState.timerInterval);
+      ESS_APP.clockState.timerInterval = setInterval(tick, 1000);
+      tick();
+    }
+
+    function formatSeconds(sec) {
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function updateTimerDisplays() {
+      const workStr = formatSeconds(ESS_APP.clockState.workSeconds);
+      const breakStr = formatSeconds(ESS_APP.clockState.totalBreakSeconds);
+
+      if (document.getElementById('clockWorkTimer')) document.getElementById('clockWorkTimer').innerText = workStr;
+      if (document.getElementById('dashTodayWorkTimer')) document.getElementById('dashTodayWorkTimer').innerText = workStr;
+      if (document.getElementById('clockBreakTimer')) document.getElementById('clockBreakTimer').innerText = breakStr;
+      if (document.getElementById('quickBreakTimer')) document.getElementById('quickBreakTimer').innerText = breakStr.slice(0, 5);
+      if (document.getElementById('stripTotalHours')) document.getElementById('stripTotalHours').innerText = `${Math.floor(ESS_APP.clockState.workSeconds / 3600)}h ${Math.floor((ESS_APP.clockState.workSeconds % 3600) / 60)}m`;
+    }
+
+    // 1. Trigger Clock In
+    function triggerClockInAction() {
+      if (ESS_APP.clockState.status !== 'not_in') return;
+
+      const now = new Date();
+      const inTimeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+      ESS_APP.clockState.status = 'working';
+      ESS_APP.clockState.clockInTime = inTimeStr;
+
+      // Update UI Pills & Badges
+      const statusPill = document.getElementById('headerShiftStatusPill');
+      const statusText = document.getElementById('headerShiftStatusText');
+      const punchBadge = document.getElementById('shiftPunchStatusBadge');
+
+      if (statusPill) statusPill.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 whitespace-nowrap punch-active-pulse';
+      if (statusText) statusText.innerText = 'Working (Clocked In)';
+      if (punchBadge) {
+        punchBadge.innerText = 'Shift Active • Working';
+        punchBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+      }
+
+      // Update Buttons
+      const btnIn = document.getElementById('btnMainClockIn');
+      const btnBreak = document.getElementById('btnMainBreak');
+      const btnOut = document.getElementById('btnMainClockOut');
+
+      if (btnIn) {
+        btnIn.disabled = true;
+        btnIn.className = 'py-4 px-6 rounded-2xl bg-brand-card opacity-50 cursor-not-allowed border border-brand-border text-neutral-400 font-bold text-sm flex items-center justify-center gap-2.5';
+      }
+      if (btnBreak) {
+        btnBreak.disabled = false;
+        btnBreak.className = 'py-4 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-sm flex items-center justify-center gap-2.5 shadow-lg shadow-amber-500/20 transition-all';
+      }
+      if (btnOut) {
+        btnOut.disabled = false;
+        btnOut.className = 'py-4 px-6 rounded-2xl bg-rose-500/20 hover:bg-rose-500 hover:text-white text-rose-300 font-bold text-sm border border-rose-500/40 flex items-center justify-center gap-2.5 transition-all';
+      }
+
+      // Quick Widget sync
+      if (document.getElementById('quickBtnClockIn')) {
+        document.getElementById('quickBtnClockIn').disabled = true;
+        document.getElementById('quickBtnClockIn').classList.add('opacity-50');
+      }
+      if (document.getElementById('quickClockInTime')) document.getElementById('quickClockInTime').innerText = inTimeStr;
+      if (document.getElementById('stripInTime')) document.getElementById('stripInTime').innerText = inTimeStr;
+      if (document.getElementById('dashPunchTrail')) document.getElementById('dashPunchTrail').innerHTML = `Punches today: <strong class="text-emerald-400 font-mono">Clock In at ${inTimeStr}</strong>`;
+
+      showToast('Clock In Verified', `Shift started at ${inTimeStr}. GPS geofence verified (BKC Tower 2).`);
+      lucide.createIcons();
+    }
+
+    // 2. Trigger Break (Start or Stop)
+    function triggerBreakAction() {
+      if (ESS_APP.clockState.status === 'working') {
+        // Open modal to choose break type
+        document.getElementById('modalBreakSelection').classList.remove('hidden');
+      } else if (ESS_APP.clockState.status === 'on_break') {
+        stopBreakAction();
+      }
+    }
+
+    function startSpecificBreak(typeName, approxMins) {
+      closeModal('modalBreakSelection');
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+
+      ESS_APP.clockState.status = 'on_break';
+      ESS_APP.clockState.activeBreakType = typeName;
+      ESS_APP.clockState.breakStartTime = timeStr;
+
+      // Update UI Pill
+      const statusPill = document.getElementById('headerShiftStatusPill');
+      const statusText = document.getElementById('headerShiftStatusText');
+      const punchBadge = document.getElementById('shiftPunchStatusBadge');
+
+      if (statusPill) statusPill.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5 whitespace-nowrap animate-pulse';
+      if (statusText) statusText.innerText = `On Break (${typeName})`;
+      if (punchBadge) {
+        punchBadge.innerText = `On Break (${typeName})`;
+        punchBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40';
+      }
+
+      // Update Button Text to "Stop Break"
+      document.getElementById('btnMainBreakText').innerText = `Stop Break & Resume Shift`;
+      document.getElementById('btnMainBreak').className = 'py-4 px-6 rounded-2xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-black text-sm flex items-center justify-center gap-2.5 shadow-xl transition-all';
+      if (document.getElementById('quickBreakBtnText')) document.getElementById('quickBreakBtnText').innerText = 'Stop Break';
+      if (document.getElementById('stripBreakStart')) document.getElementById('stripBreakStart').innerText = timeStr;
+
+      showToast('Break Started', `${typeName} logged at ${timeStr}. Work shift timer paused.`);
+    }
+
+    function stopBreakAction() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+
+      ESS_APP.clockState.status = 'working';
+
+      // Update UI back to working
+      const statusPill = document.getElementById('headerShiftStatusPill');
+      const statusText = document.getElementById('headerShiftStatusText');
+      const punchBadge = document.getElementById('shiftPunchStatusBadge');
+
+      if (statusPill) statusPill.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 whitespace-nowrap punch-active-pulse';
+      if (statusText) statusText.innerText = 'Working (Shift Active)';
+      if (punchBadge) {
+        punchBadge.innerText = 'Shift Active • Working';
+        punchBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+      }
+
+      document.getElementById('btnMainBreakText').innerText = `Start Another Break`;
+      document.getElementById('btnMainBreak').className = 'py-4 px-6 rounded-2xl bg-brand-card hover:bg-brand-surface border border-brand-border text-neutral-300 font-bold text-sm flex items-center justify-center gap-2.5 transition-all';
+      if (document.getElementById('quickBreakBtnText')) document.getElementById('quickBreakBtnText').innerText = 'Start Break';
+      if (document.getElementById('stripBreakEnd')) document.getElementById('stripBreakEnd').innerText = timeStr;
+
+      showToast('Shift Resumed', `Break ended at ${timeStr}. Work shift counter running.`);
+    }
+
+    // 3. Trigger Clock Out
+    function triggerClockOutAction() {
+      if (ESS_APP.clockState.status === 'not_in') return;
+
+      const confirmed = confirm("Are you sure you want to clock out and complete your work shift for today?");
+      if (!confirmed) return;
+
+      const now = new Date();
+      const outTimeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+      ESS_APP.clockState.status = 'completed';
+      ESS_APP.clockState.clockOutTime = outTimeStr;
+
+      // Stop timers
+      if (ESS_APP.clockState.timerInterval) clearInterval(ESS_APP.clockState.timerInterval);
+
+      // Total calculated working time
+      const totalWorkStr = formatSeconds(ESS_APP.clockState.workSeconds);
+      const totalBreakMins = Math.round(ESS_APP.clockState.totalBreakSeconds / 60);
+
+      // Add to attendance records
+      const todayDate = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      ESS_APP.attendanceLogs.unshift({
+        date: `Today (${todayDate})`,
+        inTime: ESS_APP.clockState.clockInTime || '09:15 AM',
+        outTime: outTimeStr,
+        breakTime: `${totalBreakMins}m`,
+        hours: `${Math.floor(ESS_APP.clockState.workSeconds / 3600)}h ${Math.floor((ESS_APP.clockState.workSeconds % 3600) / 60)}m`,
+        status: 'Present',
+        location: 'BKC Reception Standee'
+      });
+
+      renderUserAttendanceLogs();
+
+      // Update UI
+      const statusPill = document.getElementById('headerShiftStatusPill');
+      const statusText = document.getElementById('headerShiftStatusText');
+      const punchBadge = document.getElementById('shiftPunchStatusBadge');
+
+      if (statusPill) statusPill.className = 'px-3 py-1 rounded-full text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30 flex items-center gap-1.5 whitespace-nowrap';
+      if (statusText) statusText.innerText = 'Shift Completed';
+      if (punchBadge) {
+        punchBadge.innerText = 'Shift Completed (Logged Out)';
+        punchBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30';
+      }
+
+      // Disable buttons
+      document.getElementById('btnMainClockIn').disabled = true;
+      document.getElementById('btnMainBreak').disabled = true;
+      document.getElementById('btnMainClockOut').disabled = true;
+      document.getElementById('btnMainClockOut').className = 'py-4 px-6 rounded-2xl bg-brand-card opacity-50 cursor-not-allowed border border-brand-border text-neutral-400 font-bold text-sm flex items-center justify-center gap-2.5';
+      if (document.getElementById('stripOutTime')) document.getElementById('stripOutTime').innerText = outTimeStr;
+
+      showToast('Shift Completed', `Clocked out at ${outTimeStr}. Total time logged: ${totalWorkStr}. Great work today!`);
+    }
+
+    // -----------------------------------------------------
+    // RENDERING TABLES & COMPONENTS
+    // -----------------------------------------------------
+    function renderUserLeaveQuotas() {
+      const container = document.getElementById('userLeaveQuotasGrid');
+      const select = document.getElementById('userLeaveTypeSelect');
+      if (!container || !ESS_APP.leaveTypes) return;
+
+      const colors = {
+        'CL': 'bg-brand-amber/20 text-brand-amber border-brand-amber/30',
+        'SL': 'bg-sky-500/20 text-sky-300 border-sky-500/30',
+        'EL': 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
+        'PL': 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+        'LWP': 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+        'BDL': 'bg-pink-500/20 text-pink-300 border-pink-500/30',
+        'MRL': 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+        'CO': 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+        'MPL': 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+        'BRL': 'bg-neutral-500/20 text-neutral-300 border-neutral-500/30'
+      };
+
+      container.innerHTML = ESS_APP.leaveTypes.map(lt => {
+        const cls = colors[lt.code] || 'bg-brand-amber/20 text-brand-amber border-brand-amber/30';
+        return `
+          <div class="p-3.5 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all cursor-pointer group shadow-sm" onclick="openUserApplyLeaveModal('${lt.name}')">
+            <div class="flex items-center justify-between text-[10px] font-semibold text-neutral-400">
+              <span class="group-hover:text-white transition-colors truncate max-w-[85px]">${lt.code}</span>
+              <span class="px-1.5 py-0.2 rounded font-mono font-bold ${cls} border text-[9px]">${lt.quota}</span>
+            </div>
+            <div class="text-base font-bold text-white mt-1.5">${lt.userBal !== undefined ? (lt.userBal + (typeof lt.userBal === 'number' ? ' Left' : '')) : '--'}</div>
+            <div class="text-[10px] text-neutral-400 truncate mt-0.5">${lt.name.split('(')[0].trim()}</div>
+          </div>
+        `;
+      }).join('');
+
+      if (select) {
+        select.innerHTML = ESS_APP.leaveTypes.map(lt => 
+          `<option value="${lt.name}">${lt.name} &bull; (Quota: ${lt.quota})</option>`
+        ).join('');
+      }
+    }
+
+    function renderUserRecentLeaves() {
+      const tbody1 = document.getElementById('dashRecentLeavesTbody');
+      const tbody2 = document.getElementById('userLeavesHistoryTbody');
+
+      const html = ESS_APP.userLeaves.map(lv => {
+        const badge = lv.status === 'Approved'
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Approved</span>`
+          : (lv.status === 'Pending'
+            ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30 animate-pulse">Pending Review</span>`
+            : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">Rejected</span>`);
+
+        return `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-2.5 px-3.5 font-bold text-white">${lv.type}</td>
+            <td class="py-2.5 px-3.5 text-neutral-300">${lv.mode} (${lv.days}d)</td>
+            <td class="py-2.5 px-3.5 text-neutral-300 font-mono text-[11px]">${lv.dates}</td>
+            <td class="py-2.5 px-3.5 text-neutral-400 italic truncate max-w-xs">${lv.reason}</td>
+            <td class="py-2.5 px-3.5">${badge}</td>
+          </tr>
+        `;
+      }).join('');
+
+      if (tbody1) tbody1.innerHTML = html;
+
+      if (tbody2) {
+        tbody2.innerHTML = ESS_APP.userLeaves.map(lv => {
+          const badge = lv.status === 'Approved'
+            ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Approved</span>`
+            : (lv.status === 'Pending'
+              ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">Pending Review</span>`
+              : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">Rejected</span>`);
+
+          return `
+            <tr class="hover:bg-brand-card/40 transition-colors">
+              <td class="py-3 px-3.5 font-mono text-[11px] text-brand-amber font-semibold">${lv.id}</td>
+              <td class="py-3 px-3.5 font-bold text-white">${lv.type}</td>
+              <td class="py-3 px-3.5 text-neutral-300">${lv.mode}</td>
+              <td class="py-3 px-3.5 text-neutral-300 font-mono">${lv.dates}</td>
+              <td class="py-3 px-3.5 font-bold font-mono text-white">${lv.days} Days</td>
+              <td class="py-3 px-3.5 text-neutral-400 italic truncate max-w-xs">${lv.reason}</td>
+              <td class="py-3 px-3.5">${badge}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    function renderUserAttendanceLogs() {
+      const tbody = document.getElementById('userAttendanceLogsTbody');
+      if (!tbody || !ESS_APP.attendanceLogs) return;
+
+      tbody.innerHTML = ESS_APP.attendanceLogs.map((log, idx) => {
+        const badge = log.status === 'Present'
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Present</span>`
+          : (log.status === 'Approved Leave'
+            ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30">Leave</span>`
+            : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-neutral-800 text-neutral-400">Regular</span>`);
+
+        return `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-3 px-3.5 font-bold text-white whitespace-nowrap">${log.date}</td>
+            <td class="py-3 px-3.5 font-mono text-neutral-300">${log.inTime}</td>
+            <td class="py-3 px-3.5 font-mono text-neutral-300">${log.outTime}</td>
+            <td class="py-3 px-3.5 font-mono text-amber-300">${log.breakTime}</td>
+            <td class="py-3 px-3.5 font-mono font-bold text-emerald-400">${log.hours}</td>
+            <td class="py-3 px-3.5">${badge}</td>
+            <td class="py-3 px-3.5 text-neutral-400 text-[11px] truncate max-w-[150px]">${log.location}</td>
+            <td class="py-3 px-3.5 text-right">
+              <button onclick="openRegularizeModal('${log.date}')" class="px-2 py-1 rounded-lg bg-brand-dark hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-[11px] text-brand-amber font-semibold transition-all">
+                Fix
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderTeamApprovals() {
+      const tbody = document.getElementById('teamLeaveApprovalsTbody');
+      if (!tbody || !ESS_APP.teamLeaveRequests) return;
+
+      tbody.innerHTML = ESS_APP.teamLeaveRequests.map((req, idx) => `
+        <tr class="hover:bg-brand-card/40 transition-colors">
+          <td class="py-3 px-3.5">
+            <div class="font-bold text-white">${req.name}</div>
+            <div class="text-[10px] text-neutral-400">${req.role}</div>
+          </td>
+          <td class="py-3 px-3.5 text-brand-amber font-semibold">${req.type}</td>
+          <td class="py-3 px-3.5 text-neutral-300 font-mono text-[11px]">${req.dates} (${req.days}d)</td>
+          <td class="py-3 px-3.5 text-neutral-400 italic truncate max-w-xs">${req.reason}</td>
+          <td class="py-3 px-3.5 text-right">
+            <div class="flex items-center justify-end gap-1.5">
+              <button onclick="approveTeamLeave(${idx})" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500 hover:text-neutral-950 font-bold text-[11px] border border-emerald-500/30 transition-all">Approve</button>
+              <button onclick="rejectTeamLeave(${idx})" class="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-400 hover:bg-rose-500 hover:text-white font-bold text-[11px] border border-rose-500/30 transition-all">Reject</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function approveTeamLeave(idx) {
+      const req = ESS_APP.teamLeaveRequests[idx];
+      if (!req) return;
+      ESS_APP.teamLeaveRequests.splice(idx, 1);
+      renderTeamApprovals();
+      showToast('Leave Approved', `Approved ${req.type} for ${req.name}.`);
+    }
+
+    function rejectTeamLeave(idx) {
+      const req = ESS_APP.teamLeaveRequests[idx];
+      if (!req) return;
+      ESS_APP.teamLeaveRequests.splice(idx, 1);
+      renderTeamApprovals();
+      showToast('Leave Rejected', `Rejected request for ${req.name}.`);
+    }
+
+    function renderTeamPresence() {
+      const grid = document.getElementById('teamPresenceGrid');
+      if (!grid || !ESS_APP.teamPresence) return;
+
+      grid.innerHTML = ESS_APP.teamPresence.map(m => {
+        const isWork = m.status === 'Working';
+        const isBreak = m.status.includes('Break');
+        const badge = isWork
+          ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Working</span>`
+          : (isBreak
+            ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">On Break</span>`
+            : `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30">On Leave</span>`);
+
+        return `
+          <div class="p-3.5 rounded-2xl bg-brand-dark border border-brand-border space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="w-8 h-8 rounded-xl bg-brand-surface border border-brand-border font-bold text-white text-xs flex items-center justify-center">
+                ${m.avatar}
+              </div>
+              ${badge}
+            </div>
+            <div>
+              <div class="font-bold text-white text-xs">${m.name}</div>
+              <div class="text-[10px] text-neutral-400 truncate">${m.role}</div>
+            </div>
+            <div class="text-[10px] text-neutral-500 font-mono">In: ${m.inTime}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderUserAssets() {
+      const grid = document.getElementById('userAssetsContainer');
+      if (!grid || !ESS_APP.assets) return;
+
+      grid.innerHTML = ESS_APP.assets.map(a => `
+        <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] text-brand-amber font-mono font-semibold uppercase">${a.category}</span>
+            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Active</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-white text-sm">${a.name}</h4>
+            <div class="text-xs text-neutral-400 font-mono mt-1">Serial: <strong class="text-neutral-200">${a.serial}</strong></div>
+          </div>
+          <div class="pt-2 border-t border-brand-border flex items-center justify-between text-[11px] text-neutral-400">
+            <span>Issued: ${a.date}</span>
+            <button onclick="openReportAssetModal('${a.name}')" class="text-brand-amber hover:underline font-semibold">Report Issue</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderUserPolicies() {
+      const grid = document.getElementById('userPoliciesContainer');
+      if (!grid || !ESS_APP.policies) return;
+
+      grid.innerHTML = ESS_APP.policies.map(p => `
+        <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all flex flex-col justify-between space-y-3">
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-[10px] font-mono text-purple-400">
+              <span>${p.id}</span>
+              <span class="px-1.5 py-0.2 rounded bg-purple-500/15 border border-purple-500/30 font-semibold">${p.cat}</span>
+            </div>
+            <h4 class="font-bold text-white text-xs leading-snug">${p.title}</h4>
+            <p class="text-[11px] text-neutral-400 leading-relaxed">${p.desc}</p>
+          </div>
+          <div class="pt-2 border-t border-brand-border flex items-center justify-between">
+            <span class="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+              <i data-lucide="check" class="w-3 h-3"></i>
+              <span>Acknowledged</span>
+            </span>
+            <button onclick="showToast('Policy Reader', 'Opening official document reader...')" class="text-xs text-brand-amber hover:underline font-semibold">
+              Read Policy &rarr;
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // -----------------------------------------------------
+    // TAB SWITCHER
+    // -----------------------------------------------------
+    function switchUserTab(tabKey) {
+      ESS_APP.currentTab = tabKey;
+
+      // Update button active states
+      document.querySelectorAll('.user-nav-btn').forEach(btn => {
+        btn.className = 'user-nav-btn w-full px-3 py-2.5 rounded-xl font-semibold text-xs text-neutral-300 hover:text-white hover:bg-brand-card flex items-center gap-3 transition-all';
+      });
+
+      const activeBtn = document.getElementById(`nav-btn-${tabKey}`);
+      if (activeBtn) {
+        activeBtn.className = 'user-nav-btn w-full px-3 py-2.5 rounded-xl font-bold text-xs flex items-center gap-3 transition-all bg-brand-amber text-neutral-950 shadow-md';
+      }
+
+      // Hide all tabs, show selected tab
+      document.querySelectorAll('.user-tab-content').forEach(el => el.classList.add('hidden'));
+      const activeTabEl = document.getElementById(`tab-${tabKey}`);
+      if (activeTabEl) activeTabEl.classList.remove('hidden');
+
+      // Initialize Leaflet map if GPS tab opened
+      if (tabKey === 'field-gps') {
+        setTimeout(initUserFieldMap, 150);
+      }
+
+      lucide.createIcons();
+    }
+
+    // -----------------------------------------------------
+    // MODAL OPENERS & HANDLERS
+    // -----------------------------------------------------
+    function openUserApplyLeaveModal(preselected) {
+      const modal = document.getElementById('modalUserApplyLeave');
+      const select = document.getElementById('userLeaveTypeSelect');
+      if (preselected && select) select.value = preselected;
+
+      const today = new Date().toISOString().split('T')[0];
+      if (document.getElementById('userLeaveStartDate')) document.getElementById('userLeaveStartDate').value = today;
+      if (document.getElementById('userLeaveEndDate')) document.getElementById('userLeaveEndDate').value = today;
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function handleUserSubmitLeave(e) {
+      e.preventDefault();
+      const type = document.getElementById('userLeaveTypeSelect').value;
+      const mode = document.getElementById('userLeaveModeSelect').value;
+      const days = parseFloat(document.getElementById('userLeaveDaysInput').value) || 1;
+      const start = document.getElementById('userLeaveStartDate').value;
+      const end = document.getElementById('userLeaveEndDate').value;
+      const reason = document.getElementById('userLeaveReasonInput').value.trim();
+
+      const newId = 'LV-2026-' + Math.floor(100 + Math.random() * 900);
+      const datesStr = (start === end) ? start : `${start} to ${end}`;
+
+      ESS_APP.userLeaves.unshift({
+        id: newId,
+        type: type,
+        mode: mode,
+        dates: datesStr,
+        days: days,
+        reason: reason,
+        status: 'Pending'
+      });
+
+      renderUserRecentLeaves();
+      closeModal('modalUserApplyLeave');
+      showToast('Leave Submitted', `Application for ${days} days (${type}) registered successfully.`);
+    }
+
+    function openRegularizeModal(dateVal) {
+      const modal = document.getElementById('modalUserRegularize');
+      if (dateVal && document.getElementById('regDateInput')) {
+        document.getElementById('regDateInput').value = new Date().toISOString().split('T')[0];
+      }
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function handleUserSubmitRegularize(e) {
+      e.preventDefault();
+      const date = document.getElementById('regDateInput').value;
+      const inTime = document.getElementById('regInTimeInput').value;
+      const outTime = document.getElementById('regOutTimeInput').value;
+      const reason = document.getElementById('regReasonSelect').value;
+
+      closeModal('modalUserRegularize');
+      showToast('Regularization Sent', `Request for ${date} (${inTime} - ${outTime}) submitted to manager.`);
+    }
+
+    function viewDetailedPayslipModal() {
+      document.getElementById('modalUserPayslipDetail').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function downloadUserPayslipPdf(monthStr) {
+      const element = document.getElementById('payslipPrintArea');
+      if (!element) return;
+
+      const opt = {
+        margin: [8, 8, 8, 8],
+        filename: `Payslip_${ESS_APP.currentUser.name.replace(/\s+/g, '_')}_${monthStr}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      showToast('Downloading Payslip...', 'Compiling official PDF salary slip...');
+      html2pdf().set(opt).from(element).save();
+    }
+
+    function openReportAssetModal(assetName) {
+      const reason = prompt(`Report hardware issue or replacement request for ${assetName || 'asset'}:\nPlease describe the malfunction:`, 'Keyboard/Screen issue');
+      if (reason) {
+        showToast('Ticket Registered', `IT Support Ticket #HD-2026-901 created for ${assetName || 'asset'}.`);
+      }
+    }
+
+    function saveUserProfileChanges() {
+      showToast('Profile Updated', 'Personal contact and emergency information saved successfully.');
+    }
+
+    // -----------------------------------------------------
+    // FIELD LEAFLET MAP ENGINE
+    // -----------------------------------------------------
+    let fieldMapInstance = null;
+    function initUserFieldMap() {
+      const mapDiv = document.getElementById('userFieldMap');
+      if (!mapDiv || fieldMapInstance) return;
+
+      // BKC coordinates
+      const bkcLat = 19.0657;
+      const bkcLng = 72.8682;
+
+      fieldMapInstance = L.map('userFieldMap').setView([bkcLat, bkcLng], 14);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(fieldMapInstance);
+
+      // Office Geofence Circle (50m radius)
+      L.circle([bkcLat, bkcLng], {
+        color: '#f59e0b',
+        fillColor: '#f59e0b',
+        fillOpacity: 0.25,
+        radius: 75
+      }).addTo(fieldMapInstance).bindPopup("<b>BKC Head Office Geofence</b><br>Allowable clock-in zone: 50m");
+
+      // Current location marker
+      L.marker([bkcLat, bkcLng]).addTo(fieldMapInstance)
+        .bindPopup(`<b>${ESS_APP.currentUser ? ESS_APP.currentUser.name : 'You'}</b><br>Current Clock-In GPS Coordinates`)
+        .openPopup();
+    }
+
+    function refreshUserFieldGps() {
+      showToast('GPS Telemetry', 'Updated satellite coordinates: 19.0657° N, 72.8682° E (Accuracy: ±4m)');
+    }
+
+    // -----------------------------------------------------
+    // UTILITY HELPERS
+    // -----------------------------------------------------
+    function closeModal(modalId) {
+      const el = document.getElementById(modalId);
+      if (el) el.classList.add('hidden');
+    }
+
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = `<i data-lucide="eye-off" class="w-3.5 h-3.5"></i>`;
+      } else {
+        input.type = 'password';
+        btn.innerHTML = `<i data-lucide="eye" class="w-3.5 h-3.5"></i>`;
+      }
+      lucide.createIcons();
+    }
+
+    let toastTimer = null;
+    function showToast(title, msg) {
+      const toast = document.getElementById('userToast');
+      if (!toast) return;
+      document.getElementById('userToastTitle').innerText = title;
+      document.getElementById('userToastMsg').innerText = msg;
+
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 3500);
+    }
+
+    // Auto-login on load with first demo profile or listen to query param
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+
+      // Check query param e.g. /user/?autoLogin=1&emp=EMP-AGT-0104
+      const urlParams = new URLSearchParams(window.location.search);
+      const empParam = urlParams.get('emp');
+      const auto = urlParams.get('autoLogin');
+
+      if (auto === '1' || empParam) {
+        quickLoginAs(empParam || 'EMP-AGT-0104');
+      }
+    });
+  </script>
+</body>
+</html>
