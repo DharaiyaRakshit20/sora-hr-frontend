@@ -4955,29 +4955,48 @@
 
         <!-- Section 1: Monthly Working Days Base -->
         <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-2">
-          <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
-            1. Monthly Working Days Calculation Base
-          </label>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
-              <input type="radio" name="ruleWorkingDaysBase" value="26" checked class="text-brand-amber">
+          <div class="flex items-center justify-between">
+            <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
+              1. Monthly Working Days Calculation Base
+            </label>
+            <span id="ruleWorkingDaysActiveLabel" class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-brand-amber/15 text-brand-amber border border-brand-amber/30">Active Base: 26 Days</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+            <label class="p-2.5 rounded-xl bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+              <input type="radio" name="ruleWorkingDaysBase" value="26" checked onchange="onWorkingDaysBaseChange()" class="text-brand-amber">
               <div>
-                <div class="font-bold text-white">26 Days</div>
-                <div class="text-[10px] text-neutral-400">Statutory Indian rule (Sundays off)</div>
+                <div class="font-bold text-white text-xs">26 Days</div>
+                <div class="text-[10px] text-neutral-400">Statutory (Sundays off)</div>
               </div>
             </label>
-            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
-              <input type="radio" name="ruleWorkingDaysBase" value="calendar" class="text-brand-amber">
+            <label class="p-2.5 rounded-xl bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+              <input type="radio" name="ruleWorkingDaysBase" value="calendar" onchange="onWorkingDaysBaseChange()" class="text-brand-amber">
               <div>
-                <div class="font-bold text-white">Actual Calendar Days</div>
-                <div class="text-[10px] text-neutral-400">30 or 31 days in month</div>
+                <div class="font-bold text-white text-xs">Actual Calendar</div>
+                <div class="text-[10px] text-neutral-400">30 or 31 days/mo</div>
               </div>
             </label>
-            <label class="p-2.5 rounded-lg bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
-              <input type="radio" name="ruleWorkingDaysBase" value="22" class="text-brand-amber">
+            <label class="p-2.5 rounded-xl bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+              <input type="radio" name="ruleWorkingDaysBase" value="22" onchange="onWorkingDaysBaseChange()" class="text-brand-amber">
               <div>
-                <div class="font-bold text-white">22 Days</div>
+                <div class="font-bold text-white text-xs">22 Days</div>
                 <div class="text-[10px] text-neutral-400">5-day corporate week</div>
+              </div>
+            </label>
+            <label class="p-2.5 rounded-xl bg-brand-surface border border-brand-border cursor-pointer flex items-center gap-2 has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+              <input type="radio" name="ruleWorkingDaysBase" value="custom" id="ruleWorkingDaysCustomRadio" onchange="onWorkingDaysBaseChange()" class="text-brand-amber">
+              <div class="flex-grow">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-white text-xs">Custom Days</span>
+                  <span class="text-[9px] text-brand-amber font-mono font-semibold">Dynamic</span>
+                </div>
+                <div class="flex items-center gap-1 mt-1">
+                  <input type="number" id="ruleCustomWorkingDays" min="15" max="31" value="24" 
+                         onfocus="document.getElementById('ruleWorkingDaysCustomRadio').checked=true; onWorkingDaysBaseChange();"
+                         oninput="document.getElementById('ruleWorkingDaysCustomRadio').checked=true; onWorkingDaysBaseChange();"
+                         class="w-14 px-1.5 py-0.5 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-mono font-bold focus:border-brand-amber outline-none">
+                  <span class="text-[10px] text-neutral-400">days</span>
+                </div>
               </div>
             </label>
           </div>
@@ -4986,136 +5005,320 @@
         <!-- Section 2: Salary Component Splits (% of Gross Salary) -->
         <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
           <div class="flex items-center justify-between">
-            <label class="font-bold text-white uppercase text-[11px] tracking-wider">
-              2. Salary Component Percentages (% of Gross Salary)
-            </label>
-            <span id="ruleComponentsTotalBadge" class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-brand-amber/15 text-brand-amber border border-brand-amber/30">Total: 100% Gross</span>
+            <div class="flex items-center gap-2">
+              <label class="font-bold text-white uppercase text-[11px] tracking-wider">
+                2. Salary Component Percentages (% of Gross Salary)
+              </label>
+              <span class="text-[10px] text-neutral-400 font-mono">(Fully Customizable)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="ruleComponentsTotalBadge" class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-brand-amber/15 text-brand-amber border border-brand-amber/30">Total: 100% Gross</span>
+            </div>
           </div>
 
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div>
-              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Basic Salary (%)</label>
-              <select id="ruleBasicPct" onchange="updateSalaryStructurePreview()" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
-                <option value="50" selected>50% (New Wage Code)</option>
-                <option value="40">40% of Gross</option>
-                <option value="35">35% of Gross</option>
-                <option value="30">30% of Gross</option>
-              </select>
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <!-- Basic Salary Input -->
+            <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-neutral-300 font-semibold text-[11px]">Basic Salary (%)</label>
+                <span class="text-[9px] text-emerald-400 font-mono font-semibold">Min 50% Wage Code</span>
+              </div>
+              <div class="relative">
+                <input type="number" id="ruleBasicPct" min="0" max="100" step="1" value="50" oninput="updateSalaryStructurePreview()"
+                       class="w-full px-3 py-1.5 pr-8 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-mono font-bold focus:border-brand-amber outline-none">
+                <span class="absolute right-3 top-1.5 text-neutral-400 font-bold text-xs">%</span>
+              </div>
+              <div class="flex flex-wrap gap-1 pt-1">
+                <button type="button" onclick="setComponentPct('ruleBasicPct', 50)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">50%</button>
+                <button type="button" onclick="setComponentPct('ruleBasicPct', 45)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">45%</button>
+                <button type="button" onclick="setComponentPct('ruleBasicPct', 40)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">40%</button>
+                <button type="button" onclick="setComponentPct('ruleBasicPct', 35)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">35%</button>
+              </div>
             </div>
-            <div>
-              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">HRA Ratio (%)</label>
-              <select id="ruleHraPct" onchange="updateSalaryStructurePreview()" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
-                <option value="25" selected>25% of Gross (Metro)</option>
-                <option value="20">20% of Gross</option>
-                <option value="15">15% of Gross</option>
-                <option value="10">10% of Gross</option>
-              </select>
+
+            <!-- HRA Ratio Input -->
+            <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-neutral-300 font-semibold text-[11px]">HRA Ratio (%)</label>
+                <span class="text-[9px] text-neutral-400 font-mono">Metro / Non-Metro</span>
+              </div>
+              <div class="relative">
+                <input type="number" id="ruleHraPct" min="0" max="100" step="1" value="25" oninput="updateSalaryStructurePreview()"
+                       class="w-full px-3 py-1.5 pr-8 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-mono font-bold focus:border-brand-amber outline-none">
+                <span class="absolute right-3 top-1.5 text-neutral-400 font-bold text-xs">%</span>
+              </div>
+              <div class="flex flex-wrap gap-1 pt-1">
+                <button type="button" onclick="setComponentPct('ruleHraPct', 25)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">25%</button>
+                <button type="button" onclick="setComponentPct('ruleHraPct', 20)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">20%</button>
+                <button type="button" onclick="setComponentPct('ruleHraPct', 15)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">15%</button>
+                <button type="button" onclick="setComponentPct('ruleHraPct', 10)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">10%</button>
+              </div>
             </div>
-            <div>
-              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">DA (Dearness) (%)</label>
-              <select id="ruleDaPct" onchange="updateSalaryStructurePreview()" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
-                <option value="10" selected>10% of Gross</option>
-                <option value="5">5% of Gross</option>
-                <option value="0">0% (Merged into Special)</option>
-              </select>
+
+            <!-- DA (Dearness Allowance) Input -->
+            <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-neutral-300 font-semibold text-[11px]">DA (Dearness) (%)</label>
+                <span class="text-[9px] text-neutral-400 font-mono">Cost of living</span>
+              </div>
+              <div class="relative">
+                <input type="number" id="ruleDaPct" min="0" max="100" step="1" value="10" oninput="updateSalaryStructurePreview()"
+                       class="w-full px-3 py-1.5 pr-8 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-mono font-bold focus:border-brand-amber outline-none">
+                <span class="absolute right-3 top-1.5 text-neutral-400 font-bold text-xs">%</span>
+              </div>
+              <div class="flex flex-wrap gap-1 pt-1">
+                <button type="button" onclick="setComponentPct('ruleDaPct', 10)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">10%</button>
+                <button type="button" onclick="setComponentPct('ruleDaPct', 5)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">5%</button>
+                <button type="button" onclick="setComponentPct('ruleDaPct', 0)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">0%</button>
+              </div>
             </div>
-            <div>
-              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Special / Balancing (%)</label>
-              <input type="text" id="ruleSpecialPctDisplay" value="15% (Remaining)" readonly class="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-brand-border/60 text-brand-amber text-xs font-mono font-bold cursor-not-allowed">
+
+            <!-- Special / Balancing (%) (Auto-Balancing) -->
+            <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-neutral-300 font-semibold text-[11px]">Special / Balancing (%)</label>
+                <span class="text-[9px] text-brand-amber font-mono font-semibold">Auto-Balanced</span>
+              </div>
+              <div class="relative">
+                <input type="text" id="ruleSpecialPctDisplay" value="15%" readonly
+                       class="w-full px-3 py-1.5 pr-8 rounded-lg bg-neutral-900 border border-brand-border/60 text-brand-amber text-xs font-mono font-bold cursor-not-allowed">
+                <span class="absolute right-3 top-1.5 text-brand-amber font-bold text-xs">%</span>
+              </div>
+              <div class="text-[10px] text-neutral-400 pt-1">
+                Absorbs residual gross up to 100%
+              </div>
             </div>
           </div>
 
           <!-- Dynamic Component Formula Display -->
-          <div class="p-2.5 rounded-xl bg-brand-surface/70 border border-brand-border text-[11px] text-neutral-300 flex items-center justify-between font-mono">
-            <span>Breakdown Formula:</span>
+          <div class="p-2.5 rounded-xl bg-brand-surface/70 border border-brand-border text-[11px] text-neutral-300 flex flex-col sm:flex-row sm:items-center justify-between gap-1 font-mono">
+            <span class="text-neutral-400 font-semibold">Live Breakdown Formula:</span>
             <span id="ruleBreakdownEquation" class="text-white font-bold">Gross = 50% Basic + 25% HRA + 10% DA + 15% Special Allowance</span>
+          </div>
+          <div id="ruleComponentWarning" class="hidden p-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 shrink-0"></i>
+            <span>Warning: Total component percentages exceed 100%! Special allowance has been clamped to 0%. Please adjust percentages.</span>
           </div>
         </div>
 
         <!-- Section 3: Overtime (OT) Hourly Calculation Rules -->
         <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
-          <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
-            3. Overtime (OT) Calculation Formula &amp; Multiplier
-          </label>
+          <div class="flex items-center justify-between">
+            <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
+              3. Overtime (OT) Calculation Formula &amp; Multiplier
+            </label>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-brand-surface border border-brand-border text-neutral-300">
+              Attendance Biometric Link Active
+            </span>
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Daily Shift Work Hours</label>
-              <select id="ruleDailyHours" onchange="updateSalaryStructurePreview()" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
-                <option value="8" selected>8 Hours / Day (Standard Corporate)</option>
-                <option value="9">9 Hours / Day (Including 1 hr break)</option>
-                <option value="8.5">8.5 Hours / Day</option>
-              </select>
+            <!-- Dynamic Daily Shift Work Hours -->
+            <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border space-y-2">
+              <label class="block text-neutral-300 font-semibold text-[11px]">Daily Shift Work Hours</label>
+              <div class="flex items-center gap-2">
+                <select id="ruleDailyHoursPreset" onchange="onDailyHoursPresetChange()" class="flex-grow px-3 py-1.5 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+                  <option value="8" selected>8 Hours / Day (Standard Corporate)</option>
+                  <option value="9">9 Hours / Day (With 1 hr break)</option>
+                  <option value="8.5">8.5 Hours / Day</option>
+                  <option value="10">10 Hours / Day (Extended Shift)</option>
+                  <option value="custom">Custom Shift Hours...</option>
+                </select>
+                <div id="ruleCustomDailyHoursWrap" class="hidden w-24 relative shrink-0">
+                  <input type="number" id="ruleCustomDailyHours" step="0.5" min="4" max="16" value="8" oninput="updateSalaryStructurePreview()"
+                         class="w-full px-2 py-1.5 pr-6 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-mono font-bold focus:border-brand-amber outline-none">
+                  <span class="absolute right-2 top-1.5 text-neutral-400 text-xs">h</span>
+                </div>
+              </div>
+              <div class="text-[10px] text-neutral-400">Used as divisor for employee hourly base rate.</div>
             </div>
-            <div>
-              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Overtime Hourly Multiplier</label>
-              <div class="grid grid-cols-3 gap-1.5">
-                <label class="p-2 rounded-lg bg-brand-surface border border-brand-border cursor-pointer text-center has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
-                  <input type="radio" name="ruleOtMultiplier" value="1.0" class="sr-only">
-                  <div class="font-bold text-white">1.0x</div>
-                  <div class="text-[9px] text-neutral-400">Flat Rate</div>
+
+            <!-- Dynamic Overtime Multiplier -->
+            <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-neutral-300 font-semibold text-[11px]">Overtime Hourly Multiplier</label>
+                <span id="ruleOtMultBadge" class="text-[10px] font-mono text-brand-amber font-bold">1.5x Rate</span>
+              </div>
+              <div class="grid grid-cols-4 gap-1.5">
+                <label class="p-1.5 rounded-lg bg-brand-dark border border-brand-border cursor-pointer text-center has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+                  <input type="radio" name="ruleOtMultiplier" value="1.0" onchange="onOtMultiplierChange()" class="sr-only">
+                  <div class="font-bold text-white text-xs">1.0x</div>
+                  <div class="text-[9px] text-neutral-400">Flat</div>
                 </label>
-                <label class="p-2 rounded-lg bg-brand-surface border border-brand-border cursor-pointer text-center has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
-                  <input type="radio" name="ruleOtMultiplier" value="1.5" checked class="sr-only">
-                  <div class="font-bold text-white">1.5x</div>
-                  <div class="text-[9px] text-neutral-400">Standard 1.5x</div>
+                <label class="p-1.5 rounded-lg bg-brand-dark border border-brand-border cursor-pointer text-center has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+                  <input type="radio" name="ruleOtMultiplier" value="1.5" checked onchange="onOtMultiplierChange()" class="sr-only">
+                  <div class="font-bold text-white text-xs">1.5x</div>
+                  <div class="text-[9px] text-neutral-400">Std</div>
                 </label>
-                <label class="p-2 rounded-lg bg-brand-surface border border-brand-border cursor-pointer text-center has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10">
-                  <input type="radio" name="ruleOtMultiplier" value="2.0" class="sr-only">
-                  <div class="font-bold text-white">2.0x</div>
-                  <div class="text-[9px] text-neutral-400">Double Time</div>
+                <label class="p-1.5 rounded-lg bg-brand-dark border border-brand-border cursor-pointer text-center has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+                  <input type="radio" name="ruleOtMultiplier" value="2.0" onchange="onOtMultiplierChange()" class="sr-only">
+                  <div class="font-bold text-white text-xs">2.0x</div>
+                  <div class="text-[9px] text-neutral-400">Double</div>
                 </label>
+                <label class="p-1.5 rounded-lg bg-brand-dark border border-brand-border cursor-pointer text-center has-[:checked]:border-brand-amber has-[:checked]:bg-brand-amber/10 transition-all">
+                  <input type="radio" name="ruleOtMultiplier" value="custom" id="ruleOtMultCustomRadio" onchange="onOtMultiplierChange()" class="sr-only">
+                  <div class="font-bold text-white text-xs">Custom</div>
+                  <div class="text-[9px] text-brand-amber font-semibold">Custom x</div>
+                </label>
+              </div>
+              <div id="ruleCustomOtMultWrap" class="hidden flex items-center gap-2 pt-1">
+                <span class="text-[11px] text-neutral-300">Custom Multiplier:</span>
+                <input type="number" id="ruleCustomOtMultiplierInput" step="0.1" min="1.0" max="5.0" value="1.75" 
+                       oninput="updateSalaryStructurePreview()"
+                       class="w-20 px-2 py-1 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-mono font-bold focus:border-brand-amber outline-none">
+                <span class="text-[10px] text-neutral-400">e.g. 1.25x, 1.75x, 2.5x</span>
               </div>
             </div>
           </div>
 
-          <!-- Formula & Example OT Calculator -->
-          <div class="p-2.5 rounded-xl bg-brand-surface/70 border border-brand-border text-[11px] space-y-1">
-            <div class="text-neutral-300 font-mono flex items-center justify-between">
-              <span>Hourly Rate Formula:</span>
-              <span class="text-brand-amber font-bold">Gross Salary &divide; Working Days &divide; Daily Hours</span>
+          <!-- Live Employee Overtime Audit & Attendance Breakdown Calculator -->
+          <div class="p-3.5 rounded-xl bg-brand-surface/90 border border-brand-border space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-brand-border/60 pb-2.5">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+                  <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span>Live Employee Overtime &amp; Attendance Calculation Audit</span>
+                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">Live Tester</span>
+                  </h4>
+                  <p class="text-[10px] text-neutral-400">Tracked automatically via Biometric / GPS punch-out after shift end. You can test or adjust hours here.</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <label class="text-[10px] text-neutral-300 whitespace-nowrap">Audit Employee:</label>
+                <select id="ruleOtAuditEmpSelect" onchange="onOtAuditEmployeeChange()" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+                  <!-- dynamically populated -->
+                </select>
+              </div>
             </div>
-            <div class="text-neutral-400 font-mono text-[10px] flex items-center justify-between border-t border-brand-border/40 pt-1">
-              <span>Example (&#8377;65,000 Gross @ 26 days &amp; 8 hrs):</span>
-              <span class="text-emerald-400 font-bold">&#8377;312.50 / hr &bull; 1.5x OT = &#8377;468.75 / hr</span>
+
+            <!-- Dynamic calculation formula cards for the selected employee -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+              <div class="p-2 rounded-lg bg-brand-dark border border-brand-border/80">
+                <div class="text-[10px] text-neutral-400">Monthly Gross</div>
+                <div id="otAuditGross" class="text-xs font-mono font-bold text-white mt-0.5">&#8377;65,000</div>
+                <div class="text-[9px] text-neutral-400 font-mono">Fixed CTC Component</div>
+              </div>
+              <div class="p-2 rounded-lg bg-brand-dark border border-brand-border/80">
+                <div class="text-[10px] text-neutral-400">Base Hourly Rate</div>
+                <div id="otAuditHourlyRate" class="text-xs font-mono font-bold text-brand-amber mt-0.5">&#8377;312.50 / hr</div>
+                <div id="otAuditHourlyRateFormula" class="text-[9px] text-neutral-400 font-mono">Gross &divide; 26d &divide; 8h</div>
+              </div>
+              <div class="p-2 rounded-lg bg-brand-dark border border-brand-border/80">
+                <div class="text-[10px] text-neutral-400">Attendance OT Hours</div>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <input type="number" id="otAuditHoursInput" step="0.5" min="0" max="100" value="8" 
+                         oninput="onOtAuditHoursDirectChange()"
+                         class="w-14 px-1 py-0.5 rounded bg-brand-surface border border-brand-border text-white text-xs font-mono font-bold text-center focus:border-brand-amber outline-none">
+                  <span class="text-xs text-neutral-300 font-mono">hrs</span>
+                </div>
+                <div class="text-[9px] text-emerald-400 font-mono">Editable / Punch Logged</div>
+              </div>
+              <div class="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30">
+                <div class="text-[10px] text-amber-300 font-semibold">Total OT Pay Earned</div>
+                <div id="otAuditTotalOtPay" class="text-xs font-mono font-bold text-emerald-400 mt-0.5">&#8377;3,750.00</div>
+                <div id="otAuditPayFormula" class="text-[9px] text-amber-300/80 font-mono">8h &times; (&#8377;312.50 &times; 1.5x)</div>
+              </div>
+            </div>
+
+            <!-- Formula Summary Pill -->
+            <div class="p-2 rounded-lg bg-brand-dark/70 border border-brand-border/50 text-[10px] font-mono text-neutral-300 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <div>
+                <span class="text-neutral-400">Overtime Formula: </span>
+                <span class="text-brand-amber font-bold">OT Pay = Logged OT Hours &times; [Monthly Gross &divide; (Working Days &times; Shift Hours)] &times; Multiplier</span>
+              </div>
+              <button type="button" onclick="saveOtAuditHoursToEmployee()" class="px-2 py-0.5 rounded bg-brand-surface hover:bg-brand-border border border-brand-border text-white text-[10px] font-semibold flex items-center justify-center gap-1">
+                <i data-lucide="save" class="w-3 h-3 text-brand-amber"></i>
+                <span>Save OT to Employee Slip</span>
+              </button>
             </div>
           </div>
         </div>
 
         <!-- Section 4: Statutory Social Security Deductions (PF, ESIC, PT, TDS) -->
         <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
-          <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
-            4. Statutory &amp; Social Security Deductions
-          </label>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div>
-              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Provident Fund (PF)</label>
-              <select id="rulePfPolicy" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
-                <option value="cap15k" selected>Cap at &#8377;1,800/mo (&#8377;15k Basic)</option>
+          <div class="flex items-center justify-between">
+            <label class="block font-bold text-white uppercase text-[11px] tracking-wider">
+              4. Statutory &amp; Social Security Deductions
+            </label>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-brand-surface border border-brand-border text-neutral-300">
+              Configurable Slabs &amp; Exemptions
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <!-- PF Policy -->
+            <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border space-y-2">
+              <label class="block text-neutral-300 font-semibold text-[11px]">Provident Fund (PF)</label>
+              <select id="rulePfPolicy" onchange="onPfPolicyChange()" class="w-full px-2.5 py-1.5 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+                <option value="cap15k" selected>Cap at &#8377;1,800/mo (&#8377;15k Ceiling)</option>
                 <option value="uncapped">Full 12% on Basic (Uncapped)</option>
-                <option value="exempt">Exempt (0%)</option>
+                <option value="custom">Custom PF % Rate...</option>
+                <option value="exempt">Exempt (0% - No PF)</option>
               </select>
+              <div id="ruleCustomPfWrap" class="hidden flex items-center gap-1.5 pt-1">
+                <span class="text-[10px] text-neutral-300">Rate:</span>
+                <input type="number" id="ruleCustomPfRate" min="0" max="25" step="1" value="12" oninput="updateSalaryStructurePreview()"
+                       class="w-14 px-1.5 py-0.5 rounded bg-brand-dark border border-brand-border text-white text-xs font-mono font-bold focus:border-brand-amber outline-none">
+                <span class="text-[10px] text-neutral-400">%</span>
+              </div>
+              <div class="text-[9px] text-neutral-400 font-mono">12% statutory employer match</div>
             </div>
-            <div>
-              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">ESIC Health (0.75%)</label>
-              <select id="ruleEsicPolicy" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
+
+            <!-- ESIC Health Policy -->
+            <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border space-y-2">
+              <label class="block text-neutral-300 font-semibold text-[11px]">ESIC Health Insurance</label>
+              <select id="ruleEsicPolicy" onchange="onEsicPolicyChange()" class="w-full px-2.5 py-1.5 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
                 <option value="statutory" selected>Auto: 0.75% for Gross &le; &#8377;21k</option>
-                <option value="exempt">Exempt (0%)</option>
+                <option value="custom">Custom Ceiling &amp; %...</option>
+                <option value="exempt">Exempt (0% - No ESIC)</option>
               </select>
+              <div id="ruleCustomEsicWrap" class="hidden flex items-center gap-1.5 pt-1">
+                <span class="text-[10px] text-neutral-300">Ceil: &#8377;</span>
+                <input type="number" id="ruleCustomEsicCeiling" min="10000" max="50000" step="1000" value="21000" oninput="updateSalaryStructurePreview()"
+                       class="w-16 px-1.5 py-0.5 rounded bg-brand-dark border border-brand-border text-white text-[11px] font-mono font-bold focus:border-brand-amber outline-none">
+              </div>
+              <div class="text-[9px] text-neutral-400 font-mono">0.75% employee deduction</div>
             </div>
-            <div>
-              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">Professional Tax (PT)</label>
-              <select id="rulePtPolicy" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
-                <option value="200" selected>&#8377;200 / Month (Standard Slab)</option>
-                <option value="0">Exempt (&#8377;0)</option>
-              </select>
+
+            <!-- Professional Tax (PT) -->
+            <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-neutral-300 font-semibold text-[11px]">Professional Tax (PT)</label>
+                <span class="text-[9px] text-brand-amber font-mono font-semibold">&#8377; / Month</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-2.5 top-1.5 text-neutral-400 text-xs">&#8377;</span>
+                <input type="number" id="rulePtPolicyInput" min="0" max="1000" step="10" value="200" oninput="updateSalaryStructurePreview()"
+                       class="w-full pl-6 pr-3 py-1.5 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-mono font-bold focus:border-brand-amber outline-none">
+              </div>
+              <div class="flex flex-wrap gap-1 pt-0.5">
+                <button type="button" onclick="setPtAmount(200)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">&#8377;200</button>
+                <button type="button" onclick="setPtAmount(208)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">&#8377;208</button>
+                <button type="button" onclick="setPtAmount(300)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">&#8377;300</button>
+                <button type="button" onclick="setPtAmount(0)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">&#8377;0</button>
+              </div>
             </div>
-            <div>
-              <label class="block text-neutral-300 font-semibold mb-1 text-[11px]">TDS / Income Tax</label>
-              <select id="ruleTdsPct" class="w-full px-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-white text-xs font-semibold focus:border-brand-amber outline-none">
-                <option value="5" selected>5% Standard Estimate</option>
-                <option value="10">10% Higher Bracket</option>
-                <option value="0">0% (Exempt / Form 12BB)</option>
-              </select>
+
+            <!-- TDS / Income Tax Estimation -->
+            <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-neutral-300 font-semibold text-[11px]">TDS / Income Tax</label>
+                <span class="text-[9px] text-brand-amber font-mono font-semibold">% of Gross</span>
+              </div>
+              <div class="relative">
+                <input type="number" id="ruleTdsPctInput" min="0" max="40" step="0.5" value="5" oninput="updateSalaryStructurePreview()"
+                       class="w-full px-3 py-1.5 pr-8 rounded-lg bg-brand-dark border border-brand-border text-white text-xs font-mono font-bold focus:border-brand-amber outline-none">
+                <span class="absolute right-3 top-1.5 text-neutral-400 font-bold text-xs">%</span>
+              </div>
+              <div class="flex flex-wrap gap-1 pt-0.5">
+                <button type="button" onclick="setTdsPct(0)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">0%</button>
+                <button type="button" onclick="setTdsPct(5)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">5%</button>
+                <button type="button" onclick="setTdsPct(10)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">10%</button>
+                <button type="button" onclick="setTdsPct(20)" class="text-[10px] px-1.5 py-0.5 rounded bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300">20%</button>
+              </div>
             </div>
           </div>
         </div>
@@ -7779,18 +7982,29 @@
       structureName: 'Apex Global Standard Corporate Structure 2026',
       effectivePeriod: 'Oct 2026 – Ongoing',
       workingDaysBase: '26',
+      customWorkingDays: 24,
       dailyHours: 8,
       basicPct: 50,
       hraPct: 25,
       daPct: 10,
+      specialPct: 15,
       otMultiplier: 1.5,
       pfPolicy: 'cap15k',
+      customPfRate: 12,
       esicPolicy: 'statutory',
+      customEsicCeiling: 21000,
       ptAmount: 200,
       tdsPct: 5,
       assignAll: true
     };
 
+    // Load attendance with OT hours from localStorage or set defaults
+    const savedAttendance = localStorage.getItem('sora_payroll_attendance');
+    if (savedAttendance) {
+      try {
+        appState.payrollAttendance = JSON.parse(savedAttendance);
+      } catch(e) {}
+    }
     if (!appState.payrollAttendance) {
       appState.payrollAttendance = {
         'EMP-AGT-0103': { workingDays: 26, payableDays: 26.0, lopDays: 0, otHours: 4.5, deficitHours: 0, uan: '100982341031', pan: 'AAAPM8921K', bank: 'HDFC Bank (0103)' },
@@ -7829,13 +8043,16 @@
     function calculateEmployeePayroll(emp) {
       const rules = appState.payrollRules || {
         workingDaysBase: '26',
+        customWorkingDays: 24,
         dailyHours: 8,
         basicPct: 50,
         hraPct: 25,
         daPct: 10,
         otMultiplier: 1.5,
         pfPolicy: 'cap15k',
+        customPfRate: 12,
         esicPolicy: 'statutory',
+        customEsicCeiling: 21000,
         ptAmount: 200,
         tdsPct: 5
       };
@@ -7844,35 +8061,64 @@
         uan: '100982341099', pan: 'PANXX0000X', bank: 'HDFC Bank'
       };
 
-      const workingDays = rules.workingDaysBase === 'calendar' ? 31 : (rules.workingDaysBase === '22' ? 22 : 26);
+      // Dynamic Working Days Base Calculation
+      let workingDays = 26;
+      if (rules.workingDaysBase === 'calendar') {
+        const monthVal = document.getElementById('payrollMonthSelect')?.value || '2026-10';
+        const [yr, mo] = monthVal.split('-');
+        workingDays = new Date(parseInt(yr), parseInt(mo), 0).getDate();
+      } else if (rules.workingDaysBase === '22') {
+        workingDays = 22;
+      } else if (rules.workingDaysBase === 'custom') {
+        workingDays = parseInt(rules.customWorkingDays || 24);
+      } else {
+        workingDays = parseInt(rules.workingDaysBase || 26);
+      }
+      if (!workingDays || isNaN(workingDays) || workingDays < 1) workingDays = 26;
+
       const gross = emp.salary || 65000;
-      const dailyHours = rules.dailyHours || 8;
+      const dailyHours = parseFloat(rules.dailyHours || 8);
       const hourlyRate = gross / workingDays / dailyHours;
 
-      // Salary Component Breakdown (% of Gross)
-      const basic = Math.round(gross * (rules.basicPct / 100));
-      const hra = Math.round(gross * (rules.hraPct / 100));
-      const da = Math.round(gross * (rules.daPct / 100));
+      // Dynamic Salary Component Breakdown (% of Gross)
+      const basicPct = rules.basicPct !== undefined ? rules.basicPct : 50;
+      const hraPct = rules.hraPct !== undefined ? rules.hraPct : 25;
+      const daPct = rules.daPct !== undefined ? rules.daPct : 10;
+
+      const basic = Math.round(gross * (basicPct / 100));
+      const hra = Math.round(gross * (hraPct / 100));
+      const da = Math.round(gross * (daPct / 100));
       const special = Math.max(0, gross - basic - hra - da);
 
-      // Overtime Pay (Based on structure hourly formula & multiplier)
-      const otMultiplier = rules.otMultiplier !== undefined ? rules.otMultiplier : 1.5;
-      const otPay = Math.round(att.otHours * hourlyRate * otMultiplier);
+      // Overtime Pay Calculation
+      // Formula: (Gross Salary ÷ Working Days ÷ Daily Shift Hours) × OT Multiplier × OT Hours
+      const otMultiplier = rules.otMultiplier !== undefined ? parseFloat(rules.otMultiplier) : 1.5;
+      const otHours = att.otHours !== undefined ? parseFloat(att.otHours) : 0;
+      const otPay = Math.round(otHours * hourlyRate * otMultiplier);
       const totalGrossEarned = gross + otPay;
 
-      // Statutory & Tax Deductions
+      // Statutory & Tax Deductions (Dynamic)
       let pf = 0;
       if (rules.pfPolicy === 'cap15k') {
         pf = Math.min(1800, Math.round(basic * 0.12));
       } else if (rules.pfPolicy === 'uncapped') {
         pf = Math.round(basic * 0.12);
+      } else if (rules.pfPolicy === 'custom') {
+        const rate = (rules.customPfRate !== undefined ? rules.customPfRate : 12) / 100;
+        pf = Math.round(basic * rate);
       } else {
         pf = 0; // exempt
       }
 
       const pt = rules.ptAmount !== undefined ? rules.ptAmount : 200;
-      const esic = (rules.esicPolicy !== 'exempt' && gross <= 21000) ? Math.round(gross * 0.0075) : 0;
-      const tds = Math.round(gross * ((rules.tdsPct || 5) / 100));
+
+      let esic = 0;
+      const esicCeil = rules.customEsicCeiling || 21000;
+      if (rules.esicPolicy !== 'exempt' && gross <= esicCeil) {
+        esic = Math.round(gross * 0.0075);
+      }
+
+      const tds = Math.round(gross * ((rules.tdsPct !== undefined ? rules.tdsPct : 5) / 100));
 
       // LOP & Short Hours Deductions
       const lopDeduct = Math.round((gross / workingDays) * att.lopDays + (att.deficitHours * hourlyRate));
@@ -7900,6 +8146,7 @@
         da,
         special,
         otMultiplier,
+        otHours,
         otPay,
         totalGrossEarned,
         pf,
@@ -7978,8 +8225,11 @@
 
             <!-- 6. Overtime Pay -->
             <td class="py-3 px-4 text-right font-mono ${p.otPay > 0 ? 'text-amber-400 font-bold' : 'text-neutral-500'}">
-              ${p.otPay > 0 ? `+&#8377; ${p.otPay.toLocaleString('en-IN')}` : '&#8377; 0'}
-              ${p.otPay > 0 ? `<div class="text-[9px] text-neutral-500 font-mono">${p.otMultiplier}x rate</div>` : ''}
+              <div onclick="openOtAuditForEmployee('${emp.id}')" title="Click to Audit / Edit Attendance Overtime Calculation for ${emp.name}" class="cursor-pointer group flex items-center justify-end gap-1">
+                <span>${p.otPay > 0 ? `+&#8377; ${p.otPay.toLocaleString('en-IN')}` : '&#8377; 0'}</span>
+                <i data-lucide="clock" class="w-2.5 h-2.5 text-neutral-500 group-hover:text-brand-amber transition-colors"></i>
+              </div>
+              <div class="text-[9px] text-neutral-500 font-mono">${p.att.otHours || 0}h &bull; ${p.otMultiplier}x rate</div>
             </td>
 
             <!-- 7. Total Gross -->
@@ -8052,6 +8302,7 @@
         statusPill.innerHTML = `<span class="text-emerald-400">${countSent} Sent</span> &bull; <span class="text-sky-400">${countReady} Ready</span>`;
       }
 
+      updatePayrollStructureBanner();
       lucide.createIcons();
     }
 
@@ -8163,6 +8414,7 @@
         } catch(e) {}
       }
       updatePayrollDatesBanner();
+      updatePayrollStructureBanner();
     }
 
     function viewEmployeePayslip(empId) {
@@ -8262,19 +8514,270 @@
       return inWords(num);
     }
 
+    // Dynamic Working Days Base Selector
+    function onWorkingDaysBaseChange() {
+      let daysBase = '26';
+      const dayRadios = document.getElementsByName('ruleWorkingDaysBase');
+      for (let r of dayRadios) {
+        if (r.checked) { daysBase = r.value; break; }
+      }
+      const label = document.getElementById('ruleWorkingDaysActiveLabel');
+      if (label) {
+        if (daysBase === 'custom') {
+          const customVal = document.getElementById('ruleCustomWorkingDays')?.value || '24';
+          label.innerText = `Active Base: ${customVal} Days (Custom)`;
+        } else if (daysBase === 'calendar') {
+          label.innerText = 'Active Base: Actual Calendar Days';
+        } else {
+          label.innerText = `Active Base: ${daysBase} Days`;
+        }
+      }
+      updateSalaryStructurePreview();
+    }
+
+    function setComponentPct(fieldId, val) {
+      const el = document.getElementById(fieldId);
+      if (el) {
+        el.value = val;
+        updateSalaryStructurePreview();
+      }
+    }
+
+    function onDailyHoursPresetChange() {
+      const sel = document.getElementById('ruleDailyHoursPreset');
+      const wrap = document.getElementById('ruleCustomDailyHoursWrap');
+      const customInput = document.getElementById('ruleCustomDailyHours');
+      if (sel && wrap && customInput) {
+        if (sel.value === 'custom') {
+          wrap.classList.remove('hidden');
+        } else {
+          wrap.classList.add('hidden');
+          customInput.value = sel.value;
+        }
+      }
+      updateSalaryStructurePreview();
+    }
+
+    function onOtMultiplierChange() {
+      let multVal = '1.5';
+      const otRadios = document.getElementsByName('ruleOtMultiplier');
+      for (let r of otRadios) {
+        if (r.checked) { multVal = r.value; break; }
+      }
+      const wrap = document.getElementById('ruleCustomOtMultWrap');
+      const badge = document.getElementById('ruleOtMultBadge');
+      if (multVal === 'custom') {
+        if (wrap) wrap.classList.remove('hidden');
+        const customMult = document.getElementById('ruleCustomOtMultiplierInput')?.value || '1.75';
+        if (badge) badge.innerText = `${customMult}x Custom Rate`;
+      } else {
+        if (wrap) wrap.classList.add('hidden');
+        if (badge) badge.innerText = `${multVal}x Rate`;
+      }
+      updateSalaryStructurePreview();
+    }
+
+    function onPfPolicyChange() {
+      const val = document.getElementById('rulePfPolicy')?.value;
+      const wrap = document.getElementById('ruleCustomPfWrap');
+      if (wrap) {
+        if (val === 'custom') wrap.classList.remove('hidden');
+        else wrap.classList.add('hidden');
+      }
+      updateSalaryStructurePreview();
+    }
+
+    function onEsicPolicyChange() {
+      const val = document.getElementById('ruleEsicPolicy')?.value;
+      const wrap = document.getElementById('ruleCustomEsicWrap');
+      if (wrap) {
+        if (val === 'custom') wrap.classList.remove('hidden');
+        else wrap.classList.add('hidden');
+      }
+      updateSalaryStructurePreview();
+    }
+
+    function setPtAmount(val) {
+      const el = document.getElementById('rulePtPolicyInput');
+      if (el) {
+        el.value = val;
+        updateSalaryStructurePreview();
+      }
+    }
+
+    function setTdsPct(val) {
+      const el = document.getElementById('ruleTdsPctInput');
+      if (el) {
+        el.value = val;
+        updateSalaryStructurePreview();
+      }
+    }
+
+    function getModalEffectiveWorkingDays() {
+      let daysBase = '26';
+      const dayRadios = document.getElementsByName('ruleWorkingDaysBase');
+      for (let r of dayRadios) {
+        if (r.checked) { daysBase = r.value; break; }
+      }
+      if (daysBase === 'calendar') {
+        const monthVal = document.getElementById('payrollMonthSelect')?.value || '2026-10';
+        const [yr, mo] = monthVal.split('-');
+        return new Date(parseInt(yr), parseInt(mo), 0).getDate();
+      } else if (daysBase === '22') {
+        return 22;
+      } else if (daysBase === 'custom') {
+        const customVal = parseInt(document.getElementById('ruleCustomWorkingDays')?.value || '24');
+        return (!isNaN(customVal) && customVal > 0) ? customVal : 24;
+      }
+      return 26;
+    }
+
+    function getModalDailyHours() {
+      const sel = document.getElementById('ruleDailyHoursPreset');
+      if (sel && sel.value === 'custom') {
+        const customHours = parseFloat(document.getElementById('ruleCustomDailyHours')?.value || '8');
+        return (!isNaN(customHours) && customHours > 0) ? customHours : 8;
+      }
+      const val = parseFloat(sel?.value || '8');
+      return (!isNaN(val) && val > 0) ? val : 8;
+    }
+
+    function getModalOtMultiplier() {
+      let multVal = 1.5;
+      const otRadios = document.getElementsByName('ruleOtMultiplier');
+      for (let r of otRadios) {
+        if (r.checked) {
+          if (r.value === 'custom') {
+            multVal = parseFloat(document.getElementById('ruleCustomOtMultiplierInput')?.value || '1.75');
+          } else {
+            multVal = parseFloat(r.value);
+          }
+          break;
+        }
+      }
+      return (!isNaN(multVal) && multVal > 0) ? multVal : 1.5;
+    }
+
     // Dynamic Special Allowance Balancing in Structure Builder
     function updateSalaryStructurePreview() {
-      const basic = parseInt(document.getElementById('ruleBasicPct')?.value || '50');
-      const hra = parseInt(document.getElementById('ruleHraPct')?.value || '25');
-      const da = parseInt(document.getElementById('ruleDaPct')?.value || '10');
-      const special = Math.max(0, 100 - basic - hra - da);
+      const basic = Math.max(0, parseInt(document.getElementById('ruleBasicPct')?.value || '0'));
+      const hra = Math.max(0, parseInt(document.getElementById('ruleHraPct')?.value || '0'));
+      const da = Math.max(0, parseInt(document.getElementById('ruleDaPct')?.value || '0'));
+      const totalFixed = basic + hra + da;
+      const special = Math.max(0, 100 - totalFixed);
 
       const elSpecial = document.getElementById('ruleSpecialPctDisplay');
-      if (elSpecial) elSpecial.value = `${special}% (Remaining)`;
+      if (elSpecial) elSpecial.value = `${special}%`;
 
       const elEquation = document.getElementById('ruleBreakdownEquation');
       if (elEquation) {
         elEquation.innerText = `Gross = ${basic}% Basic + ${hra}% HRA + ${da}% DA + ${special}% Special Allowance`;
+      }
+
+      const totalBadge = document.getElementById('ruleComponentsTotalBadge');
+      const warningEl = document.getElementById('ruleComponentWarning');
+      if (totalFixed > 100) {
+        if (totalBadge) {
+          totalBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold';
+          totalBadge.innerText = `Total: ${totalFixed}% (Exceeds 100%)`;
+        }
+        if (warningEl) warningEl.classList.remove('hidden');
+      } else {
+        if (totalBadge) {
+          totalBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold';
+          totalBadge.innerText = 'Total: 100% Gross (Balanced)';
+        }
+        if (warningEl) warningEl.classList.add('hidden');
+      }
+
+      updateOtAuditPreview();
+    }
+
+    function updateOtAuditPreview() {
+      const sel = document.getElementById('ruleOtAuditEmpSelect');
+      if (!sel) return;
+      const empId = sel.value || (appState.employees && appState.employees[0]?.id) || 'EMP-AGT-0101';
+      const emp = (appState.employees && appState.employees.find(e => e.id === empId)) || { name: 'Vikram Joshi', salary: 65000, id: empId };
+      const att = (appState.payrollAttendance && appState.payrollAttendance[empId]) || { workingDays: 26, payableDays: 26, otHours: 8.0 };
+
+      const gross = emp.salary || 65000;
+      const workingDays = getModalEffectiveWorkingDays();
+      const dailyHours = getModalDailyHours();
+      const otMultiplier = getModalOtMultiplier();
+      const hourlyRate = gross / workingDays / dailyHours;
+
+      // Read currently typed or logged OT hours
+      const otHoursInput = document.getElementById('otAuditHoursInput');
+      let otHours = parseFloat(otHoursInput?.value);
+      if (isNaN(otHours)) otHours = (att.otHours !== undefined ? att.otHours : 0);
+
+      const totalOtPay = Math.round(otHours * hourlyRate * otMultiplier);
+
+      const elGross = document.getElementById('otAuditGross');
+      const elRate = document.getElementById('otAuditHourlyRate');
+      const elRateFormula = document.getElementById('otAuditHourlyRateFormula');
+      const elPay = document.getElementById('otAuditTotalOtPay');
+      const elPayFormula = document.getElementById('otAuditPayFormula');
+
+      if (elGross) elGross.innerText = `₹ ${gross.toLocaleString('en-IN')}`;
+      if (elRate) elRate.innerText = `₹ ${hourlyRate.toFixed(2)} / hr`;
+      if (elRateFormula) elRateFormula.innerText = `₹${gross.toLocaleString('en-IN')} ÷ ${workingDays}d ÷ ${dailyHours}h`;
+      if (elPay) elPay.innerText = `₹ ${totalOtPay.toLocaleString('en-IN')}`;
+      if (elPayFormula) elPayFormula.innerText = `${otHours}h × (₹${hourlyRate.toFixed(2)} × ${otMultiplier}x)`;
+    }
+
+    function onOtAuditEmployeeChange() {
+      const sel = document.getElementById('ruleOtAuditEmpSelect');
+      if (!sel) return;
+      const empId = sel.value;
+      const att = (appState.payrollAttendance && appState.payrollAttendance[empId]) || { otHours: 0 };
+      const hoursInput = document.getElementById('otAuditHoursInput');
+      if (hoursInput) hoursInput.value = att.otHours !== undefined ? att.otHours : 0;
+      updateOtAuditPreview();
+    }
+
+    function onOtAuditHoursDirectChange() {
+      updateOtAuditPreview();
+    }
+
+    function saveOtAuditHoursToEmployee() {
+      const sel = document.getElementById('ruleOtAuditEmpSelect');
+      if (!sel) return;
+      const empId = sel.value;
+      const emp = appState.employees.find(e => e.id === empId);
+      const hoursInput = document.getElementById('otAuditHoursInput');
+      const newHours = parseFloat(hoursInput?.value || '0');
+
+      if (!appState.payrollAttendance) appState.payrollAttendance = {};
+      if (!appState.payrollAttendance[empId]) {
+        appState.payrollAttendance[empId] = { workingDays: 26, payableDays: 26, lopDays: 0, otHours: 0, deficitHours: 0 };
+      }
+      appState.payrollAttendance[empId].otHours = newHours;
+      localStorage.setItem('sora_payroll_attendance', JSON.stringify(appState.payrollAttendance));
+
+      // Refresh table and dropdown label
+      renderPayrollTable();
+      updateOtAuditEmployeeDropdown(empId);
+      updateOtAuditPreview();
+      showToast('Overtime Hours Updated', `Saved ${newHours} hours OT for ${emp ? emp.name : empId}. Table and slips refreshed.`);
+    }
+
+    function updateOtAuditEmployeeDropdown(selectedEmpId) {
+      const sel = document.getElementById('ruleOtAuditEmpSelect');
+      if (!sel) return;
+      sel.innerHTML = appState.employees.map(e => {
+        const att = (appState.payrollAttendance && appState.payrollAttendance[e.id]) || { otHours: 0 };
+        const otTxt = (att.otHours && att.otHours > 0) ? `+${att.otHours}h OT` : '0h OT';
+        return `<option value="${e.id}" ${e.id === selectedEmpId ? 'selected' : ''}>${e.name} (${e.id}) — ${otTxt}</option>`;
+      }).join('');
+    }
+
+    function openOtAuditForEmployee(empId) {
+      openCompanyPayrollRulesModal();
+      const sel = document.getElementById('ruleOtAuditEmpSelect');
+      if (sel) {
+        sel.value = empId;
+        onOtAuditEmployeeChange();
       }
     }
 
@@ -8296,24 +8799,84 @@
 
       // Working Days Base
       const dayRadios = document.getElementsByName('ruleWorkingDaysBase');
+      const isCustomDays = (rules.workingDaysBase === 'custom' || (!['26', 'calendar', '22'].includes(String(rules.workingDaysBase))));
       for (let r of dayRadios) {
-        r.checked = (r.value === String(rules.workingDaysBase || '26'));
+        if (isCustomDays && r.value === 'custom') r.checked = true;
+        else if (!isCustomDays && r.value === String(rules.workingDaysBase || '26')) r.checked = true;
+        else r.checked = false;
+      }
+      if (document.getElementById('ruleCustomWorkingDays')) {
+        document.getElementById('ruleCustomWorkingDays').value = String(rules.customWorkingDays || 24);
+      }
+      onWorkingDaysBaseChange();
+
+      // Components
+      if (document.getElementById('ruleBasicPct')) document.getElementById('ruleBasicPct').value = String(rules.basicPct !== undefined ? rules.basicPct : 50);
+      if (document.getElementById('ruleHraPct')) document.getElementById('ruleHraPct').value = String(rules.hraPct !== undefined ? rules.hraPct : 25);
+      if (document.getElementById('ruleDaPct')) document.getElementById('ruleDaPct').value = String(rules.daPct !== undefined ? rules.daPct : 10);
+
+      // Shift Hours
+      const dailyHoursPreset = document.getElementById('ruleDailyHoursPreset');
+      const customDailyWrap = document.getElementById('ruleCustomDailyHoursWrap');
+      const customDailyInput = document.getElementById('ruleCustomDailyHours');
+      const dHours = String(rules.dailyHours || 8);
+      if (['8', '9', '8.5', '10'].includes(dHours)) {
+        if (dailyHoursPreset) dailyHoursPreset.value = dHours;
+        if (customDailyWrap) customDailyWrap.classList.add('hidden');
+        if (customDailyInput) customDailyInput.value = dHours;
+      } else {
+        if (dailyHoursPreset) dailyHoursPreset.value = 'custom';
+        if (customDailyWrap) customDailyWrap.classList.remove('hidden');
+        if (customDailyInput) customDailyInput.value = dHours;
       }
 
       // OT Multiplier
       const otRadios = document.getElementsByName('ruleOtMultiplier');
+      const otMultStr = String(rules.otMultiplier !== undefined ? rules.otMultiplier : '1.5');
+      const isCustomOt = !['1.0', '1.5', '2.0'].includes(otMultStr);
       for (let r of otRadios) {
-        r.checked = (r.value === String(rules.otMultiplier || '1.5'));
+        if (isCustomOt && r.value === 'custom') r.checked = true;
+        else if (!isCustomOt && r.value === otMultStr) r.checked = true;
+        else r.checked = false;
+      }
+      const customOtWrap = document.getElementById('ruleCustomOtMultWrap');
+      const customOtInput = document.getElementById('ruleCustomOtMultiplierInput');
+      if (isCustomOt) {
+        if (customOtWrap) customOtWrap.classList.remove('hidden');
+        if (customOtInput) customOtInput.value = otMultStr;
+      } else {
+        if (customOtWrap) customOtWrap.classList.add('hidden');
+        if (customOtInput) customOtInput.value = '1.75';
+      }
+      onOtMultiplierChange();
+
+      // Statutory
+      if (document.getElementById('rulePfPolicy')) {
+        document.getElementById('rulePfPolicy').value = rules.pfPolicy || 'cap15k';
+        onPfPolicyChange();
+      }
+      if (document.getElementById('ruleCustomPfRate')) {
+        document.getElementById('ruleCustomPfRate').value = String(rules.customPfRate || 12);
       }
 
-      if (document.getElementById('ruleDailyHours')) document.getElementById('ruleDailyHours').value = String(rules.dailyHours || 8);
-      if (document.getElementById('ruleBasicPct')) document.getElementById('ruleBasicPct').value = String(rules.basicPct || 50);
-      if (document.getElementById('ruleHraPct')) document.getElementById('ruleHraPct').value = String(rules.hraPct || 25);
-      if (document.getElementById('ruleDaPct')) document.getElementById('ruleDaPct').value = String(rules.daPct || 10);
-      if (document.getElementById('rulePfPolicy')) document.getElementById('rulePfPolicy').value = rules.pfPolicy || 'cap15k';
-      if (document.getElementById('ruleEsicPolicy')) document.getElementById('ruleEsicPolicy').value = rules.esicPolicy || 'statutory';
-      if (document.getElementById('rulePtPolicy')) document.getElementById('rulePtPolicy').value = String(rules.ptAmount !== undefined ? rules.ptAmount : 200);
-      if (document.getElementById('ruleTdsPct')) document.getElementById('ruleTdsPct').value = String(rules.tdsPct || 5);
+      if (document.getElementById('ruleEsicPolicy')) {
+        document.getElementById('ruleEsicPolicy').value = rules.esicPolicy || 'statutory';
+        onEsicPolicyChange();
+      }
+      if (document.getElementById('ruleCustomEsicCeiling')) {
+        document.getElementById('ruleCustomEsicCeiling').value = String(rules.customEsicCeiling || 21000);
+      }
+
+      if (document.getElementById('rulePtPolicyInput')) {
+        document.getElementById('rulePtPolicyInput').value = String(rules.ptAmount !== undefined ? rules.ptAmount : 200);
+      }
+      if (document.getElementById('ruleTdsPctInput')) {
+        document.getElementById('ruleTdsPctInput').value = String(rules.tdsPct !== undefined ? rules.tdsPct : 5);
+      }
+
+      // Populate audit dropdown
+      updateOtAuditEmployeeDropdown(currentModalSlipEmpId || 'EMP-AGT-0101');
+      onOtAuditEmployeeChange();
 
       updateSalaryStructurePreview();
       modal.classList.remove('hidden');
@@ -8326,30 +8889,45 @@
       for (let r of dayRadios) {
         if (r.checked) { daysBase = r.value; break; }
       }
+      const customWorkingDays = parseInt(document.getElementById('ruleCustomWorkingDays')?.value || '24');
 
       let otMult = 1.5;
       const otRadios = document.getElementsByName('ruleOtMultiplier');
       for (let r of otRadios) {
-        if (r.checked) { otMult = parseFloat(r.value); break; }
+        if (r.checked) {
+          if (r.value === 'custom') {
+            otMult = parseFloat(document.getElementById('ruleCustomOtMultiplierInput')?.value || '1.75');
+          } else {
+            otMult = parseFloat(r.value);
+          }
+          break;
+        }
       }
 
       const structName = document.getElementById('ruleStructureName')?.value.trim() || 'Apex Global Standard Corporate Structure';
       const structPeriod = document.getElementById('ruleStructurePeriod')?.value.trim() || 'Oct 2026 – Ongoing';
       const assignAll = document.getElementById('ruleAssignAllEmployees')?.checked ?? true;
-      const dailyHours = parseFloat(document.getElementById('ruleDailyHours')?.value || '8');
-      const basicPct = parseInt(document.getElementById('ruleBasicPct')?.value || '50');
-      const hraPct = parseInt(document.getElementById('ruleHraPct')?.value || '25');
-      const daPct = parseInt(document.getElementById('ruleDaPct')?.value || '10');
-      const pfPolicy = document.getElementById('rulePfPolicy')?.value || 'cap15k';
-      const esicPolicy = document.getElementById('ruleEsicPolicy')?.value || 'statutory';
-      const ptAmount = parseInt(document.getElementById('rulePtPolicy')?.value || '200');
-      const tdsPct = parseInt(document.getElementById('ruleTdsPct')?.value || '5');
+
+      const dailyHours = getModalDailyHours();
+      const basicPct = Math.max(0, parseInt(document.getElementById('ruleBasicPct')?.value || '50'));
+      const hraPct = Math.max(0, parseInt(document.getElementById('ruleHraPct')?.value || '25'));
+      const daPct = Math.max(0, parseInt(document.getElementById('ruleDaPct')?.value || '10'));
       const specialPct = Math.max(0, 100 - basicPct - hraPct - daPct);
+
+      const pfPolicy = document.getElementById('rulePfPolicy')?.value || 'cap15k';
+      const customPfRate = parseInt(document.getElementById('ruleCustomPfRate')?.value || '12');
+
+      const esicPolicy = document.getElementById('ruleEsicPolicy')?.value || 'statutory';
+      const customEsicCeiling = parseInt(document.getElementById('ruleCustomEsicCeiling')?.value || '21000');
+
+      const ptAmount = parseInt(document.getElementById('rulePtPolicyInput')?.value || '200');
+      const tdsPct = parseFloat(document.getElementById('ruleTdsPctInput')?.value || '5');
 
       appState.payrollRules = {
         structureName: structName,
         effectivePeriod: structPeriod,
         workingDaysBase: daysBase,
+        customWorkingDays,
         dailyHours,
         basicPct,
         hraPct,
@@ -8357,7 +8935,9 @@
         specialPct,
         otMultiplier: otMult,
         pfPolicy,
+        customPfRate,
         esicPolicy,
+        customEsicCeiling,
         ptAmount,
         tdsPct,
         assignAll
@@ -8367,14 +8947,28 @@
       localStorage.setItem('sora_payroll_structure', JSON.stringify(appState.payrollRules));
 
       // Update banner badge
-      const badge = document.getElementById('activePayrollRuleBadge');
-      if (badge) {
-        badge.innerText = `${structName} • ${daysBase === 'calendar' ? 'Calendar' : daysBase + ' Working'} Days • Basic ${basicPct}% • HRA ${hraPct}% • DA ${daPct}% • Special ${specialPct}% • PF ${pfPolicy === 'cap15k' ? '15k Cap' : 'Uncapped'} • PT ₹${ptAmount} • ${otMult}x OT`;
-      }
+      updatePayrollStructureBanner();
 
       closeModal('modalPayrollRules');
       renderPayrollTable();
       showToast('Salary Structure Assigned!', `Assigned "${structName}" to all company employees. Batch payroll recalculated.`);
+    }
+
+    function updatePayrollStructureBanner() {
+      const badge = document.getElementById('activePayrollRuleBadge');
+      if (!badge) return;
+      const rules = appState.payrollRules || {};
+      const structName = rules.structureName || 'Apex Global Standard Structure';
+      const daysStr = rules.workingDaysBase === 'custom' ? `${rules.customWorkingDays || 24} Working Days (Custom)` : (rules.workingDaysBase === 'calendar' ? 'Calendar Days' : `${rules.workingDaysBase || 26} Working Days`);
+      const basic = rules.basicPct !== undefined ? rules.basicPct : 50;
+      const hra = rules.hraPct !== undefined ? rules.hraPct : 25;
+      const da = rules.daPct !== undefined ? rules.daPct : 10;
+      const special = rules.specialPct !== undefined ? rules.specialPct : Math.max(0, 100 - basic - hra - da);
+      const otMult = rules.otMultiplier !== undefined ? rules.otMultiplier : 1.5;
+      const pfStr = rules.pfPolicy === 'cap15k' ? '15k Cap PF' : (rules.pfPolicy === 'uncapped' ? '12% Uncapped PF' : (rules.pfPolicy === 'custom' ? `${rules.customPfRate || 12}% PF` : 'Exempt PF'));
+      const ptStr = `PT ₹${rules.ptAmount !== undefined ? rules.ptAmount : 200}`;
+      
+      badge.innerHTML = `${structName} &bull; ${daysStr} &bull; Basic ${basic}% &bull; HRA ${hra}% &bull; DA ${da}% &bull; Special ${special}% &bull; ${pfStr} &bull; ${ptStr} &bull; ${otMult}x Overtime`;
     }
 
     function onPayrollMonthChange() {
