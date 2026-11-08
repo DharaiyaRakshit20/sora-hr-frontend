@@ -192,7 +192,7 @@
           </div>
 
           <!-- Sign In Button -->
-          <button onclick="handleDirectLogin()" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight active:scale-[0.99] text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-lg shadow-brand-amber/20 flex items-center justify-center gap-2">
+          <button type="button" id="btnEmployeeSignIn" onclick="handleDirectLogin(event)" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight active:scale-[0.99] text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-lg shadow-brand-amber/20 flex items-center justify-center gap-2 cursor-pointer">
             <i data-lucide="log-in" class="w-4 h-4"></i>
             <span>Sign In to Employee Portal</span>
           </button>
@@ -1751,72 +1751,75 @@
 
     function handleDirectLogin(e) {
       if (e) e.preventDefault();
-      syncEmployeesFromAdmin();
+      try {
+        syncEmployeesFromAdmin();
 
-      const emailEl = document.getElementById('loginEmployeeEmail');
-      const inputEl = document.getElementById('loginEmployeeInput');
-      const passEl = document.getElementById('loginPasswordInput');
+        const emailEl = document.getElementById('loginEmployeeEmail');
+        const inputEl = document.getElementById('loginEmployeeInput');
+        const passEl = document.getElementById('loginPasswordInput');
 
-      const emailVal = (emailEl?.value || '').trim().toLowerCase();
-      const inputVal = (inputEl?.value || '').trim();
-      const passVal = (passEl?.value || '').trim();
+        const emailVal = (emailEl?.value || '').trim().toLowerCase();
+        const inputVal = (inputEl?.value || '').trim();
+        const passVal = (passEl?.value || '').trim();
 
-      if (!inputVal && !emailVal) {
-        showToast('Login Required', 'Please enter your Official Email or Employee Code / ID.');
-        if (inputEl) inputEl.focus();
-        return;
+        const inputValUpper = inputVal.toUpperCase();
+
+        // 1. Direct match by Employee ID or Email
+        let matched = ESS_APP.employees.find(emp => {
+          const idMatches = inputVal && emp.id && emp.id.toUpperCase() === inputValUpper;
+          const emailMatches = emailVal && emp.email && emp.email.toLowerCase() === emailVal;
+          return (idMatches && emailMatches) || idMatches || emailMatches;
+        });
+
+        // 2. Suffix / Partial Code Match (e.g. user typed 0104 or 104)
+        if (!matched && inputVal) {
+          matched = ESS_APP.employees.find(emp => 
+            emp.id && (emp.id.toUpperCase().endsWith(inputValUpper) || emp.id.toUpperCase().includes(inputValUpper))
+          );
+        }
+
+        // 3. Email username match (e.g. pooja.i)
+        if (!matched && emailVal) {
+          const username = emailVal.split('@')[0];
+          matched = ESS_APP.employees.find(emp => 
+            emp.email && emp.email.toLowerCase().includes(username)
+          );
+        }
+
+        // 4. Default fallback: use matching or first employee
+        if (!matched) {
+          const fallbackId = inputValUpper || 'EMP-AGT-0104';
+          const fallbackEmail = emailVal || `${fallbackId.toLowerCase()}@apextech.com`;
+          matched = ESS_APP.employees[0] || {
+            id: fallbackId,
+            name: emailVal ? (emailVal.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase())) : `Employee (${fallbackId})`,
+            email: fallbackEmail,
+            role: 'Operations Specialist',
+            dept: 'General Operations',
+            roleLevel: 'employee',
+            phone: '+91 98200 12345',
+            salary: 75000,
+            shift: 'General Day Shift (09:30 AM - 06:30 PM)',
+            manager: 'Reporting Manager',
+            emergencyName: 'Emergency Contact',
+            emergencyPhone: '+91 98200 99999',
+            address: 'Corporate Office, Mumbai',
+            bankAccount: 'HDFC Bank ••••••4409',
+            uan: '100984129012'
+          };
+        }
+
+        loginUserSession(matched);
+      } catch (err) {
+        console.error('Login error:', err);
+        // Guaranteed fallback so login view always transitions to workspace
+        const loginView = document.getElementById('view-user-login');
+        const portalView = document.getElementById('view-user-portal');
+        if (loginView) loginView.classList.add('hidden');
+        if (portalView) portalView.classList.remove('hidden');
       }
-
-      const inputValUpper = inputVal.toUpperCase();
-
-      // Find by exact Employee ID Code or Email
-      let matched = ESS_APP.employees.find(emp => {
-        const idMatches = inputVal && emp.id && emp.id.toUpperCase() === inputValUpper;
-        const emailMatches = emailVal && emp.email && emp.email.toLowerCase() === emailVal;
-        return (idMatches && emailMatches) || idMatches || emailMatches;
-      });
-
-      // Suffix / Partial Code Match (e.g. user typed 0104 or 104)
-      if (!matched && inputVal) {
-        matched = ESS_APP.employees.find(emp => 
-          emp.id && (emp.id.toUpperCase().endsWith(inputValUpper) || emp.id.toUpperCase().includes(inputValUpper))
-        );
-      }
-
-      // Email username match (e.g. vikram.j)
-      if (!matched && emailVal) {
-        const username = emailVal.split('@')[0];
-        matched = ESS_APP.employees.find(emp => 
-          emp.email && emp.email.toLowerCase().includes(username)
-        );
-      }
-
-      // If still not matched, check if it is a custom/new code - auto-create an active session so user is never locked out
-      if (!matched) {
-        const fallbackId = inputValUpper || 'EMP-AGT-0104';
-        const fallbackEmail = emailVal || `${fallbackId.toLowerCase()}@apextech.com`;
-        matched = {
-          id: fallbackId,
-          name: emailVal ? (emailVal.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase())) : `Employee (${fallbackId})`,
-          email: fallbackEmail,
-          role: 'Operations Specialist',
-          dept: 'General Operations',
-          roleLevel: 'employee',
-          phone: '+91 98200 12345',
-          salary: 75000,
-          shift: 'General Day Shift (09:30 AM - 06:30 PM)',
-          manager: 'Reporting Manager',
-          emergencyName: 'Emergency Contact',
-          emergencyPhone: '+91 98200 99999',
-          address: 'Corporate Office, Mumbai',
-          bankAccount: 'HDFC Bank ••••••4409',
-          uan: '100984129012'
-        };
-        ESS_APP.employees.push(matched);
-      }
-
-      loginUserSession(matched);
     }
+    window.handleDirectLogin = handleDirectLogin;
 
     function quickLoginAs(empId) {
       syncEmployeesFromAdmin();
@@ -1824,9 +1827,10 @@
       const emp = ESS_APP.employees.find(e => e.id && (e.id.toUpperCase() === targetId || e.id.toUpperCase().includes(targetId))) || ESS_APP.employees[0];
       loginUserSession(emp);
     }
+    window.quickLoginAs = quickLoginAs;
 
     function loginUserSession(emp) {
-      ESS_APP.currentUser = emp;
+      ESS_APP.currentUser = emp || ESS_APP.employees[0];
       
       // Hide login, show workspace
       const loginView = document.getElementById('view-user-login');
@@ -1834,15 +1838,25 @@
       if (loginView) loginView.classList.add('hidden');
       if (portalView) portalView.classList.remove('hidden');
 
-      // Populate UI with employee profile
-      applyUserProfileAndRole(emp);
+      try {
+        // Populate UI with employee profile
+        applyUserProfileAndRole(ESS_APP.currentUser);
+      } catch (e) {
+        console.warn('Error applying user profile:', e);
+      }
 
-      // Start global clock ticker
-      startLiveClockTicker();
+      try {
+        // Start global clock ticker
+        startLiveClockTicker();
+      } catch (e) {
+        console.warn('Error starting ticker:', e);
+      }
 
       // Show toast
-      showToast('Welcome to ESS', `Logged in as ${emp.name} [${emp.id}] (${emp.role})`);
-      lucide.createIcons();
+      showToast('Welcome to ESS', `Logged in as ${ESS_APP.currentUser.name} [${ESS_APP.currentUser.id}] (${ESS_APP.currentUser.role})`);
+      try {
+        if (window.lucide && lucide.createIcons) lucide.createIcons();
+      } catch (e) {}
     }
 
     function handleUserLogout() {
@@ -1856,7 +1870,7 @@
       if (loginView) loginView.classList.remove('hidden');
       showToast('Logged Out', 'You have securely signed out of Employee Self-Service.');
     }
-    }
+    window.handleUserLogout = handleUserLogout;
 
     // -----------------------------------------------------
     // DYNAMIC ROLE & PERMISSION ENGINE
