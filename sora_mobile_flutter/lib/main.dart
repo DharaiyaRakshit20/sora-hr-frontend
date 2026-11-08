@@ -102,9 +102,7 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
           onWebResourceError: (error) {
             // Only trigger full-screen error if the MAIN FRAME itself failed to load
             // Sub-resource failures (fonts, map tiles, images, aborted requests) must not crash the app
-            if (error.isForMainFrame == true &&
-                error.errorCode != -3 &&
-                error.errorType != WebResourceErrorType.cancelled) {
+            if (error.isForMainFrame == true && error.errorCode != -3) {
               setState(() {
                 _isLoading = false;
                 _hasError = true;
