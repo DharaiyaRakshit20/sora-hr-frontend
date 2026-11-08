@@ -34,6 +34,8 @@ jobs:
         run: |
           cd sora_mobile_flutter
           flutter create --platforms=android --org com.sorahr .
+          # Upgrade Kotlin version to 1.9.22
+          sed -i "s/ext.kotlin_version = ['\"][^'\"]*['\"]/ext.kotlin_version = '1.9.22'/g" android/build.gradle
           flutter pub get
           # Inject Camera & GPS permissions into AndroidManifest.xml
           sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />' android/app/src/main/AndroidManifest.xml
