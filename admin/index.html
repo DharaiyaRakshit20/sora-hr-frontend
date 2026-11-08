@@ -1967,7 +1967,7 @@
                 <p class="text-xs text-neutral-400 mt-0.5">CL, SL, EL, PL, LWP (Leave Without Pay), Birthday Leave, Marriage Leave, Comp-Off &amp; Maternity/Paternity with automated payroll deduction.</p>
               </div>
               <div class="flex items-center gap-2.5">
-                <button onclick="openMasterSubTab('leaves')" class="px-3 py-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white font-semibold text-xs flex items-center gap-1.5 transition-all">
+                <button onclick="openManageLeaveQuotasModal()" title="Manage Annual Leave Quotas, Accrual & Policies" class="px-3 py-2 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm">
                   <i data-lucide="sliders" class="w-4 h-4 text-brand-amber"></i>
                   <span>Manage Quotas</span>
                 </button>
@@ -1978,9 +1978,9 @@
               </div>
             </div>
 
-            <!-- 10 Comprehensive Leave Categories & Statutory Rules Grid (User Requirement 4) -->
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+            <!-- 10 Comprehensive Leave Categories & Statutory Rules Grid (Dynamically Governed) -->
+            <div id="leavePolicyCardsGrid" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all cursor-pointer" onclick="openManageLeaveQuotasModal()">
                 <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
                   <span>Casual (CL)</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] bg-brand-amber/20 text-brand-amber font-mono font-bold">12 D/Yr</span>
@@ -1989,7 +1989,7 @@
                 <div class="text-[10px] text-neutral-400 mt-0.5">Urgent family & personal</div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all cursor-pointer" onclick="openManageLeaveQuotasModal()">
                 <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
                   <span>Sick (SL)</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] bg-sky-500/20 text-sky-300 font-mono font-bold">10 D/Yr</span>
@@ -1998,7 +1998,7 @@
                 <div class="text-[10px] text-neutral-400 mt-0.5">Illness & doctor recovery</div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all cursor-pointer" onclick="openManageLeaveQuotasModal()">
                 <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
                   <span>Earned (EL)</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] bg-indigo-500/20 text-indigo-300 font-mono font-bold">15 D/Yr</span>
@@ -2007,7 +2007,7 @@
                 <div class="text-[10px] text-neutral-400 mt-0.5">Carry forward up to 45d</div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all cursor-pointer" onclick="openManageLeaveQuotasModal()">
                 <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
                   <span>Privilege (PL)</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] bg-purple-500/20 text-purple-300 font-mono font-bold">18 D/Yr</span>
@@ -2016,7 +2016,7 @@
                 <div class="text-[10px] text-neutral-400 mt-0.5">Planned annual off</div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-brand-surface border border-rose-500/30 bg-rose-500/5 hover:border-rose-500/60 transition-all">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-rose-500/30 bg-rose-500/5 hover:border-rose-500/60 transition-all cursor-pointer" onclick="openManageLeaveQuotasModal()">
                 <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
                   <span class="text-rose-300">LWP (Loss of Pay)</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] bg-rose-500/20 text-rose-300 font-mono font-bold">Uncapped</span>
@@ -2025,7 +2025,7 @@
                 <div class="text-[10px] text-neutral-400 mt-0.5">Direct Payroll LOP cut</div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-brand-surface border border-pink-500/30 bg-pink-500/5 hover:border-pink-500/60 transition-all">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-pink-500/30 bg-pink-500/5 hover:border-pink-500/60 transition-all cursor-pointer" onclick="openManageLeaveQuotasModal()">
                 <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
                   <span class="text-pink-300">Birthday Leave</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] bg-pink-500/20 text-pink-300 font-mono font-bold">1 Day</span>
@@ -2034,7 +2034,7 @@
                 <div class="text-[10px] text-neutral-400 mt-0.5">Annual birthday gift</div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-brand-surface border border-amber-500/30 bg-amber-500/5 hover:border-amber-500/60 transition-all">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-amber-500/30 bg-amber-500/5 hover:border-amber-500/60 transition-all cursor-pointer" onclick="openManageLeaveQuotasModal()">
                 <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
                   <span class="text-amber-300">Marriage Leave</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] bg-amber-500/20 text-amber-300 font-mono font-bold">5 Days</span>
@@ -2043,7 +2043,7 @@
                 <div class="text-[10px] text-neutral-400 mt-0.5">Wedding celebration</div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-brand-surface border border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/60 transition-all">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/60 transition-all cursor-pointer" onclick="openManageLeaveQuotasModal()">
                 <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
                   <span class="text-emerald-300">Comp-Off (CO)</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] bg-emerald-500/20 text-emerald-300 font-mono font-bold">As Earned</span>
@@ -2052,7 +2052,7 @@
                 <div class="text-[10px] text-neutral-400 mt-0.5">Valid within 60 days</div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all cursor-pointer" onclick="openManageLeaveQuotasModal()">
                 <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
                   <span>Maternity / Paternity</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] bg-cyan-500/20 text-cyan-300 font-mono font-bold">26 Weeks</span>
@@ -2061,7 +2061,7 @@
                 <div class="text-[10px] text-neutral-400 mt-0.5">Parental care benefit</div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all">
+              <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all cursor-pointer" onclick="openManageLeaveQuotasModal()">
                 <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
                   <span>Bereavement</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] bg-neutral-500/20 text-neutral-300 font-mono font-bold">5 Days</span>
@@ -3269,6 +3269,83 @@
           </div>
         </div>
 
+        <!-- SECTION 5: CLIENT BRANDING - LOGO & OFFICIAL SEAL / STAMP (DYNAMIC CUSTOMIZATION) -->
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border/70 space-y-3.5">
+          <div class="flex items-center justify-between border-b border-brand-border/50 pb-2">
+            <span class="font-bold text-white text-xs flex items-center gap-2">
+              <i data-lucide="image" class="w-3.5 h-3.5 text-brand-amber"></i>
+              <span>5. Client Company Logo &amp; Official Stamp / Seal Mark</span>
+            </span>
+            <span class="text-[10px] text-emerald-400 font-mono font-semibold">Client Branding Only</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- 1. Client Company Logo Customization -->
+            <div class="p-3 rounded-xl bg-brand-surface border border-brand-border space-y-2.5">
+              <div class="flex items-center justify-between">
+                <label class="text-neutral-200 font-semibold text-xs flex items-center gap-1.5">
+                  <i data-lucide="bookmark" class="w-3.5 h-3.5 text-brand-amber"></i>
+                  <span>Company Logo (Top Letterhead)</span>
+                </label>
+                <span class="text-[9px] text-neutral-400 font-mono">PNG / JPG / SVG</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <!-- Logo Preview Box -->
+                <div id="offerLogoPreviewBox" class="w-16 h-14 rounded-lg bg-white border border-neutral-300 flex items-center justify-center overflow-hidden shrink-0 shadow-sm p-1">
+                  <div id="offerLogoFallback" class="w-9 h-9 rounded bg-[#003366] text-white font-bold flex items-center justify-center text-sm font-serif shadow-sm">AGT</div>
+                  <img id="offerLogoImg" src="" alt="Client Logo" class="hidden max-h-full max-w-full object-contain">
+                </div>
+                <div class="space-y-1.5 flex-grow">
+                  <input type="file" id="offerLogoFileInput" accept="image/*" onchange="handleOfferLogoUpload(this)" class="hidden">
+                  <div class="flex flex-wrap gap-1.5">
+                    <button type="button" onclick="document.getElementById('offerLogoFileInput').click()" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-white text-[11px] font-semibold flex items-center gap-1 transition-all">
+                      <i data-lucide="upload" class="w-3 h-3 text-brand-amber"></i>
+                      <span>Upload Logo</span>
+                    </button>
+                    <button type="button" onclick="resetOfferLogoToDefault()" class="px-2 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-[10px] font-medium transition-colors">
+                      Reset Monogram
+                    </button>
+                  </div>
+                  <p class="text-[10px] text-neutral-400">Upload your client/company logo image to replace the default monogram box.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Official Seal / Stamp Mark Customization -->
+            <div class="p-3 rounded-xl bg-brand-surface border border-brand-border space-y-2.5">
+              <div class="flex items-center justify-between">
+                <label class="text-neutral-200 font-semibold text-xs flex items-center gap-1.5">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5 text-brand-amber"></i>
+                  <span>Official Seal / Stamp Mark</span>
+                </label>
+                <span class="text-[9px] text-neutral-400 font-mono">HR Dept Seal</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <!-- Stamp Preview Box -->
+                <div id="offerStampPreviewBox" class="w-16 h-14 rounded-lg bg-white border border-neutral-300 flex items-center justify-center overflow-hidden shrink-0 shadow-sm p-1">
+                  <div id="offerStampSvgPreview" class="scale-50 origin-center">
+                    <!-- Default SVG Seal -->
+                  </div>
+                  <img id="offerStampImg" src="" alt="Official Seal" class="hidden max-h-full max-w-full object-contain">
+                </div>
+                <div class="space-y-1.5 flex-grow">
+                  <input type="file" id="offerStampFileInput" accept="image/*" onchange="handleOfferStampUpload(this)" class="hidden">
+                  <div class="flex flex-wrap gap-1.5">
+                    <button type="button" onclick="document.getElementById('offerStampFileInput').click()" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-white text-[11px] font-semibold flex items-center gap-1 transition-all">
+                      <i data-lucide="upload" class="w-3 h-3 text-brand-amber"></i>
+                      <span>Upload Seal Image</span>
+                    </button>
+                    <button type="button" onclick="resetOfferStampToDefault()" class="px-2 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-[10px] font-medium transition-colors">
+                      Use Vector Seal
+                    </button>
+                  </div>
+                  <p class="text-[10px] text-neutral-400">Upload physical stamp image or use official verified SVG seal.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- Action Footer -->
@@ -3277,6 +3354,75 @@
         <button id="submitOfferBtn" onclick="submitOfferModalAction()" class="px-5 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-2 transition-all">
           <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
           <span id="submitOfferBtnText">Generate &amp; Dispatch Letter</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MANAGE LEAVE QUOTAS & ALLOCATION POLICIES -->
+  <div id="modalManageLeaveQuotas" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-border w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-150">
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-brand-border flex items-center justify-between bg-brand-dark">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-brand-amber/15 border border-brand-amber/30 text-brand-amber flex items-center justify-center">
+            <i data-lucide="sliders" class="w-4 h-4 text-brand-amber"></i>
+          </div>
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+              <span>Manage Annual Leave Quotas &amp; Allocation Policies</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Live Governance</span>
+            </h3>
+            <p class="text-[11px] text-neutral-400 mt-0.5">Configure annual quota days, carry forward limits, and paid/unpaid rules across all 10 leave categories.</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalManageLeaveQuotas')" class="text-neutral-400 hover:text-white p-1 text-xl leading-none">&times;</button>
+      </div>
+
+      <!-- Modal Body (Editable Quota Table) -->
+      <div class="p-4 sm:p-6 overflow-y-auto max-h-[70vh] space-y-4 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="text-neutral-300 font-semibold text-xs">Annual Leave Entitlements &amp; Accrual Rules</span>
+          <button type="button" onclick="openMasterTab('leaveTypes'); closeModal('modalManageLeaveQuotas');" class="text-[11px] text-brand-amber hover:underline flex items-center gap-1 font-semibold">
+            <i data-lucide="external-link" class="w-3 h-3"></i>
+            <span>Open in Master Setup Directory</span>
+          </button>
+        </div>
+
+        <div class="rounded-2xl border border-brand-border overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-brand-dark text-neutral-400 font-semibold uppercase text-[10px] border-b border-brand-border">
+              <tr>
+                <th class="py-2.5 px-3">Leave Code &amp; Name</th>
+                <th class="py-2.5 px-3">Annual Quota (Days / Rule)</th>
+                <th class="py-2.5 px-3">Classification</th>
+                <th class="py-2.5 px-3">Carry Forward Rule</th>
+                <th class="py-2.5 px-3">Payroll Impact</th>
+              </tr>
+            </thead>
+            <tbody id="manageQuotasTableBody" class="divide-y divide-brand-border/60">
+              <!-- Dynamically populated from appState.leaveTypes -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-3 rounded-xl bg-brand-dark/70 border border-brand-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-neutral-400">
+          <div class="flex items-center gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-brand-amber shrink-0"></i>
+            <span>Changes to quotas immediately update employee leave balances, leave apply dropdowns, and payroll LOP calculations.</span>
+          </div>
+          <button type="button" onclick="resetLeaveQuotasToDefault()" class="text-neutral-400 hover:text-rose-400 font-medium text-[10px] whitespace-nowrap">
+            Reset All to Statutory Defaults
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-between gap-3">
+        <button onclick="closeModal('modalManageLeaveQuotas')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:text-white">Cancel</button>
+        <button onclick="saveManageLeaveQuotas()" class="px-5 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs shadow flex items-center gap-2 transition-all">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Save Quotas &amp; Apply Policies</span>
         </button>
       </div>
     </div>
@@ -3813,6 +3959,12 @@
         </div>
 
         <div class="flex items-center gap-2">
+          <!-- Logo & Stamp Button -->
+          <button type="button" onclick="editCurrentOfferLetter()" class="px-3 py-1.5 rounded-xl bg-brand-card hover:bg-brand-card/80 border border-brand-border text-xs text-sky-400 hover:text-white flex items-center gap-1.5 transition-all" title="Customize Company Logo or HR Stamp Seal">
+            <i data-lucide="image" class="w-3 h-3 text-sky-400"></i>
+            <span>Logo &amp; Seal</span>
+          </button>
+
           <!-- Edit Terms Button -->
           <button type="button" onclick="editCurrentOfferLetter()" class="px-3 py-1.5 rounded-xl bg-brand-card hover:bg-brand-card/80 border border-brand-border text-xs text-brand-amber hover:text-white flex items-center gap-1.5 transition-all">
             <i data-lucide="edit-3" class="w-3 h-3"></i>
@@ -5695,7 +5847,8 @@
         { id: 'stg_acc', name: 'Offer Letter Accepted', code: 'Offer Accepted', category: 'Onboarding & Joined', order: 5, desc: 'Signed offer received, ready for day-1 onboarding' },
         { id: 'stg_rej', name: 'Rejected / Archived', code: 'Archived', category: 'Talent Pool', order: 6, desc: 'Candidate archived for future open opportunities' }
       ],
-            currentMasterTab: 'roles',
+      clientBranding: { logo: '', stamp: '' },
+      currentMasterTab: 'roles',
       locations: [
         { id: 'loc_bkc', name: 'Mumbai Head Office (BKC)', city: 'Mumbai', lat: 19.0657, lng: 72.8682, radius: 100 },
         { id: 'loc_blr', name: 'Bengaluru Tech Hub (Whitefield)', city: 'Bengaluru', lat: 12.9716, lng: 77.5946, radius: 150 },
@@ -6097,7 +6250,7 @@
       'employees', 'candidates', 'offers', 'promotions', 'leaves', 
       'attendance', 'resignations', 'policies', 'roles', 'departments', 
       'designations', 'locations', 'shifts', 'assets', 'employmentTypes', 
-      'leaveTypes', 'pipelineStages'
+      'leaveTypes', 'pipelineStages', 'clientBranding'
     ];
 
     function saveAppState(entity) {
@@ -6125,6 +6278,8 @@
               const data = JSON.parse(raw);
               if (Array.isArray(data) && data.length > 0) {
                 appState[k] = data;
+              } else if (data && typeof data === 'object' && !Array.isArray(data)) {
+                appState[k] = Object.assign(appState[k] || {}, data);
               }
             } catch (e) {}
           }
@@ -9902,6 +10057,7 @@
           </tr>
         `;
       }).join('');
+      renderLeavePolicyCards();
       lucide.createIcons();
     }
 
@@ -10002,6 +10158,140 @@
       saveAppState('leaves');
       renderLeaveTable();
       showToast('Leave Rejected', `Rejected leave application for ${appState.leaves[idx].name}`);
+    }
+
+    // ------------------------------------------
+    // LEAVE QUOTAS & ACCRUAL POLICIES ENGINE
+    // ------------------------------------------
+    function renderLeavePolicyCards() {
+      const container = document.getElementById('leavePolicyCardsGrid');
+      if (!container || !appState.leaveTypes) return;
+
+      const badgeStyles = {
+        'CL': 'bg-brand-amber/20 text-brand-amber',
+        'SL': 'bg-sky-500/20 text-sky-300',
+        'EL': 'bg-indigo-500/20 text-indigo-300',
+        'PL': 'bg-purple-500/20 text-purple-300',
+        'LWP': 'bg-rose-500/20 text-rose-300',
+        'BDL': 'bg-pink-500/20 text-pink-300',
+        'MRL': 'bg-amber-500/20 text-amber-300',
+        'CO': 'bg-emerald-500/20 text-emerald-300',
+        'MPL': 'bg-cyan-500/20 text-cyan-300',
+        'BRL': 'bg-neutral-500/20 text-neutral-300'
+      };
+
+      container.innerHTML = appState.leaveTypes.map((lt) => {
+        const badgeClass = badgeStyles[lt.code] || 'bg-brand-amber/20 text-brand-amber';
+        return `
+          <div class="p-3 rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-amber/40 transition-all cursor-pointer group shadow-sm hover:shadow" onclick="openManageLeaveQuotasModal()" title="Click to edit quota for ${lt.name}">
+            <div class="flex items-center justify-between text-neutral-400 text-[10px] font-semibold">
+              <span class="group-hover:text-white transition-colors truncate max-w-[90px]">${lt.name.split('(')[0].trim()} (${lt.code})</span>
+              <span class="px-1.5 py-0.2 rounded text-[9px] ${badgeClass} font-mono font-bold">${lt.quota}</span>
+            </div>
+            <div class="text-sm font-bold text-white mt-1 truncate">${lt.type}</div>
+            <div class="text-[10px] text-neutral-400 mt-0.5 truncate">${lt.desc || (lt.carryForward !== 'No' ? 'CF: ' + lt.carryForward : 'Standard Policy')}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openManageLeaveQuotasModal() {
+      const tbody = document.getElementById('manageQuotasTableBody');
+      if (!tbody || !appState.leaveTypes) return;
+
+      tbody.innerHTML = appState.leaveTypes.map((lt, idx) => {
+        const isPaid = lt.type.toLowerCase().includes('paid') && !lt.type.toLowerCase().includes('unpaid');
+        const isUnpaid = lt.type.toLowerCase().includes('unpaid') || lt.type.toLowerCase().includes('lop');
+        const impactBadge = isUnpaid
+          ? `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-500/15 text-rose-400 border border-rose-500/30 whitespace-nowrap">Auto LOP Cut</span>`
+          : (isPaid && !lt.type.includes('Special') && !lt.type.includes('Statutory') && !lt.type.includes('Compassionate')
+            ? `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">100% Salary Paid</span>`
+            : `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 whitespace-nowrap">${lt.type}</span>`);
+
+        return `
+          <tr class="hover:bg-brand-card/40 transition-colors">
+            <td class="py-2.5 px-3">
+              <div class="font-bold text-white text-xs">${lt.name}</div>
+              <div class="text-[10px] text-neutral-400 truncate max-w-xs">${lt.desc || ''}</div>
+            </td>
+            <td class="py-2.5 px-3">
+              <input type="text" id="quota_input_${idx}" value="${lt.quota}" class="w-full bg-brand-dark border border-brand-border rounded-lg px-2.5 py-1 text-xs text-brand-amber font-mono font-semibold focus:outline-none focus:border-brand-amber">
+            </td>
+            <td class="py-2.5 px-3">
+              <select id="type_select_${idx}" class="w-full bg-brand-dark border border-brand-border rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-amber">
+                <option value="Paid" ${lt.type === 'Paid' ? 'selected' : ''}>Paid</option>
+                <option value="Unpaid / LOP" ${isUnpaid ? 'selected' : ''}>Unpaid / LOP</option>
+                <option value="Special Paid" ${lt.type === 'Special Paid' ? 'selected' : ''}>Special Paid</option>
+                <option value="Statutory Paid" ${lt.type === 'Statutory Paid' ? 'selected' : ''}>Statutory Paid</option>
+                <option value="Compassionate Paid" ${lt.type === 'Compassionate Paid' ? 'selected' : ''}>Compassionate Paid</option>
+              </select>
+            </td>
+            <td class="py-2.5 px-3">
+              <input type="text" id="cf_input_${idx}" value="${lt.carryForward || 'No'}" class="w-full bg-brand-dark border border-brand-border rounded-lg px-2.5 py-1 text-xs text-neutral-300 focus:outline-none focus:border-brand-amber">
+            </td>
+            <td class="py-2.5 px-3">
+              ${impactBadge}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('modalManageLeaveQuotas').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveManageLeaveQuotas() {
+      if (!appState.leaveTypes) return;
+
+      appState.leaveTypes.forEach((lt, idx) => {
+        const quotaEl = document.getElementById(`quota_input_${idx}`);
+        const typeEl = document.getElementById(`type_select_${idx}`);
+        const cfEl = document.getElementById(`cf_input_${idx}`);
+
+        if (quotaEl) lt.quota = quotaEl.value.trim() || lt.quota;
+        if (typeEl) lt.type = typeEl.value;
+        if (cfEl) lt.carryForward = cfEl.value.trim() || 'No';
+      });
+
+      saveAppState('leaveTypes');
+      renderLeavePolicyCards();
+
+      const leaveTypeSelect = document.getElementById('leaveTypeSelect');
+      if (leaveTypeSelect) {
+        leaveTypeSelect.innerHTML = appState.leaveTypes.map(lt => 
+          `<option value="${lt.name}">${lt.name} (${lt.quota})</option>`
+        ).join('');
+      }
+
+      closeModal('modalManageLeaveQuotas');
+      showToast('Leave Quotas Updated', 'Annual leave entitlements and allocation policies successfully saved.');
+    }
+
+    function resetLeaveQuotasToDefault() {
+      appState.leaveTypes = [
+        { id: 'lt_cl', name: 'Casual Leave (CL)', code: 'CL', quota: '12 Days/Year', type: 'Paid', carryForward: 'No', desc: 'Urgent personal matters & family functions' },
+        { id: 'lt_sl', name: 'Sick Leave (SL) / Medical Leave', code: 'SL', quota: '10 Days/Year', type: 'Paid', carryForward: 'No', desc: 'Illness, hospitalization & medical recovery' },
+        { id: 'lt_el', name: 'Earned Leave (EL)', code: 'EL', quota: '15 Days/Year', type: 'Paid', carryForward: 'Max 45 Days', desc: 'Accrued privilege leave for extended vacations' },
+        { id: 'lt_pl', name: 'Privilege Leave (PL)', code: 'PL', quota: '18 Days/Year', type: 'Paid', carryForward: 'Max 30 Days', desc: 'Planned annual vacations & leisure' },
+        { id: 'lt_lwp', name: 'Leave Without Pay (LWP / Loss of Pay)', code: 'LWP', quota: 'Uncapped', type: 'Unpaid / LOP', carryForward: 'No', desc: 'Unexcused leave or exhausted balances (deducted in payroll)' },
+        { id: 'lt_bday', name: 'Birthday Leave', code: 'BDL', quota: '1 Day/Year', type: 'Special Paid', carryForward: 'No', desc: '1 Day paid birthday holiday granted to each employee' },
+        { id: 'lt_marr', name: 'Marriage Leave', code: 'MRL', quota: '5 Days', type: 'Special Paid', carryForward: 'No', desc: '5 Days paid wedding leave celebration gift from company' },
+        { id: 'lt_co', name: 'Compensatory Off (Comp-Off)', code: 'CO', quota: 'As Earned', type: 'Paid', carryForward: 'Within 60 Days', desc: 'Compensatory day-off for weekend or holiday duty' },
+        { id: 'lt_ml', name: 'Maternity / Paternity Leave', code: 'MPL', quota: '26 Weeks', type: 'Statutory Paid', carryForward: 'No', desc: 'Childbirth, newborn bonding & parental care' },
+        { id: 'lt_berv', name: 'Bereavement Leave', code: 'BRL', quota: '5 Days', type: 'Compassionate Paid', carryForward: 'No', desc: 'Compassionate leave for immediate family bereavement' }
+      ];
+      saveAppState('leaveTypes');
+      openManageLeaveQuotasModal();
+      renderLeavePolicyCards();
+      showToast('Quotas Reset', 'Statutory leave entitlements restored to corporate defaults.');
+    }
+
+    function openMasterSubTab(tabName) {
+      if (tabName === 'leaves' || tabName === 'leaveTypes') {
+        openManageLeaveQuotasModal();
+      } else if (typeof openMasterTab === 'function') {
+        openMasterTab(tabName);
+      }
     }
 
     // ------------------------------------------
@@ -10447,7 +10737,7 @@
       `;
     }
 
-    function renderCorporateHeader(compName, compWebsite) {
+    function renderCorporateHeader(compName, compWebsite, logoUrl) {
       const initials = (compName || 'Apex Global Technologies')
         .replace(/Private|Limited|Pvt|Ltd/gi, '')
         .trim()
@@ -10458,13 +10748,19 @@
         .join('')
         .toUpperCase() || 'AGT';
 
+      const logoMarkup = logoUrl
+        ? `<div style="max-width: 140px; max-height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+             <img src="${logoUrl}" alt="${compName}" style="max-height: 38px; max-width: 130px; object-fit: contain; display: block;" />
+           </div>`
+        : `<div style="width: 36px; height: 36px; background: #003366; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: bold; font-size: 15px; letter-spacing: 0.5px; font-family: 'Times New Roman', serif; box-shadow: 0 1px 3px rgba(0,0,0,0.18);">
+             ${initials}
+           </div>`;
+
       return `
         <div style="margin-bottom: 2px;">
           <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="width: 36px; height: 36px; background: #003366; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: bold; font-size: 15px; letter-spacing: 0.5px; font-family: 'Times New Roman', serif; box-shadow: 0 1px 3px rgba(0,0,0,0.18);">
-                ${initials}
-              </div>
+              ${logoMarkup}
               <div>
                 <div style="font-size: 15px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; letter-spacing: 0.5px; line-height: 1.15;">
                   ${compName.toUpperCase()}
@@ -10512,6 +10808,9 @@
       const compAddress = off.companyAddress || 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051';
       const signatory = off.signatory || 'HR Department';
 
+      const clientLogo = off.logo || (appState.clientBranding && appState.clientBranding.logo) || '';
+      const clientStamp = off.stamp || (appState.clientBranding && appState.clientBranding.stamp) || '';
+
       const compInitials = (compName || 'Apex Global Technologies')
         .replace(/Private|Limited|Pvt|Ltd/gi, '')
         .trim()
@@ -10521,6 +10820,14 @@
         .slice(0, 3)
         .join('')
         .toUpperCase() || 'AGT';
+
+      const watermarkGraphic = clientLogo
+        ? `<div style="max-width: 220px; max-height: 180px; margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center;">
+             <img src="${clientLogo}" alt="${compName}" style="max-width: 200px; max-height: 130px; object-fit: contain; filter: grayscale(100%);" />
+           </div>`
+        : `<div style="width: 150px; height: 150px; margin: 0 auto 10px auto; border: 5px solid #003366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; letter-spacing: 2px;">
+             ${compInitials}
+           </div>`;
 
       const name = off.name || 'Candidate Name';
       const prefix = off.prefix || (name.toLowerCase().includes('kavita') || name.toLowerCase().includes('megha') || name.toLowerCase().includes('ananya') || name.toLowerCase().includes('priya') ? 'Ms.' : 'Mr.');
@@ -10546,15 +10853,13 @@
           
           <!-- Watermark Background (Client Company Branding Only - Zero SORA HR) -->
           <div style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); opacity: 0.04; pointer-events: none; z-index: 0; text-align: center; width: 420px;">
-            <div style="width: 150px; height: 150px; margin: 0 auto 10px auto; border: 5px solid #003366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; letter-spacing: 2px;">
-              ${compInitials}
-            </div>
+            ${watermarkGraphic}
             <div style="font-size: 20px; font-weight: bold; color: #003366; letter-spacing: 2px; font-family: 'Times New Roman', serif;">${compName.toUpperCase()}</div>
           </div>
 
           <div style="position: relative; z-index: 1;">
             <!-- Letterhead Header -->
-            ${renderCorporateHeader(compName, compWebsite)}
+            ${renderCorporateHeader(compName, compWebsite, clientLogo)}
 
             <!-- Recipient & Date Row -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; font-size: 12px; line-height: 1.4;">
@@ -10643,8 +10948,8 @@
               <!-- Left: HR Department & Seal -->
               <div>
                 <div style="font-size: 12px; margin-bottom: 6px;">Thanking you,</div>
-                <div style="margin: 2px 0 4px 0;">
-                  ${renderCorporateStampSVG(compName)}
+                <div style="margin: 2px 0 4px 0; min-height: 85px; display: flex; align-items: center;">
+                  ${clientStamp ? `<img src="${clientStamp}" alt="Official Seal" style="width: 86px; height: 86px; object-fit: contain; display: block;" />` : renderCorporateStampSVG(compName)}
                 </div>
                 <div style="font-size: 12.5px; font-weight: bold; margin-top: 4px;">${signatory}</div>
               </div>
@@ -10670,15 +10975,13 @@
           
           <!-- Watermark Background (Client Company Branding Only - Zero SORA HR) -->
           <div style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); opacity: 0.04; pointer-events: none; z-index: 0; text-align: center; width: 420px;">
-            <div style="width: 150px; height: 150px; margin: 0 auto 10px auto; border: 5px solid #003366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; letter-spacing: 2px;">
-              ${compInitials}
-            </div>
+            ${watermarkGraphic}
             <div style="font-size: 20px; font-weight: bold; color: #003366; letter-spacing: 2px; font-family: 'Times New Roman', serif;">${compName.toUpperCase()}</div>
           </div>
 
           <div style="position: relative; z-index: 1;">
             <!-- Letterhead Header -->
-            ${renderCorporateHeader(compName, compWebsite)}
+            ${renderCorporateHeader(compName, compWebsite, clientLogo)}
 
             <!-- Annexure – I Boxed Heading -->
             <div style="text-align: center; margin: 10px 0 12px 0;">
@@ -10867,6 +11170,133 @@
       lucide.createIcons();
     }
 
+    // ------------------------------------------
+    // CLIENT COMPANY BRANDING (LOGO & SEAL MARK) ENGINE
+    // ------------------------------------------
+    let currentOfferLogo = '';
+    let currentOfferStamp = '';
+
+    function handleOfferLogoUpload(input) {
+      if (input && input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          currentOfferLogo = e.target.result;
+          updateOfferLogoPreview();
+          if (!appState.clientBranding) appState.clientBranding = {};
+          appState.clientBranding.logo = currentOfferLogo;
+          saveAppState('clientBranding');
+          showToast('Company Logo Updated', 'Client logo uploaded and set as corporate letterhead branding.');
+          if (activeOfferPreviewIdx !== null && appState.offers[activeOfferPreviewIdx]) {
+            appState.offers[activeOfferPreviewIdx].logo = currentOfferLogo;
+            const body = document.getElementById('offerLetterDocumentBody');
+            if (body && document.getElementById('modalOfferPreview') && !document.getElementById('modalOfferPreview').classList.contains('hidden')) {
+              body.innerHTML = renderOfferLetterHTML(appState.offers[activeOfferPreviewIdx]);
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function resetOfferLogoToDefault() {
+      currentOfferLogo = '';
+      const input = document.getElementById('offerLogoFileInput');
+      if (input) input.value = '';
+      if (!appState.clientBranding) appState.clientBranding = {};
+      appState.clientBranding.logo = '';
+      saveAppState('clientBranding');
+      updateOfferLogoPreview();
+      showToast('Logo Reset', 'Reverted to standard corporate monogram.');
+      if (activeOfferPreviewIdx !== null && appState.offers[activeOfferPreviewIdx]) {
+        appState.offers[activeOfferPreviewIdx].logo = '';
+        const body = document.getElementById('offerLetterDocumentBody');
+        if (body && document.getElementById('modalOfferPreview') && !document.getElementById('modalOfferPreview').classList.contains('hidden')) {
+          body.innerHTML = renderOfferLetterHTML(appState.offers[activeOfferPreviewIdx]);
+        }
+      }
+    }
+
+    function updateOfferLogoPreview() {
+      const img = document.getElementById('offerLogoImg');
+      const fallback = document.getElementById('offerLogoFallback');
+      if (currentOfferLogo) {
+        if (img) {
+          img.src = currentOfferLogo;
+          img.classList.remove('hidden');
+        }
+        if (fallback) fallback.classList.add('hidden');
+      } else {
+        if (img) {
+          img.src = '';
+          img.classList.add('hidden');
+        }
+        if (fallback) fallback.classList.remove('hidden');
+      }
+    }
+
+    function handleOfferStampUpload(input) {
+      if (input && input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          currentOfferStamp = e.target.result;
+          updateOfferStampPreview();
+          if (!appState.clientBranding) appState.clientBranding = {};
+          appState.clientBranding.stamp = currentOfferStamp;
+          saveAppState('clientBranding');
+          showToast('Official Seal Updated', 'Official HR stamp mark uploaded and set for offer letters.');
+          if (activeOfferPreviewIdx !== null && appState.offers[activeOfferPreviewIdx]) {
+            appState.offers[activeOfferPreviewIdx].stamp = currentOfferStamp;
+            const body = document.getElementById('offerLetterDocumentBody');
+            if (body && document.getElementById('modalOfferPreview') && !document.getElementById('modalOfferPreview').classList.contains('hidden')) {
+              body.innerHTML = renderOfferLetterHTML(appState.offers[activeOfferPreviewIdx]);
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function resetOfferStampToDefault() {
+      currentOfferStamp = '';
+      const input = document.getElementById('offerStampFileInput');
+      if (input) input.value = '';
+      if (!appState.clientBranding) appState.clientBranding = {};
+      appState.clientBranding.stamp = '';
+      saveAppState('clientBranding');
+      updateOfferStampPreview();
+      showToast('Seal Reset', 'Reverted to official vector verified seal.');
+      if (activeOfferPreviewIdx !== null && appState.offers[activeOfferPreviewIdx]) {
+        appState.offers[activeOfferPreviewIdx].stamp = '';
+        const body = document.getElementById('offerLetterDocumentBody');
+        if (body && document.getElementById('modalOfferPreview') && !document.getElementById('modalOfferPreview').classList.contains('hidden')) {
+          body.innerHTML = renderOfferLetterHTML(appState.offers[activeOfferPreviewIdx]);
+        }
+      }
+    }
+
+    function updateOfferStampPreview() {
+      const img = document.getElementById('offerStampImg');
+      const svgBox = document.getElementById('offerStampSvgPreview');
+      if (svgBox && !svgBox.innerHTML.trim()) {
+        svgBox.innerHTML = renderCorporateStampSVG('Apex Global Technologies Private Limited');
+      }
+      if (currentOfferStamp) {
+        if (img) {
+          img.src = currentOfferStamp;
+          img.classList.remove('hidden');
+        }
+        if (svgBox) svgBox.classList.add('hidden');
+      } else {
+        if (img) {
+          img.src = '';
+          img.classList.add('hidden');
+        }
+        if (svgBox) svgBox.classList.remove('hidden');
+      }
+    }
+
     function openOfferGeneratorModal(preselectedName, editIdx) {
       populateDeptDropdown();
       populateDesignationDropdown();
@@ -10925,11 +11355,21 @@
         if (document.getElementById('offerCompanyEmailInput')) document.getElementById('offerCompanyEmailInput').value = off.companyEmail || 'hr@apextechnologies.com';
         if (document.getElementById('offerSignatoryInput')) document.getElementById('offerSignatoryInput').value = off.signatory || 'HR Department';
         if (document.getElementById('offerCompanyAddressInput')) document.getElementById('offerCompanyAddressInput').value = off.companyAddress || 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051';
+
+        currentOfferLogo = off.logo || (appState.clientBranding && appState.clientBranding.logo) || '';
+        currentOfferStamp = off.stamp || (appState.clientBranding && appState.clientBranding.stamp) || '';
+        updateOfferLogoPreview();
+        updateOfferStampPreview();
       } else {
         const modalTitle = document.getElementById('offerModalTitle');
         const submitBtnText = document.getElementById('submitOfferBtnText');
         if (modalTitle) modalTitle.innerText = 'Generate Official Offer Letter & Annexure – I';
         if (submitBtnText) submitBtnText.innerText = 'Generate & Dispatch Letter';
+
+        currentOfferLogo = (appState.clientBranding && appState.clientBranding.logo) || '';
+        currentOfferStamp = (appState.clientBranding && appState.clientBranding.stamp) || '';
+        updateOfferLogoPreview();
+        updateOfferStampPreview();
 
         if (preselectedName && sel) {
           sel.value = preselectedName;
@@ -11085,8 +11525,15 @@
         companyEmail: compEmail,
         companyAddress: compAddress,
         signatory: signatory,
+        logo: currentOfferLogo,
+        stamp: currentOfferStamp,
         status: (editingOfferIndex !== null && appState.offers[editingOfferIndex]) ? appState.offers[editingOfferIndex].status : 'Sent via Email'
       };
+
+      if (!appState.clientBranding) appState.clientBranding = {};
+      if (currentOfferLogo) appState.clientBranding.logo = currentOfferLogo;
+      if (currentOfferStamp) appState.clientBranding.stamp = currentOfferStamp;
+      saveAppState('clientBranding');
 
       if (editingOfferIndex !== null && appState.offers[editingOfferIndex]) {
         appState.offers[editingOfferIndex] = offerData;
