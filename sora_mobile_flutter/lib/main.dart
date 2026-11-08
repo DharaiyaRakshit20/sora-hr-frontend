@@ -117,25 +117,11 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
         ),
       );
 
-    // Auto-grant Camera, Microphone and Geolocation for Android WebView
+    // Auto-grant Camera and WebRTC permissions for Android WebView
     if (Platform.isAndroid && _controller.platform is AndroidWebViewController) {
       final androidController = _controller.platform as AndroidWebViewController;
-      AndroidWebViewController.enableDebugging(true);
       androidController.setMediaPlaybackRequiresUserGesture(false);
-      androidController.setOnPlatformPermissionRequest(
-        (PlatformPermissionRequest request) {
-          debugPrint("Auto-granting WebRTC permission in SORA WebView: ${request.types}");
-          request.grant();
-        },
-      );
-      androidController.setGeolocationPermissionsPromptCallbacks(
-        onShowPrompt: (request) async {
-          return const GeolocationPermissionsResponse(
-            allow: true,
-            retain: true,
-          );
-        },
-      );
+      androidController.setOnPlatformPermissionRequest((request) => request.grant());
     }
 
     _controller.loadRequest(Uri.parse(appUrl));

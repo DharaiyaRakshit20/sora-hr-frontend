@@ -1,5 +1,5 @@
 name: sora_hr_mobile
-description: "SORA HR — Employee Mobile App (Flutter & React Engine)"
+description: "SORA HR - Employee Mobile App"
 publish_to: "none"
 version: 1.0.0+1
 
@@ -10,7 +10,6 @@ dependencies:
   flutter:
     sdk: flutter
   webview_flutter: ^4.7.0
-  webview_flutter_android: ^3.16.0
   permission_handler: ^11.3.1
   cupertino_icons: ^1.0.6
 
