@@ -33,10 +33,13 @@ jobs:
         run: |
           cd sora_mobile_flutter
           
-          # Backup lib & pubspec
+          # Backup lib, pubspec & android_res
           mkdir -p /tmp/sora_backup
           cp -r lib /tmp/sora_backup/lib
           cp pubspec.yaml /tmp/sora_backup/pubspec.yaml
+          if [ -d "android_res" ]; then
+              cp -r android_res /tmp/sora_backup/android_res
+          fi
           
           # Wipe existing manual android folder completely
           rm -rf android
@@ -44,42 +47,19 @@ jobs:
           # Re-create clean Android platform project using the runner's Flutter version
           flutter create --platforms=android --org com.sorahr --project-name sora_hr_mobile .
           
-          # Restore exact lib and pubspec
+          # Restore exact lib, pubspec & android_res
           rm -rf lib
           cp -r /tmp/sora_backup/lib lib
           cp /tmp/sora_backup/pubspec.yaml pubspec.yaml
 
-          # Generate SORA HR App Launcher Icons from sora-hr-icon-512.png
-          python3 - << 'EOF'
-          import os
-          from PIL import Image
-
-          icon_src = 'assets/sora-hr-icon-512.png'
-          if not os.path.exists(icon_src):
-              icon_src = 'assets/sora-hr-icon.png'
-          if not os.path.exists(icon_src):
-              icon_src = '../sora-hr-icon-512.png'
-
-          print(f"Generating Android launcher icons from: {icon_src}")
-          img = Image.open(icon_src).convert('RGBA')
-
-          densities = {
-              'mipmap-mdpi': (48, 48),
-              'mipmap-hdpi': (72, 72),
-              'mipmap-xhdpi': (96, 96),
-              'mipmap-xxhdpi': (144, 144),
-              'mipmap-xxxhdpi': (192, 192),
-          }
-
-          for folder, size in densities.items():
-              target_dir = os.path.join('android', 'app', 'src', 'main', 'res', folder)
-              os.makedirs(target_dir, exist_ok=True)
-              resized = img.resize(size, Image.Resampling.LANCZOS)
-              resized.save(os.path.join(target_dir, 'ic_launcher.png'), 'PNG')
-              resized.save(os.path.join(target_dir, 'ic_launcher_round.png'), 'PNG')
-
-          print("Successfully generated SORA HR launcher icons for all screen densities!")
-          EOF
+          # Copy Pre-generated SORA HR App Launcher Icons directly to Android mipmap folders
+          if [ -d "/tmp/sora_backup/android_res" ]; then
+              cp -r /tmp/sora_backup/android_res/* android/app/src/main/res/
+              echo "Copied pre-generated SORA HR launcher icons successfully!"
+          elif [ -d "android_res" ]; then
+              cp -r android_res/* android/app/src/main/res/
+              echo "Copied pre-generated SORA HR launcher icons successfully!"
+          fi
 
           # Inject App Name "SORA HR" and Camera, Location & Internet permissions into AndroidManifest.xml
           python3 - << 'EOF'
@@ -124,11 +104,10 @@ jobs:
               print(f"Notice during build.gradle update: {e}")
           EOF
 
-      - name: Fetch Flutter Dependencies & Generate Launcher Icons
+      - name: Fetch Flutter Dependencies
         run: |
           cd sora_mobile_flutter
           flutter pub get
-          dart run flutter_launcher_icons || true
 
       - name: Build Android Release APK
         run: |
