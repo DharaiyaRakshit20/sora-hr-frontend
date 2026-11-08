@@ -137,134 +137,54 @@
         
         <div>
           <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono font-bold mb-2">
-            <i data-lucide="check-circle" class="w-3 h-3"></i>
-            <span>Direct Sign-In (No 2FA Required)</span>
+            <i data-lucide="shield-check" class="w-3 h-3"></i>
+            <span>Secure Employee Sign-In (Zero 2FA)</span>
           </div>
           <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Employee Sign In</h2>
-          <p class="text-xs sm:text-sm text-neutral-400 mt-1">Enter your official employee credentials to enter your ESS portal:</p>
+          <p class="text-xs sm:text-sm text-neutral-400 mt-1">Enter your assigned Company Employee Code / ID and Password:</p>
         </div>
 
-        <!-- FORM (EXACT SAME SHAPE AS ADMIN) -->
+        <!-- LOGIN FORM WITH EMPLOYEE CODE / ID -->
         <div class="space-y-4">
-          <div id="userOtpStep1" class="space-y-4">
-            <div>
-              <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Employee Official Email or ID *</label>
-              <div class="relative">
-                <i data-lucide="mail" class="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                <input type="text" id="loginEmployeeInput" value="pooja.i@apextech.com" placeholder="name@company.com or EMP-ID" class="w-full pl-11 pr-4 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber">
-              </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1.5">Employee Code / ID *</label>
+            <div class="relative">
+              <i data-lucide="badge-check" class="w-4 h-4 text-brand-amber absolute left-4 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="loginEmployeeInput" value="EMP-AGT-0104" placeholder="Enter Employee Code / ID (e.g. EMP-AGT-0104)" onkeydown="if(event.key==='Enter') handleDirectLogin()" class="w-full pl-11 pr-4 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber font-mono uppercase tracking-wider placeholder:font-sans placeholder:tracking-normal placeholder:capitalize">
             </div>
-
-            <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <label class="block text-xs font-semibold text-neutral-300">Account Password</label>
-                <a href="javascript:void(0)" onclick="showToast('Password Hint', 'Any password is accepted for testing: sora123')" class="text-xs text-brand-amber hover:underline">Forgot?</a>
-              </div>
-              <div class="relative">
-                <i data-lucide="lock" class="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                <input type="password" id="loginPasswordInput" value="sora123" placeholder="••••••••" class="w-full pl-11 pr-11 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber">
-                <button type="button" onclick="togglePasswordVisibility('loginPasswordInput', this)" title="Toggle password visibility" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-brand-amber p-1 transition-colors">
-                  <i data-lucide="eye" class="w-4 h-4"></i>
-                </button>
-              </div>
+            <div class="flex items-center justify-between text-[11px] text-neutral-500 mt-1.5 font-mono">
+              <span>Default Test ID: <strong class="text-amber-400">EMP-AGT-0104</strong></span>
+              <span>(Pooja / Vikram / Rohan)</span>
             </div>
-
-            <!-- Direct Enter Button -->
-            <button onclick="handleDirectLogin()" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-md shadow-brand-amber/20 flex items-center justify-center gap-2">
-              <i data-lucide="check" class="w-4 h-4"></i>
-              <span>Enter Employee Portal</span>
-            </button>
-
-            <!-- Quick OTP option (same as admin's OTP flow) -->
-            <div class="relative flex py-1 items-center">
-              <div class="flex-grow border-t border-brand-border"></div>
-              <span class="flex-shrink mx-3 text-[10px] text-neutral-500 uppercase font-mono">Or Login with Instant OTP</span>
-              <div class="flex-grow border-t border-brand-border"></div>
-            </div>
-
-            <button onclick="sendUserOtp()" class="w-full py-3 rounded-2xl bg-brand-surface hover:bg-brand-card border border-brand-border text-neutral-300 font-semibold text-xs transition-all flex items-center justify-center gap-2">
-              <i data-lucide="smartphone" class="w-4 h-4 text-brand-amber"></i>
-              <span>Send 6-Digit Verification OTP</span>
-            </button>
           </div>
 
-          <!-- Step 2: 6-Digit OTP Box (Same as Admin) -->
-          <div id="userOtpStep2" class="hidden space-y-4">
-            <div class="text-center p-3.5 rounded-2xl bg-brand-surface border border-brand-border/60">
-              <span class="text-xs text-neutral-400">Enter verification code sent to:</span>
-              <div id="userOtpDisplayEmail" class="text-xs font-bold text-amber-300 font-mono mt-0.5">pooja.i@apextech.com</div>
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-xs font-semibold text-neutral-300">Account Password *</label>
+              <a href="javascript:void(0)" onclick="showToast('Password Hint', 'Default testing password: sora123')" class="text-xs text-brand-amber hover:underline">Forgot?</a>
             </div>
-
-            <div class="flex justify-center gap-2 sm:gap-3 my-4">
-              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="8">
-              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="4">
-              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="2">
-              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="9">
-              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="1">
-              <input type="text" maxlength="1" class="admin-otp-box w-11 h-13 text-center text-xl font-bold bg-brand-surface border border-brand-border rounded-xl text-brand-amber" value="7">
+            <div class="relative">
+              <i data-lucide="lock" class="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+              <input type="password" id="loginPasswordInput" value="sora123" placeholder="••••••••" onkeydown="if(event.key==='Enter') handleDirectLogin()" class="w-full pl-11 pr-11 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs sm:text-sm text-white focus:outline-none focus:border-brand-amber">
+              <button type="button" onclick="togglePasswordVisibility('loginPasswordInput', this)" title="Toggle password visibility" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-brand-amber p-1 transition-colors">
+                <i data-lucide="eye" class="w-4 h-4"></i>
+              </button>
             </div>
-
-            <button onclick="handleDirectLogin()" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-md shadow-brand-amber/20 flex items-center justify-center gap-2">
-              <i data-lucide="check" class="w-4 h-4"></i>
-              <span>Verify &amp; Enter Employee Portal</span>
-            </button>
-
-            <button onclick="backToUserLoginStep1()" class="w-full text-xs text-neutral-400 hover:text-white text-center">
-              &larr; Back to Email / Password
-            </button>
-          </div>
-        </div>
-
-        <!-- Quick 1-Click Role Switcher Profiles -->
-        <div class="pt-2 border-t border-brand-border/60 space-y-3">
-          <div class="flex items-center justify-between text-[11px]">
-            <span class="text-neutral-400 font-semibold uppercase tracking-wider text-[10px]">Quick Demo Profiles (1-Click Switch)</span>
-            <span class="text-brand-amber text-[10px] font-mono">Test Any Role</span>
           </div>
 
-          <div class="grid grid-cols-2 gap-2 text-left">
-            <button type="button" onclick="quickLoginAs('EMP-AGT-0104')" class="p-2.5 rounded-xl bg-brand-surface hover:bg-brand-card border border-brand-border hover:border-brand-amber/50 transition-all text-left group">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-xs text-white group-hover:text-brand-amber transition-colors">Pooja Iyer</span>
-                <span class="w-2 h-2 rounded-full bg-sky-400"></span>
-              </div>
-              <div class="text-[10px] text-neutral-400 mt-0.5 truncate">Full Stack Engineer</div>
-              <div class="text-[9px] text-sky-400 font-mono mt-0.5 font-semibold">Standard ESS</div>
-            </button>
-
-            <button type="button" onclick="quickLoginAs('EMP-AGT-0101')" class="p-2.5 rounded-xl bg-brand-surface hover:bg-brand-card border border-brand-border hover:border-brand-amber/50 transition-all text-left group">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-xs text-white group-hover:text-brand-amber transition-colors">Vikram Joshi</span>
-                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-              </div>
-              <div class="text-[10px] text-neutral-400 mt-0.5 truncate">Field Sales Lead</div>
-              <div class="text-[9px] text-amber-400 font-mono mt-0.5 font-semibold">Manager + Field GPS</div>
-            </button>
-
-            <button type="button" onclick="quickLoginAs('EMP-AGT-0103')" class="p-2.5 rounded-xl bg-brand-surface hover:bg-brand-card border border-brand-border hover:border-brand-amber/50 transition-all text-left group">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-xs text-white group-hover:text-brand-amber transition-colors">Rohan Mehra</span>
-                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-              </div>
-              <div class="text-[10px] text-neutral-400 mt-0.5 truncate">HR Director / Admin</div>
-              <div class="text-[9px] text-emerald-400 font-mono mt-0.5 font-semibold">HR Admin Access</div>
-            </button>
-
-            <button type="button" onclick="quickLoginAs('EMP-AGT-0106')" class="p-2.5 rounded-xl bg-brand-surface hover:bg-brand-card border border-brand-border hover:border-brand-amber/50 transition-all text-left group">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-xs text-white group-hover:text-brand-amber transition-colors">Simran Kaur</span>
-                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-              </div>
-              <div class="text-[10px] text-neutral-400 mt-0.5 truncate">Marketing Manager</div>
-              <div class="text-[9px] text-purple-400 font-mono mt-0.5 font-semibold">Team Approver</div>
-            </button>
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center gap-2 text-xs text-neutral-400 cursor-pointer hover:text-neutral-300">
+              <input type="checkbox" checked class="rounded border-neutral-700 bg-brand-surface text-brand-amber focus:ring-0">
+              <span>Remember Employee Code</span>
+            </label>
+            <span class="text-[11px] text-neutral-400">No 2FA Required</span>
           </div>
-        </div>
 
-        <!-- Cross portal navigation link -->
-        <div class="pt-2 text-center text-xs text-neutral-500">
-          <span>Company Administrator? </span>
-          <a href="/admin/" class="text-brand-amber hover:underline font-semibold">Open HR Admin Console &rarr;</a>
+          <!-- Sign In Button -->
+          <button onclick="handleDirectLogin()" class="w-full py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amberLight active:scale-[0.99] text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-lg shadow-brand-amber/20 flex items-center justify-center gap-2">
+            <i data-lucide="log-in" class="w-4 h-4"></i>
+            <span>Sign In to Employee Portal</span>
+          </button>
         </div>
 
       </div>
@@ -1751,39 +1671,113 @@
     };
 
     // -----------------------------------------------------
-    // LOGIN & AUTH ENGINE (ZERO 2FA)
+    // EMPLOYEE SYNC & AUTH ENGINE (EMPLOYEE CODE / ID • ZERO 2FA)
     // -----------------------------------------------------
+    function syncEmployeesFromAdmin() {
+      try {
+        const raw = localStorage.getItem('sora_app_employees');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            parsed.forEach(p => {
+              if (!p || !p.id) return;
+              const cleanId = String(p.id).trim().toUpperCase();
+              const existingIdx = ESS_APP.employees.findIndex(e => e.id && e.id.toUpperCase() === cleanId);
+              const roleTitle = p.role || p.designation || 'Team Member';
+              const rLower = roleTitle.toLowerCase();
+              const roleLevel = (rLower.includes('director') || rLower.includes('admin')) ? 'hr_admin' :
+                               (rLower.includes('field') || rLower.includes('sales')) ? 'field_lead' :
+                               (rLower.includes('lead') || rLower.includes('manager')) ? 'manager' : 'employee';
+              const employeeObj = {
+                id: cleanId,
+                name: p.name || 'Company Employee',
+                email: p.email || `${cleanId.toLowerCase()}@apextech.com`,
+                role: roleTitle,
+                dept: p.dept || p.department || 'Corporate Operations',
+                roleLevel: roleLevel,
+                phone: p.phone || '+91 98200 00000',
+                salary: p.salary || 75000,
+                shift: p.shift || 'General Day Shift (09:30 AM - 06:30 PM)',
+                manager: p.manager || 'Reporting Manager',
+                emergencyName: 'Family Contact',
+                emergencyPhone: '+91 98200 99999',
+                address: p.address || 'Mumbai Corporate Office',
+                bankAccount: p.bankAccount || 'HDFC Bank ••••••4409',
+                uan: p.uan || '100984129012'
+              };
+              if (existingIdx >= 0) {
+                ESS_APP.employees[existingIdx] = Object.assign(ESS_APP.employees[existingIdx], employeeObj);
+              } else {
+                ESS_APP.employees.push(employeeObj);
+              }
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Sync employees error:', err);
+      }
+    }
+
     function handleDirectLogin(e) {
       if (e) e.preventDefault();
-      const inputVal = (document.getElementById('loginEmployeeInput')?.value || '').trim().toLowerCase();
-      
-      // Match by email or ID or default to first employee
-      const matched = ESS_APP.employees.find(emp => 
-        emp.email.toLowerCase() === inputVal || 
-        emp.id.toLowerCase() === inputVal ||
-        emp.name.toLowerCase().includes(inputVal)
-      ) || ESS_APP.employees[0];
+      syncEmployeesFromAdmin();
+
+      const inputEl = document.getElementById('loginEmployeeInput');
+      const passEl = document.getElementById('loginPasswordInput');
+      const inputVal = (inputEl?.value || '').trim();
+      const passVal = (passEl?.value || '').trim();
+
+      if (!inputVal) {
+        showToast('Login Required', 'Please enter your Employee Code / ID.');
+        if (inputEl) inputEl.focus();
+        return;
+      }
+
+      const inputValUpper = inputVal.toUpperCase();
+      const inputValLower = inputVal.toLowerCase();
+
+      // Find by exact Employee ID Code (case-insensitive) first
+      let matched = ESS_APP.employees.find(emp => 
+        (emp.id && emp.id.toUpperCase() === inputValUpper) ||
+        (emp.email && emp.email.toLowerCase() === inputValLower)
+      );
+
+      // Suffix / Partial Code Match (e.g. user typed 0104 or 104)
+      if (!matched) {
+        matched = ESS_APP.employees.find(emp => 
+          emp.id && (emp.id.toUpperCase().endsWith(inputValUpper) || emp.id.toUpperCase().includes(inputValUpper))
+        );
+      }
+
+      // If still not matched, check if it is a custom/new code - auto-create an active session so user is never locked out
+      if (!matched) {
+        matched = {
+          id: inputValUpper,
+          name: `Employee (${inputValUpper})`,
+          email: `${inputValLower}@apextech.com`,
+          role: 'Operations Specialist',
+          dept: 'General Operations',
+          roleLevel: 'employee',
+          phone: '+91 98200 12345',
+          salary: 75000,
+          shift: 'General Day Shift (09:30 AM - 06:30 PM)',
+          manager: 'Reporting Manager',
+          emergencyName: 'Emergency Contact',
+          emergencyPhone: '+91 98200 99999',
+          address: 'Corporate Office, Mumbai',
+          bankAccount: 'HDFC Bank ••••••4409',
+          uan: '100984129012'
+        };
+        ESS_APP.employees.push(matched);
+      }
 
       loginUserSession(matched);
     }
 
-    function sendUserOtp() {
-      const emailVal = document.getElementById('loginEmployeeInput').value || 'pooja.i@apextech.com';
-      document.getElementById('userOtpDisplayEmail').innerText = emailVal;
-      document.getElementById('userOtpStep1').classList.add('hidden');
-      document.getElementById('userOtpStep2').classList.remove('hidden');
-      showToast('OTP Dispatched', `6-digit verification code sent to ${emailVal}`);
-      lucide.createIcons();
-    }
-
-    function backToUserLoginStep1() {
-      document.getElementById('userOtpStep2').classList.add('hidden');
-      document.getElementById('userOtpStep1').classList.remove('hidden');
-      lucide.createIcons();
-    }
-
     function quickLoginAs(empId) {
-      const emp = ESS_APP.employees.find(e => e.id === empId) || ESS_APP.employees[0];
+      syncEmployeesFromAdmin();
+      const targetId = (empId || '').toUpperCase();
+      const emp = ESS_APP.employees.find(e => e.id && (e.id.toUpperCase() === targetId || e.id.toUpperCase().includes(targetId))) || ESS_APP.employees[0];
       loginUserSession(emp);
     }
 
@@ -1803,7 +1797,7 @@
       startLiveClockTicker();
 
       // Show toast
-      showToast('Welcome to ESS', `Logged in as ${emp.name} (${emp.role})`);
+      showToast('Welcome to ESS', `Logged in as ${emp.name} [${emp.id}] (${emp.role})`);
       lucide.createIcons();
     }
 
@@ -1816,8 +1810,8 @@
       const portalView = document.getElementById('view-user-portal');
       if (portalView) portalView.classList.add('hidden');
       if (loginView) loginView.classList.remove('hidden');
-      backToUserLoginStep1();
       showToast('Logged Out', 'You have securely signed out of Employee Self-Service.');
+    }
     }
 
     // -----------------------------------------------------
@@ -2615,6 +2609,7 @@
     // Auto-login on load with first demo profile or listen to query param
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
+      syncEmployeesFromAdmin();
 
       // Check query param e.g. /user/?autoLogin=1&emp=EMP-AGT-0104
       const urlParams = new URLSearchParams(window.location.search);
