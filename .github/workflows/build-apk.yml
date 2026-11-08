@@ -1,4 +1,4 @@
-name: Build & Upload SORA HR APK
+name: Build SORA HR APK
 
 on:
   push:
@@ -49,14 +49,3 @@ jobs:
         with:
           name: SORA-HR-Employee-App-APK
           path: SORA-HR-Employee-App.apk
-
-      # Optional Google Drive Upload (Only runs if GDRIVE_CREDENTIALS and GDRIVE_FOLDER_ID are set)
-      - name: Upload to Google Drive (Optional)
-        if: "${{ secrets.GDRIVE_CREDENTIALS != '' && secrets.GDRIVE_FOLDER_ID != '' }}"
-        uses: adityak74/google-drive-upload-git-action@main
-        with:
-          credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
-          filename: "SORA-HR-Employee-App.apk"
-          folderId: ${{ secrets.GDRIVE_FOLDER_ID }}
-          name: "SORA-HR-Employee-App.apk"
-          overwrite: "true"
