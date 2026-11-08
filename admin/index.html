@@ -1545,9 +1545,12 @@
                 </button>
 
                 <!-- Step 2: Send All Payslips (Generated -> Sent) -->
-                <button type="button" onclick="dispatchAllPayslips()" title="Send generated salary slips to all employees via Email & WhatsApp" class="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow transition-all">
-                  <i data-lucide="send" class="w-3.5 h-3.5"></i>
-                  <span>2. Send All Payslips</span>
+                <button type="button" onclick="dispatchAllPayslips()" title="Send generated salary slips to all employees via Email & WhatsApp" class="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs flex items-center gap-2 shadow transition-all">
+                  <div class="flex items-center gap-1 text-neutral-950">
+                    <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                    <i data-lucide="message-circle" class="w-3.5 h-3.5 text-neutral-900"></i>
+                  </div>
+                  <span>2. Send All (Mail &amp; WhatsApp)</span>
                 </button>
               </div>
             </div>
@@ -1577,6 +1580,98 @@
                     <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
                     <span>Download NEFT Excel</span>
                   </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Statutory Deductions & Mathematical Audit Reconciliation Register -->
+            <div class="p-4 rounded-2xl bg-brand-surface/90 border border-brand-border space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-brand-border/60 pb-2.5">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center font-bold text-xs">
+                    <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-xs font-bold text-white flex items-center gap-2">
+                      <span>October 2026 Statutory Deductions &amp; Net Disbursal Reconciliation</span>
+                      <span class="px-2 py-0.2 rounded-full text-[9px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">100% Reconciled</span>
+                    </h3>
+                  </div>
+                </div>
+                <!-- Mathematical Formula -->
+                <div class="text-[11px] font-mono text-neutral-300 bg-brand-dark px-3 py-1 rounded-xl border border-brand-border flex items-center gap-1.5 flex-wrap">
+                  <span class="text-white font-bold">&#8377;68,45,000</span>
+                  <span class="text-neutral-500">(Gross)</span>
+                  <span class="text-amber-400 font-bold">+ &#8377;1,84,500</span>
+                  <span class="text-neutral-500">(OT)</span>
+                  <span class="text-rose-400 font-bold">&minus; &#8377;8,21,400</span>
+                  <span class="text-neutral-500">(Deduct)</span>
+                  <span class="text-white font-bold">=</span>
+                  <span class="text-emerald-400 font-black text-xs">&#8377;62,08,100</span>
+                  <span class="text-emerald-300 font-semibold">(Net Bank Disbursal)</span>
+                </div>
+              </div>
+
+              <!-- 4 Deductions Itemized Breakdown Grid -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-mono">
+                <!-- 1. Provident Fund (PF) -->
+                <div class="p-2.5 rounded-xl bg-brand-dark border border-brand-border/70 space-y-1">
+                  <div class="text-[10px] text-neutral-400 flex items-center justify-between font-sans">
+                    <span>1. Provident Fund (PF)</span>
+                    <span class="text-brand-amber font-mono font-bold">12% Base</span>
+                  </div>
+                  <div class="text-sm font-bold text-white">&#8377; 1,87,200</div>
+                  <div class="text-[9px] text-neutral-500 leading-tight font-sans">
+                    Cap at &#8377;15k basic (&#8377;1,800/mo max). Employer shares &#8377;1,87,200 (EPF 3.67% + EPS 8.33%).
+                  </div>
+                </div>
+
+                <!-- 2. Professional Tax (PT) -->
+                <div class="p-2.5 rounded-xl bg-brand-dark border border-brand-border/70 space-y-1">
+                  <div class="text-[10px] text-neutral-400 flex items-center justify-between font-sans">
+                    <span>2. Professional Tax (PT)</span>
+                    <span class="text-brand-amber font-mono font-bold">&#8377;200/mo</span>
+                  </div>
+                  <div class="text-sm font-bold text-white">&#8377; 20,800</div>
+                  <div class="text-[9px] text-neutral-500 leading-tight font-sans">
+                    Standard statutory slab for 104 employees based on Gujarat/Maharashtra state tax rules.
+                  </div>
+                </div>
+
+                <!-- 3. TDS / Income Tax -->
+                <div class="p-2.5 rounded-xl bg-brand-dark border border-brand-border/70 space-y-1">
+                  <div class="text-[10px] text-neutral-400 flex items-center justify-between font-sans">
+                    <span>3. TDS (Income Tax)</span>
+                    <span class="text-rose-400 font-mono font-bold">Sec 192</span>
+                  </div>
+                  <div class="text-sm font-bold text-white">&#8377; 3,42,250</div>
+                  <div class="text-[9px] text-neutral-500 leading-tight font-sans">
+                    IT Act withholding per declared regime &amp; investment slabs (Form 16/12BB synchronized).
+                  </div>
+                </div>
+
+                <!-- 4. LOP & Short Hours -->
+                <div class="p-2.5 rounded-xl bg-brand-dark border border-brand-border/70 space-y-1">
+                  <div class="text-[10px] text-neutral-400 flex items-center justify-between font-sans">
+                    <span>4. LOP &amp; Deficit Hours</span>
+                    <span class="text-rose-400 font-mono font-bold">12.5 Days</span>
+                  </div>
+                  <div class="text-sm font-bold text-white">&#8377; 2,71,150</div>
+                  <div class="text-[9px] text-neutral-500 leading-tight font-sans">
+                    (Gross &divide; 26) &times; 12.5 unpaid leave days + short hour deficit verified from attendance.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Overtime & Annual CTC Variance Clarification Bar -->
+              <div class="p-2 rounded-xl bg-brand-dark/50 border border-brand-border/50 text-[10px] text-neutral-400 flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5 font-mono">
+                  <span class="text-amber-400 font-bold">&#9679; Approved Overtime:</span>
+                  <span>142 total hours approved &times; &#8377;866.20/hr base &times; 1.5x OT multiplier = <strong class="text-white font-mono">&#8377; 1,84,500</strong></span>
+                </div>
+                <div class="flex items-center gap-1.5 text-neutral-300">
+                  <i data-lucide="info" class="w-3.5 h-3.5 text-brand-amber flex-shrink-0"></i>
+                  <span><strong class="text-brand-amber font-mono">&#8377;1 Lakh CTC Difference:</strong> Annual CTC = (12 &times; Gross) + Employer PF (&#8377;21.6k) + Gratuity (&#8377;21.6k) + Insurance (&#8377;14.4k) + Bonus (&#8377;42.4k).</span>
                 </div>
               </div>
             </div>
@@ -1691,76 +1786,82 @@
               </div>
             </div>
 
-            <!-- 7 KPI Metric Cards (User Requirement 2: Present, Absent, Halfday, Late In, Early Out, Sort Hour, Overtime) -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
+            <!-- Reconciled 104 Workforce Headcount KPI Metric Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
               <!-- Total Staff -->
-              <div onclick="filterAttendanceByStatus('all')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-brand-amber/50 transition-all shadow-sm group">
+              <div onclick="filterAttendanceByStatus('all')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-brand-amber/50 transition-all shadow-sm group">
                 <div class="flex items-center justify-between text-neutral-400 mb-1.5">
-                  <span class="text-[10px] font-medium uppercase tracking-wider">Total Staff</span>
-                  <i data-lucide="users" class="w-3.5 h-3.5 text-neutral-400"></i>
+                  <span class="text-[10px] font-medium uppercase tracking-wider">Total Active Staff</span>
+                  <i data-lucide="users" class="w-3.5 h-3.5 text-brand-amber"></i>
                 </div>
-                <div class="text-xl font-black text-white font-mono" id="attKpiTotal">104</div>
-                <div class="text-[9px] text-neutral-500 mt-0.5">Workforce</div>
+                <div class="text-xl sm:text-2xl font-black text-white font-mono" id="attKpiTotal">104</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">100% Workforce Reconciled</div>
               </div>
 
-              <!-- Present (On-Time) -->
-              <div onclick="filterAttendanceByStatus('present')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-emerald-500/50 transition-all shadow-sm group">
+              <!-- Full Day Present (1.0D) -->
+              <div onclick="filterAttendanceByStatus('present')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-emerald-500/50 transition-all shadow-sm group">
                 <div class="flex items-center justify-between text-neutral-400 mb-1.5">
                   <span class="text-[10px] font-medium uppercase tracking-wider text-emerald-400">Present (1.0D)</span>
                   <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
                 </div>
-                <div class="text-xl font-black text-emerald-400 font-mono" id="attKpiPresent">78</div>
-                <div class="text-[9px] text-neutral-500 mt-0.5">&ge;8h full day</div>
-              </div>
-
-              <!-- Late In -->
-              <div onclick="filterAttendanceByStatus('late')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-amber-500/50 transition-all shadow-sm group">
-                <div class="flex items-center justify-between text-neutral-400 mb-1.5">
-                  <span class="text-[10px] font-medium uppercase tracking-wider text-amber-400">Late In</span>
-                  <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
-                </div>
-                <div class="text-xl font-black text-amber-400 font-mono" id="attKpiLate">8</div>
-                <div class="text-[9px] text-neutral-500 mt-0.5">&gt;15m delay</div>
-              </div>
-
-              <!-- Early Out -->
-              <div onclick="filterAttendanceByStatus('early')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-orange-500/50 transition-all shadow-sm group">
-                <div class="flex items-center justify-between text-neutral-400 mb-1.5">
-                  <span class="text-[10px] font-medium uppercase tracking-wider text-orange-400">Early Out</span>
-                  <i data-lucide="log-out" class="w-3.5 h-3.5 text-orange-400"></i>
-                </div>
-                <div class="text-xl font-black text-orange-400 font-mono" id="attKpiEarly">5</div>
-                <div class="text-[9px] text-neutral-500 mt-0.5">Left before end</div>
+                <div class="text-xl sm:text-2xl font-black text-emerald-400 font-mono" id="attKpiPresent">92</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">&ge;8h Net Duty (84 On-time, 8 Late)</div>
               </div>
 
               <!-- Half-Day (0.5D) -->
-              <div onclick="filterAttendanceByStatus('halfday')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-indigo-500/50 transition-all shadow-sm group">
+              <div onclick="filterAttendanceByStatus('halfday')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-indigo-500/50 transition-all shadow-sm group">
                 <div class="flex items-center justify-between text-neutral-400 mb-1.5">
                   <span class="text-[10px] font-medium uppercase tracking-wider text-indigo-400">Half-Day (0.5D)</span>
                   <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-indigo-400"></i>
                 </div>
-                <div class="text-xl font-black text-indigo-400 font-mono" id="attKpiHalfDay">3</div>
-                <div class="text-[9px] text-neutral-500 mt-0.5">4h to 7h work</div>
+                <div class="text-xl sm:text-2xl font-black text-indigo-400 font-mono" id="attKpiHalfDay">4</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">4h to 7h Approved Half-Duty</div>
               </div>
 
-              <!-- Overtime (OT) -->
-              <div onclick="filterAttendanceByStatus('overtime')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-yellow-500/50 transition-all shadow-sm group">
+              <!-- Approved Paid Leave -->
+              <div onclick="filterAttendanceByStatus('leave')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-purple-500/50 transition-all shadow-sm group">
                 <div class="flex items-center justify-between text-neutral-400 mb-1.5">
-                  <span class="text-[10px] font-medium uppercase tracking-wider text-yellow-400">Overtime (OT)</span>
-                  <i data-lucide="trending-up" class="w-3.5 h-3.5 text-yellow-400"></i>
+                  <span class="text-[10px] font-medium uppercase tracking-wider text-purple-400">On Paid Leave</span>
+                  <i data-lucide="calendar" class="w-3.5 h-3.5 text-purple-400"></i>
                 </div>
-                <div class="text-xl font-black text-yellow-400 font-mono" id="attKpiOvertime">6</div>
-                <div class="text-[9px] text-neutral-500 mt-0.5">+Extra shift hours</div>
+                <div class="text-xl sm:text-2xl font-black text-purple-400 font-mono" id="attKpiLeave">5</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Approved CL, SL &amp; Marriage Leave</div>
               </div>
 
               <!-- Absent (LOP) -->
-              <div onclick="filterAttendanceByStatus('absent')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3 rounded-2xl border border-brand-border hover:border-rose-500/50 transition-all shadow-sm group">
+              <div onclick="filterAttendanceByStatus('absent')" class="cursor-pointer bg-brand-surface hover:bg-brand-card p-3.5 rounded-2xl border border-brand-border hover:border-rose-500/50 transition-all shadow-sm group">
                 <div class="flex items-center justify-between text-neutral-400 mb-1.5">
-                  <span class="text-[10px] font-medium uppercase tracking-wider text-rose-400">Absent (0.0D)</span>
+                  <span class="text-[10px] font-medium uppercase tracking-wider text-rose-400">Absent (0.0D LOP)</span>
                   <i data-lucide="x-circle" class="w-3.5 h-3.5 text-rose-400"></i>
                 </div>
-                <div class="text-xl font-black text-rose-400 font-mono" id="attKpiAbsent">4</div>
-                <div class="text-[9px] text-neutral-500 mt-0.5">Loss of Pay</div>
+                <div class="text-xl sm:text-2xl font-black text-rose-400 font-mono" id="attKpiAbsent">3</div>
+                <div class="text-[10px] text-neutral-400 mt-0.5">Unexcused &bull; Direct LOP Salary Cut</div>
+              </div>
+            </div>
+
+            <!-- Shift Timings, Break Calculation & Punctuality Details Bar -->
+            <div class="p-3.5 rounded-2xl bg-brand-dark border border-brand-border/80 flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-xs font-mono">
+              <div class="flex flex-wrap items-center gap-2.5 text-[11px]">
+                <span class="text-brand-amber font-bold flex items-center gap-1.5 font-sans">
+                  <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                  <span>Shift &amp; Break Formula:</span>
+                </span>
+                <span class="text-neutral-300">Shift 09:30 AM &ndash; 06:30 PM (9.0h)</span>
+                <span class="text-neutral-500">&minus;</span>
+                <span class="text-amber-400">1.0h Meal Break (01:00 PM &ndash; 02:00 PM)</span>
+                <span class="text-neutral-500">=</span>
+                <span class="text-emerald-400 font-bold">8.0h Net Productive Work Target</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-3 text-[10px] text-neutral-400">
+                <span>Punctual: <strong class="text-white">84</strong></span>
+                <span>&bull;</span>
+                <span>Late In (&gt;15m): <strong class="text-amber-400">8</strong></span>
+                <span>&bull;</span>
+                <span>Early Out: <strong class="text-orange-400">4</strong></span>
+                <span>&bull;</span>
+                <span>Approved OT Shifts: <strong class="text-yellow-400">14</strong></span>
+                <span>&bull;</span>
+                <span class="text-emerald-400 font-bold">Reconciled: 92 + 4 + 5 + 3 = 104</span>
               </div>
             </div>
 
@@ -2164,6 +2265,7 @@
                       <th class="py-3 px-4">Employee</th>
                       <th class="py-3 px-4">Previous Designation</th>
                       <th class="py-3 px-4">Promoted Designation</th>
+                      <th class="py-3 px-4 text-center">Effective Date</th>
                       <th class="py-3 px-4 text-right">Old CTC</th>
                       <th class="py-3 px-4 text-right">New CTC</th>
                       <th class="py-3 px-4 text-center">Increment %</th>
@@ -2723,7 +2825,7 @@
         </div>
 
         <div class="p-3 rounded-xl bg-brand-dark border border-brand-border/60 text-[11px] text-neutral-400">
-          Supported file extensions: PDF, PNG, JPG up to 10MB per document.
+          Supported file extensions: PDF, PNG, JPG up to 25MB per document.
         </div>
       </div>
 
@@ -2910,7 +3012,30 @@
           <input type="text" id="candidateSkillsInput" placeholder="e.g. React.js, Node.js, TypeScript, PostgreSQL, Tailwind CSS" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
         </div>
 
-        <!-- 6. Expected CTC & Initial Stage -->
+        <!-- 6. Candidate Contact & Address Details (Auto-fills into Offer Letters) -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Mobile Phone *</label>
+            <input type="text" id="candidatePhoneInput" placeholder="+91-98201 12345" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs font-mono">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Email Address *</label>
+            <input type="email" id="candidateEmailInput" placeholder="candidate@example.com" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Residence / Location Address *</label>
+            <input type="text" id="candidateAddressInput" placeholder="e.g. Flat 301, Silver Sands, Andheri West, Mumbai" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Expected Joining Date</label>
+            <input type="date" id="candidateJoiningDateInput" value="2026-11-15" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs">
+          </div>
+        </div>
+
+        <!-- 7. Expected CTC & Initial Stage -->
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-neutral-300 font-semibold mb-1">Expected Annual CTC (₹)</label>
@@ -3978,6 +4103,13 @@
           <label class="block text-neutral-300 font-semibold mb-1">New Designation Title *</label>
           <input type="text" id="promoNewDesigInput" value="Regional Sales Director" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
         </div>
+        <div>
+          <label class="block text-neutral-300 font-semibold mb-1 flex items-center justify-between">
+            <span>Effective Date of Revision *</span>
+            <span class="text-[10px] text-brand-amber">Payroll Cutoff Alignment</span>
+          </label>
+          <input type="date" id="promoEffectiveDateInput" value="2026-11-01" class="w-full px-3.5 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber text-xs font-mono">
+        </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-neutral-300 font-semibold mb-1">Salary Hike Percentage</label>
@@ -4636,9 +4768,10 @@
         </span>
         <div class="flex items-center gap-2">
           <!-- Single Send from Modal -->
-          <button id="modalSlipSendBtn" onclick="dispatchSinglePayslipFromModal()" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs flex items-center gap-1 shadow transition-all">
-            <i data-lucide="send" class="w-3.5 h-3.5"></i>
-            <span id="modalSlipSendBtnText">Send to Employee</span>
+          <button id="modalSlipSendBtn" onclick="dispatchSinglePayslipFromModal()" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow transition-all" title="Deliver via Official Email and WhatsApp">
+            <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+            <span id="modalSlipSendBtnText">Send (Mail & WhatsApp)</span>
           </button>
           <button onclick="printSalarySlip()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-white flex items-center gap-1">
             <i data-lucide="printer" class="w-3.5 h-3.5"></i>
@@ -5105,6 +5238,38 @@
     </div>
   </div>
 
+  <!-- MODAL: UNIVERSAL DELETE CONFIRMATION -->
+  <div id="modalConfirmDelete" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-rose-500/30 w-full max-w-md shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      <div class="p-5 border-b border-brand-border bg-brand-dark flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400">
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 id="confirmDeleteTitle" class="text-sm font-bold text-white">Confirm Record Deletion</h3>
+            <p class="text-[11px] text-neutral-400 mt-0.5">Permanent Deletion Action</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalConfirmDelete')" class="text-neutral-400 hover:text-white p-1 text-lg leading-none">&times;</button>
+      </div>
+      <div class="p-6 space-y-3">
+        <p id="confirmDeleteMessage" class="text-xs text-neutral-300 leading-relaxed">
+          Are you sure you want to delete this record? This action cannot be undone.
+        </p>
+      </div>
+      <div class="p-4 border-t border-brand-border bg-brand-dark flex items-center justify-end gap-3">
+        <button type="button" onclick="closeModal('modalConfirmDelete')" class="px-4 py-2 rounded-xl border border-brand-border text-xs text-neutral-300 hover:bg-white/5 transition-all">
+          No, Cancel
+        </button>
+        <button type="button" id="btnConfirmDeleteAction" class="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow flex items-center gap-1.5 transition-all">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <span>Yes, Delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: INTERACTIVE MOBILE SCANNER SIMULATOR -->
   <div id="modalMobileScannerTest" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-brand-surface rounded-[2.5rem] border-2 border-brand-border w-full max-w-sm shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
@@ -5564,11 +5729,11 @@
         { id: 'L-105', name: 'Rohan Gupta', empId: 'EMP-AGT-0106', dept: 'Operations & Logistics', type: 'Leave Without Pay (LWP)', mode: 'Full Day', dates: '01 Nov 2026', days: 1, reason: 'Exhausted casual balance; recorded as LWP loss of pay in payroll', status: 'Approved', clBalance: 0, plBalance: 0, slBalance: 0 }
       ],
       candidates: [
-        { id: 'CND-8801', name: 'Kavita Sundaram', pos: 'Product Marketing Manager', candidateType: 'Experienced', dept: 'Marketing & Growth', exp: '6 Years', currentOrg: 'GrowthWave Tech', education: 'MBA in Marketing (IIM Bangalore)', skills: 'B2B SaaS Positioning, Product Marketing, GTM Strategy', ctc: '₹ 18,00,000', notice: '30 Days', stage: 'Offer Letter', score: '94%', notes: 'Strong presentation skills, deep B2B SaaS product positioning expertise.', resumeUrl: 'Kavita_Sundaram_Resume.pdf' },
-        { id: 'CND-8802', name: 'Aditya Nair', pos: 'DevOps & Cloud Engineer', candidateType: 'Experienced', dept: 'Engineering & Technology', exp: '4 Years', currentOrg: 'CloudNine Systems', education: 'B.Tech in Computer Engineering (VJTI Mumbai)', skills: 'Kubernetes, AWS Cloud, Terraform, Docker, CI/CD', ctc: '₹ 14,50,000', notice: '15 Days', stage: 'Offer Letter Accepted', score: '98%', notes: 'Exceptional Kubernetes, AWS CI/CD and Terraform infrastructure knowledge.', resumeUrl: 'Aditya_Nair_DevOps_CV.pdf' },
-        { id: 'CND-8803', name: 'Siddharth Rao', pos: 'Corporate Sales Specialist', candidateType: 'Experienced', dept: 'Sales & Business Development', exp: '3 Years', currentOrg: 'InnoSales India', education: 'B.Com & Enterprise Sales (Delhi University)', skills: 'Enterprise B2B Sales, CRM Salesforce, Lead Generation', ctc: '₹ 9,00,000', notice: '30 Days', stage: 'Interview', score: '82%', notes: 'Good enterprise communication, demonstrated quota attainment in past 4 quarters.', resumeUrl: 'Siddharth_Rao_CV.pdf' },
-        { id: 'CND-8804', name: 'Priya Sharma', pos: 'Associate Frontend Developer', candidateType: 'Fresher', dept: 'Engineering & Technology', exp: 'Fresher (0 Years)', currentOrg: 'IIT Roorkee (Campus)', education: 'B.Tech in Computer Science (Batch 2026)', skills: 'React.js, JavaScript (ES6+), HTML5/CSS3, Tailwind CSS', ctc: '₹ 7,50,000', notice: 'Immediate', stage: 'Resume', score: '88%', notes: 'Strong algorithms foundation, built active open-source React dashboard projects.', resumeUrl: 'Priya_Sharma_Resume.pdf' },
-        { id: 'CND-8805', name: 'Rohan Gupta', pos: 'Full Stack Node.js Engineer', candidateType: 'Experienced', dept: 'Engineering & Technology', exp: '2 Years', currentOrg: 'CodeCraft Solutions', education: 'B.E. in Information Technology (Pune University)', skills: 'Node.js, Express, PostgreSQL, Redis, Microservices', ctc: '₹ 11,00,000', notice: '30 Days', stage: 'Applied', score: '85%', notes: 'Applied via company careers portal; solid backend system design skills.', resumeUrl: 'Rohan_Gupta_CV.pdf' }
+        { id: 'CND-8801', name: 'Kavita Sundaram', pos: 'Product Marketing Manager', candidateType: 'Experienced', dept: 'Marketing & Growth', exp: '6 Years', currentOrg: 'GrowthWave Tech', education: 'MBA in Marketing (IIM Bangalore)', skills: 'B2B SaaS Positioning, Product Marketing, GTM Strategy', ctc: '₹ 18,00,000', notice: '30 Days', stage: 'Offer Letter', score: '94%', phone: '+91-98201 44219', email: 'kavita.sundaram@gmail.com', address: 'Flat 402, Green Meadows, Powai, Mumbai - 400076', joiningDate: '2026-11-15', notes: 'Strong presentation skills, deep B2B SaaS product positioning expertise.', resumeUrl: 'Kavita_Sundaram_Resume.pdf' },
+        { id: 'CND-8802', name: 'Aditya Nair', pos: 'DevOps & Cloud Engineer', candidateType: 'Experienced', dept: 'Engineering & Technology', exp: '4 Years', currentOrg: 'CloudNine Systems', education: 'B.Tech in Computer Engineering (VJTI Mumbai)', skills: 'Kubernetes, AWS Cloud, Terraform, Docker, CI/CD', ctc: '₹ 14,50,000', notice: '15 Days', stage: 'Offer Letter Accepted', score: '98%', phone: '+91-98334 11092', email: 'aditya.nair.devops@gmail.com', address: 'B-304, Sea Breeze Towers, Palm Beach Road, Navi Mumbai - 400705', joiningDate: '2026-11-20', notes: 'Exceptional Kubernetes, AWS CI/CD and Terraform infrastructure knowledge.', resumeUrl: 'Aditya_Nair_DevOps_CV.pdf' },
+        { id: 'CND-8803', name: 'Siddharth Rao', pos: 'Corporate Sales Specialist', candidateType: 'Experienced', dept: 'Sales & Business Development', exp: '3 Years', currentOrg: 'InnoSales India', education: 'B.Com & Enterprise Sales (Delhi University)', skills: 'Enterprise B2B Sales, CRM Salesforce, Lead Generation', ctc: '₹ 9,00,000', notice: '30 Days', stage: 'Interview', score: '82%', phone: '+91-99881 77234', email: 'siddharth.rao@gmail.com', address: 'Plot 18, Defence Colony, New Delhi - 110024', joiningDate: '2026-12-01', notes: 'Good enterprise communication, demonstrated quota attainment in past 4 quarters.', resumeUrl: 'Siddharth_Rao_CV.pdf' },
+        { id: 'CND-8804', name: 'Priya Sharma', pos: 'Associate Frontend Developer', candidateType: 'Fresher', dept: 'Engineering & Technology', exp: 'Fresher (0 Years)', currentOrg: 'IIT Roorkee (Campus)', education: 'B.Tech in Computer Science (Batch 2026)', skills: 'React.js, JavaScript (ES6+), HTML5/CSS3, Tailwind CSS', ctc: '₹ 7,50,000', notice: 'Immediate', stage: 'Resume', score: '88%', phone: '+91-97112 55643', email: 'priya.sharma.tech@gmail.com', address: 'Sector 62, Block C, Noida, Uttar Pradesh - 201309', joiningDate: '2026-11-25', notes: 'Strong algorithms foundation, built active open-source React dashboard projects.', resumeUrl: 'Priya_Sharma_Resume.pdf' },
+        { id: 'CND-8805', name: 'Rohan Gupta', pos: 'Full Stack Node.js Engineer', candidateType: 'Experienced', dept: 'Engineering & Technology', exp: '2 Years', currentOrg: 'CodeCraft Solutions', education: 'B.E. in Information Technology (Pune University)', skills: 'Node.js, Express, PostgreSQL, Redis, Microservices', ctc: '₹ 11,00,000', notice: '30 Days', stage: 'Applied', score: '85%', phone: '+91-98220 99312', email: 'rohan.gupta.dev@gmail.com', address: 'A-12, Koregaon Park Heights, Pune - 411001', joiningDate: '2026-12-05', notes: 'Applied via company careers portal; solid backend system design skills.', resumeUrl: 'Rohan_Gupta_CV.pdf' }
       ],
       offers: [
         {
@@ -5713,8 +5878,8 @@
         }
       ],
       promotions: [
-        { name: 'Ananya Verma', oldDesig: 'Account Executive', newDesig: 'Senior Account Executive', oldCtc: '₹ 7,80,000', newCtc: '₹ 9,20,000', inc: '+18%' },
-        { name: 'Pooja Iyer', oldDesig: 'Software Engineer', newDesig: 'Full Stack Engineer', oldCtc: '₹ 9,50,000', newCtc: '₹ 11,40,000', inc: '+20%' }
+        { name: 'Ananya Verma', oldDesig: 'Account Executive', newDesig: 'Senior Account Executive', oldCtc: '₹ 7,80,000', newCtc: '₹ 9,20,000', inc: '+18%', effectiveDate: '01 Nov 2026' },
+        { name: 'Pooja Iyer', oldDesig: 'Software Engineer', newDesig: 'Full Stack Engineer', oldCtc: '₹ 9,50,000', newCtc: '₹ 11,40,000', inc: '+20%', effectiveDate: '01 Oct 2026' }
       ],
       zipLogs: [
         { date: '29 Oct 2026, 05:20 PM', file: 'EMP_DOCS_BATCH_Q4.zip', count: '48 Files', mapped: '16 Employees', user: 'Rohan Mehra', status: 'Success' },
@@ -7135,15 +7300,52 @@
       lucide.createIcons();
     }
 
+    let pendingDeleteCallback = null;
+
+    function requestDeleteConfirmation(title, message, onConfirm) {
+      const modal = document.getElementById('modalConfirmDelete');
+      if (!modal) {
+        if (confirm(message || 'Are you sure you want to delete this record?')) {
+          if (typeof onConfirm === 'function') onConfirm();
+        }
+        return;
+      }
+      const titleEl = document.getElementById('confirmDeleteTitle');
+      const msgEl = document.getElementById('confirmDeleteMessage');
+      if (titleEl) titleEl.innerText = title || 'Confirm Record Deletion';
+      if (msgEl) msgEl.innerText = message || 'Are you sure you want to delete this record? This action cannot be undone.';
+      
+      pendingDeleteCallback = onConfirm;
+      const btnConfirm = document.getElementById('btnConfirmDeleteAction');
+      if (btnConfirm) {
+        btnConfirm.onclick = () => {
+          closeModal('modalConfirmDelete');
+          if (typeof pendingDeleteCallback === 'function') {
+            const cb = pendingDeleteCallback;
+            pendingDeleteCallback = null;
+            cb();
+          }
+        };
+      }
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
     function deleteMasterItem(entity, id) {
       const idx = appState[entity].findIndex(x => x.id === id);
       if (idx !== -1) {
         const item = appState[entity][idx];
-        const name = item.title || item.name;
-        appState[entity].splice(idx, 1);
-        populateAllDropdowns();
-        renderMasterTable();
-        showToast('Item Deleted', `${name} removed from master configuration.`);
+        const name = item.title || item.name || id;
+        requestDeleteConfirmation(
+          'Delete Master Configuration',
+          `Are you sure you want to delete "${name}" from ${entity}? This will permanently remove it from system dropdowns.`,
+          () => {
+            appState[entity].splice(idx, 1);
+            populateAllDropdowns();
+            renderMasterTable();
+            showToast('Item Deleted', `"${name}" removed from master configuration.`);
+          }
+        );
       }
     }
 
@@ -7763,7 +7965,8 @@
                   <span>Slip</span>
                 </button>
                 <button onclick="dispatchSinglePayslip('${emp.id}')" title="Send Salary Slip to ${emp.name} via Email & WhatsApp" class="px-2.5 py-1.5 rounded-xl ${isSent ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20' : 'bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold'} text-xs transition-all flex items-center gap-1 shadow-sm">
-                  <i data-lucide="${isSent ? 'refresh-cw' : 'send'}" class="w-3 h-3"></i>
+                  <i data-lucide="mail" class="w-3 h-3"></i>
+                  <i data-lucide="message-circle" class="w-3 h-3"></i>
                   <span>${isSent ? 'Resend' : 'Send'}</span>
                 </button>
               </div>
@@ -9148,6 +9351,139 @@
     // CANDIDATE PIPELINE ENGINE (ROW CLICK & STAGE UPDATER)
     // ------------------------------------------
     let currentCandidateIdx = 0;
+    let currentCandidateType = 'Experienced';
+
+    function setCandidateType(type) {
+      currentCandidateType = type;
+      const isExp = type === 'Experienced';
+      const badge = document.getElementById('cndTypeBadge');
+      if (badge) {
+        badge.innerText = isExp ? 'Experienced Professional' : 'Fresher / Graduate';
+      }
+      const btnExp = document.getElementById('btnCndTypeExp');
+      const btnFresh = document.getElementById('btnCndTypeFresh');
+      if (btnExp && btnFresh) {
+        if (isExp) {
+          btnExp.className = 'py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 bg-brand-amber text-neutral-950 shadow';
+          btnFresh.className = 'py-2 px-3 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2';
+        } else {
+          btnFresh.className = 'py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 bg-brand-amber text-neutral-950 shadow';
+          btnExp.className = 'py-2 px-3 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white transition-all flex items-center justify-center gap-2';
+        }
+      }
+      const expGrp = document.getElementById('cndExpYearsGroup');
+      const compLbl = document.getElementById('cndCompanyLabel');
+      const expInput = document.getElementById('candidateExpInput');
+      const compInput = document.getElementById('candidateCompanyInput');
+      if (isExp) {
+        if (expGrp) expGrp.classList.remove('hidden');
+        if (compLbl) compLbl.innerText = 'Current / Previous Company *';
+        if (compInput) compInput.placeholder = 'e.g. GrowthWave Tech / TCS';
+        if (expInput && !expInput.value) expInput.value = '3.5 Years';
+      } else {
+        if (compLbl) compLbl.innerText = 'College / University & Passing Year *';
+        if (compInput) compInput.placeholder = 'e.g. IIT Roorkee (Batch 2026)';
+        if (expInput) expInput.value = 'Fresher (0 Years)';
+      }
+      lucide.createIcons();
+    }
+
+    function openAddCandidateModal() {
+      // Populate department dropdown
+      const deptSel = document.getElementById('candidateDeptSelect');
+      if (deptSel) {
+        deptSel.innerHTML = appState.departments.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
+      }
+      // Populate designation dropdown
+      const posSel = document.getElementById('candidatePosSelect');
+      if (posSel) {
+        posSel.innerHTML = appState.designations.map(ds => `<option value="${ds.title}">${ds.title} (${ds.dept})</option>`).join('');
+      }
+      // Populate pipeline stages dropdown
+      const stgSel = document.getElementById('candidateStageSelect');
+      if (stgSel) {
+        stgSel.innerHTML = appState.pipelineStages.map(s => `<option value="${s.title}">${s.title} [${s.category}]</option>`).join('');
+      }
+
+      // Reset input fields
+      document.getElementById('candidateNameInput').value = '';
+      if (document.getElementById('candidatePhoneInput')) document.getElementById('candidatePhoneInput').value = '+91-';
+      if (document.getElementById('candidateEmailInput')) document.getElementById('candidateEmailInput').value = '';
+      if (document.getElementById('candidateAddressInput')) document.getElementById('candidateAddressInput').value = '';
+      if (document.getElementById('candidateJoiningDateInput')) document.getElementById('candidateJoiningDateInput').value = '2026-11-15';
+      if (document.getElementById('candidateCompanyInput')) document.getElementById('candidateCompanyInput').value = '';
+      if (document.getElementById('candidateEducationInput')) document.getElementById('candidateEducationInput').value = '';
+      if (document.getElementById('candidateSkillsInput')) document.getElementById('candidateSkillsInput').value = '';
+      if (document.getElementById('candidateCtcInput')) document.getElementById('candidateCtcInput').value = '₹ 14,00,000';
+      
+      setCandidateType('Experienced');
+      document.getElementById('modalAddCandidate').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function submitCandidateModalAction() {
+      const name = (document.getElementById('candidateNameInput')?.value || '').trim();
+      const dept = document.getElementById('candidateDeptSelect')?.value || 'Engineering & Technology';
+      const pos = document.getElementById('candidatePosSelect')?.value || 'Software Engineer';
+      const exp = (document.getElementById('candidateExpInput')?.value || '').trim() || (currentCandidateType === 'Fresher' ? 'Fresher (0 Years)' : '2 Years');
+      const company = (document.getElementById('candidateCompanyInput')?.value || '').trim();
+      const edu = (document.getElementById('candidateEducationInput')?.value || '').trim();
+      const notice = document.getElementById('candidateNoticeInput')?.value || '30 Days';
+      const skills = (document.getElementById('candidateSkillsInput')?.value || '').trim();
+      const phone = (document.getElementById('candidatePhoneInput')?.value || '').trim();
+      const email = (document.getElementById('candidateEmailInput')?.value || '').trim();
+      const address = (document.getElementById('candidateAddressInput')?.value || '').trim();
+      const joiningDate = document.getElementById('candidateJoiningDateInput')?.value || '2026-11-15';
+      const ctc = (document.getElementById('candidateCtcInput')?.value || '').trim() || '₹ 12,00,000';
+      const stage = document.getElementById('candidateStageSelect')?.value || 'Applied';
+
+      if (!name) {
+        showToast('Required Field', 'Please enter candidate full name.');
+        return;
+      }
+
+      const newId = `CND-${Math.floor(1000 + Math.random() * 9000)}`;
+      const newCand = {
+        id: newId,
+        name: name,
+        pos: pos,
+        candidateType: currentCandidateType,
+        dept: dept,
+        exp: exp,
+        currentOrg: company || (currentCandidateType === 'Fresher' ? 'University Graduate' : 'Previous Tech Corp'),
+        education: edu || 'Graduate Degree',
+        skills: skills || 'Problem Solving, Communication',
+        ctc: ctc.startsWith('₹') ? ctc : `₹ ${ctc}`,
+        notice: notice,
+        phone: phone || '+91-98200 00000',
+        email: email || `${name.toLowerCase().replace(/[^a-z0-9]/g, '')}@gmail.com`,
+        address: address || 'Mumbai, Maharashtra',
+        joiningDate: joiningDate,
+        stage: stage,
+        score: '90%',
+        notes: `Enrolled via ATS Portal on ${new Date().toLocaleDateString('en-GB')}. Experience: ${exp}.`,
+        resumeUrl: `${name.replace(/\s+/g, '_')}_Resume.pdf`
+      };
+
+      appState.candidates.unshift(newCand);
+      renderCandidateTable();
+      closeModal('modalAddCandidate');
+      showToast('Candidate Enrolled', `${name} successfully added to ATS pipeline [${newId}].`);
+    }
+
+    function deleteCandidate(idx) {
+      const c = appState.candidates[idx];
+      if (!c) return;
+      requestDeleteConfirmation(
+        'Delete Candidate from ATS',
+        `Are you sure you want to remove candidate "${c.name}" (${c.pos}) from the recruitment pipeline? This will permanently delete their application and interview scorecards.`,
+        () => {
+          appState.candidates.splice(idx, 1);
+          renderCandidateTable();
+          showToast('Candidate Deleted', `${c.name} has been removed from ATS.`);
+        }
+      );
+    }
 
     let currentCandidateStageFilter = 'all';
 
@@ -9230,9 +9566,14 @@
               </span>
             </td>
             <td class="py-3 px-4 text-right">
-              <button onclick="event.stopPropagation(); openCandidateDetailModal(${idx})" class="px-2.5 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs transition-all">
-                Review
-              </button>
+              <div class="flex items-center justify-end gap-1.5">
+                <button onclick="event.stopPropagation(); openCandidateDetailModal(${idx})" class="px-2.5 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs transition-all">
+                  Review
+                </button>
+                <button onclick="event.stopPropagation(); deleteCandidate(${idx})" class="p-1.5 rounded-lg bg-brand-surface hover:bg-rose-500/20 text-neutral-400 hover:text-rose-400 border border-brand-border transition-all" title="Delete Candidate">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
             </td>
           </tr>
         `;
@@ -9447,18 +9788,35 @@
     }
 
     function renderCorporateHeader(compName, compWebsite) {
+      const initials = (compName || 'Apex Global Technologies')
+        .replace(/Private|Limited|Pvt|Ltd/gi, '')
+        .trim()
+        .split(/\s+/)
+        .map(w => w[0])
+        .filter(Boolean)
+        .slice(0, 3)
+        .join('')
+        .toUpperCase() || 'AGT';
+
       return `
         <div style="margin-bottom: 2px;">
           <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <img src="/sora-hr-logo-light.svg" onerror="this.onerror=null; this.src='/sora-hr-logo-light.png';" style="height: 38px; max-width: 170px; object-fit: contain;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 36px; height: 36px; background: #003366; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: bold; font-size: 15px; letter-spacing: 0.5px; font-family: 'Times New Roman', serif; box-shadow: 0 1px 3px rgba(0,0,0,0.18);">
+                ${initials}
+              </div>
+              <div>
+                <div style="font-size: 15px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; letter-spacing: 0.5px; line-height: 1.15;">
+                  ${compName.toUpperCase()}
+                </div>
+                <div style="font-size: 9.5px; color: #475569; letter-spacing: 0.3px; font-family: 'Times New Roman', serif;">
+                  ISO 9001:2015 &bull; CERTIFIED CORPORATE EMPLOYER
+                </div>
+              </div>
             </div>
             <div style="font-size: 12.5px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif;">
               ${compWebsite}
             </div>
-          </div>
-          <div style="font-size: 13.5px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; letter-spacing: 0.35px; margin-bottom: 4px;">
-            ${compName.toUpperCase()}
           </div>
           <div style="border-top: 1.5px solid #003366; border-bottom: 1.5px solid #003366; height: 3px; margin-bottom: 14px;"></div>
         </div>
@@ -9494,6 +9852,16 @@
       const compAddress = off.companyAddress || 'Level 8, Tower 2, Equinox Business Park, BKC, Mumbai - 400051';
       const signatory = off.signatory || 'HR Department';
 
+      const compInitials = (compName || 'Apex Global Technologies')
+        .replace(/Private|Limited|Pvt|Ltd/gi, '')
+        .trim()
+        .split(/\s+/)
+        .map(w => w[0])
+        .filter(Boolean)
+        .slice(0, 3)
+        .join('')
+        .toUpperCase() || 'AGT';
+
       const name = off.name || 'Candidate Name';
       const prefix = off.prefix || (name.toLowerCase().includes('kavita') || name.toLowerCase().includes('megha') || name.toLowerCase().includes('ananya') || name.toLowerCase().includes('priya') ? 'Ms.' : 'Mr.');
       const desig = off.desig || 'Senior Specialist';
@@ -9516,10 +9884,12 @@
       const page1 = `
         <div class="offer-pdf-page" style="width: 210mm; height: 297mm; min-height: 297mm; max-height: 297mm; box-sizing: border-box; padding: 12mm 16mm 12mm 16mm; position: relative; page-break-after: always; page-break-inside: avoid; background: #ffffff; color: #000000; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; font-family: 'Times New Roman', Times, serif;">
           
-          <!-- Watermark Background -->
-          <div style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); opacity: 0.045; pointer-events: none; z-index: 0; text-align: center; width: 380px;">
-            <img src="/sora-hr-logo-light.svg" onerror="this.onerror=null; this.src='/sora-hr-logo-light.png';" style="width: 280px; max-width: 100%; filter: grayscale(100%);">
-            <div style="font-size: 18px; font-weight: bold; color: #111827; letter-spacing: 1.5px; margin-top: 8px; font-family: 'Times New Roman', serif;">${compName.toUpperCase()}</div>
+          <!-- Watermark Background (Client Company Branding Only - Zero SORA HR) -->
+          <div style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); opacity: 0.04; pointer-events: none; z-index: 0; text-align: center; width: 420px;">
+            <div style="width: 150px; height: 150px; margin: 0 auto 10px auto; border: 5px solid #003366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; letter-spacing: 2px;">
+              ${compInitials}
+            </div>
+            <div style="font-size: 20px; font-weight: bold; color: #003366; letter-spacing: 2px; font-family: 'Times New Roman', serif;">${compName.toUpperCase()}</div>
           </div>
 
           <div style="position: relative; z-index: 1;">
@@ -9638,10 +10008,12 @@
       const page2 = `
         <div class="offer-pdf-page" style="width: 210mm; height: 297mm; min-height: 297mm; max-height: 297mm; box-sizing: border-box; padding: 12mm 16mm 12mm 16mm; position: relative; page-break-after: avoid; page-break-inside: avoid; background: #ffffff; color: #000000; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; font-family: 'Times New Roman', Times, serif;">
           
-          <!-- Watermark Background -->
-          <div style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); opacity: 0.045; pointer-events: none; z-index: 0; text-align: center; width: 380px;">
-            <img src="/sora-hr-logo-light.svg" onerror="this.onerror=null; this.src='/sora-hr-logo-light.png';" style="width: 280px; max-width: 100%; filter: grayscale(100%);">
-            <div style="font-size: 18px; font-weight: bold; color: #111827; letter-spacing: 1.5px; margin-top: 8px; font-family: 'Times New Roman', serif;">${compName.toUpperCase()}</div>
+          <!-- Watermark Background (Client Company Branding Only - Zero SORA HR) -->
+          <div style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); opacity: 0.04; pointer-events: none; z-index: 0; text-align: center; width: 420px;">
+            <div style="width: 150px; height: 150px; margin: 0 auto 10px auto; border: 5px solid #003366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: bold; color: #003366; font-family: 'Times New Roman', serif; letter-spacing: 2px;">
+              ${compInitials}
+            </div>
+            <div style="font-size: 20px; font-weight: bold; color: #003366; letter-spacing: 2px; font-family: 'Times New Roman', serif;">${compName.toUpperCase()}</div>
           </div>
 
           <div style="position: relative; z-index: 1;">
@@ -9973,6 +10345,12 @@
           }
           if (document.getElementById('offerAddressInput')) {
             document.getElementById('offerAddressInput').value = c.address || 'Flat 402, Green Meadows, Powai, Mumbai - 400076';
+          }
+          if (document.getElementById('offerJoiningDate')) {
+            document.getElementById('offerJoiningDate').value = c.joiningDate || '2026-11-15';
+          }
+          if (document.getElementById('offerNoticeConfirmedInput')) {
+            document.getElementById('offerNoticeConfirmedInput').value = c.notice || '1 Month or Payment in Lieu off';
           }
           if (document.getElementById('offerManagerInput')) {
             document.getElementById('offerManagerInput').value = 'Aarav Sharma (VP People & Culture)';
@@ -10676,13 +11054,20 @@
         showToast('Notice', 'Document must contain at least 1 page.');
         return;
       }
-      policyDraftPages.splice(activePolicyPageIndex, 1);
-      if (activePolicyPageIndex >= policyDraftPages.length) {
-        activePolicyPageIndex = policyDraftPages.length - 1;
-      }
-      renderPolicyPageTabs();
-      loadActivePolicyPage();
-      showToast('Page Removed', 'Page deleted from policy document.');
+      const pageNum = activePolicyPageIndex + 1;
+      requestDeleteConfirmation(
+        'Delete Policy Page',
+        `Are you sure you want to delete Page ${pageNum} of this HR policy document? This page and its drafted clauses will be permanently removed.`,
+        () => {
+          policyDraftPages.splice(activePolicyPageIndex, 1);
+          if (activePolicyPageIndex >= policyDraftPages.length) {
+            activePolicyPageIndex = policyDraftPages.length - 1;
+          }
+          renderPolicyPageTabs();
+          loadActivePolicyPage();
+          showToast('Page Deleted', `Page ${pageNum} removed from document.`);
+        }
+      );
     }
 
     function insertClauseSnippet(type) {
@@ -10842,6 +11227,7 @@
           <td class="py-3 px-4 font-bold text-white">${pr.name}</td>
           <td class="py-3 px-4 text-neutral-400">${pr.oldDesig}</td>
           <td class="py-3 px-4 text-brand-amber font-semibold">${pr.newDesig}</td>
+          <td class="py-3 px-4 text-center font-mono text-neutral-300">${pr.effectiveDate || '01 Nov 2026'}</td>
           <td class="py-3 px-4 text-right font-mono text-neutral-400">&#8377; ${pr.oldCtc.replace(/[^0-9,]/g, '')}</td>
           <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">&#8377; ${pr.newCtc.replace(/[^0-9,]/g, '')}</td>
           <td class="py-3 px-4 text-center font-bold text-brand-amber">${pr.inc || pr.hike}</td>
@@ -10876,6 +11262,9 @@
       const newDesig = document.getElementById('promoNewDesigInput').value.trim() || 'Lead Specialist';
       const hike = document.getElementById('promoHikeInput').value.trim() || '+20%';
       const newCtc = document.getElementById('promoNewCtcInput').value.trim();
+      const effDateInput = document.getElementById('promoEffectiveDateInput')?.value || '2026-11-01';
+      const effectiveDate = formatDateDisplay(effDateInput) || effDateInput || '01 Nov 2026';
+
       const emp = appState.employees.find(e => e.name === name);
       const oldDesig = emp ? emp.role : 'Specialist';
       const oldCtc = emp ? `₹ ${(emp.salary * 12).toLocaleString('en-IN')}` : '₹ 8,00,000';
@@ -10885,6 +11274,7 @@
         name: name,
         oldDesig: oldDesig,
         newDesig: newDesig,
+        effectiveDate: effectiveDate,
         oldCtc: oldCtc,
         newCtc: newCtc,
         hike: hike,
@@ -10893,7 +11283,7 @@
       renderPromotionTable();
       renderEmployeeTable();
       closeModal('modalCreatePromotion');
-      showToast('Promotion Authorized', `${name} promoted to ${newDesig} (${hike}).`);
+      showToast('Promotion Authorized', `${name} promoted to ${newDesig} (${hike}) effective ${effectiveDate}.`);
     }
 
     // ------------------------------------------
