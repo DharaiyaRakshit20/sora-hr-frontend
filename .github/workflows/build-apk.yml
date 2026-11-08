@@ -48,12 +48,48 @@ jobs:
           rm -rf lib
           cp -r /tmp/sora_backup/lib lib
           cp /tmp/sora_backup/pubspec.yaml pubspec.yaml
-          
-          # Inject Camera, Location & Internet permissions into AndroidManifest.xml
+
+          # Generate SORA HR App Launcher Icons from sora-hr-icon-512.png
           python3 - << 'EOF'
+          import os
+          from PIL import Image
+
+          icon_src = 'assets/sora-hr-icon-512.png'
+          if not os.path.exists(icon_src):
+              icon_src = 'assets/sora-hr-icon.png'
+          if not os.path.exists(icon_src):
+              icon_src = '../sora-hr-icon-512.png'
+
+          print(f"Generating Android launcher icons from: {icon_src}")
+          img = Image.open(icon_src).convert('RGBA')
+
+          densities = {
+              'mipmap-mdpi': (48, 48),
+              'mipmap-hdpi': (72, 72),
+              'mipmap-xhdpi': (96, 96),
+              'mipmap-xxhdpi': (144, 144),
+              'mipmap-xxxhdpi': (192, 192),
+          }
+
+          for folder, size in densities.items():
+              target_dir = os.path.join('android', 'app', 'src', 'main', 'res', folder)
+              os.makedirs(target_dir, exist_ok=True)
+              resized = img.resize(size, Image.Resampling.LANCZOS)
+              resized.save(os.path.join(target_dir, 'ic_launcher.png'), 'PNG')
+              resized.save(os.path.join(target_dir, 'ic_launcher_round.png'), 'PNG')
+
+          print("Successfully generated SORA HR launcher icons for all screen densities!")
+          EOF
+
+          # Inject App Name "SORA HR" and Camera, Location & Internet permissions into AndroidManifest.xml
+          python3 - << 'EOF'
+          import re
           manifest = 'android/app/src/main/AndroidManifest.xml'
           with open(manifest, 'r') as f:
               code = f.read()
+
+          # Set app display name on phone home screen to "SORA HR"
+          code = re.sub(r'android:label="[^"]*"', 'android:label="SORA HR"', code)
 
           perms = """
               <uses-permission android:name="android.permission.INTERNET" />
@@ -71,7 +107,7 @@ jobs:
           
           with open(manifest, 'w') as f:
               f.write(code)
-          print("Updated AndroidManifest.xml successfully")
+          print("Updated AndroidManifest.xml with 'SORA HR' label successfully")
           EOF
 
           # Ensure minSdk is 21 for webview_flutter compatibility
@@ -88,10 +124,11 @@ jobs:
               print(f"Notice during build.gradle update: {e}")
           EOF
 
-      - name: Fetch Flutter Dependencies
+      - name: Fetch Flutter Dependencies & Generate Launcher Icons
         run: |
           cd sora_mobile_flutter
           flutter pub get
+          dart run flutter_launcher_icons || true
 
       - name: Build Android Release APK
         run: |

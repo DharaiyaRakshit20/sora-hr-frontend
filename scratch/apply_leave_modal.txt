@@ -1,0 +1,192 @@
+    // =========================================================================
+    // SUB-COMPONENT: MODAL -- APPLY LEAVE
+    // =========================================================================
+    function ApplyLeaveModal({ leaveQuotas, onSubmit, onClose }) {
+      const [type, setType] = useState('Casual Leave (CL)');
+      const [fromDate, setFromDate] = useState('2026-11-12');
+      const [toDate, setToDate] = useState('2026-11-13');
+      const [dayType, setDayType] = useState('Full Day');
+      const [reason, setReason] = useState('');
+      const [days, setDays] = useState(2);
+
+      const recalculateDays = (from, to, dType) => {
+        setFromDate(from);
+        setToDate(to);
+        const d1 = new Date(from);
+        const d2 = new Date(to);
+        let diff = Math.max(1, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)) + 1);
+        if (dType !== 'Full Day' && diff === 1) {
+          diff = 0.5;
+        }
+        setDays(diff);
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!reason.trim()) {
+          alert('Please enter a brief reason for your leave application.');
+          return;
+        }
+
+        // Format dates into clean readable string: e.g. "12 Nov 2026 - 13 Nov 2026"
+        const d1 = new Date(fromDate);
+        const d2 = new Date(toDate);
+        const opt = { day: '2-digit', month: 'short', year: 'numeric' };
+        const d1Str = d1.toLocaleDateString('en-IN', opt);
+        const d2Str = d2.toLocaleDateString('en-IN', opt);
+        const datesFormatted = (fromDate === toDate) ? d1Str : `${d1Str} – ${d2Str}`;
+
+        onSubmit({
+          type,
+          fromDate,
+          toDate,
+          datesFormatted,
+          dayType,
+          days,
+          reason
+        });
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-[#14141a] border border-neutral-800 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl relative animate-in zoom-in-95 duration-200">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                  <Icon name="coffee" className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">Apply for Time Off</h3>
+                  <p className="text-[10px] text-neutral-400">Employee Self-Service Leave Request</p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+              >
+                <Icon name="x-circle" className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
+              
+              {/* Category */}
+              <div>
+                <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1">
+                  Leave Category *
+                </label>
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#09090c] border border-neutral-800 text-white font-semibold outline-none focus:border-amber-500"
+                >
+                  <option value="Casual Leave (CL)">Casual Leave (CL) &bull; 8d Remaining</option>
+                  <option value="Sick Leave (SL)">Sick Leave (SL) &bull; 5d Remaining</option>
+                  <option value="Privilege / Paid Leave (PL)">Privilege / Paid Leave (PL) &bull; 12d Remaining</option>
+                  <option value="Compensatory Off (CO)">Compensatory Off (CO) &bull; 2d Remaining</option>
+                </select>
+              </div>
+
+              {/* Date Pickers Row */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1">
+                    From Date *
+                  </label>
+                  <input
+                    type="date"
+                    value={fromDate}
+                    onChange={(e) => recalculateDays(e.target.value, toDate, dayType)}
+                    className="w-full px-3 py-2 rounded-xl bg-[#09090c] border border-neutral-800 text-white font-mono outline-none focus:border-amber-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1">
+                    To Date *
+                  </label>
+                  <input
+                    type="date"
+                    value={toDate}
+                    min={fromDate}
+                    onChange={(e) => recalculateDays(fromDate, e.target.value, dayType)}
+                    className="w-full px-3 py-2 rounded-xl bg-[#09090c] border border-neutral-800 text-white font-mono outline-none focus:border-amber-500"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Day Type Selection */}
+              <div>
+                <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1">
+                  Day Type &bull; Calculated Duration
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {['Full Day', 'First Half', 'Second Half'].map(t => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => {
+                        setDayType(t);
+                        recalculateDays(fromDate, toDate, t);
+                      }}
+                      className={`py-2 px-2 rounded-xl text-center font-bold text-[11px] transition-all cursor-pointer border ${
+                        dayType === t ? 'bg-amber-400 text-neutral-950 border-amber-400 shadow' : 'bg-[#09090c] text-neutral-400 border-neutral-800 hover:text-white'
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Computed Duration Badge */}
+              <div className="p-3 rounded-xl bg-[#09090c] border border-neutral-800 flex items-center justify-between">
+                <span className="text-neutral-400 text-[11px]">Total Leave Duration:</span>
+                <span className="px-2.5 py-0.5 rounded-md bg-amber-500/10 text-amber-400 font-mono font-bold text-xs border border-amber-500/20">
+                  {days} Day{days > 1 ? 's' : ''} ({dayType})
+                </span>
+              </div>
+
+              {/* Reason */}
+              <div>
+                <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1">
+                  Reason for Leave *
+                </label>
+                <textarea
+                  rows="3"
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  placeholder="e.g. Attending family function / urgent medical consultation"
+                  className="w-full px-3 py-2 rounded-xl bg-[#09090c] border border-neutral-800 text-white outline-none focus:border-amber-500 text-xs resize-none"
+                  required
+                />
+              </div>
+
+              {/* Submit Button */}
+              <div className="pt-2 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 py-3 px-4 rounded-xl bg-[#09090c] hover:bg-neutral-800 border border-neutral-800 text-neutral-400 hover:text-white font-bold transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-black shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+                >
+                  Submit Request
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      );
+    }

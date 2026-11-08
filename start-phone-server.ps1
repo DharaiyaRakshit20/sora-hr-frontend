@@ -2,32 +2,30 @@
 $Port = 8080
 $RootPath = $PSScriptRoot
 
-# Detect Local IPv4
-$LocalIP = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { 
-    $_.InterfaceAlias -notmatch "Loopback|vEthernet" -and $_.IPAddress -notmatch "^169\." 
-} | Select-Object -First 1).IPAddress
+$LocalIP = "192.168.31.192"
+try {
+    $ipObj = Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object { 
+        $_.InterfaceAlias -notmatch "Loopback|vEthernet" -and $_.IPAddress -notmatch "^169\." 
+    } | Select-Object -First 1
+    if ($ipObj -and $ipObj.IPAddress) {
+        $LocalIP = $ipObj.IPAddress
+    }
+} catch {}
 
-if (-not $LocalIP) {
-    $LocalIP = "192.168.31.192"
-}
+$userUrl = "http://" + $LocalIP + ":" + $Port + "/user/"
 
-Write-Host "========================================================" -ForegroundColor Amber
-Write-Host "   SORA HR PLATFORM — MOBILE PHONE SERVER" -ForegroundColor Yellow
-Write-Host "========================================================" -ForegroundColor Amber
+Write-Host "========================================================" -ForegroundColor Cyan
+Write-Host "   SORA HR PLATFORM -- MOBILE PHONE SERVER" -ForegroundColor Yellow
+Write-Host "========================================================" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "1. Apne phone aur computer ko SAME Wi-Fi ya Mobile Hotspot se connect karein." -ForegroundColor White
-Write-Host "2. Apne Phone ke Chrome ya Safari browser me ye link kholein:" -ForegroundColor Cyan
+Write-Host "1. Apne phone aur computer ko SAME Wi-Fi se connect rakhein." -ForegroundColor White
+Write-Host "2. Apne Phone ke Chrome browser me ye link kholein:" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "   👉 http://${LocalIP}:${Port}/user/" -ForegroundColor Green -BackgroundColor Black
+Write-Host "   $userUrl" -ForegroundColor Green
 Write-Host ""
-Write-Host "Admin Portal Link:" -ForegroundColor Gray
-Write-Host "   👉 http://${LocalIP}:${Port}/admin/" -ForegroundColor Gray
-Write-Host ""
-Write-Host "App ko phone me install karne ke liye:" -ForegroundColor White
-Write-Host "   • Chrome me: 3 dots menu -> 'Add to Home screen' / 'Install App'" -ForegroundColor Yellow
-Write-Host "   • Safari (iPhone) me: Share icon -> 'Add to Home Screen'" -ForegroundColor Yellow
-Write-Host "========================================================" -ForegroundColor Amber
-Write-Host "Server listening on http://0.0.0.0:${Port}... (Press Ctrl+C to stop)" -ForegroundColor DarkGray
+Write-Host "3. Ya phone me install kiye gaye APK ko open karein!" -ForegroundColor Magenta
+Write-Host "========================================================" -ForegroundColor Cyan
+Write-Host "Server running on port $Port... (Press Ctrl+C to stop)" -ForegroundColor DarkGray
 Write-Host ""
 
 $listener = New-Object System.Net.Sockets.TcpListener([System.Net.IPAddress]::Any, $Port)
@@ -58,24 +56,24 @@ try {
             continue
         }
 
-        $tokens = $requestLine -split ' '
+        $tokens = $requestLine.Split(" ")
         if ($tokens.Length -lt 2) {
             $client.Close()
             continue
         }
 
         $rawUrl = $tokens[1]
-        $cleanPath = $rawUrl.Split('?')[0]
+        $cleanPath = $rawUrl.Split("?")[0]
         $cleanPath = [System.Uri]::UnescapeDataString($cleanPath)
 
-        if ($cleanPath -match '^/?user/?$') {
+        if ($cleanPath -match "^/?user/?$") {
             $filePath = Join-Path $RootPath "user\index.html"
-        } elseif ($cleanPath -match '^/?admin/?$') {
+        } elseif ($cleanPath -match "^/?admin/?$") {
             $filePath = Join-Path $RootPath "admin\index.html"
         } elseif ($cleanPath -eq "/" -or $cleanPath -eq "") {
             $filePath = Join-Path $RootPath "index.html"
         } else {
-            $relPath = $cleanPath.TrimStart('/') -replace '/', '\'
+            $relPath = $cleanPath.TrimStart("/").Replace("/", "\")
             $filePath = Join-Path $RootPath $relPath
             if ((Test-Path $filePath) -and (Get-Item $filePath).PSIsContainer) {
                 $filePath = Join-Path $filePath "index.html"
@@ -84,24 +82,32 @@ try {
 
         if (Test-Path $filePath -PathType Leaf) {
             $ext = [System.IO.Path]::GetExtension($filePath).ToLower()
-            $mime = if ($mimeTypes.ContainsKey($ext)) { $mimeTypes[$ext] } else { "application/octet-stream" }
+            $mime = "application/octet-stream"
+            if ($mimeTypes.ContainsKey($ext)) {
+                $mime = $mimeTypes[$ext]
+            }
             $bytes = [System.IO.File]::ReadAllBytes($filePath)
 
-            $header = "HTTP/1.1 200 OK`r`nContent-Type: $mime`r`nContent-Length: $($bytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
+            $nl = "`r`n"
+            $header = "HTTP/1.1 200 OK" + $nl + "Content-Type: " + $mime + $nl + "Content-Length: " + $bytes.Length + $nl + "Access-Control-Allow-Origin: *" + $nl + "Connection: close" + $nl + $nl
             $headerBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
-            
+
             $stream.Write($headerBytes, 0, $headerBytes.Length)
             $stream.Write($bytes, 0, $bytes.Length)
             $stream.Flush()
+            Write-Host "[200 OK] $cleanPath" -ForegroundColor DarkGreen
         } else {
-            $body = "404 Not Found: $cleanPath"
+            $body = "404 Not Found: " + $cleanPath
             $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
-            $header = "HTTP/1.1 404 Not Found`r`nContent-Type: text/plain`r`nContent-Length: $($bodyBytes.Length)`r`nConnection: close`r`n`r`n"
+
+            $nl = "`r`n"
+            $header = "HTTP/1.1 404 Not Found" + $nl + "Content-Type: text/plain" + $nl + "Content-Length: " + $bodyBytes.Length + $nl + "Connection: close" + $nl + $nl
             $headerBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
 
             $stream.Write($headerBytes, 0, $headerBytes.Length)
             $stream.Write($bodyBytes, 0, $bodyBytes.Length)
             $stream.Flush()
+            Write-Host "[404 Not Found] $cleanPath" -ForegroundColor DarkYellow
         }
 
         $client.Close()

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
@@ -99,15 +100,45 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
             });
           },
           onWebResourceError: (error) {
-            setState(() {
-              _isLoading = false;
-              _hasError = true;
-              _errorMessage = error.description;
-            });
+            // Only trigger full-screen error if the MAIN FRAME itself failed to load
+            // Sub-resource failures (fonts, map tiles, images, aborted requests) must not crash the app
+            if (error.isForMainFrame == true &&
+                error.errorCode != -3 &&
+                error.errorType != WebResourceErrorType.cancelled) {
+              setState(() {
+                _isLoading = false;
+                _hasError = true;
+                _errorMessage = error.description;
+              });
+            } else {
+              debugPrint("Ignored non-main frame resource error: ${error.description}");
+            }
           },
         ),
-      )
-      ..loadRequest(Uri.parse(appUrl));
+      );
+
+    // Auto-grant Camera, Microphone and Geolocation for Android WebView
+    if (Platform.isAndroid && _controller.platform is AndroidWebViewController) {
+      final androidController = _controller.platform as AndroidWebViewController;
+      AndroidWebViewController.enableDebugging(true);
+      androidController.setMediaPlaybackRequiresUserGesture(false);
+      androidController.setOnPlatformPermissionRequest(
+        (PlatformPermissionRequest request) {
+          debugPrint("Auto-granting WebRTC permission in SORA WebView: ${request.types}");
+          request.grant();
+        },
+      );
+      androidController.setGeolocationPermissionsPromptCallbacks(
+        onShowPrompt: (request) async {
+          return const GeolocationPermissionsResponse(
+            allow: true,
+            retain: true,
+          );
+        },
+      );
+    }
+
+    _controller.loadRequest(Uri.parse(appUrl));
   }
 
   void _changeServerUrl() {
@@ -132,7 +163,28 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
               'Enter the SORA HR portal IP or public domain:',
               style: TextStyle(color: Colors.grey, fontSize: 13),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ActionChip(
+                  backgroundColor: const Color(0xFF22222E),
+                  label: const Text('🏠 Local Wi-Fi', style: TextStyle(color: Color(0xFFF59E0B), fontSize: 11)),
+                  onPressed: () {
+                    textController.text = 'http://192.168.31.192:8080/user/';
+                  },
+                ),
+                ActionChip(
+                  backgroundColor: const Color(0xFF22222E),
+                  label: const Text('☁️ Vercel Cloud', style: TextStyle(color: Color(0xFF38BDF8), fontSize: 11)),
+                  onPressed: () {
+                    textController.text = 'https://sora-hr-frontend.vercel.app/user/';
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
             TextField(
               controller: textController,
               style: const TextStyle(color: Colors.white, fontSize: 14),
@@ -186,10 +238,23 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        // 1. If currently showing error screen, clear error and restore app!
+        if (_hasError) {
+          setState(() {
+            _hasError = false;
+            _isLoading = true;
+          });
+          _controller.loadRequest(Uri.parse(appUrl));
+          return false;
+        }
+
+        // 2. Can WebView go back within SPA history?
         if (await _controller.canGoBack()) {
           await _controller.goBack();
           return false;
         }
+
+        // 3. Already at root dashboard, allow exit
         return true;
       },
       child: Scaffold(

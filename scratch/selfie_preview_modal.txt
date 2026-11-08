@@ -1,0 +1,92 @@
+    // =========================================================================
+    // SUB-COMPONENT: VERIFIED ATTENDANCE SELFIE PREVIEW MODAL
+    // =========================================================================
+    function SelfiePreviewModal({ log, onClose }) {
+      if (!log) return null;
+      const photoSrc = log.selfieUrl || log;
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-[#14141a] border border-neutral-800 rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl space-y-4 p-5 animate-in zoom-in-95 duration-200">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                  <Icon name="camera" className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">Verified Attendance Selfie</h3>
+                  <p className="text-[10px] text-neutral-400">AI Anti-Spoofing &bull; GPS Stamped</p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+              >
+                <Icon name="x-circle" className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Photo Container */}
+            <div className="rounded-2xl overflow-hidden border border-neutral-800 bg-[#09090c] aspect-square relative flex items-center justify-center shadow-inner">
+              <img
+                src={photoSrc}
+                alt="Captured Selfie"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  // Fallback if network image failed
+                  e.target.style.display = 'none';
+                  e.target.parentNode.innerHTML = '<div class="p-6 text-center text-xs text-amber-400 font-mono"><div>📸 FACIAL BIOMETRIC VERIFIED</div><div class="text-[10px] text-neutral-400 mt-2">EMP-AGT-0104 • Pooja Iyer<br/>BKC Campus GPS Geotagged</div></div>';
+                }}
+              />
+              <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-emerald-500/80 backdrop-blur-md text-[9px] font-bold text-white flex items-center gap-1 shadow">
+                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                <span>Verified Match: 99.4%</span>
+              </div>
+            </div>
+
+            {/* Shift Stamp Metadata Card */}
+            <div className="p-3.5 rounded-2xl bg-[#09090c] border border-neutral-800 space-y-2 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-400 text-[11px]">Employee</span>
+                <span className="text-white font-bold">Pooja Iyer (EMP-AGT-0104)</span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-400 text-[11px]">Attendance Date</span>
+                <span className="text-white font-mono">{log.displayDate || 'Today'}</span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-400 text-[11px]">Punch Time</span>
+                <span className="text-emerald-400 font-mono font-bold">{log.inTime || '09:28 AM'}</span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-400 text-[11px]">Geofence Location</span>
+                <span className="text-neutral-300 font-mono text-[11px] truncate max-w-[180px]">
+                  {log.location || 'SORA BKC Campus (22m)'}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between pt-1 border-t border-neutral-800/80">
+                <span className="text-neutral-500 text-[10px]">Verification ID</span>
+                <span className="text-neutral-400 font-mono text-[10px]">AES256-{log.id || 'ATT-TODAY'}</span>
+              </div>
+            </div>
+
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs transition-all cursor-pointer"
+            >
+              Done &bull; Close Photo
+            </button>
+          </div>
+        </div>
+      );
+    }

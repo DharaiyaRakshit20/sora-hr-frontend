@@ -3,8 +3,16 @@
   "trailingSlash": true,
   "rewrites": [
     {
-      "source": "/public/(.*)",
-      "destination": "/$1"
+      "source": "/user/(.*)",
+      "destination": "/user/index.html"
+    },
+    {
+      "source": "/admin/(.*)",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/super-admin/(.*)",
+      "destination": "/super-admin/index.html"
     }
   ]
 }

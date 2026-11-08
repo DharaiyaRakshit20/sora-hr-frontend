@@ -1,0 +1,329 @@
+    // =========================================================================
+    // SUB-COMPONENT: TAB 2 -- ATTENDANCE VIEW (Calendar & Full Register)
+    // =========================================================================
+    function AttendanceViewTab({ attendanceLogs, hrSettings, onPreviewSelfie }) {
+      const [selectedDate, setSelectedDate] = useState('2026-11-08');
+
+      // 30 Days Monthly Calendar Grid Simulation for November 2026
+      const calendarDays = useMemo(() => {
+        const days = [];
+        for (let i = 1; i <= 30; i++) {
+          const dayStr = String(i).padStart(2, '0');
+          const dateKey = `2026-11-${dayStr}`;
+          const isWeekend = (i % 7 === 1 || i % 7 === 0); // 1 = Sun, 7 = Sat in Nov 2026
+          const log = attendanceLogs.find(l => l.date === dateKey);
+
+          let status = 'Not Logged';
+          if (isWeekend) {
+            status = 'Weekend';
+          } else if (log) {
+            status = log.status;
+          } else if (i < 8) {
+            status = (i === 6) ? 'Late' : (i === 4 ? 'Half Day' : 'Present');
+          }
+
+          days.push({ day: i, dateKey, status, log, isWeekend });
+        }
+        return days;
+      }, [attendanceLogs]);
+
+      // Calculate exact dynamic counts for the Top Legend Badges
+      const counts = useMemo(() => {
+        let present = 0, late = 0, halfDay = 0, weekend = 0;
+        calendarDays.forEach(d => {
+          if (d.status === 'Present') present++;
+          else if (d.status === 'Late') late++;
+          else if (d.status === 'Half Day') halfDay++;
+          else if (d.status === 'Weekend') weekend++;
+        });
+        return { present, late, halfDay, weekend };
+      }, [calendarDays]);
+
+      return (
+        <div className="space-y-5">
+          
+          {/* Header Title */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+                <Icon name="calendar" className="w-5 h-5 text-amber-400" />
+                <span>Attendance Register &amp; Calendar</span>
+              </h2>
+              <p className="text-xs text-neutral-400 mt-0.5">
+                Official shift logs with verified facial selfies, geotagged BKC distance, and punch timings.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <span className="px-3 py-1 rounded-xl bg-[#14141a] border border-neutral-800 text-xs font-mono font-bold text-amber-400">
+                November 2026
+              </span>
+            </div>
+          </div>
+
+          {/* TOP CALENDAR STATUS LEGEND STRIP (Clean, fixed badges that never break!) */}
+          <div className="p-4 rounded-2xl bg-[#14141a] border border-neutral-800 space-y-3">
+            <div className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider flex items-center justify-between">
+              <span>Month Shift Status Overview</span>
+              <span className="text-neutral-500 font-mono text-[10px]">30 Days Cycle</span>
+            </div>
+
+            {/* 4 Distinct Legend Badges with live counts (Present, Late, Half Day, Weekend) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              
+              {/* Badge 1: Present */}
+              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                  <span className="text-xs font-bold text-emerald-300 whitespace-nowrap">Present</span>
+                </div>
+                <span className="text-sm font-black font-mono text-emerald-400">{counts.present}d</span>
+              </div>
+
+              {/* Badge 2: Late */}
+              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                  <span className="text-xs font-bold text-amber-300 whitespace-nowrap">Late</span>
+                </div>
+                <span className="text-sm font-black font-mono text-amber-400">{counts.late}d</span>
+              </div>
+
+              {/* Badge 3: Half Day */}
+              <div className="p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+                  <span className="text-xs font-bold text-purple-300 whitespace-nowrap">Half Day</span>
+                </div>
+                <span className="text-sm font-black font-mono text-purple-400">{counts.halfDay}d</span>
+              </div>
+
+              {/* Badge 4: Weekend */}
+              <div className="p-3 rounded-xl bg-[#1c1c26] border border-neutral-800 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-neutral-500"></span>
+                  <span className="text-xs font-bold text-neutral-300 whitespace-nowrap">Weekend</span>
+                </div>
+                <span className="text-sm font-black font-mono text-neutral-400">{counts.weekend}d</span>
+              </div>
+
+            </div>
+
+            {/* Quick KPI Stats Summary */}
+            <div className="grid grid-cols-3 gap-2 pt-1 border-t border-neutral-800/80 text-center text-xs">
+              <div className="py-1">
+                <div className="text-[10px] text-neutral-400">Working Days</div>
+                <div className="text-xs font-bold text-white mt-0.5">22 Days</div>
+              </div>
+              <div className="py-1 border-x border-neutral-800/80">
+                <div className="text-[10px] text-neutral-400">On-Time Rate</div>
+                <div className="text-xs font-bold text-emerald-400 mt-0.5">92.4%</div>
+              </div>
+              <div className="py-1">
+                <div className="text-[10px] text-neutral-400">Selfie Audits</div>
+                <div className="text-xs font-bold text-amber-400 mt-0.5">{attendanceLogs.filter(l => l.hasSelfie).length} Verified</div>
+              </div>
+            </div>
+          </div>
+
+          {/* 30-Day Monthly Calendar Grid */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#14141a] border border-neutral-800 space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-neutral-800">
+              <h3 className="text-xs font-bold text-white flex items-center gap-2">
+                <Icon name="calendar" className="w-4 h-4 text-amber-400" />
+                <span>November 2026 Calendar Matrix</span>
+              </h3>
+              <span className="text-[10px] text-neutral-400">Tap day to inspect</span>
+            </div>
+
+            <div className="grid grid-cols-7 gap-1.5 text-center">
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
+                <div key={d} className="py-1 text-[10px] font-bold text-neutral-500 uppercase">{d}</div>
+              ))}
+              {calendarDays.map(item => {
+                const isSelected = selectedDate === item.dateKey;
+                const isPresent = item.status === 'Present';
+                const isLate = item.status === 'Late';
+                const isHalf = item.status === 'Half Day';
+                const isWeekend = item.status === 'Weekend';
+
+                let borderStyle = 'border-neutral-800 bg-[#09090c] text-neutral-400';
+                if (isPresent) borderStyle = 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300';
+                else if (isLate) borderStyle = 'border-amber-500/40 bg-amber-500/10 text-amber-300';
+                else if (isHalf) borderStyle = 'border-purple-500/40 bg-purple-500/10 text-purple-300';
+                else if (isWeekend) borderStyle = 'border-transparent bg-[#111116] text-neutral-600';
+
+                return (
+                  <button
+                    key={item.day}
+                    type="button"
+                    onClick={() => setSelectedDate(item.dateKey)}
+                    className={`p-2 rounded-xl border text-left transition-all cursor-pointer ${borderStyle} ${
+                      isSelected ? 'ring-2 ring-amber-400 scale-105 z-10' : ''
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono font-bold text-xs">{item.day}</span>
+                      {item.log?.hasSelfie && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                      )}
+                    </div>
+                    <div className="mt-1 text-[8px] font-bold truncate hidden sm:block">
+                      {item.status}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ATTENDANCE RECORDS (Mobile Cards View for Phones + Scrollable Table for Desktop) */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Icon name="file-text" className="w-4 h-4 text-amber-400" />
+                <span>Shift Records &amp; Biometric Stamps</span>
+              </h3>
+              <span className="text-xs font-mono text-amber-400">{attendanceLogs.length} Records</span>
+            </div>
+
+            {/* MOBILE-FIRST CARDS VIEW (Clean, comfortable, nothing breaks or wraps awkwardly!) */}
+            <div className="space-y-3 block md:hidden">
+              {attendanceLogs.map(log => (
+                <div key={log.id} className="p-4 rounded-2xl bg-[#14141a] border border-neutral-800 space-y-3 shadow-lg">
+                  {/* Row 1: Date & Status Badge */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-bold text-white">{log.displayDate}</div>
+                      <div className="text-[10px] text-neutral-400 font-mono mt-0.5">{log.id}</div>
+                    </div>
+
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold border whitespace-nowrap flex items-center gap-1.5 ${
+                      log.status === 'Present' ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' :
+                      log.status === 'Late' ? 'bg-amber-500/15 text-amber-300 border-amber-500/30' :
+                      'bg-purple-500/15 text-purple-300 border-purple-500/30'
+                    }`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${
+                        log.status === 'Present' ? 'bg-emerald-400' :
+                        log.status === 'Late' ? 'bg-amber-400' : 'bg-purple-400'
+                      }`}></span>
+                      <span>{log.status}</span>
+                    </span>
+                  </div>
+
+                  {/* Row 2: Shift Timing Details Grid */}
+                  <div className="grid grid-cols-4 gap-2 p-2.5 rounded-xl bg-[#09090c] border border-neutral-800/80 text-center">
+                    <div>
+                      <div className="text-[9px] text-neutral-400 uppercase font-semibold">In Time</div>
+                      <div className="text-xs font-bold font-mono text-emerald-400 mt-0.5">{log.inTime}</div>
+                    </div>
+                    <div>
+                      <div className="text-[9px] text-neutral-400 uppercase font-semibold">Out Time</div>
+                      <div className="text-xs font-bold font-mono text-neutral-300 mt-0.5">{log.outTime}</div>
+                    </div>
+                    <div>
+                      <div className="text-[9px] text-neutral-400 uppercase font-semibold">Break</div>
+                      <div className="text-xs font-bold font-mono text-amber-300 mt-0.5">{log.breakMinutes}m</div>
+                    </div>
+                    <div>
+                      <div className="text-[9px] text-neutral-400 uppercase font-semibold">Work Hrs</div>
+                      <div className="text-xs font-bold font-mono text-white mt-0.5">{log.hours}</div>
+                    </div>
+                  </div>
+
+                  {/* Row 3: Location & Verification Info */}
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex items-center gap-1.5 text-neutral-300 text-[11px]">
+                      <Icon name="map-pin" className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" />
+                      <span className="truncate">{log.location}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181822] text-neutral-400 border border-neutral-800">
+                        {log.method}
+                      </span>
+
+                      {/* Selfie Photo Preview Trigger */}
+                      {log.selfieUrl ? (
+                        <button
+                          type="button"
+                          onClick={() => onPreviewSelfie(log)}
+                          className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-bold text-xs transition-all cursor-pointer"
+                        >
+                          <img src={log.selfieUrl} alt="Selfie" className="w-4 h-4 rounded-full object-cover" />
+                          <span>View Stamped Photo</span>
+                        </button>
+                      ) : (
+                        <span className="text-[10px] text-neutral-500 font-mono">No Image Required</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* DESKTOP TABLE VIEW (With whitespace-nowrap so columns never wrap awkwardly) */}
+            <div className="hidden md:block p-4 rounded-2xl bg-[#14141a] border border-neutral-800 overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-neutral-800 text-neutral-400 font-mono text-[11px]">
+                    <th className="py-3 px-3 whitespace-nowrap">Date</th>
+                    <th className="py-3 px-3 whitespace-nowrap">In Time</th>
+                    <th className="py-3 px-3 whitespace-nowrap">Out Time</th>
+                    <th className="py-3 px-3 whitespace-nowrap">Break</th>
+                    <th className="py-3 px-3 whitespace-nowrap">Work Duration</th>
+                    <th className="py-3 px-3 whitespace-nowrap">Geotag Location</th>
+                    <th className="py-3 px-3 whitespace-nowrap">Verification</th>
+                    <th className="py-3 px-3 whitespace-nowrap">Selfie Photo</th>
+                    <th className="py-3 px-3 whitespace-nowrap">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-800/80">
+                  {attendanceLogs.map(log => (
+                    <tr key={log.id} className="hover:bg-neutral-800/30 transition-colors">
+                      <td className="py-3 px-3 font-semibold text-white whitespace-nowrap">{log.displayDate}</td>
+                      <td className="py-3 px-3 font-mono text-emerald-400 font-bold whitespace-nowrap">{log.inTime}</td>
+                      <td className="py-3 px-3 font-mono text-neutral-300 whitespace-nowrap">{log.outTime}</td>
+                      <td className="py-3 px-3 font-mono text-amber-300 whitespace-nowrap">{log.breakMinutes}m</td>
+                      <td className="py-3 px-3 font-mono font-bold text-white whitespace-nowrap">{log.hours}</td>
+                      <td className="py-3 px-3 text-neutral-300 font-mono text-[11px] whitespace-nowrap">
+                        {log.location}
+                      </td>
+                      <td className="py-3 px-3 whitespace-nowrap">
+                        <span className="text-[10px] font-mono text-neutral-400 bg-[#09090c] px-2 py-0.5 rounded border border-neutral-800">
+                          {log.method}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 whitespace-nowrap">
+                        {log.selfieUrl ? (
+                          <button
+                            type="button"
+                            onClick={() => onPreviewSelfie(log)}
+                            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#181822] hover:bg-[#20202c] border border-amber-500/30 text-amber-400 text-[10px] font-semibold transition-all cursor-pointer"
+                          >
+                            <img src={log.selfieUrl} alt="Selfie" className="w-4 h-4 rounded-full object-cover" />
+                            <span>View Photo</span>
+                          </button>
+                        ) : (
+                          <span className="text-[10px] text-neutral-500 font-mono">Touchless</span>
+                        )}
+                      </td>
+                      <td className="py-3 px-3 whitespace-nowrap">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border whitespace-nowrap ${
+                          log.status === 'Present' ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' :
+                          log.status === 'Late' ? 'bg-amber-500/15 text-amber-300 border-amber-500/30' :
+                          'bg-purple-500/15 text-purple-300 border-purple-500/30'
+                        }`}>
+                          {log.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      );
+    }

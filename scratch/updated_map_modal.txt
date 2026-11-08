@@ -1,0 +1,309 @@
+    // =========================================================================
+    // SUB-COMPONENT: ATTENDANCE LOCATION & GEOFENCE MAP MODAL (India Clock-In & Out)
+    // =========================================================================
+    function AttendanceMapModal({ log, hrSettings, onClose }) {
+      if (!log) return null;
+
+      // 1. Clock In Data (India - Mumbai BKC coordinates)
+      const inLat = Number(log.inLat || log.lat || (hrSettings ? hrSettings.officeLat : 19.0658));
+      const inLng = Number(log.inLng || log.lng || (hrSettings ? hrSettings.officeLng : 72.8688));
+      const inLocation = log.inLocation || log.location || 'SORA BKC Gate #02, Mumbai, Maharashtra, India';
+      const inTime = log.inTime || '09:28 AM';
+
+      // 2. Clock Out Data
+      const hasClockedOut = log.outTime && log.outTime !== '--:--';
+      const outLat = hasClockedOut 
+        ? Number(log.outLat || inLat + 0.0006) 
+        : null;
+      const outLng = hasClockedOut 
+        ? Number(log.outLng || inLng + 0.0007) 
+        : null;
+      const outLocation = hasClockedOut
+        ? (log.outLocation || 'SORA BKC Tower B Exit, Mumbai, Maharashtra, India')
+        : 'Shift in Progress (Clock-Out pending)';
+      const outTime = hasClockedOut ? log.outTime : '--:--';
+
+      // Active Map Center: Midpoint between In and Out if both exist, else Clock In
+      const centerLat = outLat ? (inLat + outLat) / 2 : inLat;
+      const centerLng = outLng ? (inLng + outLng) / 2 : inLng;
+
+      // 3. OpenStreetMap URL centered on Mumbai, Maharashtra, India
+      const delta = 0.0045;
+      const bbox = `${centerLng - delta}%2C${centerLat - delta}%2C${centerLng + delta}%2C${centerLat + delta}`;
+      const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${inLat}%2C${inLng}`;
+
+      // 4. Google Maps Links
+      const googleMapsInUrl = `https://www.google.com/maps/search/?api=1&query=${inLat},${inLng}`;
+      const googleMapsOutUrl = outLat ? `https://www.google.com/maps/search/?api=1&query=${outLat},${outLng}` : null;
+      const googleMapsRouteUrl = outLat 
+        ? `https://www.google.com/maps/dir/?api=1&origin=${inLat},${inLng}&destination=${outLat},${outLng}`
+        : googleMapsInUrl;
+
+      const [activePinView, setActivePinView] = useState('both'); // 'both' | 'in' | 'out'
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="bg-[#14141a] border border-neutral-800 rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl relative my-auto animate-in zoom-in-95 duration-200">
+            
+            {/* Header with India Flag Badge */}
+            <div className="p-4 sm:p-5 border-b border-neutral-800 flex items-center justify-between bg-[#101015]">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500/20 to-sky-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center text-lg shadow-inner">
+                  🇮🇳
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-bold text-white">Punch Location &amp; Route Map</h3>
+                    <span className="px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 font-bold text-[9px] uppercase tracking-wider">
+                      India Region
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-neutral-400 font-mono mt-0.5">
+                    Bandra Kurla Complex (BKC), Mumbai, Maharashtra &bull; {log.displayDate || 'Attendance Log'}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-1.5 rounded-xl bg-[#181822] hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <Icon name="x-circle" className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Interactive Map Visualizer */}
+            <div className="relative w-full h-64 sm:h-72 bg-[#09090c] border-b border-neutral-800 overflow-hidden flex items-center justify-center">
+              <iframe
+                title="India Attendance GPS Map"
+                src={osmUrl}
+                className="w-full h-full border-0 filter contrast-125"
+                loading="lazy"
+              />
+
+              {/* Floating India Context Pill */}
+              <div className="absolute top-3 left-3 bg-[#0c0c12]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-neutral-800 shadow-xl flex items-center gap-2 pointer-events-none">
+                <span className="text-xs">🇮🇳</span>
+                <div className="text-left">
+                  <div className="text-[10px] font-bold text-white leading-none">Mumbai, India</div>
+                  <div className="text-[8px] text-emerald-400 font-mono mt-0.5">SORA Tech Park BKC</div>
+                </div>
+              </div>
+
+              {/* Interactive On-Map Punch Markers (Visual Overlays) */}
+              <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                
+                {/* 🟢 CLOCK IN MARKER (Left/Center) */}
+                {(activePinView === 'both' || activePinView === 'in') && (
+                  <div className="absolute left-1/4 top-1/2 -translate-x-1/2 -translate-y-full flex flex-col items-center animate-bounce">
+                    <div className="px-2 py-1 rounded-lg bg-emerald-500 text-neutral-950 font-black text-[9px] shadow-lg flex items-center gap-1 whitespace-nowrap">
+                      <span>🟢 Clock In: {inTime}</span>
+                    </div>
+                    <div className="w-3 h-3 bg-emerald-500 rotate-45 -mt-1 shadow-md"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-white border-2 border-emerald-500 -mt-1"></div>
+                  </div>
+                )}
+
+                {/* Dashed Connecting Route between In and Out */}
+                {hasClockedOut && activePinView === 'both' && (
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                    <line 
+                      x1="25%" y1="50%" 
+                      x2="75%" y2="45%" 
+                      stroke="#f59e0b" 
+                      strokeWidth="2.5" 
+                      strokeDasharray="6 4" 
+                    />
+                  </svg>
+                )}
+
+                {/* 🔴 CLOCK OUT MARKER (Right/Center) */}
+                {hasClockedOut && (activePinView === 'both' || activePinView === 'out') && (
+                  <div className="absolute right-1/4 top-1/2 -translate-y-full translate-x-1/2 flex flex-col items-center">
+                    <div className="px-2 py-1 rounded-lg bg-rose-500 text-white font-black text-[9px] shadow-lg flex items-center gap-1 whitespace-nowrap">
+                      <span>🔴 Clock Out: {outTime}</span>
+                    </div>
+                    <div className="w-3 h-3 bg-rose-500 rotate-45 -mt-1 shadow-md"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-white border-2 border-rose-500 -mt-1"></div>
+                  </div>
+                )}
+
+                {/* If Clock Out is still pending */}
+                {!hasClockedOut && (
+                  <div className="absolute right-1/4 top-1/2 -translate-y-full translate-x-1/2 flex flex-col items-center">
+                    <div className="px-2 py-1 rounded-lg bg-amber-500/90 text-neutral-950 font-bold text-[9px] shadow-lg flex items-center gap-1 whitespace-nowrap animate-pulse">
+                      <span>⏳ Shift Active (--:--)</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Map Filter Selector Pills */}
+              <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-[#0c0c12]/90 backdrop-blur-md p-1 rounded-xl border border-neutral-800 shadow">
+                <button
+                  type="button"
+                  onClick={() => setActivePinView('both')}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                    activePinView === 'both' ? 'bg-amber-400 text-neutral-950' : 'text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  Both Pins
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActivePinView('in')}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                    activePinView === 'in' ? 'bg-emerald-500 text-neutral-950' : 'text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  🟢 Clock In
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActivePinView('out')}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                    activePinView === 'out' ? 'bg-rose-500 text-white' : 'text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  🔴 Clock Out
+                </button>
+              </div>
+
+              {/* Coordinates Pill */}
+              <div className="absolute bottom-3 right-3 bg-[#0c0c12]/90 backdrop-blur-md px-2.5 py-1 rounded-lg border border-neutral-800 text-[10px] font-mono text-neutral-300 pointer-events-none shadow">
+                {centerLat.toFixed(4)}&deg; N, {centerLng.toFixed(4)}&deg; E
+              </div>
+            </div>
+
+            {/* DUAL PUNCH DETAILS: Clock In & Clock Out Comparison Cards */}
+            <div className="p-4 sm:p-5 space-y-3.5">
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                
+                {/* CARD 1: 🟢 CLOCK IN DETAILS */}
+                <div className="p-3.5 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 space-y-2 relative overflow-hidden">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-emerald-500/15">
+                    <div className="flex items-center gap-1.5 font-bold text-emerald-400 text-xs">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                      <span>1. Clock In Punch</span>
+                    </div>
+                    <span className="font-mono font-bold text-emerald-400 text-xs bg-emerald-500/10 px-2 py-0.5 rounded">
+                      {inTime}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-neutral-400 uppercase font-semibold">Location / Geotag</span>
+                    <div className="text-white font-bold text-[11px] leading-tight">
+                      {inLocation}
+                    </div>
+                    <div className="text-[10px] font-mono text-emerald-400/90 pt-0.5">
+                      Lat: {inLat.toFixed(5)}&deg; &bull; Lng: {inLng.toFixed(5)}&deg;
+                    </div>
+                  </div>
+
+                  <div className="pt-1 flex items-center justify-between border-t border-emerald-500/10 text-[10px]">
+                    <span className="text-neutral-400">Geofence Status:</span>
+                    <span className="text-emerald-400 font-bold">✓ Inside Office (18m)</span>
+                  </div>
+
+                  <a
+                    href={googleMapsInUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-1.5 px-2 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-bold text-[10px] flex items-center justify-center gap-1.5 transition-all cursor-pointer mt-1"
+                  >
+                    <Icon name="navigation" className="w-3 h-3" />
+                    <span>View Clock-In on Google Maps</span>
+                  </a>
+                </div>
+
+                {/* CARD 2: 🔴 CLOCK OUT DETAILS */}
+                <div className={`p-3.5 rounded-2xl border space-y-2 relative overflow-hidden ${
+                  hasClockedOut 
+                    ? 'bg-rose-500/5 border-rose-500/20' 
+                    : 'bg-neutral-900/40 border-neutral-800'
+                }`}>
+                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-800">
+                    <div className="flex items-center gap-1.5 font-bold text-xs">
+                      <span className={`w-2 h-2 rounded-full ${hasClockedOut ? 'bg-rose-400' : 'bg-amber-400 animate-pulse'}`}></span>
+                      <span className={hasClockedOut ? 'text-rose-400' : 'text-amber-400'}>2. Clock Out Punch</span>
+                    </div>
+                    <span className={`font-mono font-bold text-xs px-2 py-0.5 rounded ${
+                      hasClockedOut ? 'bg-rose-500/10 text-rose-400' : 'bg-amber-500/10 text-amber-400'
+                    }`}>
+                      {outTime}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-neutral-400 uppercase font-semibold">Location / Geotag</span>
+                    <div className="text-white font-bold text-[11px] leading-tight">
+                      {outLocation}
+                    </div>
+                    {hasClockedOut && outLat ? (
+                      <div className="text-[10px] font-mono text-rose-400/90 pt-0.5">
+                        Lat: {outLat.toFixed(5)}&deg; &bull; Lng: {outLng.toFixed(5)}&deg;
+                      </div>
+                    ) : (
+                      <div className="text-[10px] font-mono text-neutral-400 pt-0.5">
+                        Shift duration in progress ({log.hours})
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-1 flex items-center justify-between border-t border-neutral-800/80 text-[10px]">
+                    <span className="text-neutral-400">Total Hours:</span>
+                    <span className="text-white font-bold font-mono">{log.hours}</span>
+                  </div>
+
+                  {hasClockedOut && googleMapsOutUrl ? (
+                    <a
+                      href={googleMapsOutUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-1.5 px-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 font-bold text-[10px] flex items-center justify-center gap-1.5 transition-all cursor-pointer mt-1"
+                    >
+                      <Icon name="navigation" className="w-3 h-3" />
+                      <span>View Clock-Out on Google Maps</span>
+                    </a>
+                  ) : (
+                    <div className="w-full py-1.5 px-2 rounded-lg bg-neutral-800 text-neutral-400 text-[10px] text-center font-mono mt-1">
+                      Clock-out pin will appear upon punch out
+                    </div>
+                  )}
+                </div>
+
+              </div>
+
+              {/* Combined Route Action Buttons */}
+              <div className="flex items-center gap-2 pt-1">
+                <a
+                  href={googleMapsRouteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 transition-all cursor-pointer text-center"
+                >
+                  <Icon name="navigation" className="w-4 h-4 text-white" />
+                  <span>
+                    {hasClockedOut 
+                      ? 'Open Punch In ➔ Out Route in Google Maps (India)' 
+                      : 'Open Punch Location in Google Maps (India)'}
+                  </span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="py-2.5 px-4 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white font-bold text-xs transition-all cursor-pointer"
+                >
+                  Close Map
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      );
+    }
