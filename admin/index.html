@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="dark scroll-smooth">
 <head>
   <meta charset="UTF-8">
@@ -6926,7 +6926,8 @@
         'resignation': 'Resignation & Exit',
         'company-policy': 'Company Policies',
         'promotion': 'Promotion & Increment',
-        'clockin-qr': 'Clock-In QR Code'
+        'clockin-qr': 'Clock-In QR Code',
+        'subscription': 'My Plan & Subscription Upgrade'
       };
       document.getElementById('currentTabBreadcrumb').innerText = names[tabId] || 'Admin Portal';
 
@@ -13584,51 +13585,62 @@
       const sub = currentCompanySub;
       if (!sub) return;
 
-      document.getElementById('coPlanName').innerText = sub.planName;
-      document.getElementById('coCompanyName').innerText = sub.companyName;
-      document.getElementById('coPlanMRR').innerText = 'â‚¹' + Math.round(sub.totalAmount).toLocaleString('en-IN');
+      const coPlanName = document.getElementById('coPlanName');
+      const coCompanyName = document.getElementById('coCompanyName');
+      const coPlanMRR = document.getElementById('coPlanMRR');
+      if (coPlanName) coPlanName.innerText = sub.planName;
+      if (coCompanyName) coCompanyName.innerText = sub.companyName;
+      if (coPlanMRR) coPlanMRR.innerText = '₹' + Math.round(sub.totalAmount).toLocaleString('en-IN');
 
-      const usedSeats = (typeof employees !== 'undefined' && employees.length) ? employees.length : 18;
+      const usedSeats = (typeof employees !== 'undefined' && Array.isArray(employees) && employees.length) ? employees.length : 18;
       const totalSeats = sub.employeeCount || 35;
       const pct = Math.min(100, Math.round((usedSeats / totalSeats) * 100));
 
-      document.getElementById('coSeatProgressText').innerText = ${usedSeats} /  Seats Used (%);
-      document.getElementById('coSeatProgressBar').style.width = pct + '%';
-      document.getElementById('coSeatBreakdown').innerText = ${sub.baseIncluded || 25} Base Slab +  Extra Seats;
-      document.getElementById('coSeatsRemaining').innerText = ${Math.max(0, totalSeats - usedSeats)} Available Seats;
+      const progText = document.getElementById('coSeatProgressText');
+      const progBar = document.getElementById('coSeatProgressBar');
+      const seatBreakdown = document.getElementById('coSeatBreakdown');
+      const seatsRemaining = document.getElementById('coSeatsRemaining');
+      const perEmpRate = document.getElementById('coPerEmpRate');
+      const renewalDate = document.getElementById('coRenewalDate');
 
-      document.getElementById('coPerEmpRate').innerText = â‚¹ / extra emp;
-      document.getElementById('coRenewalDate').innerText = sub.renewalDate || '15 Dec 2026';
+      if (progText) progText.innerText = usedSeats + ' / ' + totalSeats + ' Seats Used (' + pct + '%)';
+      if (progBar) progBar.style.width = pct + '%';
+      if (seatBreakdown) seatBreakdown.innerText = (sub.baseIncluded || 25) + ' Base Slab + ' + (sub.extraEmployees || 0) + ' Extra Seats';
+      if (seatsRemaining) seatsRemaining.innerText = Math.max(0, totalSeats - usedSeats) + ' Available Seats';
+      if (perEmpRate) perEmpRate.innerText = '₹' + (sub.perEmployeePrice || 150) + ' / extra emp';
+      if (renewalDate) renewalDate.innerText = sub.renewalDate || '15 Dec 2026';
 
       const tbody = document.getElementById('coInvoicesTbody');
-      const txns = sub.transactions || [];
-      if (txns.length === 0) {
-        tbody.innerHTML = <tr><td colspan="8" class="py-4 text-center text-neutral-500">No past invoice receipts recorded.</td></tr>;
-      } else {
-        tbody.innerHTML = txns.map(t => 
-          <tr class="hover:bg-brand-surface/40 transition-colors">
-            <td class="py-3 px-4 font-mono font-bold text-brand-amber"></td>
-            <td class="py-3 px-4 font-mono text-neutral-300 text-[11px]"></td>
-            <td class="py-3 px-4 text-white font-semibold"></td>
-            <td class="py-3 px-4 font-mono text-center"> Seats</td>
-            <td class="py-3 px-4 font-mono font-bold text-emerald-400">â‚¹</td>
-            <td class="py-3 px-4 text-neutral-400"></td>
-            <td class="py-3 px-4">
-              <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span>Paid</span>
-              </span>
-            </td>
-            <td class="py-3 px-4 text-right">
-              <button type="button" onclick="window.print()" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white transition-colors text-[10px] font-semibold">
-                Print PDF
-              </button>
-            </td>
-          </tr>
-        ).join('');
+      if (tbody) {
+        const txns = sub.transactions || [];
+        if (txns.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" class="py-4 text-center text-neutral-500">No past invoice receipts recorded.</td></tr>';
+        } else {
+          tbody.innerHTML = txns.map(t => {
+            return '<tr class="hover:bg-brand-surface/40 transition-colors">' +
+              '<td class="py-3 px-4 font-mono font-bold text-brand-amber">' + (t.invoiceNo || 'INV-2026-X') + '</td>' +
+              '<td class="py-3 px-4 font-mono text-neutral-300 text-[11px]">' + (t.date || 'Recent') + '</td>' +
+              '<td class="py-3 px-4 text-white font-semibold">' + (t.planName || sub.planName) + '</td>' +
+              '<td class="py-3 px-4 font-mono text-center">' + (t.employeeCount || sub.employeeCount) + ' Seats</td>' +
+              '<td class="py-3 px-4 font-mono font-bold text-emerald-400">₹' + Math.round(t.amount || sub.totalAmount).toLocaleString('en-IN') + '</td>' +
+              '<td class="py-3 px-4 text-neutral-400 font-mono text-[11px]">' + (t.txnId || 'pay_online') + '</td>' +
+              '<td class="py-3 px-4">' +
+                '<span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">' +
+                  '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>' +
+                  '<span>' + (t.status || 'Paid') + '</span>' +
+                '</span>' +
+              '</td>' +
+              '<td class="py-3 px-4 text-right">' +
+                '<button type="button" onclick="window.print()" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white transition-colors text-[10px] font-semibold">' +
+                  'Print PDF' +
+                '</button>' +
+              '</td>' +
+            '</tr>';
+          }).join('');
+        }
       }
 
-      lucide.createIcons();
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     function openCompanyUpgradeModal() {
@@ -13636,23 +13648,29 @@
       const sub = currentCompanySub;
       const cur = sub.employeeCount || 35;
       const slider = document.getElementById('upgradeSeatSlider');
-      slider.min = cur;
-      slider.max = cur + 100;
-      slider.value = cur + 15;
-      document.getElementById('upgradeMinLabel').innerText = Current: ;
+      if (slider) {
+        slider.min = cur;
+        slider.max = cur + 100;
+        slider.value = cur + 15;
+      }
+      const minLabel = document.getElementById('upgradeMinLabel');
+      if (minLabel) minLabel.innerText = 'Current: ' + cur + ' Seats';
       updateCompanyUpgradeCalc(cur + 15);
 
-      document.getElementById('modalCompanyUpgrade').classList.remove('hidden');
-      lucide.createIcons();
+      const modal = document.getElementById('modalCompanyUpgrade');
+      if (modal) modal.classList.remove('hidden');
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     function closeCompanyUpgradeModal() {
-      document.getElementById('modalCompanyUpgrade').classList.add('hidden');
+      const modal = document.getElementById('modalCompanyUpgrade');
+      if (modal) modal.classList.add('hidden');
     }
 
     function updateCompanyUpgradeCalc(val) {
       upgradeCalculatedSeats = parseInt(val) || 35;
-      document.getElementById('upgradeSeatDisplay').innerText = ${upgradeCalculatedSeats} Seats;
+      const seatDisp = document.getElementById('upgradeSeatDisplay');
+      if (seatDisp) seatDisp.innerText = upgradeCalculatedSeats + ' Seats';
 
       const sub = currentCompanySub;
       const baseMax = sub.baseIncluded || 25;
@@ -13664,12 +13682,19 @@
       const gst = subtotal * 0.18;
       const grandTotal = subtotal + gst;
 
-      document.getElementById('upgradeBasePriceDisplay').innerText = â‚¹.00;
-      document.getElementById('upgradeExtraLabel').innerText = + Extra Seats @ â‚¹/emp:;
-      document.getElementById('upgradeExtraPriceDisplay').innerText = â‚¹.00;
-      document.getElementById('upgradeSubtotalDisplay').innerText = â‚¹.00;
-      document.getElementById('upgradeGstDisplay').innerText = â‚¹.00;
-      document.getElementById('upgradeTotalDisplay').innerText = â‚¹;
+      const basePriceDisp = document.getElementById('upgradeBasePriceDisplay');
+      const extraLabel = document.getElementById('upgradeExtraLabel');
+      const extraPriceDisp = document.getElementById('upgradeExtraPriceDisplay');
+      const subtotalDisp = document.getElementById('upgradeSubtotalDisplay');
+      const gstDisp = document.getElementById('upgradeGstDisplay');
+      const totalDisp = document.getElementById('upgradeTotalDisplay');
+
+      if (basePriceDisp) basePriceDisp.innerText = '₹' + basePrice.toLocaleString('en-IN') + '.00';
+      if (extraLabel) extraLabel.innerText = '+' + extraSeats + ' Extra Seats @ ₹' + perEmp + '/emp:';
+      if (extraPriceDisp) extraPriceDisp.innerText = '₹' + extraCost.toLocaleString('en-IN') + '.00';
+      if (subtotalDisp) subtotalDisp.innerText = '₹' + subtotal.toLocaleString('en-IN') + '.00';
+      if (gstDisp) gstDisp.innerText = '₹' + Math.round(gst).toLocaleString('en-IN') + '.00';
+      if (totalDisp) totalDisp.innerText = '₹' + Math.round(grandTotal).toLocaleString('en-IN');
     }
 
     function executeCompanyUpgrade() {
@@ -13693,7 +13718,7 @@
         txnId: 'pay_Rzp' + Math.floor(100000000 + Math.random() * 900000000),
         invoiceNo: 'INV-2026-' + Math.floor(100 + Math.random() * 900),
         date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ', Just now',
-        planName: ${sub.planName} (Upgraded to  Seats),
+        planName: sub.planName + ' (Upgraded to ' + upgradeCalculatedSeats + ' Seats)',
         employeeCount: upgradeCalculatedSeats,
         amount: grandTotal,
         method: 'Razorpay UPI Upgrade',
@@ -13723,7 +13748,7 @@
 
       closeCompanyUpgradeModal();
       renderCompanySubscriptionTab();
-      showToast('Capacity Upgraded!', Your seat limit is now  active employees.);
+      showToast('Capacity Upgraded!', 'Your seat limit is now ' + upgradeCalculatedSeats + ' active employees.');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
