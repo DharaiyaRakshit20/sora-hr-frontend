@@ -1801,7 +1801,7 @@
                       </th>
                       <th class="py-4 px-4 text-center whitespace-nowrap min-w-[130px]">Slip Status</th>
                       <!-- Sticky Right: Actions -->
-                      <th class="py-4 px-5 text-right font-bold text-neutral-300 sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[180px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
+                      <th class="py-4 px-5 text-right font-bold text-neutral-300 sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[275px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
                         Actions
                       </th>
                     </tr>
@@ -5004,11 +5004,14 @@
           <span>Official Salary Slip Document &bull; Pay Period View</span>
         </span>
         <div class="flex items-center gap-2">
-          <!-- Single Send from Modal -->
-          <button id="modalSlipSendBtn" onclick="dispatchSinglePayslipFromModal()" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow transition-all" title="Deliver via Official Email and WhatsApp">
+          <!-- Separate Send Buttons from Modal -->
+          <button id="modalSlipEmailBtn" onclick="dispatchSinglePayslipFromModal('email')" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center gap-1.5 shadow transition-all" title="Deliver via Official Email">
             <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+            <span id="modalSlipEmailBtnText">Send Email</span>
+          </button>
+          <button id="modalSlipWaBtn" onclick="dispatchSinglePayslipFromModal('whatsapp')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow transition-all" title="Deliver via Official WhatsApp">
             <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
-            <span id="modalSlipSendBtnText">Send (Mail & WhatsApp)</span>
+            <span id="modalSlipWaBtnText">Send WhatsApp</span>
           </button>
           <button onclick="printSalarySlip()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-white flex items-center gap-1">
             <i data-lucide="printer" class="w-3.5 h-3.5"></i>
@@ -8741,6 +8744,8 @@
           const slipInfo = slips[emp.id] || { status: 'Generated', genDate: '2026-10-31', sentDate: '' };
           const initials = emp.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
           const isSent = slipInfo.status === 'Sent';
+          const isEmailSent = slipInfo.emailSent !== undefined ? slipInfo.emailSent : (slipInfo.status === 'Sent');
+          const isWaSent = slipInfo.whatsappSent !== undefined ? slipInfo.whatsappSent : (slipInfo.status === 'Sent');
 
           return `
             <tr class="hover:bg-brand-card/60 transition-colors group">
@@ -8884,17 +8889,23 @@
                 `}
               </td>
 
-              <!-- 12. Actions: Slip View + Single Send (Sticky Right) -->
+              <!-- 12. Actions: Slip View + Separate Email & WhatsApp (Sticky Right) -->
               <td class="py-4 px-5 text-right whitespace-nowrap sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#15151e] border-l border-brand-border shadow-[-4px_0_12px_rgba(0,0,0,0.5)] transition-colors">
-                <div class="flex items-center justify-end gap-2">
-                  <button onclick="viewEmployeePayslip('${emp.id}')" title="View & Download Official Salary Slip" class="px-3 py-1.5 rounded-xl bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm">
+                <div class="flex items-center justify-end gap-1.5">
+                  <!-- 1. View Payslip Document -->
+                  <button onclick="viewEmployeePayslip('${emp.id}')" title="View & Download Official Salary Slip" class="px-2.5 py-1.5 rounded-xl bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
                     <i data-lucide="file-text" class="w-3.5 h-3.5 text-brand-amber"></i>
                     <span>Slip</span>
                   </button>
-                  <button onclick="dispatchSinglePayslip('${emp.id}')" title="Send Salary Slip to ${emp.name} via Email & WhatsApp" class="px-3 py-1.5 rounded-xl ${isSent ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20' : 'bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold'} text-xs transition-all flex items-center gap-1.5 shadow-sm">
+                  <!-- 2. Send via Email -->
+                  <button onclick="dispatchSinglePayslipChannel('${emp.id}', 'email')" title="Send Salary Slip to ${emp.name} via Email (${emp.email})" class="px-2.5 py-1.5 rounded-xl ${isEmailSent ? 'bg-sky-500/15 text-sky-400 border border-sky-500/30 hover:bg-sky-500/25' : 'bg-sky-600 hover:bg-sky-500 text-white font-bold'} text-xs transition-all flex items-center gap-1 shadow-sm">
                     <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                    <span>${isEmailSent ? 'Resend' : 'Email'}</span>
+                  </button>
+                  <!-- 3. Send via WhatsApp -->
+                  <button onclick="dispatchSinglePayslipChannel('${emp.id}', 'whatsapp')" title="Send Salary Slip to ${emp.name} via WhatsApp (${emp.phone || '+91 98201 12345'})" class="px-2.5 py-1.5 rounded-xl ${isWaSent ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25' : 'bg-emerald-600 hover:bg-emerald-500 text-white font-bold'} text-xs transition-all flex items-center gap-1 shadow-sm">
                     <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
-                    <span>${isSent ? 'Resend' : 'Send'}</span>
+                    <span>${isWaSent ? 'Resend' : 'WhatsApp'}</span>
                   </button>
                 </div>
               </td>
@@ -8961,37 +8972,69 @@
       showToast('All Payslips Dispatched!', `Sent ${appState.employees.length} payslips via encrypted Email & WhatsApp with download links.`);
     }
 
-    // Send Single Payslip (From table row or modal preview)
-    function dispatchSinglePayslip(empId) {
+    // Send Single Payslip via Email or WhatsApp individually
+    function dispatchSinglePayslipChannel(empId, channel) {
       const emp = appState.employees.find(e => e.id === empId);
       if (!emp) return;
 
       const genVal = document.getElementById('payrollGenDate')?.value || '2026-10-31';
       const key = getPayrollSlipsStorageKey();
       const slips = loadPayrollSlips();
+      const nowIso = new Date().toISOString();
 
-      slips[empId] = {
-        status: 'Sent',
-        genDate: slips[empId]?.genDate || genVal,
-        sentDate: new Date().toISOString()
-      };
-
-      localStorage.setItem(key, JSON.stringify(slips));
-      renderPayrollTable();
-
-      // Update button text in modal if open
-      const modalBtnText = document.getElementById('modalSlipSendBtnText');
-      if (modalBtnText && currentModalSlipEmpId === empId) {
-        modalBtnText.innerText = 'Sent (Resend)';
+      if (!slips[empId]) {
+        slips[empId] = { status: 'Generated', emailSent: false, whatsappSent: false, genDate: genVal, sentDate: '' };
       }
 
-      showToast('Payslip Sent!', `Salary slip dispatched to ${emp.name} (${emp.email}) via Email & WhatsApp.`);
+      if (channel === 'email') {
+        slips[empId].emailSent = true;
+        slips[empId].status = 'Sent';
+        slips[empId].sentDate = nowIso;
+        localStorage.setItem(key, JSON.stringify(slips));
+        renderPayrollTable();
+        updateModalSlipSendButtons(empId);
+        showToast('Email Dispatched!', `Official salary slip sent to ${emp.name} at ${emp.email}.`);
+      } else if (channel === 'whatsapp') {
+        slips[empId].whatsappSent = true;
+        slips[empId].status = 'Sent';
+        slips[empId].sentDate = nowIso;
+        localStorage.setItem(key, JSON.stringify(slips));
+        renderPayrollTable();
+        updateModalSlipSendButtons(empId);
+        showToast('WhatsApp Sent!', `Encrypted payslip link delivered to ${emp.name} on WhatsApp (${emp.phone || '+91 98201 12345'}).`);
+      } else {
+        slips[empId].emailSent = true;
+        slips[empId].whatsappSent = true;
+        slips[empId].status = 'Sent';
+        slips[empId].sentDate = nowIso;
+        localStorage.setItem(key, JSON.stringify(slips));
+        renderPayrollTable();
+        updateModalSlipSendButtons(empId);
+        showToast('Payslip Sent!', `Dispatched via Email & WhatsApp to ${emp.name}.`);
+      }
     }
 
-    function dispatchSinglePayslipFromModal() {
+    function dispatchSinglePayslip(empId) {
+      dispatchSinglePayslipChannel(empId, 'all');
+    }
+
+    function dispatchSinglePayslipFromModal(channel) {
       if (currentModalSlipEmpId) {
-        dispatchSinglePayslip(currentModalSlipEmpId);
+        dispatchSinglePayslipChannel(currentModalSlipEmpId, channel || 'all');
       }
+    }
+
+    function updateModalSlipSendButtons(empId) {
+      const slips = loadPayrollSlips();
+      const slipInfo = slips[empId];
+      const isEmailSent = slipInfo ? (slipInfo.emailSent !== undefined ? slipInfo.emailSent : slipInfo.status === 'Sent') : false;
+      const isWaSent = slipInfo ? (slipInfo.whatsappSent !== undefined ? slipInfo.whatsappSent : slipInfo.status === 'Sent') : false;
+
+      const emailBtnText = document.getElementById('modalSlipEmailBtnText');
+      const waBtnText = document.getElementById('modalSlipWaBtnText');
+
+      if (emailBtnText) emailBtnText.innerText = isEmailSent ? 'Resend Email' : 'Send Email';
+      if (waBtnText) waBtnText.innerText = isWaSent ? 'Resend WhatsApp' : 'Send WhatsApp';
     }
 
     function formatDateDisplay(iso) {
@@ -9062,12 +9105,7 @@
       if (elStructure) elStructure.innerText = rules.structureName || 'Apex Global Standard 2026';
 
       // Update Modal Send Button Text based on current status
-      const slips = loadPayrollSlips();
-      const slipInfo = slips[empId];
-      const modalBtnText = document.getElementById('modalSlipSendBtnText');
-      if (modalBtnText) {
-        modalBtnText.innerText = (slipInfo && slipInfo.status === 'Sent') ? 'Sent (Resend)' : 'Send to Employee';
-      }
+      updateModalSlipSendButtons(empId);
 
       // Populate Employee Info
       document.getElementById('slipEmpName').innerText = p.emp.name;
