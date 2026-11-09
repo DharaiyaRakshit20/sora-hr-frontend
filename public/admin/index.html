@@ -107,6 +107,13 @@
     .payroll-scroll::-webkit-scrollbar-thumb:hover {
       background: #f59e0b;
     }
+    /* Mobile Responsive Tables: Disable sticky columns on screens < 768px so columns do not overlap on mobile */
+    @media (max-width: 767px) {
+      th.sticky, td.sticky, .sticky.left-0, .sticky.right-0 {
+        position: static !important;
+        box-shadow: none !important;
+      }
+    }
     @media print {
       body * { visibility: hidden; }
       #printablePayslip, #printablePayslip * { visibility: visible; }
@@ -195,6 +202,13 @@
     }
     .offer-pdf-page:last-child {
       page-break-after: avoid !important;
+    }
+    /* Mobile Responsive Tables: Disable sticky columns on screens < 768px so columns do not overlap on mobile */
+    @media (max-width: 767px) {
+      th.sticky, td.sticky, .sticky.left-0, .sticky.right-0 {
+        position: static !important;
+        box-shadow: none !important;
+      }
     }
     @media print {
       body * {

@@ -2742,7 +2742,7 @@
           </div>
 
           {/* 30-Day Monthly Calendar Grid */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-[#14141a] border border-neutral-800 space-y-3">
+          <div className="p-3 sm:p-5 rounded-2xl bg-[#14141a] border border-neutral-800 space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-neutral-800">
               <h3 className="text-xs font-bold text-white flex items-center gap-2">
                 <Icon name="calendar" className="w-4 h-4 text-amber-400" />
@@ -2751,9 +2751,9 @@
               <span className="text-[10px] text-neutral-400">Tap day to inspect</span>
             </div>
 
-            <div className="grid grid-cols-7 gap-1.5 text-center">
+            <div className="grid grid-cols-7 gap-1 sm:gap-1.5 text-center">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
-                <div key={d} className="py-1 text-[10px] font-bold text-neutral-500 uppercase">{d}</div>
+                <div key={d} className="py-1 text-[9px] sm:text-[10px] font-bold text-neutral-500 uppercase">{d}</div>
               ))}
               {calendarDays.map(item => {
                 const isSelected = selectedDate === item.dateKey;
@@ -2773,23 +2773,60 @@
                     key={item.day}
                     type="button"
                     onClick={() => setSelectedDate(item.dateKey)}
-                    className={`p-2 rounded-xl border text-left transition-all cursor-pointer ${borderStyle} ${
+                    className={`p-1 sm:p-2 rounded-lg sm:rounded-xl border text-center sm:text-left transition-all cursor-pointer ${borderStyle} ${
                       isSelected ? 'ring-2 ring-amber-400 scale-105 z-10' : ''
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-mono font-bold text-xs">{item.day}</span>
+                      <span className="font-mono font-bold text-[11px] sm:text-xs">{item.day}</span>
                       {item.log?.hasSelfie && (
                         <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                       )}
                     </div>
-                    <div className="mt-1 text-[8px] font-bold truncate hidden sm:block">
+                    <div className="mt-0.5 text-[7px] sm:text-[8px] font-bold truncate hidden sm:block">
                       {item.status}
                     </div>
                   </button>
                 );
               })}
             </div>
+
+            {/* Selected Date Dynamic Details Card */}
+            {selectedDate && (
+              <div className="p-3 rounded-xl bg-[#09090c] border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mt-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-amber-400/15 text-amber-400 flex items-center justify-center font-mono font-bold text-xs flex-shrink-0 border border-amber-400/20">
+                    {selectedDate.slice(-2)}
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white flex items-center gap-2">
+                      <span>{selectedDate}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 font-mono font-bold">
+                        {calendarDays.find(d => d.dateKey === selectedDate)?.status || 'Not Logged'}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-neutral-400 mt-0.5">
+                      {calendarDays.find(d => d.dateKey === selectedDate)?.log ? (
+                        <span>Punch In: <b className="text-emerald-400 font-mono">{calendarDays.find(d => d.dateKey === selectedDate).log.inTime}</b> &bull; Out: <b className="text-neutral-300 font-mono">{calendarDays.find(d => d.dateKey === selectedDate).log.outTime}</b> ({calendarDays.find(d => d.dateKey === selectedDate).log.hours})</span>
+                      ) : (
+                        <span>No attendance punch recorded on corporate ledger.</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {calendarDays.find(d => d.dateKey === selectedDate)?.log && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMapLog(calendarDays.find(d => d.dateKey === selectedDate).log)}
+                    className="self-start sm:self-auto px-2.5 py-1 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-400 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                  >
+                    <Icon name="map-pin" className="w-3.5 h-3.5" />
+                    <span>View Map</span>
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* ATTENDANCE RECORDS (Mobile Cards View for Phones + Scrollable Table for Desktop) */}
@@ -2826,21 +2863,21 @@
                     </span>
                   </div>
 
-                  {/* Row 2: Shift Timing Details Grid */}
-                  <div className="grid grid-cols-4 gap-2 p-2.5 rounded-xl bg-[#09090c] border border-neutral-800/80 text-center">
-                    <div>
+                  {/* Row 2: Shift Timing Details Grid (2x2 on mobile, 4 across on desktop) */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2.5 rounded-xl bg-[#09090c] border border-neutral-800/80 text-center">
+                    <div className="p-1 rounded bg-[#14141a]/60">
                       <div className="text-[9px] text-neutral-400 uppercase font-semibold">In Time</div>
                       <div className="text-xs font-bold font-mono text-emerald-400 mt-0.5">{log.inTime}</div>
                     </div>
-                    <div>
+                    <div className="p-1 rounded bg-[#14141a]/60">
                       <div className="text-[9px] text-neutral-400 uppercase font-semibold">Out Time</div>
                       <div className="text-xs font-bold font-mono text-neutral-300 mt-0.5">{log.outTime}</div>
                     </div>
-                    <div>
+                    <div className="p-1 rounded bg-[#14141a]/60">
                       <div className="text-[9px] text-neutral-400 uppercase font-semibold">Break</div>
                       <div className="text-xs font-bold font-mono text-amber-300 mt-0.5">{log.breakMinutes}m</div>
                     </div>
-                    <div>
+                    <div className="p-1 rounded bg-[#14141a]/60">
                       <div className="text-[9px] text-neutral-400 uppercase font-semibold">Work Hrs</div>
                       <div className="text-xs font-bold font-mono text-white mt-0.5">{log.hours}</div>
                     </div>
@@ -2888,9 +2925,17 @@
               ))}
             </div>
 
-            {/* DESKTOP TABLE VIEW (With whitespace-nowrap so columns never wrap awkwardly) */}
-            <div className="hidden md:block p-4 rounded-2xl bg-[#14141a] border border-neutral-800 overflow-x-auto payroll-scroll">
-              <table className="w-full text-left text-xs border-collapse min-w-[1050px]">
+            {/* DESKTOP TABLE VIEW (With whitespace-nowrap and horizontal scroll bar) */}
+            <div className="hidden md:block p-4 rounded-2xl bg-[#14141a] border border-neutral-800 space-y-2">
+              <div className="flex items-center justify-between text-[11px] text-neutral-400 font-mono pb-1 border-b border-neutral-800">
+                <span className="flex items-center gap-1.5 text-amber-400">
+                  <Icon name="file-text" className="w-3.5 h-3.5" />
+                  <span>Master Attendance Grid Ledger</span>
+                </span>
+                <span className="text-neutral-500 text-[10px]">↔️ Scroll horizontally to inspect all columns</span>
+              </div>
+              <div className="overflow-x-auto payroll-scroll">
+                <table className="w-full text-left text-xs border-collapse min-w-[1050px]">
                 <thead>
                   <tr className="border-b border-neutral-800 text-neutral-400 font-mono text-[11px]">
                     <th className="py-3 px-3 whitespace-nowrap">Date</th>
@@ -2958,6 +3003,7 @@
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           </div>
 
@@ -3273,22 +3319,22 @@
           {/* THE SALARY SLIP DOCUMENT CONTAINER */}
           <div
             id="printable-payslip-area"
-            className="p-8 sm:p-12 rounded-3xl bg-brand-surface border border-brand-border shadow-2xl space-y-8 max-w-4xl mx-auto"
+            className="p-4 sm:p-8 lg:p-12 rounded-2xl sm:rounded-3xl bg-brand-surface border border-brand-border shadow-2xl space-y-6 sm:space-y-8 max-w-4xl mx-auto overflow-hidden"
           >
             
             {/* Header Letterhead */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-brand-border">
               <div className="flex items-center gap-3">
-                <img src="/sora-hr-logo.svg" alt="SORA HR" className="h-9 w-auto" onError={(e) => { e.target.src = '/sora-hr-logo.png'; }} />
+                <img src="/sora-hr-logo.svg" alt="SORA HR" className="h-8 sm:h-9 w-auto" onError={(e) => { e.target.src = '/sora-hr-logo.png'; }} />
                 <div>
-                  <h3 className="font-extrabold text-white text-base">Apex Global Technologies Pvt Ltd</h3>
-                  <p className="text-[11px] text-neutral-400">Unit 604, Tower B, BKC Business Plaza, Mumbai 400051</p>
-                  <p className="text-[10px] text-neutral-500 font-mono">CIN: U72900MH2021PTC368291 &bull; GSTIN: 27AABCA1234F1Z5</p>
+                  <h3 className="font-extrabold text-white text-sm sm:text-base">Apex Global Technologies Pvt Ltd</h3>
+                  <p className="text-[10px] sm:text-[11px] text-neutral-400">Unit 604, Tower B, BKC Business Plaza, Mumbai 400051</p>
+                  <p className="text-[9px] sm:text-[10px] text-neutral-500 font-mono">CIN: U72900MH2021PTC368291 &bull; GSTIN: 27AABCA1234F1Z5</p>
                 </div>
               </div>
 
               <div className="sm:text-right">
-                <span className="px-3 py-1 rounded-full bg-brand-amber/15 text-brand-amber border border-brand-amber/30 text-xs font-bold">
+                <span className="px-3 py-1 rounded-full bg-brand-amber/15 text-brand-amber border border-brand-amber/30 text-xs font-bold inline-block">
                   PAYSLIP &bull; {selectedMonth}
                 </span>
                 <div className="text-[11px] text-neutral-400 font-mono mt-1">Payment Date: 05 Nov 2026</div>
@@ -3296,7 +3342,7 @@
             </div>
 
             {/* Employee Demographic Details Matrix */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-2xl bg-brand-dark border border-brand-border text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-brand-dark border border-brand-border text-xs">
               <div>
                 <span className="text-[10px] text-neutral-500 uppercase font-bold block">Employee Name</span>
                 <strong className="text-white font-semibold text-sm">{currentUser.name}</strong>
@@ -3316,7 +3362,7 @@
 
               <div>
                 <span className="text-[10px] text-neutral-500 uppercase font-bold block">Bank &amp; A/C</span>
-                <span className="text-neutral-300 font-mono">{currentUser.bank} &bull; {currentUser.accountNo}</span>
+                <span className="text-neutral-300 font-mono break-all">{currentUser.bank} &bull; {currentUser.accountNo}</span>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-500 uppercase font-bold block">PAN Number</span>
@@ -3324,7 +3370,7 @@
               </div>
               <div>
                 <span className="text-[10px] text-neutral-500 uppercase font-bold block">UAN &bull; PF Number</span>
-                <span className="text-neutral-300 font-mono text-[11px]">{currentUser.uan}</span>
+                <span className="text-neutral-300 font-mono text-[11px] break-all">{currentUser.uan}</span>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-500 uppercase font-bold block">Days Payable</span>
@@ -3502,7 +3548,7 @@
           </div>
 
           {/* Master Payroll Register Table */}
-          <div className="p-6 rounded-3xl bg-brand-surface border border-brand-border space-y-4">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-brand-surface border border-brand-border space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <Icon name="file-text" className="w-4 h-4 text-brand-amber" />
@@ -3511,7 +3557,57 @@
               <span className="text-xs font-mono text-neutral-400">{payrollData.length} Personnel</span>
             </div>
 
-            <div className="overflow-x-auto payroll-scroll">
+            {/* MOBILE CARDS VIEW (Clean, touch-friendly cards for phones!) */}
+            <div className="space-y-3 block md:hidden">
+              {payrollData.map(p => (
+                <div key={p.empCode} className="p-4 rounded-2xl bg-[#14141a] border border-neutral-800 space-y-3 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-bold text-white">{p.name}</div>
+                      <div className="text-[11px] text-brand-amber font-mono font-bold mt-0.5">
+                        {p.empCode} &bull; <span className="text-neutral-400">{p.dept}</span>
+                      </div>
+                    </div>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                      p.status === 'Disbursed' ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' :
+                      'bg-amber-500/15 text-amber-300 border-amber-500/30 animate-pulse'
+                    }`}>
+                      {p.status}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-[#09090c] border border-neutral-800/80 text-center text-xs">
+                    <div className="p-1 rounded bg-[#14141a]/60">
+                      <div className="text-[9px] text-neutral-400 uppercase font-semibold">Paid Days</div>
+                      <div className="text-xs font-bold font-mono text-neutral-200 mt-0.5">{p.paidDays}/{p.workingDays}d</div>
+                    </div>
+                    <div className="p-1 rounded bg-[#14141a]/60">
+                      <div className="text-[9px] text-neutral-400 uppercase font-semibold">Gross</div>
+                      <div className="text-xs font-bold font-mono text-neutral-300 mt-0.5">₹{p.gross.toLocaleString('en-IN')}</div>
+                    </div>
+                    <div className="p-1 rounded bg-[#14141a]/60">
+                      <div className="text-[9px] text-neutral-400 uppercase font-semibold">Net Pay</div>
+                      <div className="text-xs font-black font-mono text-emerald-400 mt-0.5">₹{p.net.toLocaleString('en-IN')}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1 text-xs">
+                    <span className="text-[11px] text-rose-400 font-mono">Deductions: ₹{p.deductions.toLocaleString('en-IN')}</span>
+                    <button
+                      type="button"
+                      onClick={() => onSelectEmployeePayslip(p)}
+                      className="px-3 py-1.5 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/30 text-amber-300 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                    >
+                      <Icon name="file-text" className="w-3.5 h-3.5" />
+                      <span>View Payslip</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* DESKTOP TABLE VIEW (With horizontal scroll) */}
+            <div className="hidden md:block overflow-x-auto payroll-scroll">
               <table className="w-full text-left text-xs border-collapse min-w-[1100px]">
                 <thead>
                   <tr className="border-b border-brand-border text-neutral-400 font-mono text-[11px] select-none">
@@ -3558,6 +3654,7 @@
                 </tbody>
               </table>
             </div>
+          </div>
           </div>
 
         </div>
@@ -3707,7 +3804,44 @@
                 </button>
               </div>
 
-              <div className="overflow-x-auto max-h-96 payroll-scroll">
+              {/* MOBILE CARDS VIEW (For small phones) */}
+              <div className="space-y-3 block md:hidden max-h-96 overflow-y-auto">
+                {parsedRows.map((r, idx) => (
+                  <div key={idx} className="p-3.5 rounded-2xl bg-[#09090c] border border-neutral-800 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs font-bold text-white">{r.EmployeeName || r.Name || 'Employee'}</div>
+                        <div className="text-[10px] text-brand-amber font-mono">{r.EmployeeCode || r.EmpCode || '--'} &bull; {r.Date || '--'}</div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                        {r.Status || 'Present'}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-4 gap-1.5 p-2 rounded-xl bg-[#14141a] text-center text-xs">
+                      <div>
+                        <div className="text-[8px] text-neutral-400 uppercase font-semibold">Clock In</div>
+                        <div className="text-[11px] font-bold font-mono text-emerald-400 mt-0.5">{r.ClockIn || '--'}</div>
+                      </div>
+                      <div>
+                        <div className="text-[8px] text-neutral-400 uppercase font-semibold">Clock Out</div>
+                        <div className="text-[11px] font-bold font-mono text-neutral-300 mt-0.5">{r.ClockOut || '--'}</div>
+                      </div>
+                      <div>
+                        <div className="text-[8px] text-neutral-400 uppercase font-semibold">Break</div>
+                        <div className="text-[11px] font-bold font-mono text-amber-300 mt-0.5">{r.BreakMins || r.Break || '0'}m</div>
+                      </div>
+                      <div>
+                        <div className="text-[8px] text-neutral-400 uppercase font-semibold">Hours</div>
+                        <div className="text-[11px] font-bold font-mono text-white mt-0.5">{r.Hours || '--'}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* DESKTOP TABLE VIEW */}
+              <div className="hidden md:block overflow-x-auto max-h-96 payroll-scroll">
                 <table className="w-full text-left text-xs border-collapse min-w-[950px]">
                   <thead className="sticky top-0 bg-brand-surface z-10 select-none">
                     <tr className="border-b border-brand-border text-neutral-400 font-mono text-[11px]">
