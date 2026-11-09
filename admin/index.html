@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="dark scroll-smooth">
 <head>
   <meta charset="UTF-8">
@@ -696,6 +696,14 @@
                 <span class="sidebar-text truncate">Clock-In QR Code</span>
               </div>
               <span class="sidebar-badge text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded flex-shrink-0">Standee</span>
+            </button>
+            <!-- 13. My Plan & Subscription Upgrade -->
+            <button onclick="switchTab('subscription')" id="nav-subscription" title="My Plan & Upgrade" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
+              <div class="flex items-center gap-3 min-w-0">
+                <i data-lucide="crown" class="w-4 h-4 text-brand-amber flex-shrink-0"></i>
+                <span class="sidebar-text truncate">My Plan &amp; Upgrade</span>
+              </div>
+              <span id="badgeCurrentPlanTier" class="sidebar-badge text-[10px] bg-amber-500/20 text-brand-amber border border-brand-amber/30 px-1.5 py-0.5 rounded font-mono flex-shrink-0">Pro</span>
             </button>
 
           </nav>
@@ -2575,10 +2583,217 @@
 
         </div>
 
+                <!-- TAB 13: MY PLAN & SUBSCRIPTION MANAGEMENT -->
+          <div id="tab-subscription" class="tab-content hidden space-y-6 max-w-7xl mx-auto w-full p-4 sm:p-6">
+            <!-- Header -->
+            <div class="border-b border-brand-border pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+                  <i data-lucide="crown" class="w-6 h-6 text-brand-amber"></i>
+                  <span>My Plan &amp; Subscription Upgrade</span>
+                </h1>
+                <p class="text-xs text-neutral-400 mt-1">Manage corporate SaaS plan, monitor active employee seat allocation, and upgrade capacity.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openCompanyUpgradeModal()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-amber to-amber-600 hover:from-brand-amberLight hover:to-amber-500 text-neutral-950 font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all">
+                  <i data-lucide="zap" class="w-4 h-4"></i>
+                  <span>Upgrade / Add Employee Seats</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Current Plan Hero Card & Utilization -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- Plan Summary Card (2 cols) -->
+              <div class="lg:col-span-2 rounded-3xl bg-brand-surface border border-brand-amber/40 p-6 space-y-5 relative overflow-hidden shadow-2xl">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      <span>Active Enterprise Subscription</span>
+                    </span>
+                    <h2 id="coPlanName" class="text-2xl font-black text-white mt-2">Growth Pro Plan</h2>
+                    <p id="coCompanyName" class="text-xs text-neutral-400">Apex Global Technologies Pvt Ltd</p>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-[10px] text-neutral-400 uppercase font-semibold">Monthly Subscription Rate</div>
+                    <div id="coPlanMRR" class="text-2xl font-black text-brand-amber font-mono mt-0.5">â‚¹8,848.82</div>
+                    <div class="text-[10px] text-neutral-500 font-mono">Billed Monthly (inc. 18% GST)</div>
+                  </div>
+                </div>
+
+                <!-- Seat Capacity Utilization Meter -->
+                <div class="p-4 rounded-2xl bg-brand-dark/90 border border-brand-border space-y-2.5">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="font-bold text-white flex items-center gap-1.5">
+                      <i data-lucide="users" class="w-4 h-4 text-brand-amber"></i>
+                      <span>Employee Seat Allocation</span>
+                    </span>
+                    <span id="coSeatProgressText" class="font-mono font-bold text-brand-amber">18 / 35 Seats Used (51%)</span>
+                  </div>
+                  <div class="w-full h-3 bg-brand-surface rounded-full overflow-hidden border border-brand-border/60">
+                    <div id="coSeatProgressBar" class="h-full bg-gradient-to-r from-brand-amber to-amber-500 rounded-full transition-all duration-500 shadow-amber-glow" style="width: 51%"></div>
+                  </div>
+                  <div class="flex items-center justify-between text-[11px] text-neutral-400">
+                    <span id="coSeatBreakdown">25 Base Slab + 10 Extra Seats</span>
+                    <span id="coSeatsRemaining" class="text-emerald-400 font-semibold">17 Available Seats</span>
+                  </div>
+                </div>
+
+                <!-- Plan Renewal Details -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs">
+                  <div class="p-3 rounded-xl bg-brand-dark/50 border border-brand-border/60">
+                    <div class="text-[10px] text-neutral-400 uppercase">Per-Employee Rate</div>
+                    <div id="coPerEmpRate" class="text-sm font-bold text-purple-400 font-mono mt-0.5">â‚¹150 / extra emp</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-brand-dark/50 border border-brand-border/60">
+                    <div class="text-[10px] text-neutral-400 uppercase">Next Auto-Renewal</div>
+                    <div id="coRenewalDate" class="text-sm font-bold text-emerald-400 font-mono mt-0.5">15 Dec 2026</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-brand-dark/50 border border-brand-border/60 sm:col-span-1 col-span-2">
+                    <div class="text-[10px] text-neutral-400 uppercase">Payment Method</div>
+                    <div class="text-sm font-bold text-white font-mono mt-0.5 flex items-center gap-1">
+                      <i data-lucide="credit-card" class="w-3.5 h-3.5 text-brand-amber"></i>
+                      <span>Razorpay Auto-Debit</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Included HRMS Features Card (1 col) -->
+              <div class="rounded-3xl bg-brand-surface border border-brand-border p-6 flex flex-col justify-between space-y-4 shadow-xl">
+                <div>
+                  <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+                    <span>Included Plan Features</span>
+                  </h3>
+                  <p class="text-[11px] text-neutral-400 mt-1">Enterprise features active in your current subscription tier:</p>
+                  <ul class="mt-4 space-y-2 text-xs text-neutral-300">
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-amber"></i><span>Core Employee Directory &amp; Hierarchy</span></li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-amber"></i><span>Geofence &amp; Biometric Attendance</span></li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-amber"></i><span>Multi-State Automated Payroll Engine</span></li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-amber"></i><span>Candidate Pipeline &amp; ATS Engine</span></li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-amber"></i><span>Employee Self-Service Mobile APK</span></li>
+                  </ul>
+                </div>
+
+                <div class="pt-4 border-t border-brand-border">
+                  <button type="button" onclick="openCompanyUpgradeModal()" class="w-full py-2.5 rounded-xl bg-brand-dark border border-brand-border hover:border-brand-amber text-neutral-200 hover:text-white font-bold text-xs transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="arrow-up-circle" class="w-4 h-4 text-brand-amber"></i>
+                    <span>Upgrade to Higher Tier</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Invoices & Transaction History -->
+            <div class="rounded-3xl bg-brand-surface border border-brand-border p-6 space-y-4 shadow-xl">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <i data-lucide="receipt" class="w-4 h-4 text-brand-amber"></i>
+                    <span>Billing &amp; Invoice History</span>
+                  </h3>
+                  <p class="text-xs text-neutral-400 mt-0.5">Download GST compliant tax invoices for your corporate financial filings.</p>
+                </div>
+                <span class="text-[10px] font-mono text-neutral-400 bg-brand-dark px-2.5 py-1 rounded-lg border border-brand-border">Verified Invoices</span>
+              </div>
+
+              <div class="overflow-x-auto payroll-scroll rounded-xl border border-brand-border bg-brand-dark">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="border-b border-brand-border bg-brand-surface text-neutral-400 uppercase font-mono text-[10px] tracking-wider">
+                      <th class="py-3 px-4 font-semibold">Invoice #</th>
+                      <th class="py-3 px-4 font-semibold">Date &amp; Time</th>
+                      <th class="py-3 px-4 font-semibold">Plan Details</th>
+                      <th class="py-3 px-4 font-semibold">Seats</th>
+                      <th class="py-3 px-4 font-semibold">Amount Paid</th>
+                      <th class="py-3 px-4 font-semibold">Payment Method</th>
+                      <th class="py-3 px-4 font-semibold">Status</th>
+                      <th class="py-3 px-4 font-semibold text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="coInvoicesTbody" class="divide-y divide-brand-border/60 text-neutral-300">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
       </main>
 
   <!-- MODALS SECTION                                 -->
   <!-- ============================================== -->
+
+    <!-- MODAL: UPGRADE CAPACITY / ADD EMPLOYEE SEATS -->
+  <div id="modalCompanyUpgrade" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-3xl border border-brand-amber/50 w-full max-w-lg p-6 space-y-5 text-xs text-white shadow-2xl">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-brand-amber/15 text-brand-amber flex items-center justify-center">
+            <i data-lucide="zap" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Expand Employee Capacity</h3>
+            <p class="text-[11px] text-neutral-400">Increase active team seats with dynamic per-employee pricing</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeCompanyUpgradeModal()" class="text-neutral-400 hover:text-white text-xl leading-none">&times;</button>
+      </div>
+
+      <div class="space-y-4">
+        <div class="p-4 rounded-2xl bg-brand-dark border border-brand-border space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-neutral-300 font-semibold">Select New Seat Limit:</span>
+            <span id="upgradeSeatDisplay" class="font-bold text-brand-amber font-mono text-sm bg-brand-amber/10 px-3 py-1 rounded-lg border border-brand-amber/30">45 Seats</span>
+          </div>
+          <input type="range" id="upgradeSeatSlider" min="20" max="150" value="45" oninput="updateCompanyUpgradeCalc(this.value)" class="w-full accent-amber-400 cursor-pointer h-2 bg-brand-surface rounded-lg">
+          <div class="flex justify-between text-[10px] text-neutral-500 font-mono">
+            <span id="upgradeMinLabel">Current: 35</span>
+            <span>50 Seats</span>
+            <span>75 Seats</span>
+            <span>100+ Seats</span>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-brand-dark/60 border border-brand-border space-y-1.5 font-mono text-[11px] text-neutral-300">
+          <div class="flex justify-between">
+            <span>Base Plan Fee:</span>
+            <span id="upgradeBasePriceDisplay">â‚¹5,999.00</span>
+          </div>
+          <div class="flex justify-between">
+            <span id="upgradeExtraLabel">+20 Extra Seats @ â‚¹150/emp:</span>
+            <span id="upgradeExtraPriceDisplay">â‚¹3,000.00</span>
+          </div>
+          <div class="flex justify-between border-t border-brand-border pt-1">
+            <span>Subtotal:</span>
+            <span id="upgradeSubtotalDisplay">â‚¹8,999.00</span>
+          </div>
+          <div class="flex justify-between">
+            <span>GST (18%):</span>
+            <span id="upgradeGstDisplay">â‚¹1,619.82</span>
+          </div>
+          <div class="flex justify-between border-t border-brand-border pt-1 text-sm font-bold text-brand-amber">
+            <span>New Monthly MRR:</span>
+            <span id="upgradeTotalDisplay">â‚¹10,618.82</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between border-t border-brand-border pt-4">
+        <span class="text-[10px] text-neutral-400">Instant Seat Unlock &bull; Razorpay</span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeCompanyUpgradeModal()" class="px-4 py-2 rounded-xl border border-brand-border text-neutral-400 hover:text-white transition-colors">Cancel</button>
+          <button type="button" onclick="executeCompanyUpgrade()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-amber to-amber-600 hover:from-brand-amberLight hover:to-amber-500 text-neutral-950 font-extrabold shadow-lg transition-all flex items-center gap-1.5">
+            <span>Authorize &amp; Upgrade</span>
+            <i data-lucide="check" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL 1: CREATE CUSTOM ROLE & PERMISSION MATRIX (From Step 1 + Button) -->
   <div id="modalCreateRole" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -6677,6 +6892,9 @@
     }
 
     function switchTab(tabId) {
+      if (tabId === 'subscription') {
+        renderCompanySubscriptionTab();
+      }
       appState.currentTab = tabId;
 
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -13300,6 +13518,213 @@
     }
     setInterval(updateLiveServerClock, 1000);
     updateLiveServerClock();
+
+        // ------------------------------------------
+    // COMPANY ADMIN: MY PLAN & UPGRADE LOGIC
+    // ------------------------------------------
+    let currentCompanySub = null;
+    let upgradeCalculatedSeats = 45;
+
+    function loadCompanySubscription() {
+      try {
+        const stored = localStorage.getItem('sora_current_company_subscription');
+        if (stored) {
+          currentCompanySub = JSON.parse(stored);
+        } else {
+          const rawSubs = localStorage.getItem('sora_subscriptions_data');
+          if (rawSubs) {
+            const list = JSON.parse(rawSubs);
+            currentCompanySub = list[0] || null;
+          }
+        }
+      } catch (e) {
+        console.warn('Subscription load error:', e);
+      }
+
+      if (!currentCompanySub) {
+        currentCompanySub = {
+          id: 'SUB-102',
+          companyName: 'Apex Global Technologies Pvt Ltd',
+          adminName: 'Rohan Mehra',
+          adminEmail: 'rohan.mehra@apextech.com',
+          planId: 'plan_growth',
+          planName: 'Growth Pro Plan',
+          employeeCount: 35,
+          baseIncluded: 25,
+          extraEmployees: 10,
+          perEmployeePrice: 150,
+          basePrice: 5999,
+          extraAmount: 1500,
+          taxAmount: 1349.82,
+          totalAmount: 8848.82,
+          billingCycle: 'Monthly',
+          status: 'Active',
+          renewalDate: '15 Dec 2026',
+          transactions: [
+            {
+              txnId: 'pay_Rzp872109432',
+              invoiceNo: 'INV-2026-088',
+              date: '15 Nov 2026, 03:15 PM',
+              planName: 'Growth Pro (35 Seats)',
+              employeeCount: 35,
+              amount: 8848.82,
+              method: 'Razorpay UPI Verified',
+              status: 'Success'
+            }
+          ]
+        };
+      }
+
+      const badge = document.getElementById('badgeCurrentPlanTier');
+      if (badge) badge.innerText = currentCompanySub.planName.split(' ')[0];
+    }
+
+    function renderCompanySubscriptionTab() {
+      loadCompanySubscription();
+      const sub = currentCompanySub;
+      if (!sub) return;
+
+      document.getElementById('coPlanName').innerText = sub.planName;
+      document.getElementById('coCompanyName').innerText = sub.companyName;
+      document.getElementById('coPlanMRR').innerText = 'â‚¹' + Math.round(sub.totalAmount).toLocaleString('en-IN');
+
+      const usedSeats = (typeof employees !== 'undefined' && employees.length) ? employees.length : 18;
+      const totalSeats = sub.employeeCount || 35;
+      const pct = Math.min(100, Math.round((usedSeats / totalSeats) * 100));
+
+      document.getElementById('coSeatProgressText').innerText = ${usedSeats} /  Seats Used (%);
+      document.getElementById('coSeatProgressBar').style.width = pct + '%';
+      document.getElementById('coSeatBreakdown').innerText = ${sub.baseIncluded || 25} Base Slab +  Extra Seats;
+      document.getElementById('coSeatsRemaining').innerText = ${Math.max(0, totalSeats - usedSeats)} Available Seats;
+
+      document.getElementById('coPerEmpRate').innerText = â‚¹ / extra emp;
+      document.getElementById('coRenewalDate').innerText = sub.renewalDate || '15 Dec 2026';
+
+      const tbody = document.getElementById('coInvoicesTbody');
+      const txns = sub.transactions || [];
+      if (txns.length === 0) {
+        tbody.innerHTML = <tr><td colspan="8" class="py-4 text-center text-neutral-500">No past invoice receipts recorded.</td></tr>;
+      } else {
+        tbody.innerHTML = txns.map(t => 
+          <tr class="hover:bg-brand-surface/40 transition-colors">
+            <td class="py-3 px-4 font-mono font-bold text-brand-amber"></td>
+            <td class="py-3 px-4 font-mono text-neutral-300 text-[11px]"></td>
+            <td class="py-3 px-4 text-white font-semibold"></td>
+            <td class="py-3 px-4 font-mono text-center"> Seats</td>
+            <td class="py-3 px-4 font-mono font-bold text-emerald-400">â‚¹</td>
+            <td class="py-3 px-4 text-neutral-400"></td>
+            <td class="py-3 px-4">
+              <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>Paid</span>
+              </span>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <button type="button" onclick="window.print()" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white transition-colors text-[10px] font-semibold">
+                Print PDF
+              </button>
+            </td>
+          </tr>
+        ).join('');
+      }
+
+      lucide.createIcons();
+    }
+
+    function openCompanyUpgradeModal() {
+      loadCompanySubscription();
+      const sub = currentCompanySub;
+      const cur = sub.employeeCount || 35;
+      const slider = document.getElementById('upgradeSeatSlider');
+      slider.min = cur;
+      slider.max = cur + 100;
+      slider.value = cur + 15;
+      document.getElementById('upgradeMinLabel').innerText = Current: ;
+      updateCompanyUpgradeCalc(cur + 15);
+
+      document.getElementById('modalCompanyUpgrade').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeCompanyUpgradeModal() {
+      document.getElementById('modalCompanyUpgrade').classList.add('hidden');
+    }
+
+    function updateCompanyUpgradeCalc(val) {
+      upgradeCalculatedSeats = parseInt(val) || 35;
+      document.getElementById('upgradeSeatDisplay').innerText = ${upgradeCalculatedSeats} Seats;
+
+      const sub = currentCompanySub;
+      const baseMax = sub.baseIncluded || 25;
+      const perEmp = sub.perEmployeePrice || 150;
+      const extraSeats = Math.max(0, upgradeCalculatedSeats - baseMax);
+      const extraCost = extraSeats * perEmp;
+      const basePrice = sub.basePrice || 5999;
+      const subtotal = basePrice + extraCost;
+      const gst = subtotal * 0.18;
+      const grandTotal = subtotal + gst;
+
+      document.getElementById('upgradeBasePriceDisplay').innerText = â‚¹.00;
+      document.getElementById('upgradeExtraLabel').innerText = + Extra Seats @ â‚¹/emp:;
+      document.getElementById('upgradeExtraPriceDisplay').innerText = â‚¹.00;
+      document.getElementById('upgradeSubtotalDisplay').innerText = â‚¹.00;
+      document.getElementById('upgradeGstDisplay').innerText = â‚¹.00;
+      document.getElementById('upgradeTotalDisplay').innerText = â‚¹;
+    }
+
+    function executeCompanyUpgrade() {
+      const sub = currentCompanySub;
+      const baseMax = sub.baseIncluded || 25;
+      const perEmp = sub.perEmployeePrice || 150;
+      const extraSeats = Math.max(0, upgradeCalculatedSeats - baseMax);
+      const extraCost = extraSeats * perEmp;
+      const basePrice = sub.basePrice || 5999;
+      const subtotal = basePrice + extraCost;
+      const gst = subtotal * 0.18;
+      const grandTotal = subtotal + gst;
+
+      sub.employeeCount = upgradeCalculatedSeats;
+      sub.extraEmployees = extraSeats;
+      sub.extraAmount = extraCost;
+      sub.taxAmount = gst;
+      sub.totalAmount = grandTotal;
+
+      const newTxn = {
+        txnId: 'pay_Rzp' + Math.floor(100000000 + Math.random() * 900000000),
+        invoiceNo: 'INV-2026-' + Math.floor(100 + Math.random() * 900),
+        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ', Just now',
+        planName: ${sub.planName} (Upgraded to  Seats),
+        employeeCount: upgradeCalculatedSeats,
+        amount: grandTotal,
+        method: 'Razorpay UPI Upgrade',
+        status: 'Success'
+      };
+
+      if (!sub.transactions) sub.transactions = [];
+      sub.transactions.unshift(newTxn);
+
+      localStorage.setItem('sora_current_company_subscription', JSON.stringify(sub));
+
+      try {
+        const rawSubs = localStorage.getItem('sora_subscriptions_data');
+        if (rawSubs) {
+          const list = JSON.parse(rawSubs);
+          const idx = list.findIndex(s => s.id === sub.id || s.companyName === sub.companyName);
+          if (idx >= 0) {
+            list[idx] = sub;
+          } else {
+            list.unshift(sub);
+          }
+          localStorage.setItem('sora_subscriptions_data', JSON.stringify(list));
+        }
+      } catch (e) {
+        console.error('Master sub update error:', e);
+      }
+
+      closeCompanyUpgradeModal();
+      renderCompanySubscriptionTab();
+      showToast('Capacity Upgraded!', Your seat limit is now  active employees.);
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       loadPersistedAppState();
