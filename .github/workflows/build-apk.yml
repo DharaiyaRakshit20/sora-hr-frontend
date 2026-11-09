@@ -133,5 +133,7 @@ jobs:
             Android APK built by GitHub Actions.
             Download the file directly to install on Android phone or upload to Google Drive.
           files: SORA-HR-Employee-App.apk
+          make_latest: true
+          overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
