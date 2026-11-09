@@ -778,48 +778,30 @@
         }, 1400);
       }
 
-      function ensurePlansMountedAndRendered() {
-        let mount = document.getElementById('soraPlansMount');
+      function mountPlansSection() {
+        if (document.getElementById('pricing')) return true;
+
         const whyUs = document.getElementById('why-us') || document.getElementById('contact') || document.querySelector('footer');
+        if (!whyUs || !whyUs.parentNode) return false;
 
+        let mount = document.getElementById('soraPlansMount');
         if (!mount) {
-          if (whyUs && whyUs.parentNode) {
-            mount = document.createElement('div');
-            mount.id = 'soraPlansMount';
-            whyUs.parentNode.insertBefore(mount, whyUs);
-          } else {
-            return false;
-          }
-        } else {
-          // If mount exists but is placed after footer or at wrong place, relocate it before whyUs
-          if (whyUs && whyUs.parentNode && mount.parentNode && mount.nextElementSibling !== whyUs && mount !== whyUs) {
-            whyUs.parentNode.insertBefore(mount, whyUs);
-          }
+          mount = document.createElement('div');
+          mount.id = 'soraPlansMount';
         }
-
+        whyUs.parentNode.insertBefore(mount, whyUs);
         renderWebsitePlansSection();
         return true;
       }
 
       window.addEventListener('DOMContentLoaded', () => {
-        ensurePlansMountedAndRendered();
-
-        // Watch for React rendering #root
-        const root = document.getElementById('root');
-        if (root) {
-          const observer = new MutationObserver(() => {
-            ensurePlansMountedAndRendered();
-          });
-          observer.observe(root, { childList: true, subtree: true });
-        }
-
-        // Periodic checks during first 3 seconds to guarantee position
-        let checks = 0;
-        const pollTimer = setInterval(() => {
-          checks++;
-          ensurePlansMountedAndRendered();
-          if (checks > 30) clearInterval(pollTimer);
-        }, 100);
+        let attempts = 0;
+        const timer = setInterval(() => {
+          attempts++;
+          if (mountPlansSection() || attempts > 60) {
+            clearInterval(timer);
+          }
+        }, 80);
       });
     </script>
 </html>
