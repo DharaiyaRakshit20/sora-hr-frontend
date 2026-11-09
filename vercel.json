@@ -11,6 +11,10 @@
       "destination": "/admin/index.html"
     },
     {
+      "source": "/checkout/(.*)",
+      "destination": "/checkout/index.html"
+    },
+    {
       "source": "/super-admin/(.*)",
       "destination": "/super-admin/index.html"
     }

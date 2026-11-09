@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Enrollment & Checkout | SORA HR</title>
+  <link rel="icon" type="image/svg+xml" href="/sora-hr-icon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#080808',
+              surface: '#121217',
+              card: '#181820',
+              border: '#262630',
+              amber: '#F59E0B',
+              amberLight: '#FBBF24',
+              gold: '#D9AD62'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #080808;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262630;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f59e0b;
+    }
+  </style>
+</head>
+<body class="bg-[#080808] text-[#F7F3EC] antialiased selection:bg-amber-500/20 selection:text-amber-300 min-h-screen flex flex-col">
+
+  <!-- Top Sticky Header -->
+  <header class="sticky top-0 z-40 bg-[#080808]/90 backdrop-blur-md border-b border-[#22222a] py-3.5 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-full overflow-hidden p-0.5 bg-gradient-to-tr from-[#E8590C] via-[#FAB005] to-[#FFF9DB] shadow-[0_0_15px_rgba(232,89,12,0.35)]">
+          <img src="/assets/aistudio/WhatsApp_Image_2026-11-04_at_14.09.03_6992821c.jpeg" alt="SORA HR" class="w-full h-full object-cover rounded-full">
+        </div>
+        <div class="flex flex-col leading-none">
+          <div class="flex items-center gap-1">
+            <span class="font-extrabold text-lg tracking-wider text-white">SORA</span>
+            <span class="font-extrabold text-lg tracking-wider bg-gradient-to-r from-[#FAB005] to-[#E8590C] bg-clip-text text-transparent">HR</span>
+          </div>
+          <span class="text-[8px] uppercase tracking-widest text-neutral-400">Enterprise SaaS</span>
+        </div>
+      </a>
+
+      <!-- Security Trust & Back Link -->
+      <div class="flex items-center gap-4 text-xs">
+        <span class="hidden sm:flex items-center gap-1.5 text-neutral-400 font-mono text-[11px] bg-neutral-900 border border-neutral-800 px-3 py-1 rounded-full">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>256-Bit SSL Encrypted Checkout</span>
+        </span>
+        <a href="/#pricing" class="px-3.5 py-1.5 rounded-xl bg-brand-surface hover:bg-brand-card border border-brand-border hover:border-amber-400 text-neutral-300 hover:text-white transition-all font-semibold flex items-center gap-1.5 shadow-sm">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Back to Plans</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Enrollment Form Page -->
+  <main class="flex-grow py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+
+    <!-- Top Headline Banner -->
+    <div class="mb-8">
+      <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full w-fit mb-3">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+        <span>Corporate Workspace Activation</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+        Enroll in <span class="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">SORA HR Plan</span>
+      </h1>
+      <p class="text-sm text-neutral-400 mt-1.5 max-w-2xl">
+        Complete your corporate registration and administrative credentials to provision your dedicated company HRMS portal.
+      </p>
+    </div>
+
+    <!-- 2-Column Responsive Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT: CORPORATE REGISTRATION FORM (8 COLS) -->
+      <div class="lg:col-span-7 xl:col-span-8 space-y-6">
+
+        <form id="enrollmentForm" onsubmit="handleEnrollmentSubmit(event)" class="space-y-6">
+
+          <!-- CARD 1: COMPANY ADMINISTRATOR IDENTITY -->
+          <div class="p-6 rounded-3xl bg-[#121217] border border-[#262630] space-y-4 shadow-xl">
+            <div class="flex items-center gap-2.5 pb-3 border-b border-[#262630]">
+              <div class="w-8 h-8 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                1
+              </div>
+              <div>
+                <h2 class="text-sm font-bold text-white uppercase tracking-wider">Company Administrator Identity</h2>
+                <p class="text-[11px] text-neutral-400">Primary Super Admin who will hold master root access to your company's portal</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div>
+                <label class="block text-neutral-300 font-semibold mb-1.5">Full Name *</label>
+                <input type="text" id="chkAdminName" required placeholder="e.g. Aarav Sharma" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0a0a0e] border border-[#2b2b36] text-white focus:outline-none focus:border-amber-400 transition-colors">
+              </div>
+
+              <div>
+                <label class="block text-neutral-300 font-semibold mb-1.5">Work Email (Login ID) *</label>
+                <input type="email" id="chkAdminEmail" required placeholder="e.g. aarav@mycompany.com" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0a0a0e] border border-[#2b2b36] text-white focus:outline-none focus:border-amber-400 transition-colors">
+              </div>
+
+              <div>
+                <label class="block text-neutral-300 font-semibold mb-1.5">Contact Phone *</label>
+                <input type="tel" id="chkAdminPhone" required placeholder="e.g. +91 98765 43210" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0a0a0e] border border-[#2b2b36] text-white focus:outline-none focus:border-amber-400 transition-colors">
+              </div>
+
+              <div>
+                <label class="block text-neutral-300 font-semibold mb-1.5">Admin Portal Password *</label>
+                <input type="password" id="chkAdminPassword" required placeholder="Create master password" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0a0a0e] border border-[#2b2b36] text-white focus:outline-none focus:border-amber-400 transition-colors">
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2: CORPORATE ENTITY & BILLING DETAILS -->
+          <div class="p-6 rounded-3xl bg-[#121217] border border-[#262630] space-y-4 shadow-xl">
+            <div class="flex items-center gap-2.5 pb-3 border-b border-[#262630]">
+              <div class="w-8 h-8 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                2
+              </div>
+              <div>
+                <h2 class="text-sm font-bold text-white uppercase tracking-wider">Corporate Entity &amp; Billing Details</h2>
+                <p class="text-[11px] text-neutral-400">Used for generating your official GST invoices, tax compliance and legal agreements</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div class="sm:col-span-2">
+                <label class="block text-neutral-300 font-semibold mb-1.5">Company Registered Legal Name *</label>
+                <input type="text" id="chkCompanyName" required placeholder="e.g. Zenith Global Technologies Pvt Ltd" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0a0a0e] border border-[#2b2b36] text-white focus:outline-none focus:border-amber-400 transition-colors">
+              </div>
+
+              <div>
+                <label class="block text-neutral-300 font-semibold mb-1.5">Business Industry</label>
+                <select id="chkCompanyType" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0a0a0e] border border-[#2b2b36] text-white focus:outline-none focus:border-amber-400 transition-colors">
+                  <option value="IT &amp; Software Services">IT &amp; Software Services</option>
+                  <option value="Banking &amp; Financial Services">Banking &amp; Financial Services</option>
+                  <option value="Healthcare &amp; Life Sciences">Healthcare &amp; Life Sciences</option>
+                  <option value="Manufacturing &amp; Engineering">Manufacturing &amp; Engineering</option>
+                  <option value="Retail &amp; E-Commerce">Retail &amp; E-Commerce</option>
+                  <option value="Consulting &amp; Agency">Consulting &amp; Agency</option>
+                  <option value="Education &amp; EdTech">Education &amp; EdTech</option>
+                  <option value="Other Enterprise">Other Enterprise</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-neutral-300 font-semibold mb-1.5">Corporate CIN / Reg #</label>
+                <input type="text" id="chkCompanyCin" placeholder="e.g. U74999KA2024PTC189234" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0a0a0e] border border-[#2b2b36] text-white focus:outline-none focus:border-amber-400 transition-colors uppercase font-mono">
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-neutral-300 font-semibold mb-1.5">GSTIN Number (For Input Tax Credit)</label>
+                <input type="text" id="chkCompanyGst" placeholder="e.g. 29ABCDE1234F1Z5" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0a0a0e] border border-[#2b2b36] text-white focus:outline-none focus:border-amber-400 transition-colors uppercase font-mono">
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-neutral-300 font-semibold mb-1.5">Registered Head Office Address *</label>
+                <textarea id="chkCompanyAddress" required rows="2" placeholder="e.g. 4th Floor, Prestige Meridian, MG Road, Bengaluru, Karnataka - 560001" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0a0a0e] border border-[#2b2b36] text-white focus:outline-none focus:border-amber-400 transition-colors"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons for Mobile Screen -->
+          <div class="lg:hidden pt-2">
+            <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-neutral-950 font-black text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
+              <span>Proceed to Pay via Razorpay &bull; <span class="font-mono" id="btnMobilePayAmount">₹3,515</span></span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- RIGHT: ORDER SUMMARY & PAYMENT SUMMARY (4 COLS, STICKY) -->
+      <div class="lg:col-span-5 xl:col-span-4 sticky top-24 space-y-6">
+
+        <div class="p-6 rounded-3xl bg-[#121217] border border-amber-500/30 space-y-5 shadow-2xl relative overflow-hidden">
+          <!-- Subtle Glow -->
+          <div class="absolute -top-24 -right-24 w-48 h-48 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+          <!-- Card Header -->
+          <div class="flex items-center justify-between border-b border-[#262630] pb-4">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Selected Plan</span>
+              <h3 id="summaryPlanName" class="text-xl font-black text-white">Starter Plan</h3>
+            </div>
+            <span id="summaryPlanBadge" class="text-[10px] font-black px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 uppercase tracking-widest shadow">
+              Most Popular
+            </span>
+          </div>
+
+          <!-- Live Headcount Slider Box -->
+          <div class="p-4 rounded-2xl bg-[#09090d] border border-[#262630] space-y-3">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-neutral-300 font-semibold flex items-center gap-1.5">
+                <i data-lucide="users" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>Enrolled Headcount:</span>
+              </span>
+              <span id="summarySeatsBadge" class="font-mono font-bold text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-lg border border-amber-500/20">
+                14 Employees
+              </span>
+            </div>
+            <input type="range" id="summaryEmpSlider" min="1" max="150" value="14" oninput="handleSliderChange(this.value)" class="w-full accent-amber-400 cursor-pointer h-2 bg-[#20202a] rounded-lg">
+            <div class="flex justify-between text-[10px] text-neutral-500 font-mono">
+              <span>1 Emp</span>
+              <span id="summaryBaseMaxNote">10 Base</span>
+              <span>50 Emp</span>
+              <span>150+ Emp</span>
+            </div>
+          </div>
+
+          <!-- Transparent Price Breakdown Ledger -->
+          <div class="space-y-2.5 text-xs font-mono pt-1">
+            <div class="flex justify-between text-neutral-300">
+              <span class="text-neutral-400 font-sans">Plan Base Fee:</span>
+              <span id="summaryBasePrice">₹2,499.00</span>
+            </div>
+
+            <div class="flex justify-between text-neutral-300" id="summaryExtraRow">
+              <span class="text-neutral-400 font-sans" id="summaryExtraDesc">Extra Surcharge (4 emp @ ₹120/emp):</span>
+              <span id="summaryExtraPrice" class="text-amber-400">+₹480.00</span>
+            </div>
+
+            <div class="flex justify-between text-neutral-300 pt-2 border-t border-[#1e1e26]">
+              <span class="text-neutral-400 font-sans">Subtotal (Net Amount):</span>
+              <span id="summarySubtotal" class="font-bold">₹2,979.00</span>
+            </div>
+
+            <div class="flex justify-between text-neutral-300">
+              <span class="text-neutral-400 font-sans">Integrated GST (18%):</span>
+              <span id="summaryGst">₹536.22</span>
+            </div>
+
+            <div class="flex justify-between items-baseline pt-3 border-t border-[#262630] text-sm">
+              <span class="text-white font-sans font-bold">Total Payable Amount:</span>
+              <span id="summaryGrandTotal" class="text-2xl font-black text-amber-400 font-mono">₹3,515</span>
+            </div>
+          </div>
+
+          <!-- Included Features Pills -->
+          <div class="pt-2 border-t border-[#262630]">
+            <div class="text-[11px] text-neutral-400 font-semibold mb-2">Included in this plan:</div>
+            <div id="summaryModulesList" class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 rounded bg-[#1c1c24] border border-[#2b2b36] text-[10px] text-neutral-300 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-emerald-400"></i> Core HR</span>
+              <span class="px-2 py-0.5 rounded bg-[#1c1c24] border border-[#2b2b36] text-[10px] text-neutral-300 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-emerald-400"></i> Attendance</span>
+              <span class="px-2 py-0.5 rounded bg-[#1c1c24] border border-[#2b2b36] text-[10px] text-neutral-300 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-emerald-400"></i> Payroll</span>
+            </div>
+          </div>
+
+          <!-- Primary Submit CTA Button (Desktop) -->
+          <div class="pt-2">
+            <button type="button" onclick="triggerEnrollmentSubmit()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-neutral-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2">
+              <span>Proceed to Pay via Razorpay</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Guarantees -->
+          <div class="pt-2 text-center text-[10px] text-neutral-500 space-y-1">
+            <div class="flex items-center justify-center gap-1.5">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>Instant Workspace Provisioning Upon Payment</span>
+            </div>
+            <div>Billed monthly &bull; Cancel or adjust headcount anytime</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ============================================== -->
+  <!-- MODAL: RAZORPAY PAYMENT GATEWAY SIMULATION    -->
+  <!-- ============================================== -->
+  <div id="soraRazorpayModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#101015] border border-amber-500/40 rounded-3xl max-w-md w-full p-6 space-y-5 text-white shadow-2xl">
+      <!-- Razorpay Header -->
+      <div class="flex items-center justify-between border-b border-[#262630] pb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-xs">
+            Rzp
+          </div>
+          <div>
+            <div class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1">
+              <span>Razorpay Verified Gateway</span>
+              <i data-lucide="badge-check" class="w-3.5 h-3.5 text-blue-400"></i>
+            </div>
+            <div class="text-[10px] text-neutral-400">Merchant: SORA HR TECH PRIVATE LIMITED</div>
+          </div>
+        </div>
+        <button onclick="closeRazorpayModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+
+      <!-- Payment Amount Badge -->
+      <div class="p-4 rounded-2xl bg-[#09090d] border border-[#262630] flex items-center justify-between">
+        <div>
+          <div class="text-[10px] text-neutral-400 uppercase font-semibold">Total Amount Payable</div>
+          <div class="text-2xl font-black text-amber-400 font-mono mt-0.5" id="rzpAmountDisplay">₹3,515.00</div>
+        </div>
+        <div class="text-right text-[10px] text-neutral-400">
+          <span class="inline-block px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold">18% GST Included</span>
+          <div class="mt-1" id="rzpPlanNameDisplay">Starter Plan (14 Seats)</div>
+        </div>
+      </div>
+
+      <!-- Payment Method Simulation Choices -->
+      <div class="space-y-2 text-xs">
+        <div class="text-[11px] text-neutral-400 font-semibold">Select Payment Method:</div>
+        
+        <label class="flex items-center justify-between p-3 rounded-xl bg-[#181820] border border-amber-500/50 cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <input type="radio" name="rzpMethod" checked class="accent-amber-400">
+            <div>
+              <div class="font-bold text-white">Instant UPI (Google Pay, PhonePe, Paytm, CRED)</div>
+              <div class="text-[10px] text-neutral-400">Fastest checkout &bull; Zero gateway surcharge</div>
+            </div>
+          </div>
+          <span class="text-[10px] font-mono text-emerald-400 font-bold">Fast</span>
+        </label>
+
+        <label class="flex items-center justify-between p-3 rounded-xl bg-[#14141a] border border-[#262630] cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <input type="radio" name="rzpMethod" class="accent-amber-400">
+            <div>
+              <div class="font-bold text-white">Corporate Credit / Debit Card (Visa, MC, RuPay, Amex)</div>
+              <div class="text-[10px] text-neutral-400">Monthly auto-debit supported</div>
+            </div>
+          </div>
+          <i data-lucide="credit-card" class="w-4 h-4 text-neutral-400"></i>
+        </label>
+      </div>
+
+      <!-- Action Button -->
+      <div class="pt-2">
+        <button id="rzpSubmitBtn" type="button" onclick="confirmRazorpayPayment()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-neutral-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
+          <i data-lucide="lock" class="w-4 h-4"></i>
+          <span id="rzpBtnLabel">Pay Now &amp; Authorize Subscription</span>
+        </button>
+      </div>
+
+      <div class="text-center text-[10px] text-neutral-500 flex items-center justify-center gap-1.5">
+        <i data-lucide="shield" class="w-3.5 h-3.5 text-neutral-400"></i>
+        <span>PCI-DSS Level 1 Compliant &bull; 256-Bit SSL Encrypted Ledger</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: ORDER SUCCESS & WORKSPACE ACTIVATION   -->
+  <!-- ============================================== -->
+  <div id="soraSuccessModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#121217] border border-emerald-500/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 text-white text-xs shadow-2xl text-center">
+      <!-- Success Icon -->
+      <div class="w-16 h-16 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.25)]">
+        <i data-lucide="check-circle" class="w-8 h-8"></i>
+      </div>
+
+      <div class="space-y-1.5">
+        <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+          Payment Verified &bull; Active
+        </span>
+        <h3 class="text-2xl font-black text-white">Subscription Activated!</h3>
+        <p class="text-xs text-neutral-400 max-w-sm mx-auto">
+          Your payment was processed successfully. Your dedicated corporate HR portal has been provisioned.
+        </p>
+      </div>
+
+      <!-- Receipt Voucher -->
+      <div class="p-4 rounded-2xl bg-[#09090d] border border-[#262630] text-left space-y-2 font-mono text-[11px]">
+        <div class="flex justify-between">
+          <span class="text-neutral-400 font-sans">Payment Ref ID:</span>
+          <span id="succPaymentId" class="text-amber-400 font-bold">pay_Rzp123456789</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-neutral-400 font-sans">Company:</span>
+          <span id="succCompanyName" class="text-white font-bold">Zenith Global Tech</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-neutral-400 font-sans">Activated Plan:</span>
+          <span id="succPlanName" class="text-emerald-400 font-bold">Starter Plan</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-neutral-400 font-sans">Enrolled Headcount:</span>
+          <span id="succSeats" class="text-neutral-300">14 Employees (10 Base + 4 Extra)</span>
+        </div>
+        <div class="flex justify-between pt-2 border-t border-[#1e1e26] text-xs">
+          <span class="text-neutral-400 font-sans font-bold">Total Paid:</span>
+          <span id="succAmount" class="text-emerald-400 font-black text-sm">₹3,515</span>
+        </div>
+      </div>
+
+      <!-- Action CTAs -->
+      <div class="space-y-2.5 pt-2">
+        <a href="/admin/" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-neutral-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2">
+          <span>Launch Company Admin Portal</span>
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+        </a>
+        <button type="button" onclick="window.print()" class="w-full py-2.5 rounded-xl bg-[#1c1c24] hover:bg-[#252530] text-neutral-300 hover:text-white border border-[#2b2b36] text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+          <i data-lucide="printer" class="w-3.5 h-3.5 text-neutral-400"></i>
+          <span>Print Tax Invoice Receipt</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Logic -->
+  <script>
+    const defaultSoraPlans = [
+      {
+        id: 'plan_starter',
+        name: 'Starter Plan',
+        badge: 'Most Popular',
+        desc: 'Essential foundation for early teams & growing startups.',
+        basePrice: 2499,
+        baseMinEmp: 1,
+        baseMaxEmp: 10,
+        perEmployeePrice: 120,
+        billingCycle: 'Monthly',
+        status: 'Active',
+        popular: true,
+        modules: ['Core HR', 'Attendance', 'Leaves', 'Payroll']
+      },
+      {
+        id: 'plan_growth',
+        name: 'Growth Pro',
+        badge: 'Fast Growing',
+        desc: 'Comprehensive multi-branch operations, geofence standee kiosk & candidate ATS.',
+        basePrice: 5999,
+        baseMinEmp: 1,
+        baseMaxEmp: 25,
+        perEmployeePrice: 150,
+        billingCycle: 'Monthly',
+        status: 'Active',
+        popular: false,
+        modules: ['Core HR', 'Attendance', 'Leaves', 'Payroll', 'Recruitment ATS', 'Standee Kiosk']
+      },
+      {
+        id: 'plan_enterprise',
+        name: 'Enterprise Elite',
+        badge: 'Complete Suite',
+        desc: 'Unlimited power with performance appraisal, training, audit readiness & custom APIs.',
+        basePrice: 12999,
+        baseMinEmp: 1,
+        baseMaxEmp: 50,
+        perEmployeePrice: 180,
+        billingCycle: 'Monthly',
+        status: 'Active',
+        popular: false,
+        modules: ['All HRMS Modules', 'Performance', 'Audit', 'Custom APIs']
+      }
+    ];
+
+    function getPlansData() {
+      try {
+        const stored = localStorage.getItem('sora_plans_data');
+        if (stored) return JSON.parse(stored);
+      } catch (e) {
+        console.warn('LocalStorage error:', e);
+      }
+      return defaultSoraPlans;
+    }
+
+    let activePlan = null;
+    let liveEmployeeCount = 14;
+    let currentCalculation = null;
+
+    function initCheckoutPage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const planId = urlParams.get('plan') || 'plan_starter';
+      const empParam = parseInt(urlParams.get('emp')) || 14;
+
+      const plans = getPlansData();
+      activePlan = plans.find(p => p.id === planId) || plans[0];
+      liveEmployeeCount = empParam;
+
+      // Update slider
+      const slider = document.getElementById('summaryEmpSlider');
+      if (slider) {
+        slider.value = liveEmployeeCount;
+      }
+
+      updatePricingCalculation();
+      lucide.createIcons();
+    }
+
+    function handleSliderChange(val) {
+      liveEmployeeCount = parseInt(val) || 1;
+      updatePricingCalculation();
+    }
+
+    function updatePricingCalculation() {
+      if (!activePlan) return;
+
+      const baseMax = activePlan.baseMaxEmp || 10;
+      const perEmp = activePlan.perEmployeePrice || 120;
+      const extraEmployees = Math.max(0, liveEmployeeCount - baseMax);
+      const extraCost = extraEmployees * perEmp;
+      const basePrice = activePlan.basePrice;
+      const subtotal = basePrice + extraCost;
+      const gst = subtotal * 0.18;
+      const grandTotal = subtotal + gst;
+
+      currentCalculation = {
+        baseMax,
+        perEmp,
+        extraEmployees,
+        extraCost,
+        basePrice,
+        subtotal,
+        gst,
+        grandTotal
+      };
+
+      // Update DOM
+      document.getElementById('summaryPlanName').innerText = activePlan.name;
+      const badgeEl = document.getElementById('summaryPlanBadge');
+      if (badgeEl) {
+        badgeEl.innerText = activePlan.badge || (activePlan.popular ? 'Most Popular' : 'Active Plan');
+      }
+
+      document.getElementById('summarySeatsBadge').innerText = liveEmployeeCount + ' Employees';
+      document.getElementById('summaryBaseMaxNote').innerText = baseMax + ' Base';
+
+      document.getElementById('summaryBasePrice').innerText = '₹' + basePrice.toLocaleString('en-IN') + '.00';
+      
+      const extraRow = document.getElementById('summaryExtraRow');
+      const extraDesc = document.getElementById('summaryExtraDesc');
+      const extraPrice = document.getElementById('summaryExtraPrice');
+      
+      if (extraEmployees > 0) {
+        extraRow.classList.remove('hidden');
+        extraDesc.innerText = 'Extra Surcharge (' + extraEmployees + ' emp @ ₹' + perEmp + '/emp):';
+        extraPrice.innerText = '+₹' + extraCost.toLocaleString('en-IN') + '.00';
+      } else {
+        extraRow.classList.remove('hidden');
+        extraDesc.innerText = 'Extra Surcharge (Fits in Base Slab):';
+        extraPrice.innerText = '₹0.00 (Zero Extra)';
+      }
+
+      document.getElementById('summarySubtotal').innerText = '₹' + subtotal.toLocaleString('en-IN') + '.00';
+      document.getElementById('summaryGst').innerText = '₹' + Math.round(gst).toLocaleString('en-IN') + '.00';
+      
+      const formattedGrandTotal = '₹' + Math.round(grandTotal).toLocaleString('en-IN');
+      document.getElementById('summaryGrandTotal').innerText = formattedGrandTotal;
+      const mobilePayAmt = document.getElementById('btnMobilePayAmount');
+      if (mobilePayAmt) mobilePayAmt.innerText = formattedGrandTotal;
+
+      // Update Modules pills
+      const modulesList = document.getElementById('summaryModulesList');
+      if (modulesList) {
+        const mods = activePlan.modules || ['Core HR', 'Attendance', 'Payroll'];
+        modulesList.innerHTML = mods.map(m => '<span class="px-2 py-0.5 rounded bg-[#1c1c24] border border-[#2b2b36] text-[10px] text-neutral-300 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-emerald-400"></i> ' + m + '</span>').join('');
+      }
+
+      lucide.createIcons();
+    }
+
+    function triggerEnrollmentSubmit() {
+      const form = document.getElementById('enrollmentForm');
+      if (form) {
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+        form.dispatchEvent(new Event('submit', { cancelable: true }));
+      }
+    }
+
+    function handleEnrollmentSubmit(e) {
+      e.preventDefault();
+
+      const adminName = document.getElementById('chkAdminName').value.trim();
+      const adminEmail = document.getElementById('chkAdminEmail').value.trim();
+      const adminPhone = document.getElementById('chkAdminPhone').value.trim();
+      const adminPassword = document.getElementById('chkAdminPassword').value.trim();
+      const companyName = document.getElementById('chkCompanyName').value.trim();
+      const companyType = document.getElementById('chkCompanyType').value;
+      const companyCin = document.getElementById('chkCompanyCin').value.trim();
+      const companyGst = document.getElementById('chkCompanyGst').value.trim();
+      const companyAddress = document.getElementById('chkCompanyAddress').value.trim();
+
+      if (!adminName || !adminEmail || !adminPhone || !adminPassword || !companyName || !companyAddress) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      window.pendingEnrollmentData = {
+        admin: {
+          name: adminName,
+          email: adminEmail,
+          phone: adminPhone,
+          password: adminPassword,
+          companyName: companyName,
+          companyType: companyType,
+          companyCin: companyCin,
+          companyGst: companyGst,
+          companyAddress: companyAddress
+        },
+        plan: activePlan,
+        employeeCount: liveEmployeeCount,
+        ...currentCalculation
+      };
+
+      // Open Razorpay Simulation Modal
+      document.getElementById('rzpAmountDisplay').innerText = '₹' + Math.round(currentCalculation.grandTotal).toLocaleString('en-IN') + '.00';
+      document.getElementById('rzpPlanNameDisplay').innerText = activePlan.name + ' (' + liveEmployeeCount + ' Seats)';
+      document.getElementById('soraRazorpayModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeRazorpayModal() {
+      document.getElementById('soraRazorpayModal').classList.add('hidden');
+    }
+
+    function confirmRazorpayPayment() {
+      const btn = document.getElementById('rzpSubmitBtn');
+      const label = document.getElementById('rzpBtnLabel');
+      btn.disabled = true;
+      label.innerText = 'Authorizing with Bank Gateway...';
+
+      setTimeout(() => {
+        const p = window.pendingEnrollmentData;
+        const txnId = 'pay_Rzp' + Math.floor(100000000 + Math.random() * 900000000);
+        const subId = 'SUB-' + Math.floor(100 + Math.random() * 900);
+        const adminId = 'ADM-' + Math.floor(1000 + Math.random() * 9000);
+        const invNo = 'INV-2026-' + Math.floor(100 + Math.random() * 900);
+        const nowStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+        // 1. Save New Subscription
+        const newSub = {
+          id: subId,
+          companyName: p.admin.companyName,
+          adminName: p.admin.name,
+          adminEmail: p.admin.email,
+          adminPhone: p.admin.phone,
+          companyGst: p.admin.companyGst,
+          companyAddress: p.admin.companyAddress,
+          planId: p.plan.id,
+          planName: p.plan.name,
+          employeeCount: p.employeeCount,
+          baseIncluded: p.baseMax,
+          extraEmployees: p.extraEmployees,
+          perEmployeePrice: p.perEmp,
+          basePrice: p.basePrice,
+          extraAmount: p.extraCost,
+          taxAmount: p.gst,
+          totalAmount: p.grandTotal,
+          billingCycle: 'Monthly',
+          status: 'Active',
+          renewalDate: '10 Dec 2026',
+          transactions: [
+            {
+              txnId: txnId,
+              invoiceNo: invNo,
+              date: nowStr,
+              planName: p.plan.name + ' (' + p.employeeCount + ' Seats)',
+              employeeCount: p.employeeCount,
+              amount: p.grandTotal,
+              basePrice: p.basePrice,
+              extraCost: p.extraCost,
+              tax: p.gst,
+              method: 'Razorpay UPI Verified',
+              status: 'Success'
+            }
+          ]
+        };
+
+        try {
+          const rawSubs = localStorage.getItem('sora_subscriptions_data');
+          const subsList = rawSubs ? JSON.parse(rawSubs) : [];
+          subsList.unshift(newSub);
+          localStorage.setItem('sora_subscriptions_data', JSON.stringify(subsList));
+          localStorage.setItem('sora_current_company_subscription', JSON.stringify(newSub));
+        } catch (err) {
+          console.error('Subscription save error:', err);
+        }
+
+        // 2. Save New Administrator
+        const newAdmin = {
+          id: adminId,
+          name: p.admin.name,
+          email: p.admin.email,
+          phone: p.admin.phone,
+          empId: 'EMP-SORA-' + Math.floor(100 + Math.random() * 900),
+          password: p.admin.password,
+          status: 'Active',
+          role: 'Administrator',
+          designation: 'Managing Director / Corporate Admin',
+          company: {
+            name: p.admin.companyName,
+            type: p.admin.companyType,
+            cin: p.admin.companyCin,
+            gst: p.admin.companyGst,
+            address: p.admin.companyAddress,
+            website: 'https://' + p.admin.companyName.toLowerCase().replace(/[^a-z0-9]/g, '') + '.com'
+          },
+          documents: [],
+          modulePerms: [
+            { module: 'Core HR', view: true, add: true, update: true, delete: true },
+            { module: 'Attendance', view: true, add: true, update: true, delete: true },
+            { module: 'Payroll', view: true, add: true, update: true, delete: true },
+            { module: 'Recruitment', view: true, add: true, update: true, delete: true }
+          ]
+        };
+
+        try {
+          const rawAdmins = localStorage.getItem('sora_admins_data');
+          const adminsList = rawAdmins ? JSON.parse(rawAdmins) : [];
+          adminsList.unshift(newAdmin);
+          localStorage.setItem('sora_admins_data', JSON.stringify(adminsList));
+        } catch (err) {
+          console.error('Admin enrollment error:', err);
+        }
+
+        // 3. Show Success Modal
+        btn.disabled = false;
+        label.innerText = 'Pay Now & Authorize Subscription';
+        document.getElementById('soraRazorpayModal').classList.add('hidden');
+
+        document.getElementById('succPaymentId').innerText = txnId;
+        document.getElementById('succCompanyName').innerText = p.admin.companyName;
+        document.getElementById('succPlanName').innerText = p.plan.name;
+        document.getElementById('succSeats').innerText = p.employeeCount + ' Employees (' + p.baseMax + ' Base + ' + p.extraEmployees + ' Extra)';
+        document.getElementById('succAmount').innerText = '₹' + Math.round(p.grandTotal).toLocaleString('en-IN');
+
+        document.getElementById('soraSuccessModal').classList.remove('hidden');
+        lucide.createIcons();
+      }, 1400);
+    }
+
+    window.addEventListener('DOMContentLoaded', initCheckoutPage);
+  </script>
+</body>
+</html>
