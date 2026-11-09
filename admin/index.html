@@ -92,6 +92,21 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #f59e0b;
     }
+    .payroll-scroll::-webkit-scrollbar {
+      height: 9px;
+    }
+    .payroll-scroll::-webkit-scrollbar-track {
+      background: #121217;
+      border-radius: 9999px;
+    }
+    .payroll-scroll::-webkit-scrollbar-thumb {
+      background: #3f3f50;
+      border-radius: 9999px;
+      border: 2px solid #121217;
+    }
+    .payroll-scroll::-webkit-scrollbar-thumb:hover {
+      background: #f59e0b;
+    }
     @media print {
       body * { visibility: hidden; }
       #printablePayslip, #printablePayslip * { visibility: visible; }
@@ -1748,24 +1763,47 @@
               </div>
             </div>
 
-            <!-- Comprehensive Corporate Payroll Table -->
-            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-lg">
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] border-b border-brand-border">
+            <!-- Comprehensive Corporate Payroll Table (Horizontally Scrollable Ledger) -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-2xl">
+              <!-- Scroll Hint Toolbar -->
+              <div class="flex items-center justify-between px-4 py-2.5 bg-[#121217] border-b border-brand-border text-xs text-neutral-400">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span class="font-bold text-white text-xs">Payroll Ledger (12-Column Corporate Grid)</span>
+                  <span class="text-neutral-500 hidden sm:inline">&bull;</span>
+                  <span class="text-neutral-400 text-[11px] hidden sm:inline">Uncrowded detailed view of Basic, HRA, DA, Overtime, Statutory Cuts &amp; Take-Home</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-brand-amber font-mono text-[11px] bg-brand-surface/90 px-3 py-1 rounded-lg border border-brand-border shadow-sm">
+                  <i data-lucide="arrow-left-right" class="w-3.5 h-3.5"></i>
+                  <span>Scroll horizontally &larr; &rarr; for all columns</span>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[1800px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] tracking-wider border-b border-brand-border select-none">
                     <tr>
-                      <th class="py-3.5 px-4">Employee Profile</th>
-                      <th class="py-3.5 px-4">Department</th>
-                      <th class="py-3.5 px-4 text-center">Attendance (Present / Half / Absent)</th>
-                      <th class="py-3.5 px-4 text-right">Basic Salary</th>
-                      <th class="py-3.5 px-4 text-right">HRA &amp; DA</th>
-                      <th class="py-3.5 px-4 text-right">Overtime Pay</th>
-                      <th class="py-3.5 px-4 text-right">Total Gross</th>
-                      <th class="py-3.5 px-4 text-right">PF &amp; PT</th>
-                      <th class="py-3.5 px-4 text-right">TDS &amp; LOP Deduct</th>
-                      <th class="py-3.5 px-4 text-right font-bold text-emerald-400">Net Take-Home (Balance)</th>
-                      <th class="py-3.5 px-4 text-center">Slip Status</th>
-                      <th class="py-3.5 px-4 text-right">Actions</th>
+                      <!-- Sticky Left: Employee Profile -->
+                      <th class="py-4 px-5 text-neutral-300 font-bold sticky left-0 z-20 bg-[#121217] border-r border-brand-border min-w-[260px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">
+                        Employee Profile
+                      </th>
+                      <!-- Scrollable Columns with generous width & whitespace-nowrap -->
+                      <th class="py-4 px-4 whitespace-nowrap min-w-[190px]">Department</th>
+                      <th class="py-4 px-4 text-center whitespace-nowrap min-w-[220px]">Attendance &amp; Days</th>
+                      <th class="py-4 px-4 text-right whitespace-nowrap min-w-[140px]">Basic Salary</th>
+                      <th class="py-4 px-4 text-right whitespace-nowrap min-w-[190px]">HRA &amp; DA Ratio</th>
+                      <th class="py-4 px-4 text-right whitespace-nowrap min-w-[170px]">Overtime Pay (OT)</th>
+                      <th class="py-4 px-4 text-right whitespace-nowrap min-w-[150px] font-bold text-white">Total Gross Earned</th>
+                      <th class="py-4 px-4 text-right whitespace-nowrap min-w-[170px]">PF &amp; PT Deduct</th>
+                      <th class="py-4 px-4 text-right whitespace-nowrap min-w-[180px]">TDS &amp; LOP Deduct</th>
+                      <th class="py-4 px-5 text-right whitespace-nowrap min-w-[190px] font-black text-emerald-400 bg-emerald-500/10 border-x border-emerald-500/20">
+                        Net Take-Home (Balance)
+                      </th>
+                      <th class="py-4 px-4 text-center whitespace-nowrap min-w-[130px]">Slip Status</th>
+                      <!-- Sticky Right: Actions -->
+                      <th class="py-4 px-5 text-right font-bold text-neutral-300 sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[180px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody id="payrollTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -8705,33 +8743,42 @@
           const isSent = slipInfo.status === 'Sent';
 
           return `
-            <tr class="hover:bg-brand-card/40 transition-colors">
-              <!-- 1. Employee Profile -->
-              <td class="py-3 px-4">
-                <div class="flex items-center gap-2.5">
-                  <div class="w-8 h-8 rounded-xl bg-brand-surface border border-brand-border text-brand-amber font-bold text-xs flex items-center justify-center flex-shrink-0">
+            <tr class="hover:bg-brand-card/60 transition-colors group">
+              <!-- 1. Employee Profile (Sticky Left) -->
+              <td class="py-4 px-5 whitespace-nowrap sticky left-0 z-10 bg-[#0e0e13] group-hover:bg-[#15151e] border-r border-brand-border shadow-[4px_0_12px_rgba(0,0,0,0.5)] transition-colors">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-brand-surface border border-brand-border text-brand-amber font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
                     ${initials}
                   </div>
                   <div>
-                    <div class="font-bold text-white text-xs">${emp.name}</div>
-                    <div class="text-[10px] text-brand-amber font-mono">${emp.id} &bull; <span class="text-neutral-400 font-sans">${emp.role}</span></div>
+                    <div class="font-bold text-white text-sm leading-tight">${emp.name}</div>
+                    <div class="text-[11px] text-brand-amber font-mono flex items-center gap-1.5 mt-0.5">
+                      <span>${emp.id}</span>
+                      <span class="text-neutral-500">&bull;</span>
+                      <span class="text-neutral-400 font-sans">${emp.role}</span>
+                    </div>
                   </div>
                 </div>
               </td>
 
               <!-- 2. Department -->
-              <td class="py-3 px-4 text-neutral-400 text-xs">${emp.dept}</td>
+              <td class="py-4 px-4 whitespace-nowrap">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-800/80 border border-brand-border/60 text-neutral-200 text-xs font-medium">
+                  <i data-lucide="building-2" class="w-3.5 h-3.5 text-neutral-400"></i>
+                  <span>${emp.dept}</span>
+                </span>
+              </td>
 
               <!-- 3. Attendance Summary (Present / Half Day / Absent & OT - Interactive Audit) -->
-              <td class="py-3 px-4 text-center">
-                <button type="button" onclick="openPayrollAttendanceAuditModal('${emp.id}')" title="Click to view total attendance breakdown & audit for ${emp.name}" class="group w-full max-w-[170px] mx-auto text-left p-2 rounded-xl bg-brand-dark/50 hover:bg-neutral-800/80 border border-brand-border/60 hover:border-brand-amber/50 transition-all flex flex-col gap-1 shadow-sm">
-                  <div class="flex items-center justify-between gap-1 w-full">
+              <td class="py-4 px-4 text-center whitespace-nowrap">
+                <button type="button" onclick="openPayrollAttendanceAuditModal('${emp.id}')" title="Click to view total attendance breakdown & audit for ${emp.name}" class="group/btn inline-flex flex-col gap-1.5 p-2 px-3 rounded-xl bg-brand-dark/70 hover:bg-neutral-800 border border-brand-border/70 hover:border-brand-amber text-left transition-all shadow-sm">
+                  <div class="flex items-center justify-between gap-3 w-full">
                     <span class="font-bold text-white font-mono text-xs">${p.att.payableDays} / ${p.workingDays} <span class="text-neutral-400 text-[10px] font-normal">Days</span></span>
-                    <span class="text-[10px] text-brand-amber opacity-0 group-hover:opacity-100 transition-opacity font-semibold flex items-center gap-0.5">
+                    <span class="text-[10px] text-brand-amber opacity-80 group-hover/btn:opacity-100 transition-opacity font-semibold flex items-center gap-0.5">
                       Audit &rarr;
                     </span>
                   </div>
-                  <div class="flex items-center flex-wrap gap-1 font-mono text-[9px]">
+                  <div class="flex items-center gap-1.5 font-mono text-[10px]">
                     <span class="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30" title="${p.att.presentDays} Full Present Days (100% Pay)">
                       ${p.att.presentDays}P
                     </span>
@@ -8759,68 +8806,94 @@
               </td>
 
               <!-- 4. Basic Salary -->
-              <td class="py-3 px-4 text-right font-mono font-semibold text-white">&#8377; ${p.basic.toLocaleString('en-IN')}</td>
+              <td class="py-4 px-4 text-right whitespace-nowrap">
+                <div class="font-mono font-bold text-white text-xs">&#8377; ${p.basic.toLocaleString('en-IN')}</div>
+                <div class="text-[10px] text-neutral-400 font-mono mt-0.5">${p.emp.salary ? Math.round((p.basic / p.emp.salary) * 100) : 50}% of Gross</div>
+              </td>
 
               <!-- 5. HRA & DA -->
-              <td class="py-3 px-4 text-right font-mono text-neutral-300">
-                <div>&#8377; ${(p.hra + p.da).toLocaleString('en-IN')}</div>
-                <div class="text-[9px] text-neutral-500 font-mono">H: ${p.hra} &bull; D: ${p.da}</div>
+              <td class="py-4 px-4 text-right whitespace-nowrap">
+                <div class="font-mono font-semibold text-neutral-200 text-xs">&#8377; ${(p.hra + p.da).toLocaleString('en-IN')}</div>
+                <div class="text-[10px] text-neutral-400 font-mono flex items-center justify-end gap-1.5 mt-0.5">
+                  <span>HRA: &#8377;${p.hra.toLocaleString('en-IN')}</span>
+                  <span class="text-neutral-600">&bull;</span>
+                  <span>DA: &#8377;${p.da.toLocaleString('en-IN')}</span>
+                </div>
               </td>
 
               <!-- 6. Overtime Pay -->
-              <td class="py-3 px-4 text-right font-mono ${p.otPay > 0 ? 'text-amber-400 font-bold' : 'text-neutral-500'}">
-                <div onclick="openOtAuditForEmployee('${emp.id}')" title="Click to Audit / Edit Attendance Overtime Calculation for ${emp.name}" class="cursor-pointer group flex items-center justify-end gap-1">
-                  <span>${p.otPay > 0 ? `+&#8377; ${p.otPay.toLocaleString('en-IN')}` : '&#8377; 0'}</span>
-                  <i data-lucide="clock" class="w-2.5 h-2.5 text-neutral-500 group-hover:text-brand-amber transition-colors"></i>
+              <td class="py-4 px-4 text-right whitespace-nowrap">
+                <div onclick="openOtAuditForEmployee('${emp.id}')" title="Click to Audit / Edit Attendance Overtime Calculation for ${emp.name}" class="cursor-pointer group/ot flex items-center justify-end gap-1.5">
+                  <span class="font-mono font-bold text-xs ${p.otPay > 0 ? 'text-amber-400' : 'text-neutral-500'}">
+                    ${p.otPay > 0 ? `+&#8377; ${p.otPay.toLocaleString('en-IN')}` : '&#8377; 0'}
+                  </span>
+                  <i data-lucide="clock" class="w-3.5 h-3.5 text-neutral-500 group-hover/ot:text-brand-amber transition-colors"></i>
                 </div>
-                <div class="text-[9px] text-neutral-500 font-mono">${p.att.otHours || 0}h &bull; ${p.otMultiplier}x rate</div>
+                <div class="text-[10px] text-neutral-400 font-mono mt-0.5">
+                  ${p.att.otHours || 0} hrs &bull; ${p.otMultiplier}x rate
+                </div>
               </td>
 
-              <!-- 7. Total Gross -->
-              <td class="py-3 px-4 text-right font-mono font-bold text-white">&#8377; ${p.totalGrossEarned.toLocaleString('en-IN')}</td>
+              <!-- 7. Total Gross Earned -->
+              <td class="py-4 px-4 text-right whitespace-nowrap">
+                <div class="font-mono font-black text-white text-xs">&#8377; ${p.totalGrossEarned.toLocaleString('en-IN')}</div>
+                <div class="text-[10px] text-neutral-400 font-mono mt-0.5">Base: &#8377;${p.gross.toLocaleString('en-IN')}</div>
+              </td>
 
               <!-- 8. PF & PT -->
-              <td class="py-3 px-4 text-right font-mono text-amber-300">
-                <div>&#8377; ${(p.pf + p.pt).toLocaleString('en-IN')}</div>
-                <div class="text-[9px] text-neutral-500 font-mono">PF: ${p.pf} &bull; PT: ${p.pt}</div>
+              <td class="py-4 px-4 text-right whitespace-nowrap">
+                <div class="font-mono font-semibold text-amber-300 text-xs">&#8377; ${(p.pf + p.pt).toLocaleString('en-IN')}</div>
+                <div class="text-[10px] text-neutral-400 font-mono flex items-center justify-end gap-1.5 mt-0.5">
+                  <span>PF: &#8377;${p.pf.toLocaleString('en-IN')}</span>
+                  <span class="text-neutral-600">&bull;</span>
+                  <span>PT: &#8377;${p.pt.toLocaleString('en-IN')}</span>
+                </div>
               </td>
 
               <!-- 9. TDS & LOP Deduct -->
-              <td class="py-3 px-4 text-right font-mono ${p.lopDeduct > 0 ? 'text-rose-400 font-bold' : 'text-neutral-400'}">
-                <div>&#8377; ${(p.tds + p.lopDeduct).toLocaleString('en-IN')}</div>
-                ${p.lopDeduct > 0 ? `<div class="text-[9px] text-rose-500 font-mono">LOP: -&#8377; ${p.lopDeduct}</div>` : ''}
+              <td class="py-4 px-4 text-right whitespace-nowrap">
+                <div class="font-mono font-semibold text-xs ${p.lopDeduct > 0 ? 'text-rose-400 font-bold' : 'text-neutral-300'}">
+                  &#8377; ${(p.tds + p.lopDeduct).toLocaleString('en-IN')}
+                </div>
+                <div class="text-[10px] font-mono flex items-center justify-end gap-1.5 mt-0.5 ${p.lopDeduct > 0 ? 'text-rose-400/90' : 'text-neutral-500'}">
+                  <span>TDS: &#8377;${p.tds.toLocaleString('en-IN')}</span>
+                  ${p.lopDeduct > 0 ? `<span class="text-neutral-600">&bull;</span><span>LOP: -&#8377;${p.lopDeduct.toLocaleString('en-IN')}</span>` : ''}
+                </div>
               </td>
 
               <!-- 10. Net Take-Home (Remaining Balance) -->
-              <td class="py-3 px-4 text-right font-mono font-black text-emerald-400 text-xs">
-                &#8377; ${p.netPay.toLocaleString('en-IN')}
+              <td class="py-4 px-5 text-right whitespace-nowrap bg-emerald-500/10 border-x border-emerald-500/20">
+                <div class="font-mono font-black text-emerald-400 text-sm">
+                  &#8377; ${p.netPay.toLocaleString('en-IN')}
+                </div>
+                <div class="text-[10px] text-emerald-400/80 font-mono mt-0.5">Disbursal Balance</div>
               </td>
 
               <!-- 11. Slip Status -->
-              <td class="py-3 px-4 text-center">
+              <td class="py-4 px-4 text-center whitespace-nowrap">
                 ${isSent ? `
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" title="Dispatched via Email & WhatsApp">
-                    <i data-lucide="check-circle-2" class="w-3 h-3"></i>
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" title="Dispatched via Email & WhatsApp">
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
                     <span>Sent</span>
                   </span>
                 ` : `
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30" title="Slip generated on ${slipInfo.genDate || '31-Oct-2026'}. Ready to review or send.">
-                    <i data-lucide="file-check" class="w-3 h-3"></i>
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30" title="Slip generated on ${slipInfo.genDate || '31-Oct-2026'}. Ready to review or send.">
+                    <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
                     <span>Ready</span>
                   </span>
                 `}
               </td>
 
-              <!-- 12. Actions: Slip View + Single Send -->
-              <td class="py-3 px-4 text-right">
-                <div class="flex items-center justify-end gap-1.5">
-                  <button onclick="viewEmployeePayslip('${emp.id}')" title="View & Download Official Salary Slip" class="px-2.5 py-1.5 rounded-xl bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
+              <!-- 12. Actions: Slip View + Single Send (Sticky Right) -->
+              <td class="py-4 px-5 text-right whitespace-nowrap sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#15151e] border-l border-brand-border shadow-[-4px_0_12px_rgba(0,0,0,0.5)] transition-colors">
+                <div class="flex items-center justify-end gap-2">
+                  <button onclick="viewEmployeePayslip('${emp.id}')" title="View & Download Official Salary Slip" class="px-3 py-1.5 rounded-xl bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm">
                     <i data-lucide="file-text" class="w-3.5 h-3.5 text-brand-amber"></i>
                     <span>Slip</span>
                   </button>
-                  <button onclick="dispatchSinglePayslip('${emp.id}')" title="Send Salary Slip to ${emp.name} via Email & WhatsApp" class="px-2.5 py-1.5 rounded-xl ${isSent ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20' : 'bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold'} text-xs transition-all flex items-center gap-1 shadow-sm">
-                    <i data-lucide="mail" class="w-3 h-3"></i>
-                    <i data-lucide="message-circle" class="w-3 h-3"></i>
+                  <button onclick="dispatchSinglePayslip('${emp.id}')" title="Send Salary Slip to ${emp.name} via Email & WhatsApp" class="px-3 py-1.5 rounded-xl ${isSent ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20' : 'bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold'} text-xs transition-all flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                    <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
                     <span>${isSent ? 'Resend' : 'Send'}</span>
                   </button>
                 </div>
