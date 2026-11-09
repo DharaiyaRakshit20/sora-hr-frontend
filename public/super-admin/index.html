@@ -519,7 +519,7 @@
               <span id="sidebarAdminCount" class="sidebar-badge text-[10px] bg-brand-amber text-neutral-950 font-bold px-1.5 py-0.2 rounded-full flex-shrink-0">4</span>
             </button>
 
-            <!-- 3. Master Management (Organization Masters: Department & Role Levels) -->
+            <!-- 3. Master Management (Role Master & RBAC Authority) -->
             <!-- User requested: "or side me master option bhi chiaye ye" -->
             <button onclick="showAdminPage('portal-master-management')" id="sideNavMasterManagement" title="Master Management" class="sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-brand-surface transition-colors text-left">
               <div class="flex items-center gap-3 min-w-0">
@@ -683,7 +683,7 @@
                   <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-amber/10 text-brand-amber border border-brand-amber/20">RBAC Active</span>
                 </h2>
                 <p class="text-xs text-neutral-400 mt-1">
-                  Comprehensive administrator list with department allocations and granular module access rights.
+                  Comprehensive administrator list with company profiles, verification documents, and granular module access rights.
                 </p>
               </div>
 
@@ -708,12 +708,14 @@
                   <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border select-none">
                     <tr>
                       <th class="py-3.5 px-4 sticky left-0 z-20 bg-[#121217] border-r border-brand-border min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">Admin Profile</th>
-                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Employee ID</th>
-                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[190px]">Department &amp; Role</th>
-                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[280px]">Granted Module Permissions</th>
-                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[120px]">Status</th>
-                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Last Active</th>
-                      <th class="py-3.5 px-4 text-right sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[100px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">Actions</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Admin ID</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Company Details</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Role &amp; Title</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[260px]">Granted Module Permissions</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Documents</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Status</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[110px]">Last Active</th>
+                      <th class="py-3.5 px-4 text-right sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[140px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="adminListPageTbody" class="divide-y divide-brand-border/60 text-neutral-300">
@@ -762,74 +764,93 @@
             <!-- STEP 1 CONTAINER: ADMIN CREATION FORM -->
             <div id="adminWizardStep1" class="space-y-8 bg-brand-surface p-6 sm:p-8 rounded-2xl border border-brand-border w-full">
               
+              <!-- 1. Administrator Basic & Login Information -->
               <div class="space-y-4">
                 <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
                   <i data-lucide="user" class="w-3.5 h-3.5"></i>
-                  <span>Step 1: Employee Identity &amp; Profile Details</span>
+                  <span>1. Administrator Basic &amp; Login Details</span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>
                     <label class="block text-xs text-neutral-300 font-semibold mb-1">Full Name *</label>
-                    <input type="text" id="wizardName" required placeholder="e.g. Priya Nair" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
-                  </div>
-                  <div>
-                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Employee Code / ID *</label>
-                    <input type="text" id="wizardEmpId" required placeholder="EMP-SORA-204" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber font-mono">
+                    <input type="text" id="wizardName" required placeholder="e.g. Priya Nair" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
                   </div>
                   <div>
                     <label class="block text-xs text-neutral-300 font-semibold mb-1">Official Work Email *</label>
-                    <input type="email" id="wizardEmail" required placeholder="priya.nair@sorahr.com" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                    <input type="email" id="wizardEmail" required placeholder="priya.nair@clientcorp.com" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
                   </div>
                   <div>
                     <label class="block text-xs text-neutral-300 font-semibold mb-1">Contact Phone</label>
-                    <input type="tel" id="wizardPhone" placeholder="+91 98765 12345" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
+                    <input type="tel" id="wizardPhone" placeholder="+91 98765 12345" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Employee / Admin ID *</label>
+                    <input type="text" id="wizardEmpId" required placeholder="EMP-SORA-204" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber font-mono transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Login Password *</label>
+                    <div class="relative">
+                      <input type="password" id="wizardPassword" required placeholder="Create strong password" value="SoraHR@2026" class="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber font-mono transition-colors">
+                      <button type="button" onclick="togglePasswordVisibility('wizardPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white transition-colors" title="Toggle password">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
 
+              <!-- 2. Company & Enterprise Information -->
               <div class="space-y-4 pt-4 border-t border-brand-border/60">
                 <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
-                  <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
-                  <span>Department &amp; Organizational Role</span>
+                  <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                  <span>2. Company &amp; Enterprise Information</span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <!-- Dynamic Department Selection with Quick Add Button -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>
-                    <div class="flex items-center justify-between mb-1">
-                      <label class="block text-xs text-neutral-300 font-semibold">Department *</label>
-                      <button type="button" onclick="openDeptModal(-1, true)" class="text-[11px] text-brand-amber hover:text-brand-amberLight font-semibold flex items-center gap-1 hover:underline transition-colors" title="Add New Department">
-                        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-                        <span>+ Add Dept</span>
-                      </button>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <select id="wizardDept" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
-                        <!-- Populated dynamically via renderDepartmentDropdowns() - Zero static values -->
-                      </select>
-                      <button type="button" onclick="openDeptModal(-1, true)" title="Add Department to Master" class="p-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-brand-amber hover:bg-brand-amber/10 transition-all flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                      </button>
-                    </div>
-                    <div class="text-[10px] text-neutral-500 mt-1 flex items-center justify-between">
-                      <span id="wizardDeptCountLabel">Dynamic master options</span>
-                      <button type="button" onclick="showAdminPage('portal-master-management')" class="text-brand-amber hover:underline flex items-center gap-0.5">
-                        <span>Masters</span>
-                        <i data-lucide="arrow-up-right" class="w-2.5 h-2.5"></i>
-                      </button>
-                    </div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Company / Organization Name *</label>
+                    <input type="text" id="wizardCompanyName" required placeholder="e.g. Apex Global Solutions Pvt Ltd" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
                   </div>
-
-                  <!-- Designation Title -->
                   <div>
-                    <div class="flex items-center justify-between mb-1">
-                      <label class="block text-xs text-neutral-300 font-semibold">Designation Title</label>
-                    </div>
-                    <input type="text" id="wizardDesignation" placeholder="e.g. Lead HR Business Partner" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber">
-                    <div class="text-[10px] text-neutral-500 mt-1">Specific employee job title</div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Business Type / Industry</label>
+                    <select id="wizardCompanyType" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                      <option value="IT & Software Services">IT &amp; Software Services</option>
+                      <option value="Financial Services & Fintech">Financial Services &amp; Fintech</option>
+                      <option value="Healthcare & Pharmaceuticals">Healthcare &amp; Pharmaceuticals</option>
+                      <option value="Manufacturing & Supply Chain">Manufacturing &amp; Supply Chain</option>
+                      <option value="Retail & E-commerce">Retail &amp; E-commerce</option>
+                      <option value="Consulting & Advisory">Consulting &amp; Advisory</option>
+                      <option value="Other Enterprise">Other Enterprise</option>
+                    </select>
                   </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Corporate CIN / Reg No</label>
+                    <input type="text" id="wizardCompanyCin" placeholder="e.g. U74999DL2023PTC123456" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white font-mono uppercase focus:outline-none focus:border-brand-amber transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">GSTIN Number</label>
+                    <input type="text" id="wizardCompanyGst" placeholder="e.g. 29ABCDE1234F1Z5" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white font-mono uppercase focus:outline-none focus:border-brand-amber transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Head Office Address</label>
+                    <input type="text" id="wizardCompanyAddress" placeholder="e.g. Prestige Meridian, MG Road, Bengaluru" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Official Website</label>
+                    <input type="url" id="wizardCompanyWebsite" placeholder="https://apexsolutions.com" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                  </div>
+                </div>
+              </div>
 
+              <!-- 3. Role Level & Designation Authority -->
+              <div class="space-y-4 pt-4 border-t border-brand-border/60">
+                <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                  <span>3. Role Level &amp; Designation Authority</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <!-- Dynamic Role Level Selection with Quick Add Button -->
                   <div>
                     <div class="flex items-center justify-between mb-1">
@@ -841,7 +862,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                       <select id="wizardRole" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
-                        <!-- Populated dynamically via renderRoleDropdowns() - Zero static values -->
+                        <!-- Populated dynamically via renderRoleDropdowns() -->
                       </select>
                       <button type="button" onclick="openRoleModal(-1, true)" title="Add Role Level to Master" class="p-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-brand-amber hover:bg-brand-amber/10 transition-all flex items-center justify-center flex-shrink-0">
                         <i data-lucide="plus" class="w-4 h-4"></i>
@@ -850,9 +871,99 @@
                     <div class="text-[10px] text-neutral-500 mt-1 flex items-center justify-between">
                       <span id="wizardRoleCountLabel">Dynamic RBAC tiers</span>
                       <button type="button" onclick="showAdminPage('portal-master-management')" class="text-brand-amber hover:underline flex items-center gap-0.5">
-                        <span>Masters</span>
+                        <span>Role Masters</span>
                         <i data-lucide="arrow-up-right" class="w-2.5 h-2.5"></i>
                       </button>
+                    </div>
+                  </div>
+
+                  <!-- Designation Title -->
+                  <div>
+                    <label class="block text-xs text-neutral-300 font-semibold mb-1">Designation Title</label>
+                    <input type="text" id="wizardDesignation" placeholder="e.g. Lead HR Business Partner / Director - People" class="w-full px-3.5 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                    <div class="text-[10px] text-neutral-500 mt-1">Specific employee job title</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. Company & Verification Documents Upload -->
+              <div class="space-y-4 pt-4 border-t border-brand-border/60">
+                <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                  <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                  <span>4. Verification &amp; Compliance Documents</span>
+                </div>
+                <p class="text-xs text-neutral-400">Upload business incorporation and signatory identification documents for institutional verification.</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <!-- Doc 1: Incorporation Certificate -->
+                  <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border flex flex-col justify-between space-y-2.5">
+                    <div>
+                      <div class="flex items-center justify-between text-xs font-semibold text-white">
+                        <span>Certificate of Inc. (COI)</span>
+                        <span class="text-[10px] text-brand-amber uppercase">PDF/PNG</span>
+                      </div>
+                      <p class="text-[11px] text-neutral-400 mt-0.5">Corporate entity registration</p>
+                    </div>
+                    <div id="wizardDocSlot_coi" class="space-y-1.5">
+                      <label class="cursor-pointer inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-lg bg-brand-surface border border-dashed border-brand-border hover:border-brand-amber text-xs text-neutral-300 hover:text-white transition-all">
+                        <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-brand-amber"></i>
+                        <span id="wizardDocLabel_coi">Upload COI</span>
+                        <input type="file" id="wizardDocInput_coi" onchange="handleWizardDocChange('coi', this)" class="hidden" accept=".pdf,.png,.jpg,.jpeg">
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Doc 2: GST Registration -->
+                  <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border flex flex-col justify-between space-y-2.5">
+                    <div>
+                      <div class="flex items-center justify-between text-xs font-semibold text-white">
+                        <span>GST Registration</span>
+                        <span class="text-[10px] text-brand-amber uppercase">PDF</span>
+                      </div>
+                      <p class="text-[11px] text-neutral-400 mt-0.5">Tax registration certificate</p>
+                    </div>
+                    <div id="wizardDocSlot_gst" class="space-y-1.5">
+                      <label class="cursor-pointer inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-lg bg-brand-surface border border-dashed border-brand-border hover:border-brand-amber text-xs text-neutral-300 hover:text-white transition-all">
+                        <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-brand-amber"></i>
+                        <span id="wizardDocLabel_gst">Upload GST Cert</span>
+                        <input type="file" id="wizardDocInput_gst" onchange="handleWizardDocChange('gst', this)" class="hidden" accept=".pdf,.png,.jpg,.jpeg">
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Doc 3: Signatory PAN / ID -->
+                  <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border flex flex-col justify-between space-y-2.5">
+                    <div>
+                      <div class="flex items-center justify-between text-xs font-semibold text-white">
+                        <span>Signatory ID / PAN</span>
+                        <span class="text-[10px] text-brand-amber uppercase">Gov ID</span>
+                      </div>
+                      <p class="text-[11px] text-neutral-400 mt-0.5">Director / signatory verification</p>
+                    </div>
+                    <div id="wizardDocSlot_pan" class="space-y-1.5">
+                      <label class="cursor-pointer inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-lg bg-brand-surface border border-dashed border-brand-border hover:border-brand-amber text-xs text-neutral-300 hover:text-white transition-all">
+                        <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-brand-amber"></i>
+                        <span id="wizardDocLabel_pan">Upload PAN / ID</span>
+                        <input type="file" id="wizardDocInput_pan" onchange="handleWizardDocChange('pan', this)" class="hidden" accept=".pdf,.png,.jpg,.jpeg">
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Doc 4: Service Agreement / MOA -->
+                  <div class="p-3.5 rounded-xl bg-brand-dark border border-brand-border flex flex-col justify-between space-y-2.5">
+                    <div>
+                      <div class="flex items-center justify-between text-xs font-semibold text-white">
+                        <span>Service SLA / MOA</span>
+                        <span class="text-[10px] text-brand-amber uppercase">Agreement</span>
+                      </div>
+                      <p class="text-[11px] text-neutral-400 mt-0.5">SORA HR enterprise terms</p>
+                    </div>
+                    <div id="wizardDocSlot_moa" class="space-y-1.5">
+                      <label class="cursor-pointer inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-lg bg-brand-surface border border-dashed border-brand-border hover:border-brand-amber text-xs text-neutral-300 hover:text-white transition-all">
+                        <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-brand-amber"></i>
+                        <span id="wizardDocLabel_moa">Upload SLA / MOA</span>
+                        <input type="file" id="wizardDocInput_moa" onchange="handleWizardDocChange('moa', this)" class="hidden" accept=".pdf,.docx,.png">
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -874,23 +985,45 @@
             <!-- STEP 2 CONTAINER: GRANULAR PERMISSION MATRIX -->
             <div id="adminWizardStep2" class="hidden space-y-6 bg-brand-surface p-6 sm:p-8 rounded-2xl border border-brand-border w-full">
               
-              <!-- Candidate Summary Bar -->
+              <!-- Candidate & Role Summary Bar -->
               <div class="p-4 rounded-xl bg-brand-dark border border-brand-border/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-full bg-brand-amber/20 text-brand-amber border border-brand-amber font-bold text-xs flex items-center justify-center">
+                  <div class="w-10 h-10 rounded-full bg-brand-amber/20 text-brand-amber border border-brand-amber font-bold text-sm flex items-center justify-center flex-shrink-0">
                     <span id="step2Avatar">PN</span>
                   </div>
                   <div>
-                    <div class="text-sm font-bold text-white" id="step2SummaryName">Priya Nair</div>
-                    <div class="text-[11px] text-neutral-400" id="step2SummaryMeta">EMP-SORA-204 &bull; Core Human Resources</div>
+                    <div class="text-sm font-bold text-white flex items-center gap-2">
+                      <span id="step2SummaryName">Priya Nair</span>
+                      <span id="step2SummaryCompany" class="text-xs font-normal text-brand-amber px-2 py-0.5 rounded-full bg-brand-amber/10 border border-brand-amber/20">Apex Global</span>
+                    </div>
+                    <div class="text-[11px] text-neutral-400 mt-0.5" id="step2SummaryMeta">EMP-SORA-204 &bull; Senior HR Business Partner</div>
                   </div>
                 </div>
 
-                <div class="flex items-center gap-3 text-xs">
-                  <button type="button" onclick="toggleAllMatrixPerms(true)" class="text-brand-amber hover:underline font-semibold">Select All</button>
+                <div class="flex items-center gap-2 text-xs">
+                  <button type="button" onclick="resetStep2PermsToRole()" class="text-brand-amber hover:underline font-semibold flex items-center gap-1" title="Reload default permissions for this role">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span>Reset to Role Defaults</span>
+                  </button>
                   <span class="text-neutral-600">&bull;</span>
-                  <button type="button" onclick="toggleAllMatrixPerms(false)" class="text-neutral-400 hover:underline">Clear All</button>
+                  <button type="button" onclick="toggleAllMatrixPerms(true)" class="text-neutral-300 hover:text-white hover:underline">Select All</button>
+                  <span class="text-neutral-600">&bull;</span>
+                  <button type="button" onclick="toggleAllMatrixPerms(false)" class="text-neutral-400 hover:text-white hover:underline">Clear All</button>
                 </div>
+              </div>
+
+              <!-- Role Permission Inheritance Notice -->
+              <div class="p-3.5 rounded-xl bg-brand-amber/10 border border-brand-amber/20 flex items-center justify-between text-xs text-neutral-200">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-6 h-6 rounded-lg bg-brand-amber/20 text-brand-amber flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                  </div>
+                  <div>
+                    <span>Permissions pre-populated from selected role: <strong id="step2InheritedRoleName" class="text-brand-amber">Super Administrator</strong>.</span>
+                    <span class="text-neutral-400 block text-[11px]">You can review or fine-tune individual module rights (View, Add, Update, Delete) before creating the administrator.</span>
+                  </div>
+                </div>
+                <span class="text-[10px] text-brand-amber font-mono uppercase bg-brand-dark px-2 py-1 rounded border border-brand-amber/30 hidden sm:inline-block">Auto-Synced</span>
               </div>
 
               <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
@@ -955,8 +1088,7 @@
           </div>
 
           <!-- ----------------------------------------- -->
-          <!-- ADMIN PAGE: ORGANIZATION MASTER MANAGEMENT -->
-          <!-- User requested: "isme e jo Department , Role Level e jo do hai usme dropdown hai usme na koi bhi static vlaue nahi aiye gi to uski vajah se na mujhe add ka button chiaye taki me add kar saku or side me master option bhi chiaye ye" -->
+          <!-- ADMIN PAGE: ROLE MASTER & RBAC MANAGEMENT -->
           <!-- ----------------------------------------- -->
           <div id="adminPage-master-management" class="admin-page hidden space-y-6 w-full">
             
@@ -964,20 +1096,16 @@
               <div>
                 <div class="flex items-center gap-3">
                   <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                    <span>Organization Master Management</span>
+                    <span>Role Master &amp; RBAC Authority Management</span>
                   </h2>
-                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-amber/10 text-brand-amber border border-brand-amber/20">Dynamic Masters</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-amber/10 text-brand-amber border border-brand-amber/20">Dynamic RBAC</span>
                 </div>
-                <p class="text-xs text-neutral-400 mt-1">Configure and manage corporate departments and RBAC role levels dynamically. All updates sync directly into the Administrator Enrollment Wizard and data tables.</p>
+                <p class="text-xs text-neutral-400 mt-1">Configure and manage corporate role levels with module-wise granular permissions (View, Add, Update, Delete) across all 8 HRMS modules. Assigned role permissions auto-populate during administrator creation.</p>
               </div>
 
               <div class="flex items-center gap-2">
-                <button type="button" onclick="openDeptModal(-1, false)" class="px-4 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow transition-all">
-                  <i data-lucide="building-2" class="w-4 h-4"></i>
-                  <span>+ Add Department</span>
-                </button>
-                <button type="button" onclick="openRoleModal(-1, false)" class="px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-200 hover:text-white font-bold text-xs flex items-center gap-2 transition-all">
-                  <i data-lucide="shield-plus" class="w-4 h-4 text-brand-amber"></i>
+                <button type="button" onclick="openRoleModal(-1, false)" class="px-4 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow transition-all">
+                  <i data-lucide="shield-plus" class="w-4 h-4"></i>
                   <span>+ Add Role Level</span>
                 </button>
               </div>
@@ -987,19 +1115,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
               <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border">
                 <div class="flex items-center justify-between text-neutral-400 mb-2">
-                  <span class="text-xs font-medium">Departments Master</span>
-                  <i data-lucide="building-2" class="w-4 h-4 text-brand-amber"></i>
-                </div>
-                <div class="text-2xl font-bold text-white" id="masterKpiDeptCount">0</div>
-                <div class="text-[11px] text-neutral-400 mt-1">Configured in Master Data</div>
-              </div>
-              <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border">
-                <div class="flex items-center justify-between text-neutral-400 mb-2">
                   <span class="text-xs font-medium">Role Levels Master</span>
                   <i data-lucide="shield-check" class="w-4 h-4 text-brand-amber"></i>
                 </div>
                 <div class="text-2xl font-bold text-white" id="masterKpiRoleCount">0</div>
-                <div class="text-[11px] text-neutral-400 mt-1">RBAC Authority Levels</div>
+                <div class="text-[11px] text-neutral-400 mt-1">Configured RBAC Authority Tiers</div>
               </div>
               <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border">
                 <div class="flex items-center justify-between text-neutral-400 mb-2">
@@ -1007,7 +1127,15 @@
                   <i data-lucide="users" class="w-4 h-4 text-brand-amber"></i>
                 </div>
                 <div class="text-2xl font-bold text-white" id="masterKpiAdminCount">0</div>
-                <div class="text-[11px] text-neutral-400 mt-1">Allocated to Depts &amp; Roles</div>
+                <div class="text-[11px] text-neutral-400 mt-1">Allocated to Roles &amp; Portals</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border">
+                <div class="flex items-center justify-between text-neutral-400 mb-2">
+                  <span class="text-xs font-medium">HRMS Modules Supported</span>
+                  <i data-lucide="layers" class="w-4 h-4 text-brand-amber"></i>
+                </div>
+                <div class="text-2xl font-bold text-white">8 Modules</div>
+                <div class="text-[11px] text-neutral-400 mt-1">Granular V &bull; A &bull; U &bull; D Matrix</div>
               </div>
               <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border">
                 <div class="flex items-center justify-between text-neutral-400 mb-2">
@@ -1022,63 +1150,12 @@
               </div>
             </div>
 
-            <!-- Master Tabs Switcher -->
-            <div class="flex items-center gap-2 border-b border-brand-border pb-1">
-              <button id="masterTabBtnDepts" onclick="switchMasterTab('depts')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brand-amber text-neutral-950 shadow flex items-center gap-2">
-                <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
-                <span>Department Master</span>
-                <span id="masterTabBadgeDepts" class="text-[10px] bg-neutral-950/20 text-neutral-950 px-1.5 py-0.2 rounded-full font-mono">0</span>
-              </button>
-              <button id="masterTabBtnRoles" onclick="switchMasterTab('roles')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-neutral-400 hover:text-white hover:bg-brand-surface flex items-center gap-2">
-                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                <span>Role Level Master</span>
-                <span id="masterTabBadgeRoles" class="text-[10px] bg-brand-dark px-1.5 py-0.2 rounded-full font-mono text-neutral-300">0</span>
-              </button>
-            </div>
-
-            <!-- TAB 1 CONTENT: DEPARTMENT MASTER -->
-            <div id="masterTabContentDepts" class="space-y-4">
+            <!-- Role Master Content Area -->
+            <div class="space-y-4">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="relative flex-1 max-w-sm">
                   <i data-lucide="search" class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                  <input type="text" id="deptMasterSearch" oninput="filterDeptMasterTable()" placeholder="Search department name, code..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-brand-amber transition-all">
-                </div>
-                <div class="flex items-center gap-2">
-                  <button type="button" onclick="openDeptModal(-1, false)" class="px-4 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow transition-all">
-                    <i data-lucide="plus" class="w-4 h-4"></i>
-                    <span>Add Department</span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Department Table -->
-              <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-xl w-full">
-                <div class="overflow-x-auto w-full">
-                  <table class="w-full text-left text-xs">
-                    <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border">
-                      <tr>
-                        <th class="py-3.5 px-4">Code</th>
-                        <th class="py-3.5 px-4">Department Name</th>
-                        <th class="py-3.5 px-4">Scope / Description</th>
-                        <th class="py-3.5 px-4">Assigned Administrators</th>
-                        <th class="py-3.5 px-4">Status</th>
-                        <th class="py-3.5 px-4 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody id="deptMasterTbody" class="divide-y divide-brand-border/60 text-neutral-300">
-                      <!-- Populated dynamically via JS -->
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- TAB 2 CONTENT: ROLE LEVEL MASTER -->
-            <div id="masterTabContentRoles" class="space-y-4 hidden">
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div class="relative flex-1 max-w-sm">
-                  <i data-lucide="search" class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                  <input type="text" id="roleMasterSearch" oninput="filterRoleMasterTable()" placeholder="Search role title, level..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-brand-amber transition-all">
+                  <input type="text" id="roleMasterSearch" oninput="filterRoleMasterTable()" placeholder="Search role title, code, tier..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-brand-amber transition-all">
                 </div>
                 <div class="flex items-center gap-2">
                   <button type="button" onclick="openRoleModal(-1, false)" class="px-4 py-2 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow transition-all">
@@ -1090,17 +1167,18 @@
 
               <!-- Role Level Table -->
               <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-xl w-full">
-                <div class="overflow-x-auto w-full">
-                  <table class="w-full text-left text-xs">
-                    <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border">
+                <div class="overflow-x-auto w-full payroll-scroll">
+                  <table class="w-full text-left text-xs min-w-[1000px] border-collapse">
+                    <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border select-none">
                       <tr>
-                        <th class="py-3.5 px-4">Role Code</th>
-                        <th class="py-3.5 px-4">Role Level Title</th>
-                        <th class="py-3.5 px-4">Hierarchy Tier</th>
-                        <th class="py-3.5 px-4">Authority &amp; Duties</th>
-                        <th class="py-3.5 px-4">Assigned Administrators</th>
-                        <th class="py-3.5 px-4">Status</th>
-                        <th class="py-3.5 px-4 text-right">Actions</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap">Role Code</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap">Role Level Title</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap">Hierarchy Tier</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap">Authority Scope &amp; Duties</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap min-w-[260px]">Configured Module Permissions</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap">Assigned Admins</th>
+                        <th class="py-3.5 px-4 whitespace-nowrap">Status</th>
+                        <th class="py-3.5 px-4 text-right whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody id="roleMasterTbody" class="divide-y divide-brand-border/60 text-neutral-300">
@@ -1115,11 +1193,11 @@
             <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div class="flex items-center gap-3.5">
                 <div class="w-10 h-10 rounded-xl bg-brand-amber/15 text-brand-amber flex items-center justify-center flex-shrink-0">
-                  <i data-lucide="user-plus" class="w-5 h-5"></i>
+                  <i data-lucide="shield-check" class="w-5 h-5"></i>
                 </div>
                 <div>
-                  <div class="font-bold text-white text-sm">Enroll New Administrator with Dynamic Master Data</div>
-                  <div class="text-xs text-neutral-400 mt-0.5">All departments and role levels created here appear automatically in the enrollment dropdowns with immediate selection.</div>
+                  <div class="font-bold text-white text-sm">Enroll New Administrator with Configured Role Permissions</div>
+                  <div class="text-xs text-neutral-400 mt-0.5">All role levels defined here appear in the enrollment dropdown and automatically populate the module permission matrix.</div>
                 </div>
               </div>
               <button onclick="startAdminCreationWizard()" class="px-5 py-2.5 rounded-xl bg-brand-amber hover:bg-brand-amberLight text-neutral-950 font-bold text-xs flex items-center gap-2 shadow transition-all whitespace-nowrap">
@@ -1575,67 +1653,191 @@
     </div>
   </div>
 
-  <!-- MODAL: ADD / EDIT DEPARTMENT MASTER -->
-  <!-- User requested: "isme e jo Department , Role Level e jo do hai usme dropdown hai usme na koi bhi static vlaue nahi aiye gi to uski vajah se na mujhe add ka button chiaye taki me add kar saku" -->
-  <div id="deptMasterModal" class="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-md w-full p-6 space-y-4 text-xs shadow-2xl">
+  <!-- MODAL: EDIT ADMINISTRATOR PROFILE, COMPANY DETAILS & PERMISSIONS -->
+  <div id="editAdminModal" class="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-3xl w-full p-6 space-y-5 text-xs shadow-2xl max-h-[90vh] overflow-y-auto payroll-scroll">
       <div class="flex items-center justify-between border-b border-brand-border pb-3">
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-brand-amber/15 text-brand-amber flex items-center justify-center flex-shrink-0">
-            <i data-lucide="building-2" class="w-4 h-4"></i>
+          <div class="w-9 h-9 rounded-xl bg-brand-amber/15 text-brand-amber flex items-center justify-center flex-shrink-0">
+            <i data-lucide="user-cog" class="w-4 h-4"></i>
           </div>
           <div>
-            <h3 id="deptModalTitle" class="text-sm font-bold text-white uppercase tracking-wider">Add New Department</h3>
-            <p class="text-[11px] text-neutral-400">Dynamic organizational department master</p>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Edit Administrator Details &amp; RBAC Access</h3>
+            <p class="text-[11px] text-neutral-400">Update personal credentials, corporate registration, status, and module rights</p>
           </div>
         </div>
-        <button onclick="closeDeptModal()" class="text-neutral-400 hover:text-white text-xl leading-none">&times;</button>
+        <button onclick="closeEditAdminModal()" class="text-neutral-400 hover:text-white text-xl leading-none">&times;</button>
       </div>
 
-      <input type="hidden" id="deptModalEditIndex" value="-1">
-      <input type="hidden" id="deptModalIsFromWizard" value="false">
+      <input type="hidden" id="editAdminId" value="">
 
+      <!-- Section 1: Basic Personal & Credentials -->
       <div class="space-y-3">
-        <div>
-          <label class="block text-neutral-300 font-semibold mb-1">Department Name *</label>
-          <input type="text" id="deptModalName" placeholder="e.g. Employee Relations & Governance" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber transition-colors">
+        <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+          <i data-lucide="user" class="w-3.5 h-3.5"></i>
+          <span>1. Personal &amp; Account Identity</span>
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Department Code *</label>
-            <input type="text" id="deptModalCode" placeholder="e.g. ERG" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono uppercase focus:outline-none focus:border-brand-amber transition-colors">
+            <label class="block text-neutral-300 font-semibold mb-1">Full Name *</label>
+            <input type="text" id="editAdminName" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
           </div>
           <div>
-            <label class="block text-neutral-300 font-semibold mb-1">Status</label>
-            <select id="deptModalStatus" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
+            <label class="block text-neutral-300 font-semibold mb-1">Work Email *</label>
+            <input type="email" id="editAdminEmail" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Contact Phone</label>
+            <input type="tel" id="editAdminPhone" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Employee / Admin ID *</label>
+            <input type="text" id="editAdminEmpId" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Status *</label>
+            <select id="editAdminStatus" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+              <option value="Active">Active (Full Access)</option>
+              <option value="Inactive">Inactive (Deactivated)</option>
             </select>
           </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Reset Password</label>
+            <input type="password" id="editAdminPassword" placeholder="Leave blank to keep current" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white font-mono focus:outline-none focus:border-brand-amber">
+          </div>
         </div>
-        <div>
-          <label class="block text-neutral-300 font-semibold mb-1">Scope / Description</label>
-          <textarea id="deptModalDesc" rows="2" placeholder="Brief outline of responsibilities and organizational functions..." class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber"></textarea>
+      </div>
+
+      <!-- Section 2: Company Information -->
+      <div class="space-y-3 pt-3 border-t border-brand-border/60">
+        <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+          <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+          <span>2. Company &amp; Entity Details</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Company Name *</label>
+            <input type="text" id="editAdminCompanyName" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Business Type</label>
+            <input type="text" id="editAdminCompanyType" placeholder="e.g. IT & Software Services" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Corporate CIN / Reg</label>
+            <input type="text" id="editAdminCompanyCin" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white font-mono uppercase focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">GSTIN Number</label>
+            <input type="text" id="editAdminCompanyGst" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white font-mono uppercase focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Head Office Address</label>
+            <input type="text" id="editAdminCompanyAddress" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Website</label>
+            <input type="url" id="editAdminCompanyWebsite" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Role & Designation -->
+      <div class="space-y-3 pt-3 border-t border-brand-border/60">
+        <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            <span>3. Role Authority &amp; Designation</span>
+          </div>
+          <button type="button" onclick="syncEditAdminRolePermissions()" class="text-[11px] text-brand-amber hover:underline font-semibold flex items-center gap-1">
+            <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+            <span>Inherit Selected Role's Permissions</span>
+          </button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Role Level *</label>
+            <select id="editAdminRole" onchange="syncEditAdminRolePermissions()" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+              <!-- Populated dynamically via JS -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Designation Title</label>
+            <input type="text" id="editAdminDesignation" placeholder="e.g. VP - People Operations" class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Attached Verification Documents -->
+      <div class="space-y-3 pt-3 border-t border-brand-border/60">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+            <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+            <span>4. Verification Documents</span>
+          </div>
+          <label class="cursor-pointer text-xs text-brand-amber hover:underline font-semibold flex items-center gap-1">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>+ Attach Document</span>
+            <input type="file" onchange="handleEditAdminDocUpload(this)" class="hidden" accept=".pdf,.png,.jpg,.jpeg">
+          </label>
+        </div>
+        <div id="editAdminDocsList" class="flex flex-wrap gap-2">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Section 5: Module Permissions Matrix -->
+      <div class="space-y-3 pt-3 border-t border-brand-border/60">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+            <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+            <span>5. Module-Wise Permissions Matrix</span>
+          </div>
+          <div class="flex items-center gap-2 text-[11px]">
+            <button type="button" onclick="toggleEditAdminAllPerms(true)" class="text-brand-amber hover:underline font-semibold">Select All</button>
+            <span class="text-neutral-600">&bull;</span>
+            <button type="button" onclick="toggleEditAdminAllPerms(false)" class="text-neutral-400 hover:underline">Clear All</button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-brand-border bg-brand-dark">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-[#14141a] text-neutral-400 uppercase text-[10px] font-bold border-b border-brand-border">
+              <tr>
+                <th class="py-2.5 px-3">HRMS Module</th>
+                <th class="py-2.5 px-2 text-center">View</th>
+                <th class="py-2.5 px-2 text-center">Add</th>
+                <th class="py-2.5 px-2 text-center">Update</th>
+                <th class="py-2.5 px-2 text-center">Delete</th>
+                <th class="py-2.5 px-2 text-center">Row</th>
+              </tr>
+            </thead>
+            <tbody id="editAdminPermsTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
         </div>
       </div>
 
       <div class="pt-3 border-t border-brand-border flex items-center justify-between">
         <span class="text-[10px] text-neutral-500 flex items-center gap-1">
           <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-400"></i>
-          <span>Auto-syncs across system</span>
+          <span>Persists in LocalStorage</span>
         </span>
         <div class="flex items-center gap-2">
-          <button type="button" onclick="closeDeptModal()" class="px-4 py-2 rounded-xl border border-brand-border text-neutral-400 hover:text-white transition-colors">Cancel</button>
-          <button type="button" onclick="submitDeptModal()" class="px-5 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold hover:bg-brand-amberLight shadow transition-all">Save Department</button>
+          <button type="button" onclick="closeEditAdminModal()" class="px-4 py-2 rounded-xl border border-brand-border text-neutral-400 hover:text-white transition-colors">Cancel</button>
+          <button type="button" onclick="saveEditedAdmin()" class="px-5 py-2 rounded-xl bg-brand-amber text-neutral-950 font-bold hover:bg-brand-amberLight shadow transition-all flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Save Changes</span>
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: ADD / EDIT ROLE LEVEL MASTER -->
-  <!-- User requested: "isme e jo Department , Role Level e jo do hai usme dropdown hai usme na koi bhi static vlaue nahi aiye gi to uski vajah se na mujhe add ka button chiaye taki me add kar saku" -->
+  <!-- MODAL: ADD / EDIT ROLE LEVEL MASTER (WITH MODULE-WISE PERMISSIONS) -->
   <div id="roleMasterModal" class="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-md w-full p-6 space-y-4 text-xs shadow-2xl">
+    <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-2xl w-full p-6 space-y-4 text-xs shadow-2xl max-h-[90vh] overflow-y-auto payroll-scroll">
       <div class="flex items-center justify-between border-b border-brand-border pb-3">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-xl bg-brand-amber/15 text-brand-amber flex items-center justify-center flex-shrink-0">
@@ -1643,7 +1845,7 @@
           </div>
           <div>
             <h3 id="roleModalTitle" class="text-sm font-bold text-white uppercase tracking-wider">Add New Role Level</h3>
-            <p class="text-[11px] text-neutral-400">Dynamic RBAC authority & permission tier</p>
+            <p class="text-[11px] text-neutral-400">Define role identity, hierarchy tier &amp; default module permissions</p>
           </div>
         </div>
         <button onclick="closeRoleModal()" class="text-neutral-400 hover:text-white text-xl leading-none">&times;</button>
@@ -1653,15 +1855,18 @@
       <input type="hidden" id="roleModalIsFromWizard" value="false">
 
       <div class="space-y-3">
-        <div>
-          <label class="block text-neutral-300 font-semibold mb-1">Role Level Title *</label>
-          <input type="text" id="roleModalName" placeholder="e.g. Senior HR Business Partner" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber transition-colors">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Role Level Title *</label>
+            <input type="text" id="roleModalName" placeholder="e.g. Senior HR Business Partner" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber transition-colors">
+          </div>
           <div>
             <label class="block text-neutral-300 font-semibold mb-1">Role Code</label>
             <input type="text" id="roleModalCode" placeholder="e.g. ROLE-SHRBP" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white font-mono uppercase focus:outline-none focus:border-brand-amber transition-colors">
           </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-neutral-300 font-semibold mb-1">Hierarchy Tier *</label>
             <select id="roleModalTier" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
@@ -1671,10 +1876,54 @@
               <option value="Level 4 - Read-Only">Level 4 - Read-Only</option>
             </select>
           </div>
+          <div>
+            <label class="block text-neutral-300 font-semibold mb-1">Status</label>
+            <select id="roleModalStatus" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
         </div>
+
         <div>
           <label class="block text-neutral-300 font-semibold mb-1">Authority &amp; Duties Description</label>
           <textarea id="roleModalDesc" rows="2" placeholder="Brief definition of role responsibilities and authority scope..." class="w-full px-3 py-2 rounded-xl bg-brand-dark border border-brand-border text-white focus:outline-none focus:border-brand-amber"></textarea>
+        </div>
+
+        <!-- Module-Wise Granular Permissions Matrix for Role -->
+        <div class="pt-3 border-t border-brand-border/60 space-y-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+                <span>Module-Wise Granular Permissions (8 Modules)</span>
+              </div>
+              <p class="text-[10px] text-neutral-400 mt-0.5">Permissions selected here auto-populate when creating an admin with this role.</p>
+            </div>
+            <div class="flex items-center gap-2 text-[11px]">
+              <button type="button" onclick="toggleRoleModalAllPerms(true)" class="text-brand-amber hover:underline font-semibold">Select All</button>
+              <span class="text-neutral-600">&bull;</span>
+              <button type="button" onclick="toggleRoleModalAllPerms(false)" class="text-neutral-400 hover:underline">Clear All</button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-brand-border bg-brand-dark">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-[#14141a] text-neutral-400 uppercase text-[10px] font-bold border-b border-brand-border">
+                <tr>
+                  <th class="py-2.5 px-3">HRMS Module</th>
+                  <th class="py-2.5 px-2 text-center">View</th>
+                  <th class="py-2.5 px-2 text-center">Add</th>
+                  <th class="py-2.5 px-2 text-center">Update</th>
+                  <th class="py-2.5 px-2 text-center">Delete</th>
+                  <th class="py-2.5 px-2 text-center">Row</th>
+                </tr>
+              </thead>
+              <tbody id="roleModalPermsTbody" class="divide-y divide-brand-border/40 text-neutral-300">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -1757,49 +2006,111 @@
     ];
 
     // ------------------------------------------
-    // DYNAMIC ORGANIZATION MASTER LISTS (DEPARTMENT & ROLE LEVELS)
-    // Zero static values in dropdowns - all dynamically loaded and managed
+    // DYNAMIC ROLE MASTER (RBAC AUTHORITY & MODULE-WISE PERMISSIONS)
+    // Departments completely removed; roles include granular module permissions
     // ------------------------------------------
-    const defaultDepartmentMaster = [
-      { id: 'dept_1', name: 'Core Human Resources', code: 'CHR', desc: 'Employee onboarding, lifecycle & general HR administration', status: 'Active' },
-      { id: 'dept_2', name: 'Talent Acquisition (ATS)', code: 'ATS', desc: 'Sourcing, screening, interviewing & campus recruitment', status: 'Active' },
-      { id: 'dept_3', name: 'Payroll & Compensation', code: 'PAY', desc: 'Salary disbursement, tax deductions & statutory compliance', status: 'Active' },
-      { id: 'dept_4', name: 'HR Operations & Attendance', code: 'OPS', desc: 'Shift scheduling, biometric leaves & daily workforce tracking', status: 'Active' },
-      { id: 'dept_5', name: 'Statutory & Compliance', code: 'COMP', desc: 'Labor law compliance, PF/ESIC audit & regulatory registers', status: 'Active' },
-      { id: 'dept_6', name: 'Executive People Office', code: 'EXEC', desc: 'Strategic people leadership, culture & executive governance', status: 'Active' }
-    ];
-
     const defaultRoleMaster = [
-      { id: 'role_1', name: 'Super Administrator', code: 'ROLE-SA', tier: 'Level 1 - Executive', desc: 'Full platform unrestricted access, billing & user management', status: 'Active' },
-      { id: 'role_2', name: 'HR Administrator', code: 'ROLE-HRA', tier: 'Level 2 - Operations', desc: 'Standard HR operations, employee management & permissions', status: 'Active' },
-      { id: 'role_3', name: 'Payroll Officer', code: 'ROLE-PO', tier: 'Level 3 - Functional', desc: 'Payroll processing, tax statements & compensation management', status: 'Active' },
-      { id: 'role_4', name: 'Talent Recruiter', code: 'ROLE-TR', tier: 'Level 3 - Functional', desc: 'Job posting, candidate pipeline management & hiring decisions', status: 'Active' },
-      { id: 'role_5', name: 'Auditor (Read-Only)', code: 'ROLE-AUD', tier: 'Level 4 - Read-Only', desc: 'View-only access for compliance inspection & financial audits', status: 'Active' }
+      {
+        id: 'role_1',
+        name: 'Super Administrator',
+        code: 'ROLE-SA',
+        tier: 'Level 1 - Executive',
+        desc: 'Full platform unrestricted access, billing, client contracts & user management',
+        status: 'Active',
+        permissions: {
+          core_hr: { view: true, add: true, update: true, delete: true },
+          ats: { view: true, add: true, update: true, delete: true },
+          attendance: { view: true, add: true, update: true, delete: true },
+          payroll: { view: true, add: true, update: true, delete: true },
+          performance: { view: true, add: true, update: true, delete: true },
+          compliance: { view: true, add: true, update: true, delete: true },
+          cms: { view: true, add: true, update: true, delete: true },
+          billing: { view: true, add: true, update: true, delete: true }
+        }
+      },
+      {
+        id: 'role_2',
+        name: 'HR Administrator',
+        code: 'ROLE-HRA',
+        tier: 'Level 2 - Operations',
+        desc: 'Standard HR operations, employee management, attendance & payroll processing',
+        status: 'Active',
+        permissions: {
+          core_hr: { view: true, add: true, update: true, delete: true },
+          ats: { view: true, add: true, update: true, delete: false },
+          attendance: { view: true, add: true, update: true, delete: false },
+          payroll: { view: true, add: true, update: true, delete: false },
+          performance: { view: true, add: true, update: true, delete: false },
+          compliance: { view: true, add: true, update: true, delete: false },
+          cms: { view: true, add: false, update: false, delete: false },
+          billing: { view: true, add: false, update: false, delete: false }
+        }
+      },
+      {
+        id: 'role_3',
+        name: 'Payroll Officer',
+        code: 'ROLE-PO',
+        tier: 'Level 3 - Functional',
+        desc: 'Salary disbursal calculations, PF/ESIC statutory compliance & tax forms',
+        status: 'Active',
+        permissions: {
+          core_hr: { view: true, add: false, update: false, delete: false },
+          ats: { view: false, add: false, update: false, delete: false },
+          attendance: { view: true, add: true, update: true, delete: false },
+          payroll: { view: true, add: true, update: true, delete: true },
+          performance: { view: false, add: false, update: false, delete: false },
+          compliance: { view: true, add: true, update: true, delete: false },
+          cms: { view: false, add: false, update: false, delete: false },
+          billing: { view: true, add: true, update: false, delete: false }
+        }
+      },
+      {
+        id: 'role_4',
+        name: 'Talent Recruiter',
+        code: 'ROLE-TR',
+        tier: 'Level 3 - Functional',
+        desc: 'Job posting, candidate screening, interviewing & hiring pipeline',
+        status: 'Active',
+        permissions: {
+          core_hr: { view: true, add: true, update: false, delete: false },
+          ats: { view: true, add: true, update: true, delete: true },
+          attendance: { view: false, add: false, update: false, delete: false },
+          payroll: { view: false, add: false, update: false, delete: false },
+          performance: { view: true, add: false, update: false, delete: false },
+          compliance: { view: false, add: false, update: false, delete: false },
+          cms: { view: false, add: false, update: false, delete: false },
+          billing: { view: false, add: false, update: false, delete: false }
+        }
+      },
+      {
+        id: 'role_5',
+        name: 'Auditor (Read-Only)',
+        code: 'ROLE-AUD',
+        tier: 'Level 4 - Read-Only',
+        desc: 'View-only access for compliance inspection, statutory audit & reports',
+        status: 'Active',
+        permissions: {
+          core_hr: { view: true, add: false, update: false, delete: false },
+          ats: { view: true, add: false, update: false, delete: false },
+          attendance: { view: true, add: false, update: false, delete: false },
+          payroll: { view: true, add: false, update: false, delete: false },
+          performance: { view: true, add: false, update: false, delete: false },
+          compliance: { view: true, add: false, update: false, delete: false },
+          cms: { view: true, add: false, update: false, delete: false },
+          billing: { view: true, add: false, update: false, delete: false }
+        }
+      }
     ];
 
-    let departmentMasterList = [];
     let roleMasterList = [];
 
     function loadMasterData() {
-      try {
-        const savedDepts = localStorage.getItem('sora_master_departments');
-        departmentMasterList = savedDepts ? JSON.parse(savedDepts) : JSON.parse(JSON.stringify(defaultDepartmentMaster));
-      } catch (e) {
-        departmentMasterList = JSON.parse(JSON.stringify(defaultDepartmentMaster));
-      }
-
       try {
         const savedRoles = localStorage.getItem('sora_master_roles');
         roleMasterList = savedRoles ? JSON.parse(savedRoles) : JSON.parse(JSON.stringify(defaultRoleMaster));
       } catch (e) {
         roleMasterList = JSON.parse(JSON.stringify(defaultRoleMaster));
       }
-
-      updateSidebarMasterBadge();
-    }
-
-    function saveDepartmentMaster() {
-      localStorage.setItem('sora_master_departments', JSON.stringify(departmentMasterList));
       updateSidebarMasterBadge();
     }
 
@@ -1811,10 +2122,141 @@
     function updateSidebarMasterBadge() {
       const badge = document.getElementById('sidebarMasterBadge');
       if (badge) {
-        const total = (departmentMasterList?.length || 0) + (roleMasterList?.length || 0);
-        badge.innerText = `${total} Masters`;
+        badge.innerText = `${roleMasterList.length} Roles`;
       }
     }
+
+    // Default Administrators with Company Details, Attached Documents & Module Permissions
+    const defaultAdminsData = [
+      {
+        id: 'ADM-001',
+        empId: 'EMP-SORA-001',
+        name: 'Aarav Sharma',
+        email: 'aarav.sharma@sorahr.com',
+        phone: '+91 98765 43210',
+        role: 'Super Administrator',
+        designation: 'Principal HR Director',
+        company: {
+          name: 'SORA HR Solutions Pvt Ltd',
+          type: 'IT & Software Services',
+          cin: 'U74999KA2024PTC189234',
+          gst: '29ABCDE1234F1Z5',
+          address: 'Prestige Meridian, MG Road, Bengaluru',
+          website: 'https://sorahr.in'
+        },
+        documents: [
+          { name: 'Incorporation_Cert_COI.pdf', size: '1.8 MB', date: '01 Nov 2026' },
+          { name: 'GST_Reg_Certificate.pdf', size: '820 KB', date: '01 Nov 2026' },
+          { name: 'Director_PAN_Aadhaar.pdf', size: '1.2 MB', date: '02 Nov 2026' },
+          { name: 'Service_SLA_Agreement.pdf', size: '2.4 MB', date: '03 Nov 2026' }
+        ],
+        modulePerms: [
+          { modId: 'core_hr', name: 'Core HR', view: true, add: true, update: true, delete: true },
+          { modId: 'ats', name: 'ATS', view: true, add: true, update: true, delete: true },
+          { modId: 'attendance', name: 'Attendance', view: true, add: true, update: true, delete: true },
+          { modId: 'payroll', name: 'Payroll', view: true, add: true, update: true, delete: true },
+          { modId: 'performance', name: 'Performance', view: true, add: true, update: true, delete: true },
+          { modId: 'compliance', name: 'Compliance', view: true, add: true, update: true, delete: true },
+          { modId: 'cms', name: 'CMS', view: true, add: true, update: true, delete: true },
+          { modId: 'billing', name: 'Billing', view: true, add: true, update: true, delete: true }
+        ],
+        status: 'Active',
+        lastActive: 'Just now',
+        avatarBg: 'bg-amber-500 text-black'
+      },
+      {
+        id: 'ADM-002',
+        empId: 'EMP-SORA-042',
+        name: 'Rohan Mehra',
+        email: 'rohan.mehra@apextech.com',
+        phone: '+91 98111 22334',
+        role: 'Payroll Officer',
+        designation: 'Senior Compensation Specialist',
+        company: {
+          name: 'Apex Global Technologies Ltd',
+          type: 'Financial Services & Fintech',
+          cin: 'U72200MH2022PLC345678',
+          gst: '27AABCA5678B1Z2',
+          address: 'BKC Bandra Kurla Complex, Mumbai',
+          website: 'https://apextech.com'
+        },
+        documents: [
+          { name: 'COI_Apex_Technologies.pdf', size: '2.1 MB', date: '15 Oct 2026' },
+          { name: 'GST_Certificate_Apex.pdf', size: '940 KB', date: '15 Oct 2026' },
+          { name: 'Signatory_PAN_Card.pdf', size: '610 KB', date: '16 Oct 2026' }
+        ],
+        modulePerms: [
+          { modId: 'payroll', name: 'Payroll', view: true, add: true, update: true, delete: false },
+          { modId: 'compliance', name: 'Compliance', view: true, add: true, update: true, delete: false },
+          { modId: 'attendance', name: 'Attendance', view: true, add: true, update: true, delete: false },
+          { modId: 'core_hr', name: 'Core HR', view: true, add: false, update: false, delete: false }
+        ],
+        status: 'Active',
+        lastActive: '2 hours ago',
+        avatarBg: 'bg-blue-500 text-white'
+      },
+      {
+        id: 'ADM-003',
+        empId: 'EMP-SORA-089',
+        name: 'Ananya Verma',
+        email: 'ananya.verma@zenithpharma.com',
+        phone: '+91 97234 56789',
+        role: 'Talent Recruiter',
+        designation: 'Lead Talent Partner',
+        company: {
+          name: 'Zenith BioPharma Innovations',
+          type: 'Healthcare & Pharmaceuticals',
+          cin: 'U24230TG2021PTC156789',
+          gst: '36AAACZ7890C1Z8',
+          address: 'HITEC City, Hyderabad, Telangana',
+          website: 'https://zenithbiopharma.io'
+        },
+        documents: [
+          { name: 'COI_Zenith_BioPharma.pdf', size: '1.6 MB', date: '28 Sep 2026' },
+          { name: 'GST_Certificate_Zenith.pdf', size: '780 KB', date: '28 Sep 2026' }
+        ],
+        modulePerms: [
+          { modId: 'ats', name: 'ATS', view: true, add: true, update: true, delete: true },
+          { modId: 'core_hr', name: 'Core HR', view: true, add: true, update: false, delete: false },
+          { modId: 'performance', name: 'Performance', view: true, add: false, update: false, delete: false }
+        ],
+        status: 'Active',
+        lastActive: 'Yesterday',
+        avatarBg: 'bg-emerald-500 text-white'
+      },
+      {
+        id: 'ADM-004',
+        empId: 'EMP-SORA-115',
+        name: 'Vikram Joshi',
+        email: 'vikram.joshi@kryptonlogistics.in',
+        phone: '+91 99887 66554',
+        role: 'HR Administrator',
+        designation: 'Operations HR Manager',
+        company: {
+          name: 'Krypton Global Logistics',
+          type: 'Manufacturing & Supply Chain',
+          cin: 'U63090GJ2020PTC112233',
+          gst: '24AAECK4321D1ZA',
+          address: 'Sanand Industrial Park, Ahmedabad',
+          website: 'https://kryptonlogistics.in'
+        },
+        documents: [
+          { name: 'COI_Krypton_Logistics.pdf', size: '1.4 MB', date: '05 Oct 2026' },
+          { name: 'GST_Reg_Krypton.pdf', size: '890 KB', date: '05 Oct 2026' },
+          { name: 'Director_ID_Proof.pdf', size: '1.1 MB', date: '06 Oct 2026' },
+          { name: 'Logistics_SLA_Master.pdf', size: '3.2 MB', date: '07 Oct 2026' }
+        ],
+        modulePerms: [
+          { modId: 'core_hr', name: 'Core HR', view: true, add: true, update: true, delete: false },
+          { modId: 'attendance', name: 'Attendance', view: true, add: true, update: true, delete: false },
+          { modId: 'ats', name: 'ATS', view: true, add: true, update: true, delete: false },
+          { modId: 'performance', name: 'Performance', view: true, add: true, update: true, delete: false }
+        ],
+        status: 'Inactive',
+        lastActive: '3 days ago',
+        avatarBg: 'bg-purple-500 text-white'
+      }
+    ];
 
     const appData = {
       isLoggedIn: false,
@@ -1825,73 +2267,84 @@
       currentSlide: 1,
       slideTimer: null,
       tempWizardData: {},
-      admins: [
-        {
-          id: 'ADM-001',
-          empId: 'EMP-SORA-001',
-          name: 'Aarav Sharma',
-          email: 'aarav.sharma@sorahr.com',
-          role: 'Super Administrator',
-          department: 'Executive People Office',
-          modulePerms: [
-            { name: 'Core HR', view: true, add: true, update: true, delete: true },
-            { name: 'ATS', view: true, add: true, update: true, delete: true },
-            { name: 'Payroll', view: true, add: true, update: true, delete: true },
-            { name: 'Attendance', view: true, add: true, update: true, delete: true },
-            { name: 'Compliance', view: true, add: true, update: true, delete: true }
-          ],
-          status: 'Active',
-          lastActive: 'Just now',
-          avatarBg: 'bg-amber-500 text-black'
-        },
-        {
-          id: 'ADM-002',
-          empId: 'EMP-SORA-042',
-          name: 'Rohan Mehra',
-          email: 'rohan.mehra@sorahr.com',
-          role: 'Payroll Officer',
-          department: 'Payroll & Compensation',
-          modulePerms: [
-            { name: 'Payroll', view: true, add: true, update: true, delete: false },
-            { name: 'Compliance', view: true, add: true, update: true, delete: false },
-            { name: 'Core HR', view: true, add: false, update: false, delete: false }
-          ],
-          status: 'Active',
-          lastActive: '2 hours ago',
-          avatarBg: 'bg-blue-500 text-white'
-        },
-        {
-          id: 'ADM-003',
-          empId: 'EMP-SORA-089',
-          name: 'Ananya Verma',
-          email: 'ananya.verma@sorahr.com',
-          role: 'Talent Recruiter',
-          department: 'Talent Acquisition (ATS)',
-          modulePerms: [
-            { name: 'ATS', view: true, add: true, update: true, delete: false },
-            { name: 'Core HR', view: true, add: false, update: false, delete: false }
-          ],
-          status: 'Active',
-          lastActive: 'Yesterday',
-          avatarBg: 'bg-emerald-500 text-white'
-        },
-        {
-          id: 'ADM-004',
-          empId: 'EMP-SORA-115',
-          name: 'Vikram Joshi',
-          email: 'vikram.joshi@sorahr.com',
-          role: 'HR Administrator',
-          department: 'HR Operations & Attendance',
-          modulePerms: [
-            { name: 'Attendance', view: true, add: true, update: true, delete: false },
-            { name: 'Core HR', view: true, add: true, update: false, delete: false }
-          ],
-          status: 'Active',
-          lastActive: '3 days ago',
-          avatarBg: 'bg-purple-500 text-white'
-        }
-      ]
+      tempWizardDocs: { coi: null, gst: null, pan: null, moa: null },
+      admins: []
     };
+
+    function loadAdminsData() {
+      try {
+        const savedAdmins = localStorage.getItem('sora_admins_data');
+        appData.admins = savedAdmins ? JSON.parse(savedAdmins) : JSON.parse(JSON.stringify(defaultAdminsData));
+      } catch (e) {
+        appData.admins = JSON.parse(JSON.stringify(defaultAdminsData));
+      }
+    }
+
+    function saveAdminsData() {
+      try {
+        localStorage.setItem('sora_admins_data', JSON.stringify(appData.admins));
+      } catch (e) {
+        console.error('Error saving admins:', e);
+      }
+    }
+
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      if (input) {
+        input.type = input.type === 'password' ? 'text' : 'password';
+      }
+    }
+
+    // Wizard Document File Handler
+    function handleWizardDocChange(type, input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const sizeFormatted = (file.size / (1024 * 1024) >= 1) 
+          ? (file.size / (1024 * 1024)).toFixed(1) + ' MB' 
+          : Math.round(file.size / 1024) + ' KB';
+
+        appData.tempWizardDocs[type] = {
+          name: file.name,
+          size: sizeFormatted,
+          date: 'Just now'
+        };
+
+        const slot = document.getElementById(`wizardDocSlot_${type}`);
+        if (slot) {
+          slot.innerHTML = `
+            <div class="flex items-center justify-between p-2 rounded-lg bg-brand-surface border border-brand-amber/30 text-xs">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <i data-lucide="file-check-2" class="w-3.5 h-3.5 text-brand-amber flex-shrink-0"></i>
+                <div class="min-w-0">
+                  <div class="font-medium text-white truncate text-[11px]">${file.name}</div>
+                  <div class="text-[9px] text-neutral-400 font-mono">${sizeFormatted}</div>
+                </div>
+              </div>
+              <button type="button" onclick="removeWizardDoc('${type}')" class="text-neutral-400 hover:text-rose-400 p-1 flex-shrink-0" title="Remove Document">
+                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          `;
+          lucide.createIcons();
+        }
+      }
+    }
+
+    function removeWizardDoc(type) {
+      appData.tempWizardDocs[type] = null;
+      const slot = document.getElementById(`wizardDocSlot_${type}`);
+      if (slot) {
+        const labelText = type === 'coi' ? 'Upload COI' : type === 'gst' ? 'Upload GST Cert' : type === 'pan' ? 'Upload PAN / ID' : 'Upload SLA / MOA';
+        slot.innerHTML = `
+          <label class="cursor-pointer inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-lg bg-brand-surface border border-dashed border-brand-border hover:border-brand-amber text-xs text-neutral-300 hover:text-white transition-all">
+            <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-brand-amber"></i>
+            <span>${labelText}</span>
+            <input type="file" id="wizardDocInput_${type}" onchange="handleWizardDocChange('${type}', this)" class="hidden" accept=".pdf,.png,.jpg,.jpeg">
+          </label>
+        `;
+        lucide.createIcons();
+      }
+    }
 
     // ------------------------------------------
     // MAIN APP ROUTER
@@ -2330,7 +2783,7 @@
     }
 
     // ------------------------------------------
-    // ADMIN LIST TABLE RENDERING
+    // ADMIN LIST TABLE RENDERING & ACTIONS (EDIT, DELETE, TOGGLE STATUS)
     // ------------------------------------------
     function renderAdminListTable(filterText = '') {
       const tbody = document.getElementById('adminListPageTbody');
@@ -2339,17 +2792,20 @@
 
       const search = filterText.toLowerCase().trim();
       const filtered = appData.admins.filter(a => {
+        const comp = a.company ? (a.company.name + ' ' + (a.company.type || '') + ' ' + (a.company.cin || '') + ' ' + (a.company.gst || '')) : '';
         return a.name.toLowerCase().includes(search) ||
                a.email.toLowerCase().includes(search) ||
                a.empId.toLowerCase().includes(search) ||
+               (a.phone && a.phone.toLowerCase().includes(search)) ||
                a.role.toLowerCase().includes(search) ||
-               a.department.toLowerCase().includes(search);
+               (a.designation && a.designation.toLowerCase().includes(search)) ||
+               comp.toLowerCase().includes(search);
       });
 
       tbody.innerHTML = filtered.map(admin => {
         const initials = admin.name.split(' ').map(n => n[0]).join('').substring(0, 2);
         
-        const permBadges = admin.modulePerms ? admin.modulePerms.map(mp => {
+        const permBadges = admin.modulePerms && admin.modulePerms.length > 0 ? admin.modulePerms.map(mp => {
           let letters = [];
           if (mp.view) letters.push('V');
           if (mp.add) letters.push('A');
@@ -2362,41 +2818,78 @@
               <span class="text-brand-amber font-mono font-bold">(${code})</span>
             </span>
           `;
-        }).join('') : '<span class="text-neutral-500">None</span>';
+        }).join('') : '<span class="text-neutral-500 italic">No access</span>';
+
+        const docsCount = admin.documents ? admin.documents.length : 0;
+        const docsTooltip = admin.documents && admin.documents.length > 0
+          ? admin.documents.map(d => d.name).join(', ')
+          : 'No documents attached';
+
+        const isActive = admin.status === 'Active';
+        const companyName = admin.company?.name || 'SORA HR Enterprise';
+        const companyType = admin.company?.type || 'Corporate Client';
+        const companyGst = admin.company?.gst || admin.company?.cin || '';
 
         return `
           <tr class="hover:bg-brand-card/40 transition-colors group">
             <td class="py-4 px-4 sticky left-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-r border-brand-border/60 min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full ${admin.avatarBg} flex items-center justify-center font-bold text-xs flex-shrink-0">
+                <div class="w-8 h-8 rounded-full ${admin.avatarBg || 'bg-brand-amber/20 text-brand-amber'} flex items-center justify-center font-bold text-xs flex-shrink-0">
                   ${initials}
                 </div>
                 <div>
                   <div class="font-bold text-white text-xs">${admin.name}</div>
                   <div class="text-[11px] text-neutral-400 font-mono">${admin.email}</div>
+                  ${admin.phone ? `<div class="text-[10px] text-neutral-500">${admin.phone}</div>` : ''}
                 </div>
               </div>
             </td>
-            <td class="py-4 px-4 font-mono font-bold text-brand-amber whitespace-nowrap">${admin.empId}</td>
-            <td class="py-4 px-4 whitespace-nowrap">
-              <div class="font-semibold text-neutral-200">${admin.role}</div>
-              <div class="text-[11px] text-neutral-400">${admin.department}</div>
+            <td class="py-4 px-4 font-mono font-bold text-brand-amber whitespace-nowrap">
+              <div>${admin.empId}</div>
+              <div class="text-[10px] text-neutral-500 font-normal">${admin.id}</div>
             </td>
-            <td class="py-4 px-4 whitespace-nowrap">
-              <div class="flex flex-wrap gap-1 max-w-sm">
+            <td class="py-4 px-4 whitespace-nowrap min-w-[180px]">
+              <div class="font-bold text-white text-xs">${companyName}</div>
+              <div class="text-[11px] text-neutral-400">${companyType}</div>
+              ${companyGst ? `<div class="text-[10px] font-mono text-neutral-500 mt-0.5">${companyGst}</div>` : ''}
+            </td>
+            <td class="py-4 px-4 whitespace-nowrap min-w-[180px]">
+              <div class="font-semibold text-neutral-200">${admin.role}</div>
+              <div class="text-[11px] text-brand-amber">${admin.designation || 'Administrator'}</div>
+            </td>
+            <td class="py-4 px-4 whitespace-nowrap min-w-[260px]">
+              <div class="flex flex-wrap gap-1 max-w-xs">
                 ${permBadges}
               </div>
             </td>
             <td class="py-4 px-4 whitespace-nowrap">
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${admin.status}
+              <span title="${docsTooltip}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-brand-dark border border-brand-border text-neutral-300">
+                <i data-lucide="file-check" class="w-3.5 h-3.5 text-brand-amber"></i>
+                <span>${docsCount} Doc${docsCount === 1 ? '' : 's'}</span>
               </span>
             </td>
-            <td class="py-4 px-4 text-neutral-400 whitespace-nowrap font-mono text-xs">${admin.lastActive}</td>
-            <td class="py-4 px-4 text-right sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-l border-brand-border/60 min-w-[100px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
-              <button onclick="removeAdmin('${admin.id}')" title="Revoke Access" class="p-1.5 text-neutral-400 hover:text-rose-400 hover:bg-white/5 rounded-lg transition-colors">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
+            <td class="py-4 px-4 whitespace-nowrap">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold ${isActive ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-neutral-800 text-neutral-400 border border-neutral-700'}">
+                <span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400 animate-pulse' : 'bg-neutral-500'}"></span>
+                <span>${admin.status || 'Active'}</span>
+              </span>
+            </td>
+            <td class="py-4 px-4 text-neutral-400 whitespace-nowrap font-mono text-xs">${admin.lastActive || 'Recently'}</td>
+            <td class="py-4 px-4 text-right sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-l border-brand-border/60 min-w-[140px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
+              <div class="flex items-center justify-end gap-1.5">
+                <!-- Active / Deactivate Toggle -->
+                <button onclick="toggleAdminStatus('${admin.id}')" title="${isActive ? 'Deactivate Administrator' : 'Activate Administrator'}" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-brand-amber transition-all">
+                  <i data-lucide="${isActive ? 'pause-circle' : 'play-circle'}" class="w-4 h-4 ${isActive ? 'text-amber-400' : 'text-emerald-400'}"></i>
+                </button>
+                <!-- Edit Admin -->
+                <button onclick="openEditAdminModal('${admin.id}')" title="Edit Administrator Profile & Permissions" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white transition-all">
+                  <i data-lucide="edit-3" class="w-4 h-4"></i>
+                </button>
+                <!-- Delete Admin -->
+                <button onclick="deleteAdmin('${admin.id}')" title="Delete Administrator" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-red-500/50 text-neutral-400 hover:text-red-400 transition-all">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
             </td>
           </tr>
         `;
@@ -2412,24 +2905,264 @@
       renderAdminListTable(q);
     }
 
-    function removeAdmin(id) {
+    function toggleAdminStatus(id) {
+      const admin = appData.admins.find(a => a.id === id);
+      if (!admin) return;
+      admin.status = admin.status === 'Active' ? 'Inactive' : 'Active';
+      saveAdminsData();
+      renderAdminListTable();
+      showToast('Status Updated', `${admin.name} is now ${admin.status}.`);
+    }
+
+    function deleteAdmin(id) {
       const idx = appData.admins.findIndex(a => a.id === id);
       if (idx !== -1) {
         const name = appData.admins[idx].name;
-        if (confirm(`Revoke administrative access for ${name}?`)) {
+        if (confirm(`Are you sure you want to delete administrator "${name}"? This action cannot be undone.`)) {
           appData.admins.splice(idx, 1);
+          saveAdminsData();
           renderAdminListTable();
-          showToast('Admin Removed', `Access revoked for ${name}`);
+          showToast('Administrator Deleted', `${name} was removed from the system.`);
         }
       }
     }
 
     // ------------------------------------------
+    // EDIT ADMINISTRATOR MODAL LOGIC
+    // ------------------------------------------
+    let currentEditingAdmin = null;
+
+    function openEditAdminModal(id) {
+      const admin = appData.admins.find(a => a.id === id);
+      if (!admin) return;
+      currentEditingAdmin = admin;
+
+      document.getElementById('editAdminId').value = admin.id;
+      document.getElementById('editAdminName').value = admin.name;
+      document.getElementById('editAdminEmail').value = admin.email;
+      document.getElementById('editAdminPhone').value = admin.phone || '';
+      document.getElementById('editAdminEmpId').value = admin.empId;
+      document.getElementById('editAdminPassword').value = '';
+      document.getElementById('editAdminStatus').value = admin.status || 'Active';
+
+      document.getElementById('editAdminCompanyName').value = admin.company?.name || '';
+      document.getElementById('editAdminCompanyType').value = admin.company?.type || '';
+      document.getElementById('editAdminCompanyCin').value = admin.company?.cin || '';
+      document.getElementById('editAdminCompanyGst').value = admin.company?.gst || '';
+      document.getElementById('editAdminCompanyAddress').value = admin.company?.address || '';
+      document.getElementById('editAdminCompanyWebsite').value = admin.company?.website || '';
+
+      document.getElementById('editAdminDesignation').value = admin.designation || '';
+
+      // Populate Role Dropdown
+      const roleSelect = document.getElementById('editAdminRole');
+      roleSelect.innerHTML = roleMasterList.map(r => `<option value="${r.name}">${r.name} &bull; ${r.tier ? r.tier.split(' - ')[0] : 'Role'}</option>`).join('');
+      roleSelect.value = admin.role;
+
+      // Render Attached Documents
+      renderEditAdminDocsList();
+
+      // Render Permissions Matrix
+      renderEditAdminPermsMatrix(admin.modulePerms);
+
+      document.getElementById('editAdminModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeEditAdminModal() {
+      document.getElementById('editAdminModal').classList.add('hidden');
+      currentEditingAdmin = null;
+    }
+
+    function renderEditAdminDocsList() {
+      const container = document.getElementById('editAdminDocsList');
+      if (!currentEditingAdmin || !currentEditingAdmin.documents || currentEditingAdmin.documents.length === 0) {
+        container.innerHTML = '<span class="text-neutral-500 italic text-[11px]">No documents attached.</span>';
+        return;
+      }
+      container.innerHTML = currentEditingAdmin.documents.map((doc, idx) => `
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white">
+          <i data-lucide="file-check-2" class="w-3.5 h-3.5 text-brand-amber"></i>
+          <span class="font-medium">${doc.name}</span>
+          <span class="text-[10px] text-neutral-400 font-mono">(${doc.size})</span>
+          <button type="button" onclick="removeEditAdminDoc(${idx})" class="text-neutral-400 hover:text-rose-400 p-0.5 ml-1" title="Remove Document">
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function handleEditAdminDocUpload(input) {
+      if (!currentEditingAdmin) return;
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const sizeFormatted = (file.size / (1024 * 1024) >= 1) 
+          ? (file.size / (1024 * 1024)).toFixed(1) + ' MB' 
+          : Math.round(file.size / 1024) + ' KB';
+
+        if (!currentEditingAdmin.documents) currentEditingAdmin.documents = [];
+        currentEditingAdmin.documents.push({
+          name: file.name,
+          size: sizeFormatted,
+          date: 'Just now'
+        });
+        renderEditAdminDocsList();
+        input.value = '';
+      }
+    }
+
+    function removeEditAdminDoc(idx) {
+      if (currentEditingAdmin && currentEditingAdmin.documents) {
+        currentEditingAdmin.documents.splice(idx, 1);
+        renderEditAdminDocsList();
+      }
+    }
+
+    function renderEditAdminPermsMatrix(existingPerms = []) {
+      const tbody = document.getElementById('editAdminPermsTbody');
+      tbody.innerHTML = permissionModulesList.map(mod => {
+        const existing = existingPerms ? existingPerms.find(p => p.modId === mod.id || p.name.includes(mod.name.split(' ')[0])) : null;
+        const v = existing ? existing.view : false;
+        const a = existing ? existing.add : false;
+        const u = existing ? existing.update : false;
+        const d = existing ? existing.delete : false;
+
+        return `
+          <tr class="hover:bg-brand-surface/60 transition-colors">
+            <td class="py-2.5 px-3">
+              <div class="font-bold text-white text-xs">${mod.name}</div>
+              <div class="text-[10px] text-neutral-400">${mod.desc}</div>
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <input type="checkbox" name="editAdminPerm_${mod.id}_view" ${v ? 'checked' : ''} class="edit-perm-chk rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <input type="checkbox" name="editAdminPerm_${mod.id}_add" ${a ? 'checked' : ''} class="edit-perm-chk rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <input type="checkbox" name="editAdminPerm_${mod.id}_update" ${u ? 'checked' : ''} class="edit-perm-chk rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <input type="checkbox" name="editAdminPerm_${mod.id}_delete" ${d ? 'checked' : ''} class="edit-perm-chk rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <button type="button" onclick="toggleEditAdminRowPerms('${mod.id}', true)" class="text-[10px] text-brand-amber hover:underline mr-1 font-semibold">All</button>
+              <button type="button" onclick="toggleEditAdminRowPerms('${mod.id}', false)" class="text-[10px] text-neutral-400 hover:underline">None</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleEditAdminRowPerms(modId, state) {
+      ['view', 'add', 'update', 'delete'].forEach(act => {
+        const el = document.querySelector(`input[name="editAdminPerm_${modId}_${act}"]`);
+        if (el) el.checked = state;
+      });
+    }
+
+    function toggleEditAdminAllPerms(state) {
+      document.querySelectorAll('.edit-perm-chk').forEach(cb => cb.checked = state);
+    }
+
+    function syncEditAdminRolePermissions() {
+      const roleName = document.getElementById('editAdminRole').value;
+      const roleObj = roleMasterList.find(r => r.name === roleName);
+      if (!roleObj || !roleObj.permissions) return;
+
+      permissionModulesList.forEach(mod => {
+        const p = roleObj.permissions[mod.id] || { view: false, add: false, update: false, delete: false };
+        ['view', 'add', 'update', 'delete'].forEach(act => {
+          const cb = document.querySelector(`input[name="editAdminPerm_${mod.id}_${act}"]`);
+          if (cb) cb.checked = !!p[act];
+        });
+      });
+      showToast('Permissions Inherited', `Loaded permissions from ${roleName}`);
+    }
+
+    function saveEditedAdmin() {
+      const id = document.getElementById('editAdminId').value;
+      const admin = appData.admins.find(a => a.id === id);
+      if (!admin) return;
+
+      const name = document.getElementById('editAdminName').value.trim();
+      const email = document.getElementById('editAdminEmail').value.trim();
+      const empId = document.getElementById('editAdminEmpId').value.trim();
+      const companyName = document.getElementById('editAdminCompanyName').value.trim();
+
+      if (!name || !email || !empId || !companyName) {
+        showToast('Required Fields', 'Full Name, Email, Emp ID and Company Name are required.');
+        return;
+      }
+
+      admin.name = name;
+      admin.email = email;
+      admin.phone = document.getElementById('editAdminPhone').value.trim();
+      admin.empId = empId;
+      admin.status = document.getElementById('editAdminStatus').value;
+
+      admin.company = {
+        name: companyName,
+        type: document.getElementById('editAdminCompanyType').value.trim(),
+        cin: document.getElementById('editAdminCompanyCin').value.trim(),
+        gst: document.getElementById('editAdminCompanyGst').value.trim(),
+        address: document.getElementById('editAdminCompanyAddress').value.trim(),
+        website: document.getElementById('editAdminCompanyWebsite').value.trim()
+      };
+
+      admin.role = document.getElementById('editAdminRole').value;
+      admin.designation = document.getElementById('editAdminDesignation').value.trim();
+
+      // Collect updated permissions
+      const updatedPerms = [];
+      permissionModulesList.forEach(mod => {
+        const v = document.querySelector(`input[name="editAdminPerm_${mod.id}_view"]`)?.checked || false;
+        const a = document.querySelector(`input[name="editAdminPerm_${mod.id}_add"]`)?.checked || false;
+        const u = document.querySelector(`input[name="editAdminPerm_${mod.id}_update"]`)?.checked || false;
+        const d = document.querySelector(`input[name="editAdminPerm_${mod.id}_delete"]`)?.checked || false;
+
+        if (v || a || u || d) {
+          updatedPerms.push({
+            modId: mod.id,
+            name: mod.name.split(' ')[0] + (mod.name.includes('ATS') ? ' (ATS)' : ''),
+            view: v,
+            add: a,
+            update: u,
+            delete: d
+          });
+        }
+      });
+      admin.modulePerms = updatedPerms;
+
+      saveAdminsData();
+      renderAdminListTable();
+      closeEditAdminModal();
+      showToast('Changes Saved', `Administrator ${name} has been updated.`);
+    }
+
+    // ------------------------------------------
     // 2-STEP ADMIN CREATION WIZARD LOGIC
-    // Step 1: Personal & Role Details
-    // Step 2: Granular Permissions Matrix
+    // Step 1: Personal, Company, Role & Verification Documents
+    // Step 2: Granular Permissions Matrix (Pre-populated from Selected Role)
     // ------------------------------------------
     function startAdminCreationWizard() {
+      // Clear wizard inputs
+      document.getElementById('wizardName').value = '';
+      document.getElementById('wizardEmail').value = '';
+      document.getElementById('wizardPhone').value = '';
+      document.getElementById('wizardEmpId').value = 'EMP-SORA-' + Math.floor(100 + Math.random() * 900);
+      document.getElementById('wizardPassword').value = 'SoraHR@2026';
+      document.getElementById('wizardCompanyName').value = '';
+      document.getElementById('wizardCompanyCin').value = '';
+      document.getElementById('wizardCompanyGst').value = '';
+      document.getElementById('wizardCompanyAddress').value = '';
+      document.getElementById('wizardCompanyWebsite').value = '';
+      document.getElementById('wizardDesignation').value = '';
+
+      appData.tempWizardDocs = { coi: null, gst: null, pan: null, moa: null };
+      ['coi', 'gst', 'pan', 'moa'].forEach(t => removeWizardDoc(t));
+
       showAdminPage('portal-admin-create');
     }
 
@@ -2439,7 +3172,6 @@
 
       document.getElementById('stepBadge1').className = "px-3 py-1 rounded-full bg-brand-amber text-neutral-950 flex items-center gap-1.5 shadow font-bold";
       document.getElementById('stepBadge2').className = "px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-neutral-400 flex items-center gap-1.5";
-      renderDepartmentDropdowns();
       renderRoleDropdowns();
       lucide.createIcons();
     }
@@ -2448,24 +3180,40 @@
       const name = document.getElementById('wizardName').value.trim();
       const empId = document.getElementById('wizardEmpId').value.trim();
       const email = document.getElementById('wizardEmail').value.trim();
-      const dept = document.getElementById('wizardDept').value;
       const role = document.getElementById('wizardRole').value;
       const phone = document.getElementById('wizardPhone').value.trim();
+      const password = document.getElementById('wizardPassword').value.trim();
 
-      if (!name || !empId || !email) {
-        showToast('Required Fields', 'Full Name, Employee ID and Email are mandatory.');
+      const companyName = document.getElementById('wizardCompanyName').value.trim();
+      const companyType = document.getElementById('wizardCompanyType').value;
+      const companyCin = document.getElementById('wizardCompanyCin').value.trim();
+      const companyGst = document.getElementById('wizardCompanyGst').value.trim();
+      const companyAddress = document.getElementById('wizardCompanyAddress').value.trim();
+      const companyWebsite = document.getElementById('wizardCompanyWebsite').value.trim();
+      const designation = document.getElementById('wizardDesignation').value.trim();
+
+      if (!name || !empId || !email || !companyName || !role) {
+        showToast('Required Fields', 'Full Name, Work Email, Employee ID, Company Name and Role Level are required.');
         return;
       }
 
-      appData.tempWizardData = { name, empId, email, dept, role, phone };
+      appData.tempWizardData = {
+        name, empId, email, role, phone, password,
+        companyName, companyType, companyCin, companyGst, companyAddress, companyWebsite,
+        designation
+      };
 
       // Update Step 2 Banner
       document.getElementById('step2SummaryName').innerText = name;
-      document.getElementById('step2SummaryMeta').innerText = `${empId} \u2022 ${role} (${dept})`;
+      document.getElementById('step2SummaryCompany').innerText = companyName;
+      document.getElementById('step2SummaryMeta').innerText = `${empId} \u2022 ${role} ${designation ? '(' + designation + ')' : ''}`;
       document.getElementById('step2Avatar').innerText = name.split(' ').map(n => n[0]).join('').substring(0, 2);
+      document.getElementById('step2InheritedRoleName').innerText = role;
 
-      // Render Permissions Matrix
-      renderPermissionMatrixForm();
+      // PRE-POPULATE PERMISSIONS FROM THE SELECTED ROLE!
+      const roleObj = roleMasterList.find(r => r.name === role);
+      const rolePerms = roleObj ? roleObj.permissions : null;
+      renderPermissionMatrixForm(rolePerms);
 
       document.getElementById('adminWizardStep1').classList.add('hidden');
       document.getElementById('adminWizardStep2').classList.remove('hidden');
@@ -2476,33 +3224,52 @@
       lucide.createIcons();
     }
 
-    function renderPermissionMatrixForm() {
+    function resetStep2PermsToRole() {
+      const role = appData.tempWizardData?.role;
+      if (!role) return;
+      const roleObj = roleMasterList.find(r => r.name === role);
+      if (roleObj && roleObj.permissions) {
+        renderPermissionMatrixForm(roleObj.permissions);
+        showToast('Permissions Reset', `Re-applied permissions configured for ${role}`);
+      }
+    }
+
+    function renderPermissionMatrixForm(rolePerms = null) {
       const tbody = document.getElementById('permissionMatrixTbody');
-      tbody.innerHTML = permissionModulesList.map(mod => `
-        <tr class="hover:bg-brand-surface/60 transition-colors">
-          <td class="py-3 px-4">
-            <div class="font-bold text-white text-xs">${mod.name}</div>
-            <div class="text-[10px] text-neutral-400">${mod.desc}</div>
-          </td>
-          <td class="py-3 px-3 text-center">
-            <input type="checkbox" name="perm_${mod.id}_view" data-mod="${mod.name}" data-action="view" checked class="perm-chk perm-view rounded border-brand-border text-brand-amber focus:ring-0">
-          </td>
-          <td class="py-3 px-3 text-center">
-            <input type="checkbox" name="perm_${mod.id}_add" data-mod="${mod.name}" data-action="add" checked class="perm-chk perm-add rounded border-brand-border text-brand-amber focus:ring-0">
-          </td>
-          <td class="py-3 px-3 text-center">
-            <input type="checkbox" name="perm_${mod.id}_update" data-mod="${mod.name}" data-action="update" checked class="perm-chk perm-update rounded border-brand-border text-brand-amber focus:ring-0">
-          </td>
-          <td class="py-3 px-3 text-center">
-            <input type="checkbox" name="perm_${mod.id}_delete" data-mod="${mod.name}" data-action="delete" class="perm-chk perm-delete rounded border-brand-border text-brand-amber focus:ring-0">
-          </td>
-          <td class="py-3 px-4 text-center">
-            <button type="button" onclick="toggleRowPerms('${mod.id}', true)" class="text-[10px] text-brand-amber hover:underline mr-1 font-semibold">All</button>
-            <span class="text-neutral-600">&bull;</span>
-            <button type="button" onclick="toggleRowPerms('${mod.id}', false)" class="text-[10px] text-neutral-400 hover:underline ml-1">None</button>
-          </td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = permissionModulesList.map(mod => {
+        const modPerm = rolePerms ? rolePerms[mod.id] : null;
+        // Default to true for view/add if rolePerms is not specified, or match rolePerms exactly
+        const v = modPerm !== undefined && modPerm !== null ? !!modPerm.view : true;
+        const a = modPerm !== undefined && modPerm !== null ? !!modPerm.add : true;
+        const u = modPerm !== undefined && modPerm !== null ? !!modPerm.update : false;
+        const d = modPerm !== undefined && modPerm !== null ? !!modPerm.delete : false;
+
+        return `
+          <tr class="hover:bg-brand-surface/60 transition-colors">
+            <td class="py-3 px-4">
+              <div class="font-bold text-white text-xs">${mod.name}</div>
+              <div class="text-[10px] text-neutral-400">${mod.desc}</div>
+            </td>
+            <td class="py-3 px-3 text-center">
+              <input type="checkbox" name="perm_${mod.id}_view" data-mod="${mod.name}" data-action="view" ${v ? 'checked' : ''} class="perm-chk perm-view rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-3 px-3 text-center">
+              <input type="checkbox" name="perm_${mod.id}_add" data-mod="${mod.name}" data-action="add" ${a ? 'checked' : ''} class="perm-chk perm-add rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-3 px-3 text-center">
+              <input type="checkbox" name="perm_${mod.id}_update" data-mod="${mod.name}" data-action="update" ${u ? 'checked' : ''} class="perm-chk perm-update rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-3 px-3 text-center">
+              <input type="checkbox" name="perm_${mod.id}_delete" data-mod="${mod.name}" data-action="delete" ${d ? 'checked' : ''} class="perm-chk perm-delete rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-3 px-4 text-center">
+              <button type="button" onclick="toggleRowPerms('${mod.id}', true)" class="text-[10px] text-brand-amber hover:underline mr-1 font-semibold">All</button>
+              <span class="text-neutral-600">&bull;</span>
+              <button type="button" onclick="toggleRowPerms('${mod.id}', false)" class="text-[10px] text-neutral-400 hover:underline ml-1">None</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
       lucide.createIcons();
     }
 
@@ -2539,6 +3306,7 @@
 
         if (v || a || u || d) {
           modulePerms.push({
+            modId: mod.id,
             name: mod.name.split(' ')[0] + (mod.name.includes('ATS') ? ' (ATS)' : ''),
             view: v,
             add: a,
@@ -2548,57 +3316,52 @@
         }
       });
 
+      // Collect uploaded documents
+      const docs = [];
+      if (appData.tempWizardDocs.coi) docs.push({ ...appData.tempWizardDocs.coi, type: 'COI' });
+      if (appData.tempWizardDocs.gst) docs.push({ ...appData.tempWizardDocs.gst, type: 'GST' });
+      if (appData.tempWizardDocs.pan) docs.push({ ...appData.tempWizardDocs.pan, type: 'PAN' });
+      if (appData.tempWizardDocs.moa) docs.push({ ...appData.tempWizardDocs.moa, type: 'MOA' });
+
+      // Fallback sample doc if none uploaded
+      if (docs.length === 0) {
+        docs.push({ name: 'Verification_Bundle.pdf', size: '1.2 MB', date: 'Just now' });
+      }
+
       const newAdmin = {
         id: 'ADM-' + Date.now().toString().slice(-3),
         empId: data.empId,
         name: data.name,
         email: data.email,
+        phone: data.phone || '',
+        password: data.password || '••••••••',
+        company: {
+          name: data.companyName,
+          type: data.companyType,
+          cin: data.companyCin,
+          gst: data.companyGst,
+          address: data.companyAddress,
+          website: data.companyWebsite
+        },
         role: data.role,
-        department: data.dept,
-        modulePerms: modulePerms.length > 0 ? modulePerms : [{ name: 'Core HR', view: true, add: false, update: false, delete: false }],
+        designation: data.designation || 'Administrator',
+        documents: docs,
+        modulePerms: modulePerms.length > 0 ? modulePerms : [{ modId: 'core_hr', name: 'Core HR', view: true, add: false, update: false, delete: false }],
         status: 'Active',
         lastActive: 'Just registered',
         avatarBg: 'bg-amber-500 text-black'
       };
 
       appData.admins.unshift(newAdmin);
-      showToast('Admin Created!', `${data.name} has been enrolled with ${modulePerms.length} module permissions.`);
+      saveAdminsData();
+      showToast('Admin Enrolled!', `${data.name} created for ${data.companyName} with ${modulePerms.length} module permissions.`);
       showAdminPage('portal-admin-list');
     }
 
     // ------------------------------------------
-    // ORGANIZATION MASTER MANAGEMENT LOGIC
-    // Departments & Role Levels - 100% Dynamic with LocalStorage persistence
+    // ROLE MASTER & RBAC MANAGEMENT LOGIC
+    // 100% Dynamic Role Levels with Module-Wise Granular Permissions
     // ------------------------------------------
-    let currentMasterTab = 'depts';
-
-    function renderDepartmentDropdowns(selectedVal = null) {
-      const select = document.getElementById('wizardDept');
-      if (!select) return;
-      const currentVal = selectedVal || select.value;
-
-      if (!departmentMasterList || departmentMasterList.length === 0) {
-        select.innerHTML = '<option value="" disabled selected>No departments defined - Click "+ Add Dept"</option>';
-      } else {
-        select.innerHTML = departmentMasterList
-          .filter(d => d.status !== 'Inactive')
-          .map(d => `<option value="${d.name}">${d.name} (${d.code})</option>`)
-          .join('');
-
-        if (currentVal && departmentMasterList.some(d => d.name === currentVal)) {
-          select.value = currentVal;
-        } else if (departmentMasterList.length > 0) {
-          select.value = departmentMasterList[0].name;
-        }
-      }
-
-      const countLabel = document.getElementById('wizardDeptCountLabel');
-      if (countLabel) {
-        const activeCount = departmentMasterList.filter(d => d.status !== 'Inactive').length;
-        countLabel.innerText = `${activeCount} department${activeCount === 1 ? '' : 's'} available`;
-      }
-    }
-
     function renderRoleDropdowns(selectedVal = null) {
       const select = document.getElementById('wizardRole');
       if (!select) return;
@@ -2626,109 +3389,6 @@
       }
     }
 
-    function openDeptModal(index = -1, fromWizard = false) {
-      const modal = document.getElementById('deptMasterModal');
-      const title = document.getElementById('deptModalTitle');
-      const editIndex = document.getElementById('deptModalEditIndex');
-      const fromWiz = document.getElementById('deptModalIsFromWizard');
-
-      editIndex.value = index;
-      fromWiz.value = fromWizard ? 'true' : 'false';
-
-      if (index === -1) {
-        title.innerText = 'Add New Department';
-        document.getElementById('deptModalName').value = '';
-        document.getElementById('deptModalCode').value = '';
-        document.getElementById('deptModalDesc').value = '';
-        document.getElementById('deptModalStatus').value = 'Active';
-      } else {
-        const item = departmentMasterList[index];
-        title.innerText = 'Edit Department';
-        document.getElementById('deptModalName').value = item.name;
-        document.getElementById('deptModalCode').value = item.code;
-        document.getElementById('deptModalDesc').value = item.desc || '';
-        document.getElementById('deptModalStatus').value = item.status || 'Active';
-      }
-
-      modal.classList.remove('hidden');
-      lucide.createIcons();
-      setTimeout(() => document.getElementById('deptModalName').focus(), 50);
-    }
-
-    function closeDeptModal() {
-      document.getElementById('deptMasterModal').classList.add('hidden');
-    }
-
-    function submitDeptModal() {
-      const name = document.getElementById('deptModalName').value.trim();
-      let code = document.getElementById('deptModalCode').value.trim().toUpperCase();
-      const desc = document.getElementById('deptModalDesc').value.trim();
-      const status = document.getElementById('deptModalStatus').value;
-      const index = parseInt(document.getElementById('deptModalEditIndex').value);
-      const fromWizard = document.getElementById('deptModalIsFromWizard').value === 'true';
-
-      if (!name) {
-        showToast('Required Field', 'Department name is mandatory.');
-        return;
-      }
-      if (!code) {
-        code = name.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase() || 'DEPT';
-      }
-
-      if (index === -1) {
-        if (departmentMasterList.some(d => d.name.toLowerCase() === name.toLowerCase())) {
-          showToast('Duplicate Notice', `Department "${name}" already exists.`);
-          return;
-        }
-        const newDept = {
-          id: 'dept_' + Date.now().toString().slice(-4),
-          name,
-          code,
-          desc: desc || 'Organizational operational department',
-          status
-        };
-        departmentMasterList.push(newDept);
-        saveDepartmentMaster();
-        renderDepartmentDropdowns(name);
-        showToast('Department Added!', `"${name}" (${code}) is now active.`);
-      } else {
-        departmentMasterList[index].name = name;
-        departmentMasterList[index].code = code;
-        departmentMasterList[index].desc = desc;
-        departmentMasterList[index].status = status;
-        saveDepartmentMaster();
-        renderDepartmentDropdowns(name);
-        showToast('Department Updated', `"${name}" updated successfully.`);
-      }
-
-      closeDeptModal();
-      renderMasterManagementPage();
-
-      if (fromWizard) {
-        const select = document.getElementById('wizardDept');
-        if (select) select.value = name;
-      }
-    }
-
-    function deleteDepartment(index) {
-      const dept = departmentMasterList[index];
-      if (!dept) return;
-
-      const assignedAdmins = appData.admins.filter(a => a.department === dept.name);
-      let msg = `Are you sure you want to remove the department "${dept.name}"?`;
-      if (assignedAdmins.length > 0) {
-        msg = `Notice: ${assignedAdmins.length} administrator(s) (${assignedAdmins.map(a => a.name).join(', ')}) are currently designated to "${dept.name}". Deleting it will remove it from future enrollment. Proceed?`;
-      }
-
-      if (confirm(msg)) {
-        departmentMasterList.splice(index, 1);
-        saveDepartmentMaster();
-        renderDepartmentDropdowns();
-        renderMasterManagementPage();
-        showToast('Department Removed', `"${dept.name}" was deleted from Master.`);
-      }
-    }
-
     function openRoleModal(index = -1, fromWizard = false) {
       const modal = document.getElementById('roleMasterModal');
       const title = document.getElementById('roleModalTitle');
@@ -2738,20 +3398,32 @@
       editIndex.value = index;
       fromWiz.value = fromWizard ? 'true' : 'false';
 
+      let permissionsObj = {};
+
       if (index === -1) {
         title.innerText = 'Add New Role Level';
         document.getElementById('roleModalName').value = '';
         document.getElementById('roleModalCode').value = '';
         document.getElementById('roleModalTier').value = 'Level 3 - Functional';
+        document.getElementById('roleModalStatus').value = 'Active';
         document.getElementById('roleModalDesc').value = '';
+        // Default all view and add checked for a new role
+        permissionModulesList.forEach(m => {
+          permissionsObj[m.id] = { view: true, add: true, update: true, delete: false };
+        });
       } else {
         const item = roleMasterList[index];
         title.innerText = 'Edit Role Level';
         document.getElementById('roleModalName').value = item.name;
         document.getElementById('roleModalCode').value = item.code;
         document.getElementById('roleModalTier').value = item.tier;
+        document.getElementById('roleModalStatus').value = item.status || 'Active';
         document.getElementById('roleModalDesc').value = item.desc || '';
+        permissionsObj = item.permissions || {};
       }
+
+      // Render Module Permissions Matrix in Role Modal
+      renderRoleModalPermsMatrix(permissionsObj);
 
       modal.classList.remove('hidden');
       lucide.createIcons();
@@ -2762,10 +3434,53 @@
       document.getElementById('roleMasterModal').classList.add('hidden');
     }
 
+    function renderRoleModalPermsMatrix(permsObj = {}) {
+      const tbody = document.getElementById('roleModalPermsTbody');
+      tbody.innerHTML = permissionModulesList.map(mod => {
+        const p = permsObj[mod.id] || { view: false, add: false, update: false, delete: false };
+        return `
+          <tr class="hover:bg-brand-surface/60 transition-colors">
+            <td class="py-2.5 px-3">
+              <div class="font-bold text-white text-xs">${mod.name}</div>
+              <div class="text-[10px] text-neutral-400">${mod.desc}</div>
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <input type="checkbox" name="roleModalPerm_${mod.id}_view" ${p.view ? 'checked' : ''} class="role-modal-chk rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <input type="checkbox" name="roleModalPerm_${mod.id}_add" ${p.add ? 'checked' : ''} class="role-modal-chk rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <input type="checkbox" name="roleModalPerm_${mod.id}_update" ${p.update ? 'checked' : ''} class="role-modal-chk rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <input type="checkbox" name="roleModalPerm_${mod.id}_delete" ${p.delete ? 'checked' : ''} class="role-modal-chk rounded border-brand-border text-brand-amber focus:ring-0">
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <button type="button" onclick="toggleRoleModalRowPerms('${mod.id}', true)" class="text-[10px] text-brand-amber hover:underline mr-1 font-semibold">All</button>
+              <button type="button" onclick="toggleRoleModalRowPerms('${mod.id}', false)" class="text-[10px] text-neutral-400 hover:underline">None</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleRoleModalRowPerms(modId, state) {
+      ['view', 'add', 'update', 'delete'].forEach(act => {
+        const el = document.querySelector(`input[name="roleModalPerm_${modId}_${act}"]`);
+        if (el) el.checked = state;
+      });
+    }
+
+    function toggleRoleModalAllPerms(state) {
+      document.querySelectorAll('.role-modal-chk').forEach(cb => cb.checked = state);
+    }
+
     function submitRoleModal() {
       const name = document.getElementById('roleModalName').value.trim();
       let code = document.getElementById('roleModalCode').value.trim().toUpperCase();
       const tier = document.getElementById('roleModalTier').value;
+      const status = document.getElementById('roleModalStatus').value;
       const desc = document.getElementById('roleModalDesc').value.trim();
       const index = parseInt(document.getElementById('roleModalEditIndex').value);
       const fromWizard = document.getElementById('roleModalIsFromWizard').value === 'true';
@@ -2778,6 +3493,17 @@
         code = 'ROLE-' + (name.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase() || 'LVL');
       }
 
+      // Collect module permissions
+      const perms = {};
+      permissionModulesList.forEach(mod => {
+        perms[mod.id] = {
+          view: document.querySelector(`input[name="roleModalPerm_${mod.id}_view"]`)?.checked || false,
+          add: document.querySelector(`input[name="roleModalPerm_${mod.id}_add"]`)?.checked || false,
+          update: document.querySelector(`input[name="roleModalPerm_${mod.id}_update"]`)?.checked || false,
+          delete: document.querySelector(`input[name="roleModalPerm_${mod.id}_delete"]`)?.checked || false
+        };
+      });
+
       if (index === -1) {
         if (roleMasterList.some(r => r.name.toLowerCase() === name.toLowerCase())) {
           showToast('Duplicate Notice', `Role level "${name}" already exists.`);
@@ -2788,21 +3514,24 @@
           name,
           code,
           tier,
-          desc: desc || 'RBAC authority tier with custom access rights',
-          status: 'Active'
+          desc: desc || 'RBAC authority tier with custom module rights',
+          status,
+          permissions: perms
         };
         roleMasterList.push(newRole);
         saveRoleMaster();
         renderRoleDropdowns(name);
-        showToast('Role Level Added!', `"${name}" is now active.`);
+        showToast('Role Level Added!', `"${name}" configured with module permissions.`);
       } else {
         roleMasterList[index].name = name;
         roleMasterList[index].code = code;
         roleMasterList[index].tier = tier;
+        roleMasterList[index].status = status;
         roleMasterList[index].desc = desc;
+        roleMasterList[index].permissions = perms;
         saveRoleMaster();
         renderRoleDropdowns(name);
-        showToast('Role Level Updated', `"${name}" updated successfully.`);
+        showToast('Role Level Updated', `"${name}" permissions updated successfully.`);
       }
 
       closeRoleModal();
@@ -2833,110 +3562,16 @@
       }
     }
 
-    function switchMasterTab(tab) {
-      currentMasterTab = tab;
-      const btnDepts = document.getElementById('masterTabBtnDepts');
-      const btnRoles = document.getElementById('masterTabBtnRoles');
-      const contentDepts = document.getElementById('masterTabContentDepts');
-      const contentRoles = document.getElementById('masterTabContentRoles');
-
-      if (tab === 'depts') {
-        btnDepts.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brand-amber text-neutral-950 shadow flex items-center gap-2";
-        btnRoles.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all text-neutral-400 hover:text-white hover:bg-brand-surface flex items-center gap-2";
-        contentDepts.classList.remove('hidden');
-        contentRoles.classList.add('hidden');
-      } else {
-        btnRoles.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brand-amber text-neutral-950 shadow flex items-center gap-2";
-        btnDepts.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all text-neutral-400 hover:text-white hover:bg-brand-surface flex items-center gap-2";
-        contentRoles.classList.remove('hidden');
-        contentDepts.classList.add('hidden');
-      }
-      lucide.createIcons();
-    }
-
     function renderMasterManagementPage() {
       // Update KPIs
-      const deptCountEl = document.getElementById('masterKpiDeptCount');
       const roleCountEl = document.getElementById('masterKpiRoleCount');
       const adminCountEl = document.getElementById('masterKpiAdminCount');
-      const badgeDepts = document.getElementById('masterTabBadgeDepts');
-      const badgeRoles = document.getElementById('masterTabBadgeRoles');
 
-      if (deptCountEl) deptCountEl.innerText = departmentMasterList.length;
       if (roleCountEl) roleCountEl.innerText = roleMasterList.length;
       if (adminCountEl) adminCountEl.innerText = appData.admins.length;
-      if (badgeDepts) badgeDepts.innerText = departmentMasterList.length;
-      if (badgeRoles) badgeRoles.innerText = roleMasterList.length;
 
-      filterDeptMasterTable();
       filterRoleMasterTable();
       updateSidebarMasterBadge();
-      lucide.createIcons();
-    }
-
-    function filterDeptMasterTable() {
-      const q = (document.getElementById('deptMasterSearch')?.value || '').toLowerCase().trim();
-      const tbody = document.getElementById('deptMasterTbody');
-      if (!tbody) return;
-
-      const filtered = departmentMasterList.filter(d => 
-        d.name.toLowerCase().includes(q) || 
-        d.code.toLowerCase().includes(q) || 
-        (d.desc && d.desc.toLowerCase().includes(q))
-      );
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" class="py-8 text-center text-neutral-500">
-              <i data-lucide="building-2" class="w-8 h-8 mx-auto mb-2 opacity-40"></i>
-              <div>No departments found ${q ? `matching "${q}"` : ''}</div>
-              <button onclick="openDeptModal(-1, false)" class="mt-2 text-xs text-brand-amber hover:underline font-semibold">+ Add First Department</button>
-            </td>
-          </tr>
-        `;
-      } else {
-        tbody.innerHTML = filtered.map(dept => {
-          const originalIdx = departmentMasterList.findIndex(d => d.id === dept.id);
-          const assignedAdmins = appData.admins.filter(a => a.department === dept.name);
-          return `
-            <tr class="hover:bg-brand-card/30 transition-colors">
-              <td class="py-3.5 px-4">
-                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-brand-dark border border-brand-amber/30 text-brand-amber">${dept.code}</span>
-              </td>
-              <td class="py-3.5 px-4 font-semibold text-white">
-                ${dept.name}
-              </td>
-              <td class="py-3.5 px-4 text-neutral-400 text-xs max-w-xs">
-                ${dept.desc || '&mdash;'}
-              </td>
-              <td class="py-3.5 px-4">
-                <div class="flex items-center gap-1.5">
-                  <span class="px-2 py-0.5 rounded-full text-[10px] ${assignedAdmins.length > 0 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-neutral-800 text-neutral-400'} font-semibold">
-                    ${assignedAdmins.length} Admin${assignedAdmins.length === 1 ? '' : 's'}
-                  </span>
-                  ${assignedAdmins.length > 0 ? `<span class="text-[11px] text-neutral-400 truncate max-w-[140px]">${assignedAdmins.map(a => a.name.split(' ')[0]).join(', ')}</span>` : ''}
-                </div>
-              </td>
-              <td class="py-3.5 px-4">
-                <span class="px-2 py-0.5 rounded-full text-[10px] ${dept.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-neutral-800 text-neutral-400'} font-bold">
-                  ${dept.status || 'Active'}
-                </span>
-              </td>
-              <td class="py-3.5 px-4 text-right">
-                <div class="flex items-center justify-end gap-1.5">
-                  <button type="button" onclick="openDeptModal(${originalIdx}, false)" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-brand-amber transition-all" title="Edit Department">
-                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                  </button>
-                  <button type="button" onclick="deleteDepartment(${originalIdx})" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-red-500/50 text-neutral-400 hover:text-red-400 transition-all" title="Delete Department">
-                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          `;
-        }).join('');
-      }
       lucide.createIcons();
     }
 
@@ -2955,7 +3590,7 @@
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="7" class="py-8 text-center text-neutral-500">
+            <td colspan="8" class="py-8 text-center text-neutral-500">
               <i data-lucide="shield-check" class="w-8 h-8 mx-auto mb-2 opacity-40"></i>
               <div>No role levels found ${q ? `matching "${q}"` : ''}</div>
               <button onclick="openRoleModal(-1, false)" class="mt-2 text-xs text-brand-amber hover:underline font-semibold">+ Add First Role Level</button>
@@ -2966,38 +3601,69 @@
         tbody.innerHTML = filtered.map(role => {
           const originalIdx = roleMasterList.findIndex(r => r.id === role.id);
           const assignedAdmins = appData.admins.filter(a => a.role === role.name);
+
+          // Build permission badges for this role
+          let rolePermBadges = [];
+          if (role.permissions) {
+            Object.keys(role.permissions).forEach(modId => {
+              const p = role.permissions[modId];
+              if (p && (p.view || p.add || p.update || p.delete)) {
+                let codes = [];
+                if (p.view) codes.push('V');
+                if (p.add) codes.push('A');
+                if (p.update) codes.push('U');
+                if (p.delete) codes.push('D');
+                const modMeta = permissionModulesList.find(m => m.id === modId);
+                const shortName = modMeta ? modMeta.name.split(' ')[0] : modId;
+                rolePermBadges.push(`
+                  <span class="inline-flex items-center gap-1 bg-brand-dark border border-brand-border text-[9px] px-1.5 py-0.5 rounded text-neutral-300">
+                    <span class="text-white">${shortName}</span>
+                    <span class="text-brand-amber font-mono font-bold">(${codes.length === 4 ? 'All' : codes.join(',')})</span>
+                  </span>
+                `);
+              }
+            });
+          }
+
+          const permsHtml = rolePermBadges.length > 0 
+            ? `<div class="flex flex-wrap gap-1 max-w-xs">${rolePermBadges.slice(0, 4).join('')}${rolePermBadges.length > 4 ? `<span class="text-[9px] text-neutral-500 font-mono">+${rolePermBadges.length - 4} more</span>` : ''}</div>`
+            : '<span class="text-neutral-500 text-[10px] italic">No module permissions configured</span>';
+
           return `
             <tr class="hover:bg-brand-card/30 transition-colors">
-              <td class="py-3.5 px-4">
+              <td class="py-3.5 px-4 whitespace-nowrap">
                 <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-brand-dark border border-brand-amber/30 text-brand-amber">${role.code}</span>
               </td>
-              <td class="py-3.5 px-4 font-semibold text-white">
+              <td class="py-3.5 px-4 font-semibold text-white whitespace-nowrap">
                 ${role.name}
               </td>
-              <td class="py-3.5 px-4">
+              <td class="py-3.5 px-4 whitespace-nowrap">
                 <span class="px-2 py-0.5 rounded-md text-[10px] bg-brand-dark border border-brand-border text-neutral-300 font-medium">
                   ${role.tier || 'Standard'}
                 </span>
               </td>
-              <td class="py-3.5 px-4 text-neutral-400 text-xs max-w-xs">
+              <td class="py-3.5 px-4 text-neutral-400 text-xs max-w-xs truncate">
                 ${role.desc || '&mdash;'}
               </td>
-              <td class="py-3.5 px-4">
+              <td class="py-3.5 px-4 min-w-[260px]">
+                ${permsHtml}
+              </td>
+              <td class="py-3.5 px-4 whitespace-nowrap">
                 <div class="flex items-center gap-1.5">
                   <span class="px-2 py-0.5 rounded-full text-[10px] ${assignedAdmins.length > 0 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-neutral-800 text-neutral-400'} font-semibold">
                     ${assignedAdmins.length} Admin${assignedAdmins.length === 1 ? '' : 's'}
                   </span>
-                  ${assignedAdmins.length > 0 ? `<span class="text-[11px] text-neutral-400 truncate max-w-[140px]">${assignedAdmins.map(a => a.name.split(' ')[0]).join(', ')}</span>` : ''}
+                  ${assignedAdmins.length > 0 ? `<span class="text-[11px] text-neutral-400 truncate max-w-[120px]">${assignedAdmins.map(a => a.name.split(' ')[0]).join(', ')}</span>` : ''}
                 </div>
               </td>
-              <td class="py-3.5 px-4">
+              <td class="py-3.5 px-4 whitespace-nowrap">
                 <span class="px-2 py-0.5 rounded-full text-[10px] ${role.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-neutral-800 text-neutral-400'} font-bold">
                   ${role.status || 'Active'}
                 </span>
               </td>
-              <td class="py-3.5 px-4 text-right">
+              <td class="py-3.5 px-4 text-right whitespace-nowrap">
                 <div class="flex items-center justify-end gap-1.5">
-                  <button type="button" onclick="openRoleModal(${originalIdx}, false)" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-brand-amber transition-all" title="Edit Role Level">
+                  <button type="button" onclick="openRoleModal(${originalIdx}, false)" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-brand-amber transition-all" title="Edit Role Level & Permissions">
                     <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                   </button>
                   <button type="button" onclick="deleteRole(${originalIdx})" class="p-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-red-500/50 text-neutral-400 hover:text-red-400 transition-all" title="Delete Role Level">
@@ -3856,7 +4522,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       loadMasterData();
-      renderDepartmentDropdowns();
+      loadAdminsData();
       renderRoleDropdowns();
       renderAdminListTable();
       renderInvoiceModuleSelectors();
