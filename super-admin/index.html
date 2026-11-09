@@ -106,6 +106,11 @@
       background: #f59e0b;
     }
 
+    .payroll-scroll::-webkit-scrollbar { height: 8px; }
+    .payroll-scroll::-webkit-scrollbar-track { background: #121217; border-radius: 9999px; }
+    .payroll-scroll::-webkit-scrollbar-thumb { background: #3f3f50; border-radius: 9999px; border: 2px solid #121217; }
+    .payroll-scroll::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+
     /* Dedicated Print Styling for High-Res Invoices */
     @media print {
       /* Force parent portal containers to display */
@@ -688,19 +693,19 @@
               </div>
             </div>
 
-            <!-- Full-Width Admin Table -->
+            <!-- Full-Width Admin Table (Horizontally Scrollable Ledger) -->
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-xl w-full">
-              <div class="overflow-x-auto w-full">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border">
+              <div class="overflow-x-auto w-full payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[1150px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border select-none">
                     <tr>
-                      <th class="py-3.5 px-4">Admin Profile</th>
-                      <th class="py-3.5 px-4">Employee ID</th>
-                      <th class="py-3.5 px-4">Department &amp; Role</th>
-                      <th class="py-3.5 px-4">Granted Module Permissions</th>
-                      <th class="py-3.5 px-4">Status</th>
-                      <th class="py-3.5 px-4">Last Active</th>
-                      <th class="py-3.5 px-4 text-right">Actions</th>
+                      <th class="py-3.5 px-4 sticky left-0 z-20 bg-[#121217] border-r border-brand-border min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">Admin Profile</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Employee ID</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[190px]">Department &amp; Role</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[280px]">Granted Module Permissions</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[120px]">Status</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Last Active</th>
+                      <th class="py-3.5 px-4 text-right sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[100px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="adminListPageTbody" class="divide-y divide-brand-border/60 text-neutral-300">
@@ -2352,35 +2357,35 @@
         }).join('') : '<span class="text-neutral-500">None</span>';
 
         return `
-          <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-4 px-4">
+          <tr class="hover:bg-brand-card/40 transition-colors group">
+            <td class="py-4 px-4 sticky left-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-r border-brand-border/60 min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full ${admin.avatarBg} flex items-center justify-center font-bold text-xs flex-shrink-0">
                   ${initials}
                 </div>
                 <div>
                   <div class="font-bold text-white text-xs">${admin.name}</div>
-                  <div class="text-[11px] text-neutral-400">${admin.email}</div>
+                  <div class="text-[11px] text-neutral-400 font-mono">${admin.email}</div>
                 </div>
               </div>
             </td>
-            <td class="py-4 px-4 font-mono text-neutral-300">${admin.empId}</td>
-            <td class="py-4 px-4">
+            <td class="py-4 px-4 font-mono font-bold text-brand-amber whitespace-nowrap">${admin.empId}</td>
+            <td class="py-4 px-4 whitespace-nowrap">
               <div class="font-semibold text-neutral-200">${admin.role}</div>
               <div class="text-[11px] text-neutral-400">${admin.department}</div>
             </td>
-            <td class="py-4 px-4">
+            <td class="py-4 px-4 whitespace-nowrap">
               <div class="flex flex-wrap gap-1 max-w-sm">
                 ${permBadges}
               </div>
             </td>
-            <td class="py-4 px-4">
+            <td class="py-4 px-4 whitespace-nowrap">
               <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${admin.status}
               </span>
             </td>
-            <td class="py-4 px-4 text-neutral-400">${admin.lastActive}</td>
-            <td class="py-4 px-4 text-right">
+            <td class="py-4 px-4 text-neutral-400 whitespace-nowrap font-mono text-xs">${admin.lastActive}</td>
+            <td class="py-4 px-4 text-right sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-l border-brand-border/60 min-w-[100px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
               <button onclick="removeAdmin('${admin.id}')" title="Revoke Access" class="p-1.5 text-neutral-400 hover:text-rose-400 hover:bg-white/5 rounded-lg transition-colors">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>

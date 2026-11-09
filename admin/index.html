@@ -786,19 +786,19 @@
               </div>
             </div>
 
-            <!-- Table -->
+            <!-- Table (Horizontally Scrollable Ledger with Sticky Profile & Actions) -->
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-xl">
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border">
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[1180px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 uppercase tracking-wider font-semibold border-b border-brand-border select-none">
                     <tr>
-                      <th class="py-3.5 px-4">Employee Profile</th>
-                      <th class="py-3.5 px-4">Employee ID</th>
-                      <th class="py-3.5 px-4">Department &amp; Designation</th>
-                      <th class="py-3.5 px-4">Role &amp; Permissions</th>
-                      <th class="py-3.5 px-4">Phone / Email</th>
-                      <th class="py-3.5 px-4">Status</th>
-                      <th class="py-3.5 px-4 text-right">Actions</th>
+                      <th class="py-3.5 px-4 sticky left-0 z-20 bg-[#121217] border-r border-brand-border min-w-[260px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">Employee Profile</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Employee ID</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[210px]">Department &amp; Designation</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Role &amp; Permissions</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Phone / Email</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[150px]">Status</th>
+                      <th class="py-3.5 px-4 text-right sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[240px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="employeeTableTbody" class="divide-y divide-brand-border/60 text-neutral-300">
@@ -1337,9 +1337,9 @@
 
             <!-- Master Data Table -->
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                  <thead id="masterTableThead" class="bg-brand-dark border-b border-brand-border text-neutral-400 font-semibold uppercase text-[10px] tracking-wider">
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left border-collapse text-xs min-w-[950px]">
+                  <thead id="masterTableThead" class="bg-brand-dark border-b border-brand-border text-neutral-400 font-semibold uppercase text-[10px] tracking-wider select-none">
                     <!-- Dynamic Headers -->
                   </thead>
                   <tbody id="masterTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -1386,34 +1386,34 @@
             <!-- Recent Data Exports / Imports Table -->
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
               <div class="p-4 border-b border-brand-border font-bold text-xs text-white">Recent Data Import / Export Operations</div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[900px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] select-none border-b border-brand-border">
                     <tr>
-                      <th class="py-3 px-4">Date &amp; Time</th>
-                      <th class="py-3 px-4">Operation</th>
-                      <th class="py-3 px-4">Target Role / Group</th>
-                      <th class="py-3 px-4">Mode</th>
-                      <th class="py-3 px-4">Records Count</th>
-                      <th class="py-3 px-4">Status</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[170px]">Date &amp; Time</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Operation</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Target Role / Group</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Mode</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Records Count</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Status</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-brand-border/40 text-neutral-300">
-                    <tr>
-                      <td class="py-3 px-4 text-neutral-400">30 Oct 2026, 04:15 PM</td>
-                      <td class="py-3 px-4 font-semibold text-white">Export Users</td>
-                      <td class="py-3 px-4">Sales &amp; Marketing</td>
-                      <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-brand-amber/10 text-brand-amber font-mono">With Data</span></td>
-                      <td class="py-3 px-4 font-mono">24 Employees</td>
-                      <td class="py-3 px-4 text-emerald-400 font-bold">&bull; Completed</td>
+                    <tr class="hover:bg-brand-card/40 transition-colors">
+                      <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap font-mono">30 Oct 2026, 04:15 PM</td>
+                      <td class="py-3.5 px-4 font-semibold text-white whitespace-nowrap">Export Users</td>
+                      <td class="py-3.5 px-4 whitespace-nowrap">Sales &amp; Marketing</td>
+                      <td class="py-3.5 px-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-brand-amber/10 text-brand-amber font-mono">With Data</span></td>
+                      <td class="py-3.5 px-4 font-mono whitespace-nowrap">24 Employees</td>
+                      <td class="py-3.5 px-4 text-emerald-400 font-bold whitespace-nowrap">&bull; Completed</td>
                     </tr>
-                    <tr>
-                      <td class="py-3 px-4 text-neutral-400">28 Oct 2026, 11:30 AM</td>
-                      <td class="py-3 px-4 font-semibold text-white">Import Users</td>
-                      <td class="py-3 px-4">Engineering &amp; Tech</td>
-                      <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono">Batch Insert</span></td>
-                      <td class="py-3 px-4 font-mono">12 Created</td>
-                      <td class="py-3 px-4 text-emerald-400 font-bold">&bull; Completed</td>
+                    <tr class="hover:bg-brand-card/40 transition-colors">
+                      <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap font-mono">28 Oct 2026, 11:30 AM</td>
+                      <td class="py-3.5 px-4 font-semibold text-white whitespace-nowrap">Import Users</td>
+                      <td class="py-3.5 px-4 whitespace-nowrap">Engineering &amp; Tech</td>
+                      <td class="py-3.5 px-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono">Batch Insert</span></td>
+                      <td class="py-3.5 px-4 font-mono whitespace-nowrap">12 Created</td>
+                      <td class="py-3.5 px-4 text-emerald-400 font-bold whitespace-nowrap">&bull; Completed</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1486,16 +1486,16 @@
             <!-- Upload History Table -->
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
               <div class="p-4 border-b border-brand-border font-bold text-xs text-white">ZIP Upload History &amp; Extraction Logs</div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[950px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] select-none border-b border-brand-border">
                     <tr>
-                      <th class="py-3 px-4">Upload Timestamp</th>
-                      <th class="py-3 px-4">Archive File Name</th>
-                      <th class="py-3 px-4">Files Extracted</th>
-                      <th class="py-3 px-4">Mapped Employees</th>
-                      <th class="py-3 px-4">Uploaded By</th>
-                      <th class="py-3 px-4">Status</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[170px]">Upload Timestamp</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[200px]">Archive File Name</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Files Extracted</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Mapped Employees</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Uploaded By</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Status</th>
                     </tr>
                   </thead>
                   <tbody id="zipAuditLogTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -2013,21 +2013,35 @@
               </div>
             </div>
 
-            <!-- Attendance Table: Shows BOTH Days & Hours Explicitly -->
-            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-lg">
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] border-b border-brand-border">
+            <!-- Attendance Table: Shows BOTH Days & Hours Explicitly (Horizontally Scrollable Ledger) -->
+            <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden shadow-2xl">
+              <!-- Scroll Hint Toolbar -->
+              <div class="flex items-center justify-between px-4 py-2.5 bg-[#121217] border-b border-brand-border text-xs text-neutral-400">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                  <span class="font-bold text-white text-xs">Attendance &amp; GPS Governance Ledger</span>
+                  <span class="text-neutral-500 hidden sm:inline">&bull;</span>
+                  <span class="text-neutral-400 text-[11px] hidden sm:inline">Precision punches, geofence coordinates, shift anomalies, day weightage &amp; overtime</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-brand-amber font-mono text-[11px] bg-brand-surface/90 px-3 py-1 rounded-lg border border-brand-border shadow-sm">
+                  <i data-lucide="arrow-left-right" class="w-3.5 h-3.5"></i>
+                  <span>Scroll horizontally &larr; &rarr; for full ledger</span>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[1600px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] tracking-wider border-b border-brand-border select-none">
                     <tr>
-                      <th class="py-3.5 px-4">Employee Profile</th>
-                      <th class="py-3.5 px-4">Shift &amp; Date</th>
-                      <th class="py-3.5 px-4">Clock-In (Punch &amp; GPS)</th>
-                      <th class="py-3.5 px-4">Clock-Out (Punch &amp; GPS)</th>
-                      <th class="py-3.5 px-4">Day Weightage (Days)</th>
-                      <th class="py-3.5 px-4">Hours Breakdown (Worked/OT/Deficit)</th>
-                      <th class="py-3.5 px-4">Attendance Status</th>
-                      <th class="py-3.5 px-4">Punch Source</th>
-                      <th class="py-3.5 px-4 text-right">Actions</th>
+                      <th class="py-3.5 px-4 sticky left-0 z-20 bg-[#121217] border-r border-brand-border min-w-[260px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">Employee Profile</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Shift &amp; Date</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[200px]">Clock-In (Punch &amp; GPS)</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[200px]">Clock-Out (Punch &amp; GPS)</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[150px]">Day Weightage (Days)</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[210px]">Hours Breakdown (Worked/OT/Deficit)</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[170px]">Attendance Status</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[150px]">Punch Source</th>
+                      <th class="py-3.5 px-4 text-right sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[190px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="attendanceTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -2159,17 +2173,17 @@
             <!-- Leave Requests Table -->
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
               <div class="p-4 border-b border-brand-border font-bold text-xs text-white">Pending &amp; Recent Leave Applications</div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[1100px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] select-none border-b border-brand-border">
                     <tr>
-                      <th class="py-3 px-4">Employee</th>
-                      <th class="py-3 px-4">Leave Type</th>
-                      <th class="py-3 px-4">Duration Mode</th>
-                      <th class="py-3 px-4">Dates</th>
-                      <th class="py-3 px-4">Reason</th>
-                      <th class="py-3 px-4">Status</th>
-                      <th class="py-3 px-4 text-right">Actions</th>
+                      <th class="py-3.5 px-4 sticky left-0 z-20 bg-[#121217] border-r border-brand-border min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">Employee</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Leave Type</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[150px]">Duration Mode</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Dates</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Reason</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Status</th>
+                      <th class="py-3.5 px-4 text-right sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[180px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="leaveRequestsTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -2212,17 +2226,17 @@
 
             <!-- Candidates Table -->
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[1150px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] select-none border-b border-brand-border">
                     <tr>
-                      <th class="py-3 px-4">Candidate Name</th>
-                      <th class="py-3 px-4">Applied Position</th>
-                      <th class="py-3 px-4">Experience</th>
-                      <th class="py-3 px-4">Expected CTC</th>
-                      <th class="py-3 px-4">Stage</th>
-                      <th class="py-3 px-4">Resume</th>
-                      <th class="py-3 px-4 text-right">Actions</th>
+                      <th class="py-3.5 px-4 sticky left-0 z-20 bg-[#121217] border-r border-brand-border min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">Candidate Name</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[210px]">Applied Position</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Experience</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Expected CTC</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Stage</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[120px]">Resume</th>
+                      <th class="py-3.5 px-4 text-right sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[170px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="candidatesTableTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -2251,17 +2265,17 @@
 
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
               <div class="p-4 border-b border-brand-border font-bold text-xs text-white">Issued Offer Letters Archive</div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[1150px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] select-none border-b border-brand-border">
                     <tr>
-                      <th class="py-3 px-4">Candidate</th>
-                      <th class="py-3 px-4">Designation</th>
-                      <th class="py-3 px-4">Department</th>
-                      <th class="py-3 px-4">Annual CTC</th>
-                      <th class="py-3 px-4">Joining Date</th>
-                      <th class="py-3 px-4">Status</th>
-                      <th class="py-3 px-4 text-right">Letter Actions</th>
+                      <th class="py-3.5 px-4 sticky left-0 z-20 bg-[#121217] border-r border-brand-border min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">Candidate</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Designation</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Department</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Annual CTC</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Joining Date</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[130px]">Status</th>
+                      <th class="py-3.5 px-4 text-right sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[220px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">Letter Actions</th>
                     </tr>
                   </thead>
                   <tbody id="offerLettersTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -2284,17 +2298,17 @@
 
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
               <div class="p-4 border-b border-brand-border font-bold text-xs text-white">Active Resignations &amp; Notice Periods</div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[1150px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] select-none border-b border-brand-border">
                     <tr>
-                      <th class="py-3 px-4">Employee</th>
-                      <th class="py-3 px-4">Resignation Date</th>
-                      <th class="py-3 px-4">Notice Period</th>
-                      <th class="py-3 px-4">Official LWD</th>
-                      <th class="py-3 px-4">Handover / NDC</th>
-                      <th class="py-3 px-4">Stage</th>
-                      <th class="py-3 px-4 text-right">Relieving Letter</th>
+                      <th class="py-3.5 px-4 sticky left-0 z-20 bg-[#121217] border-r border-brand-border min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">Employee</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[150px]">Resignation Date</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Notice Period</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Official LWD</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Handover / NDC</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[170px]">Stage</th>
+                      <th class="py-3.5 px-4 text-right sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[170px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">Relieving Letter</th>
                     </tr>
                   </thead>
                   <tbody id="resignationTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -2343,18 +2357,18 @@
 
             <div class="bg-brand-surface rounded-2xl border border-brand-border overflow-hidden">
               <div class="p-4 border-b border-brand-border font-bold text-xs text-white">Promotion &amp; Increment History</div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px]">
+              <div class="overflow-x-auto payroll-scroll">
+                <table class="w-full text-left text-xs min-w-[1200px] border-collapse">
+                  <thead class="bg-[#121217] text-neutral-400 font-semibold uppercase text-[10px] select-none border-b border-brand-border">
                     <tr>
-                      <th class="py-3 px-4">Employee</th>
-                      <th class="py-3 px-4">Previous Designation</th>
-                      <th class="py-3 px-4">Promoted Designation</th>
-                      <th class="py-3 px-4 text-center">Effective Date</th>
-                      <th class="py-3 px-4 text-right">Old CTC</th>
-                      <th class="py-3 px-4 text-right">New CTC</th>
-                      <th class="py-3 px-4 text-center">Increment %</th>
-                      <th class="py-3 px-4 text-right">Letter</th>
+                      <th class="py-3.5 px-4 sticky left-0 z-20 bg-[#121217] border-r border-brand-border min-w-[220px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">Employee</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Previous Designation</th>
+                      <th class="py-3.5 px-4 whitespace-nowrap min-w-[190px]">Promoted Designation</th>
+                      <th class="py-3.5 px-4 text-center whitespace-nowrap min-w-[140px]">Effective Date</th>
+                      <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[130px]">Old CTC</th>
+                      <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[130px]">New CTC</th>
+                      <th class="py-3.5 px-4 text-center whitespace-nowrap min-w-[120px]">Increment %</th>
+                      <th class="py-3.5 px-4 text-right sticky right-0 z-20 bg-[#121217] border-l border-brand-border min-w-[140px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">Letter</th>
                     </tr>
                   </thead>
                   <tbody id="promotionHistoryTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -2585,15 +2599,15 @@
           </div>
         </div>
 
-        <div class="rounded-xl border border-brand-border overflow-hidden">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-[#121217] text-neutral-400 uppercase text-[10px]">
+        <div class="rounded-xl border border-brand-border overflow-x-auto payroll-scroll">
+          <table class="w-full text-left text-xs min-w-[550px] border-collapse">
+            <thead class="bg-[#121217] text-neutral-400 uppercase text-[10px] select-none border-b border-brand-border">
               <tr>
-                <th class="py-2.5 px-3">HRMS Module</th>
-                <th class="py-2.5 px-2 text-center">View (V)</th>
-                <th class="py-2.5 px-2 text-center">Create (C)</th>
-                <th class="py-2.5 px-2 text-center">Update (U)</th>
-                <th class="py-2.5 px-2 text-center">Delete (D)</th>
+                <th class="py-3 px-3.5 whitespace-nowrap min-w-[200px]">HRMS Module</th>
+                <th class="py-3 px-2 text-center whitespace-nowrap min-w-[80px]">View (V)</th>
+                <th class="py-3 px-2 text-center whitespace-nowrap min-w-[80px]">Create (C)</th>
+                <th class="py-3 px-2 text-center whitespace-nowrap min-w-[80px]">Update (U)</th>
+                <th class="py-3 px-2 text-center whitespace-nowrap min-w-[80px]">Delete (D)</th>
               </tr>
             </thead>
             <tbody id="roleModalMatrixTbody" class="divide-y divide-brand-border/40 text-neutral-300">
@@ -3474,15 +3488,15 @@
           </button>
         </div>
 
-        <div class="rounded-2xl border border-brand-border overflow-hidden">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-brand-dark text-neutral-400 font-semibold uppercase text-[10px] border-b border-brand-border">
+        <div class="rounded-2xl border border-brand-border overflow-x-auto payroll-scroll">
+          <table class="w-full text-left text-xs min-w-[780px] border-collapse">
+            <thead class="bg-brand-dark text-neutral-400 font-semibold uppercase text-[10px] border-b border-brand-border select-none">
               <tr>
-                <th class="py-2.5 px-3">Leave Code &amp; Name</th>
-                <th class="py-2.5 px-3">Annual Quota (Days / Rule)</th>
-                <th class="py-2.5 px-3">Classification</th>
-                <th class="py-2.5 px-3">Carry Forward Rule</th>
-                <th class="py-2.5 px-3">Payroll Impact</th>
+                <th class="py-3 px-3.5 whitespace-nowrap min-w-[200px]">Leave Code &amp; Name</th>
+                <th class="py-3 px-3 whitespace-nowrap min-w-[130px]">Annual Quota</th>
+                <th class="py-3 px-3 whitespace-nowrap min-w-[150px]">Classification</th>
+                <th class="py-3 px-3 whitespace-nowrap min-w-[130px]">Carry Forward Rule</th>
+                <th class="py-3 px-3 whitespace-nowrap min-w-[140px]">Payroll Impact</th>
               </tr>
             </thead>
             <tbody id="manageQuotasTableBody" class="divide-y divide-brand-border/60">
@@ -6841,7 +6855,7 @@
 
         return `
           <tr class="hover:bg-brand-card/60 transition-colors group">
-            <td class="py-3.5 px-4 cursor-pointer" onclick="openEditEmployeeModal('${emp.id}')" title="Click to Edit Profile">
+            <td class="py-3.5 px-4 cursor-pointer sticky left-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-r border-brand-border/60 min-w-[260px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]" onclick="openEditEmployeeModal('${emp.id}')" title="Click to Edit Profile">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-brand-amber/20 text-brand-amber border border-brand-amber font-bold text-xs flex items-center justify-center shrink-0">
                   ${emp.name.split(' ').map(n=>n[0]).join('')}
@@ -6855,19 +6869,19 @@
                 </div>
               </div>
             </td>
-            <td class="py-3.5 px-4 font-mono font-bold text-amber-300">${emp.id}</td>
-            <td class="py-3.5 px-4">
+            <td class="py-3.5 px-4 font-mono font-bold text-amber-300 whitespace-nowrap">${emp.id}</td>
+            <td class="py-3.5 px-4 whitespace-nowrap">
               <div class="font-medium text-white">${emp.dept}</div>
               <div class="text-[11px] text-neutral-400">CTC: &#8377; ${emp.salary.toLocaleString('en-IN')}/mo</div>
             </td>
-            <td class="py-3.5 px-4">
+            <td class="py-3.5 px-4 whitespace-nowrap">
               <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-brand-dark border border-brand-border text-brand-amber font-semibold text-[10px]">
                 ${emp.role}
               </span>
             </td>
-            <td class="py-3.5 px-4 text-neutral-400 font-mono text-[11px]">${emp.phone}</td>
-            <td class="py-3.5 px-4">${statusBadge}</td>
-            <td class="py-3.5 px-4 text-right">
+            <td class="py-3.5 px-4 text-neutral-400 font-mono text-[11px] whitespace-nowrap">${emp.phone}</td>
+            <td class="py-3.5 px-4 whitespace-nowrap">${statusBadge}</td>
+            <td class="py-3.5 px-4 text-right sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-l border-brand-border/60 min-w-[240px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
               <div class="flex items-center justify-end gap-1.5">
                 <button onclick="openEditEmployeeModal('${emp.id}')" class="px-2.5 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border hover:border-brand-amber text-[11px] font-semibold text-neutral-200 transition-all flex items-center gap-1 shadow-sm" title="Edit Employee Profile">
                   <i data-lucide="edit-3" class="w-3.5 h-3.5 text-brand-amber"></i>
@@ -7760,26 +7774,26 @@
 
       if (t === 'roles') {
         headers = `<tr>
-          <th class="py-3 px-4">Role Title</th>
-          <th class="py-3 px-4">Description</th>
-          <th class="py-3 px-4 text-center">Permissions Matrix</th>
-          <th class="py-3 px-4 text-right">Actions</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[200px]">Role Title</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[260px]">Description</th>
+          <th class="py-3.5 px-4 text-center whitespace-nowrap min-w-[280px]">Permissions Matrix</th>
+          <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[140px]">Actions</th>
         </tr>`;
         const list = appState.roles.filter(r => r.title.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q));
         rows = list.map(r => `
           <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-brand-amber"></span>
               <span>${r.title}</span>
             </td>
-            <td class="py-3.5 px-4 text-neutral-400">${r.desc}</td>
-            <td class="py-3.5 px-4 text-center">
+            <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap">${r.desc}</td>
+            <td class="py-3.5 px-4 text-center whitespace-nowrap">
               <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/15 text-emerald-400 font-mono">View ✓</span>
               <span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/15 text-amber-400 font-mono">Create ✓</span>
               <span class="px-2 py-0.5 rounded text-[10px] bg-sky-500/15 text-sky-400 font-mono">Update ✓</span>
               <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/15 text-rose-400 font-mono">Delete ✓</span>
             </td>
-            <td class="py-3.5 px-4 text-right space-x-2">
+            <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
               <button onclick="editMasterItem('roles', '${r.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
               <button onclick="deleteMasterItem('roles', '${r.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
             </td>
@@ -7787,21 +7801,21 @@
         `).join('');
       } else if (t === 'departments') {
         headers = `<tr>
-          <th class="py-3 px-4">Department Name</th>
-          <th class="py-3 px-4">Dept Code</th>
-          <th class="py-3 px-4">Head of Department (HOD)</th>
-          <th class="py-3 px-4 text-right">Actions</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Department Name</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Dept Code</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Head of Department (HOD)</th>
+          <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[140px]">Actions</th>
         </tr>`;
         const list = appState.departments.filter(d => d.name.toLowerCase().includes(q) || d.code.toLowerCase().includes(q));
         rows = list.map(d => `
           <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
               <span>${d.name}</span>
             </td>
-            <td class="py-3.5 px-4 font-mono text-brand-amber font-bold">${d.code}</td>
-            <td class="py-3.5 px-4 text-neutral-300">${d.head || 'Leadership Board'}</td>
-            <td class="py-3.5 px-4 text-right space-x-2">
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-bold whitespace-nowrap">${d.code}</td>
+            <td class="py-3.5 px-4 text-neutral-300 whitespace-nowrap">${d.head || 'Leadership Board'}</td>
+            <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
               <button onclick="editMasterItem('departments', '${d.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
               <button onclick="deleteMasterItem('departments', '${d.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
             </td>
@@ -7809,21 +7823,21 @@
         `).join('');
       } else if (t === 'designations') {
         headers = `<tr>
-          <th class="py-3 px-4">Designation Title</th>
-          <th class="py-3 px-4">Seniority Band</th>
-          <th class="py-3 px-4">Department Mapping</th>
-          <th class="py-3 px-4 text-right">Actions</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Designation Title</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Seniority Band</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[200px]">Department Mapping</th>
+          <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[140px]">Actions</th>
         </tr>`;
         const list = appState.designations.filter(ds => ds.title.toLowerCase().includes(q) || ds.band.toLowerCase().includes(q));
         rows = list.map(ds => `
           <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-sky-400"></span>
               <span>${ds.title}</span>
             </td>
-            <td class="py-3.5 px-4"><span class="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-500/10 border border-brand-amber/30 text-brand-amber font-semibold">${ds.band}</span></td>
-            <td class="py-3.5 px-4 text-neutral-400">${ds.dept || 'Cross-Functional'}</td>
-            <td class="py-3.5 px-4 text-right space-x-2">
+            <td class="py-3.5 px-4 whitespace-nowrap"><span class="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-500/10 border border-brand-amber/30 text-brand-amber font-semibold">${ds.band}</span></td>
+            <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap">${ds.dept || 'Cross-Functional'}</td>
+            <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
               <button onclick="editMasterItem('designations', '${ds.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
               <button onclick="deleteMasterItem('designations', '${ds.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
             </td>
@@ -7831,21 +7845,21 @@
         `).join('');
       } else if (t === 'locations') {
         headers = `<tr>
-          <th class="py-3 px-4">Branch / Facility</th>
-          <th class="py-3 px-4">City</th>
-          <th class="py-3 px-4">GPS Geofence</th>
-          <th class="py-3 px-4 text-right">Actions</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[200px]">Branch / Facility</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[150px]">City</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[240px]">GPS Geofence</th>
+          <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[140px]">Actions</th>
         </tr>`;
         const list = appState.locations.filter(l => l.name.toLowerCase().includes(q) || l.city.toLowerCase().includes(q));
         rows = list.map(l => `
           <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-amber-400"></span>
               <span>${l.name}</span>
             </td>
-            <td class="py-3.5 px-4 text-neutral-300">${l.city}</td>
-            <td class="py-3.5 px-4 font-mono text-neutral-400 text-[11px]">${l.lat ? `${l.lat}, ${l.lng} (${l.radius}m)` : 'PAN-India Remote'}</td>
-            <td class="py-3.5 px-4 text-right space-x-2">
+            <td class="py-3.5 px-4 text-neutral-300 whitespace-nowrap">${l.city}</td>
+            <td class="py-3.5 px-4 font-mono text-neutral-400 text-[11px] whitespace-nowrap">${l.lat ? `${l.lat}, ${l.lng} (${l.radius}m)` : 'PAN-India Remote'}</td>
+            <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
               <button onclick="editMasterItem('locations', '${l.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
               <button onclick="deleteMasterItem('locations', '${l.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
             </td>
@@ -7853,15 +7867,15 @@
         `).join('');
       } else if (t === 'shifts') {
         headers = `<tr>
-          <th class="py-3 px-4">Shift Name</th>
-          <th class="py-3 px-4">Working Hours</th>
-          <th class="py-3 px-4">Grace Buffer &amp; Half-Day</th>
-          <th class="py-3 px-4 text-right">Actions</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Shift Name</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Working Hours</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Grace Buffer &amp; Half-Day</th>
+          <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[140px]">Actions</th>
         </tr>`;
         const list = appState.shifts.filter(s => s.name.toLowerCase().includes(q) || s.start.toLowerCase().includes(q));
         rows = list.map(s => `
           <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-violet-400"></span>
               <div>
                 <span>${s.name}</span>
@@ -7871,9 +7885,9 @@
                 </div>
               </div>
             </td>
-            <td class="py-3.5 px-4 font-mono text-brand-amber font-semibold">${s.start} &rarr; ${s.end}</td>
-            <td class="py-3.5 px-4 text-neutral-400">Grace: ${s.grace} &bull; Min Half-Day: ${s.halfDay}</td>
-            <td class="py-3.5 px-4 text-right space-x-2">
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-semibold whitespace-nowrap">${s.start} &rarr; ${s.end}</td>
+            <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap">Grace: ${s.grace} &bull; Min Half-Day: ${s.halfDay}</td>
+            <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
               <button onclick="editMasterItem('shifts', '${s.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
               <button onclick="deleteMasterItem('shifts', '${s.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
             </td>
@@ -7881,21 +7895,21 @@
         `).join('');
       } else if (t === 'assets') {
         headers = `<tr>
-          <th class="py-3 px-4">Asset Name / Kit</th>
-          <th class="py-3 px-4">Category</th>
-          <th class="py-3 px-4">Serial / Tag</th>
-          <th class="py-3 px-4 text-right">Actions</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Asset Name / Kit</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Category</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Serial / Tag</th>
+          <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[140px]">Actions</th>
         </tr>`;
         const list = appState.assets.filter(a => a.name.toLowerCase().includes(q) || a.serial.toLowerCase().includes(q));
         rows = list.map(a => `
           <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-teal-400"></span>
               <span>${a.name}</span>
             </td>
-            <td class="py-3.5 px-4 text-neutral-300">${a.category}</td>
-            <td class="py-3.5 px-4 font-mono text-brand-amber font-semibold">${a.serial}</td>
-            <td class="py-3.5 px-4 text-right space-x-2">
+            <td class="py-3.5 px-4 text-neutral-300 whitespace-nowrap">${a.category}</td>
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-semibold whitespace-nowrap">${a.serial}</td>
+            <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
               <button onclick="editMasterItem('assets', '${a.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
               <button onclick="deleteMasterItem('assets', '${a.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
             </td>
@@ -7903,21 +7917,21 @@
         `).join('');
       } else if (t === 'empTypes') {
         headers = `<tr>
-          <th class="py-3 px-4">Employment Category</th>
-          <th class="py-3 px-4">Notice Period</th>
-          <th class="py-3 px-4">Policy Description</th>
-          <th class="py-3 px-4 text-right">Actions</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Employment Category</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Notice Period</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[260px]">Policy Description</th>
+          <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[140px]">Actions</th>
         </tr>`;
         const list = appState.employmentTypes.filter(et => et.name.toLowerCase().includes(q));
         rows = list.map(et => `
           <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
               <span>${et.name}</span>
             </td>
-            <td class="py-3.5 px-4 font-mono text-brand-amber font-semibold">${et.notice}</td>
-            <td class="py-3.5 px-4 text-neutral-400">${et.desc || 'Standard corporate benefits'}</td>
-            <td class="py-3.5 px-4 text-right space-x-2">
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-semibold whitespace-nowrap">${et.notice}</td>
+            <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap">${et.desc || 'Standard corporate benefits'}</td>
+            <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
               <button onclick="editMasterItem('empTypes', '${et.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
               <button onclick="deleteMasterItem('empTypes', '${et.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
             </td>
@@ -7925,32 +7939,32 @@
         `).join('');
       } else if (t === 'leaveTypes') {
         headers = `<tr>
-          <th class="py-3 px-4">Leave Category Name</th>
-          <th class="py-3 px-4">Short Code</th>
-          <th class="py-3 px-4">Annual Quota</th>
-          <th class="py-3 px-4">Compensation Type</th>
-          <th class="py-3 px-4">Carry Forward Rule</th>
-          <th class="py-3 px-4 text-right">Actions</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Leave Category Name</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[120px]">Short Code</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[140px]">Annual Quota</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Compensation Type</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[160px]">Carry Forward Rule</th>
+          <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[140px]">Actions</th>
         </tr>`;
         const list = appState.leaveTypes.filter(lt => lt.name.toLowerCase().includes(q) || lt.code.toLowerCase().includes(q));
         rows = list.map(lt => `
           <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-brand-amber"></span>
               <div>
                 <span>${lt.name}</span>
                 <div class="text-[10px] text-neutral-400 font-normal mt-0.5">${lt.desc || 'Standard corporate leave'}</div>
               </div>
             </td>
-            <td class="py-3.5 px-4 font-mono text-brand-amber font-bold">${lt.code}</td>
-            <td class="py-3.5 px-4 font-mono text-white font-semibold">${lt.quota}</td>
-            <td class="py-3.5 px-4">
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-bold whitespace-nowrap">${lt.code}</td>
+            <td class="py-3.5 px-4 font-mono text-white font-semibold whitespace-nowrap">${lt.quota}</td>
+            <td class="py-3.5 px-4 whitespace-nowrap">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${lt.type.includes('Paid') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-neutral-500/10 text-neutral-300 border border-neutral-500/30'}">
                 ${lt.type}
               </span>
             </td>
-            <td class="py-3.5 px-4 text-neutral-300 text-xs">${lt.carryForward}</td>
-            <td class="py-3.5 px-4 text-right space-x-2">
+            <td class="py-3.5 px-4 text-neutral-300 text-xs whitespace-nowrap">${lt.carryForward}</td>
+            <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
               <button onclick="editMasterItem('leaveTypes', '${lt.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
               <button onclick="deleteMasterItem('leaveTypes', '${lt.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
             </td>
@@ -7958,18 +7972,18 @@
         `).join('');
       } else if (t === 'pipelineStages') {
         headers = `<tr>
-          <th class="py-3 px-4">Sequence &amp; Stage Title</th>
-          <th class="py-3 px-4">Short Code</th>
-          <th class="py-3 px-4">Pipeline Phase / Category</th>
-          <th class="py-3 px-4">Evaluation Scope</th>
-          <th class="py-3 px-4 text-right">Actions</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Sequence &amp; Stage Title</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[120px]">Short Code</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[180px]">Pipeline Phase / Category</th>
+          <th class="py-3.5 px-4 whitespace-nowrap min-w-[220px]">Evaluation Scope</th>
+          <th class="py-3.5 px-4 text-right whitespace-nowrap min-w-[140px]">Actions</th>
         </tr>`;
         const list = appState.pipelineStages
           .filter(stg => stg.name.toLowerCase().includes(q) || stg.code.toLowerCase().includes(q))
           .sort((a, b) => (a.order || 0) - (b.order || 0));
         rows = list.map(stg => `
           <tr class="hover:bg-brand-card/40 transition-colors">
-            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+            <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2 whitespace-nowrap">
               <span class="w-6 h-6 rounded-lg bg-brand-amber/15 text-brand-amber border border-brand-amber/30 text-[11px] font-mono font-bold flex items-center justify-center flex-shrink-0">
                 #${stg.order || 1}
               </span>
@@ -7977,14 +7991,14 @@
                 <span>${stg.name}</span>
               </div>
             </td>
-            <td class="py-3.5 px-4 font-mono text-brand-amber font-bold">${stg.code}</td>
-            <td class="py-3.5 px-4">
+            <td class="py-3.5 px-4 font-mono text-brand-amber font-bold whitespace-nowrap">${stg.code}</td>
+            <td class="py-3.5 px-4 whitespace-nowrap">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/30">
                 ${stg.category}
               </span>
             </td>
-            <td class="py-3.5 px-4 text-neutral-400 text-xs">${stg.desc || 'Progression round'}</td>
-            <td class="py-3.5 px-4 text-right space-x-2">
+            <td class="py-3.5 px-4 text-neutral-400 text-xs whitespace-nowrap">${stg.desc || 'Progression round'}</td>
+            <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
               <button onclick="editMasterItem('pipelineStages', '${stg.id}')" class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 hover:text-brand-amber text-xs">Edit</button>
               <button onclick="deleteMasterItem('pipelineStages', '${stg.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 text-xs">Delete</button>
             </td>
@@ -8402,13 +8416,13 @@
     function renderZipAuditTable() {
       const tbody = document.getElementById('zipAuditLogTbody');
       tbody.innerHTML = appState.zipLogs.map(l => `
-        <tr class="hover:bg-brand-card/40">
-          <td class="py-3 px-4 text-neutral-400">${l.date}</td>
-          <td class="py-3 px-4 font-mono font-bold text-brand-amber">${l.file}</td>
-          <td class="py-3 px-4 font-semibold text-white">${l.count}</td>
-          <td class="py-3 px-4">${l.mapped}</td>
-          <td class="py-3 px-4 text-neutral-400">${l.user}</td>
-          <td class="py-3 px-4 text-emerald-400 font-bold">&bull; ${l.status}</td>
+        <tr class="hover:bg-brand-card/40 transition-colors">
+          <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap font-mono">${l.date}</td>
+          <td class="py-3.5 px-4 font-mono font-bold text-brand-amber whitespace-nowrap">${l.file}</td>
+          <td class="py-3.5 px-4 font-semibold text-white whitespace-nowrap">${l.count}</td>
+          <td class="py-3.5 px-4 whitespace-nowrap">${l.mapped}</td>
+          <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap">${l.user}</td>
+          <td class="py-3.5 px-4 text-emerald-400 font-bold whitespace-nowrap">&bull; ${l.status}</td>
         </tr>
       `).join('');
     }
@@ -10288,9 +10302,9 @@
         }
 
         return `
-          <tr class="hover:bg-brand-card/40 transition-colors">
-            <!-- 1. Employee Profile -->
-            <td class="py-3 px-4">
+          <tr class="hover:bg-brand-card/60 transition-colors group">
+            <!-- 1. Employee Profile (Sticky Left) -->
+            <td class="py-3.5 px-4 sticky left-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-r border-brand-border/60 min-w-[260px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">
               <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-brand-surface border border-brand-border text-brand-amber font-bold text-xs flex items-center justify-center flex-shrink-0">
                   ${initials}
@@ -10300,20 +10314,20 @@
                   <div class="text-[10px] text-neutral-400 font-mono flex items-center gap-1.5 mt-0.5">
                     <span class="text-brand-amber">${att.empId}</span>
                     <span>&bull;</span>
-                    <span class="truncate max-w-[110px]">${att.role || 'Staff'}</span>
+                    <span class="text-neutral-300 font-sans">${att.role || 'Staff'}</span>
                   </div>
                 </div>
               </div>
             </td>
 
             <!-- 2. Shift & Date -->
-            <td class="py-3 px-4">
+            <td class="py-3.5 px-4 whitespace-nowrap">
               <div class="font-mono text-xs text-white font-semibold">${att.date || '30 Oct 2026'}</div>
               <div class="text-[10px] text-neutral-400 font-mono mt-0.5">09:30 AM - 06:30 PM</div>
             </td>
 
             <!-- 3. Clock-In Punch & Anomaly -->
-            <td class="py-3 px-4">
+            <td class="py-3.5 px-4 whitespace-nowrap">
               <div class="flex items-center gap-1.5">
                 <span class="${att.inTime === '--' ? 'text-neutral-500 font-mono' : 'text-emerald-400 font-bold font-mono text-xs'}">${att.inTime || '--'}</span>
                 ${inBadge}
@@ -10324,7 +10338,7 @@
             </td>
 
             <!-- 4. Clock-Out Punch & Anomaly -->
-            <td class="py-3 px-4">
+            <td class="py-3.5 px-4 whitespace-nowrap">
               <div class="flex items-center gap-1.5">
                 <span class="${att.outTime === '--' ? 'text-neutral-500 font-mono' : (att.outStatus && att.outStatus.includes('Overtime') ? 'text-yellow-300 font-bold font-mono text-xs' : 'text-rose-400 font-bold font-mono text-xs')}">${att.outTime || '--'}</span>
                 ${outBadge}
@@ -10335,28 +10349,28 @@
             </td>
 
             <!-- 5. Day Weightage (Days Metric) -->
-            <td class="py-3 px-4">
+            <td class="py-3.5 px-4 whitespace-nowrap">
               ${dayWeightBadge}
             </td>
 
             <!-- 6. Hours Breakdown (Hours Metric) -->
-            <td class="py-3 px-4">
+            <td class="py-3.5 px-4 whitespace-nowrap">
               ${hoursHtml}
             </td>
 
             <!-- 7. Attendance Status -->
-            <td class="py-3 px-4">
+            <td class="py-3.5 px-4 whitespace-nowrap">
               ${statusBadge}
-              ${att.regNote ? `<div class="text-[9px] text-neutral-400 italic mt-0.5 max-w-[130px] truncate" title="${att.regNote}">Note: ${att.regNote}</div>` : ''}
+              ${att.regNote ? `<div class="text-[9px] text-neutral-400 italic mt-0.5" title="${att.regNote}">Note: ${att.regNote}</div>` : ''}
             </td>
 
             <!-- 8. Punch Method -->
-            <td class="py-3 px-4">
+            <td class="py-3.5 px-4 whitespace-nowrap">
               ${methodBadge}
             </td>
 
-            <!-- 9. Actions -->
-            <td class="py-3 px-4 text-right">
+            <!-- 9. Actions (Sticky Right) -->
+            <td class="py-3.5 px-4 text-right sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-l border-brand-border/60 min-w-[190px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
               <div class="flex items-center justify-end gap-1.5">
                 <button onclick="openDualLatLongMap('${att.empId}')" title="View GPS Route on Map" class="px-2.5 py-1.5 rounded-lg bg-brand-surface border border-brand-border text-neutral-300 hover:text-brand-amber hover:border-brand-amber text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
                   <i data-lucide="map" class="w-3.5 h-3.5 text-brand-amber"></i>
@@ -10754,18 +10768,18 @@
 
         return `
           <tr class="hover:bg-brand-card/60 transition-colors cursor-pointer group" onclick="openLeaveDetailModal(${idx})">
-            <td class="py-3 px-4 font-bold text-white">
+            <td class="py-3.5 px-4 font-bold text-white sticky left-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-r border-brand-border/60 min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">
               <div class="flex items-center gap-2">
                 <span>${l.name}</span>
-                <span class="text-[10px] text-brand-amber font-mono opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">&bull; Click to Review &rarr;</span>
+                <span class="text-[10px] text-brand-amber font-mono opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">&bull; Review &rarr;</span>
               </div>
             </td>
-            <td class="py-3 px-4 text-brand-amber font-medium">${l.type}</td>
-            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-brand-dark border border-brand-border text-[11px] text-neutral-300">${l.mode}</span></td>
-            <td class="py-3 px-4 text-neutral-300 font-mono text-[11px]">${l.dates}</td>
-            <td class="py-3 px-4 text-neutral-400 italic text-[11px] max-w-xs truncate">${l.reason}</td>
-            <td class="py-3 px-4">${badge}</td>
-            <td class="py-3 px-4 text-right">${actions}</td>
+            <td class="py-3.5 px-4 text-brand-amber font-medium whitespace-nowrap">${l.type}</td>
+            <td class="py-3.5 px-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-brand-dark border border-brand-border text-[11px] text-neutral-300">${l.mode}</span></td>
+            <td class="py-3.5 px-4 text-neutral-300 font-mono text-[11px] whitespace-nowrap">${l.dates}</td>
+            <td class="py-3.5 px-4 text-neutral-300 text-[11px] whitespace-nowrap" title="${l.reason}">${l.reason}</td>
+            <td class="py-3.5 px-4 whitespace-nowrap">${badge}</td>
+            <td class="py-3.5 px-4 text-right sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-l border-brand-border/60 min-w-[180px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">${actions}</td>
           </tr>
         `;
       }).join('');
@@ -11206,27 +11220,27 @@
 
         return `
           <tr class="hover:bg-brand-card/60 transition-colors cursor-pointer group" onclick="openCandidateDetailModal(${idx})">
-            <td class="py-3 px-4">
+            <td class="py-3.5 px-4 sticky left-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-r border-brand-border/60 min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">
               <div class="flex items-center gap-1.5">
                 <span class="font-bold text-white text-xs">${c.name}</span>
                 ${typeBadge}
               </div>
               <div class="text-[10px] text-brand-amber font-mono">${c.id}</div>
             </td>
-            <td class="py-3 px-4">
+            <td class="py-3.5 px-4 whitespace-nowrap">
               <div class="text-white text-xs">${c.pos}</div>
               <div class="text-[10px] text-neutral-400">${c.dept}</div>
             </td>
-            <td class="py-3 px-4 text-neutral-300 text-xs">${c.exp}</td>
-            <td class="py-3 px-4 font-mono text-white text-xs">${c.ctc}</td>
-            <td class="py-3 px-4">${stageBadge}</td>
-            <td class="py-3 px-4 text-neutral-400">
+            <td class="py-3.5 px-4 text-neutral-300 text-xs whitespace-nowrap">${c.exp}</td>
+            <td class="py-3.5 px-4 font-mono text-white text-xs whitespace-nowrap">${c.ctc}</td>
+            <td class="py-3.5 px-4 whitespace-nowrap">${stageBadge}</td>
+            <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap">
               <span class="text-xs text-brand-amber font-mono flex items-center gap-1">
                 <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                 <span>PDF CV</span>
               </span>
             </td>
-            <td class="py-3 px-4 text-right">
+            <td class="py-3.5 px-4 text-right sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-l border-brand-border/60 min-w-[170px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
               <div class="flex items-center justify-end gap-1.5">
                 <button onclick="event.stopPropagation(); openCandidateDetailModal(${idx})" class="px-2.5 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-xs transition-all">
                   Review
@@ -11845,23 +11859,23 @@
       const tbody = document.getElementById('offerLettersTbody');
       if (!tbody) return;
       tbody.innerHTML = appState.offers.map((off, idx) => `
-        <tr class="hover:bg-brand-card/40 transition-colors">
-          <td class="py-3 px-4">
+        <tr class="hover:bg-brand-card/40 transition-colors group">
+          <td class="py-3.5 px-4 sticky left-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-r border-brand-border/60 min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">
             <div class="font-bold text-white flex items-center gap-2">
               <span>${off.name}</span>
             </div>
             <div class="text-[10px] text-neutral-400">${off.email || 'candidate@domain.com'} &bull; ${off.phone || '+91-98200 00000'}</div>
           </td>
-          <td class="py-3 px-4 text-neutral-300">${off.desig}</td>
-          <td class="py-3 px-4 text-neutral-400">${off.dept}</td>
-          <td class="py-3 px-4 font-mono font-bold text-emerald-400">&#8377; ${String(off.ctc).replace(/[^0-9,]/g, '')}</td>
-          <td class="py-3 px-4 text-brand-amber font-mono text-[11px]">${off.doj || off.date || '15 Nov 2026'}</td>
-          <td class="py-3 px-4">
+          <td class="py-3.5 px-4 text-neutral-300 whitespace-nowrap">${off.desig}</td>
+          <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap">${off.dept}</td>
+          <td class="py-3.5 px-4 font-mono font-bold text-emerald-400 whitespace-nowrap">&#8377; ${String(off.ctc).replace(/[^0-9,]/g, '')}</td>
+          <td class="py-3.5 px-4 text-brand-amber font-mono text-[11px] whitespace-nowrap">${off.doj || off.date || '15 Nov 2026'}</td>
+          <td class="py-3.5 px-4 whitespace-nowrap">
             <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               ${off.status || 'Active'}
             </span>
           </td>
-          <td class="py-3 px-4 text-right">
+          <td class="py-3.5 px-4 text-right sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-l border-brand-border/60 min-w-[220px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
             <div class="flex items-center justify-end gap-1.5">
               <button onclick="viewOfferLetterModal(${idx})" class="px-2.5 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-[11px] font-semibold text-neutral-300 transition-all flex items-center gap-1">
                 <i data-lucide="eye" class="w-3 h-3"></i>
@@ -12642,15 +12656,15 @@
       const tbody = document.getElementById('resignationTbody');
       if (!tbody) return;
       tbody.innerHTML = appState.resignations.map((res, idx) => `
-        <tr class="hover:bg-brand-card/40 transition-colors">
-          <td class="py-3 px-4 font-bold text-white">
+        <tr class="hover:bg-brand-card/40 transition-colors group">
+          <td class="py-3.5 px-4 font-bold text-white sticky left-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-r border-brand-border/60 min-w-[240px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">
             <div>${res.name}</div>
-            <div class="text-[10px] text-neutral-400 font-normal">${res.role || 'Staff'} &bull; ${res.empId || 'EMP-AGT-0101'}</div>
+            <div class="text-[10px] text-neutral-400 font-normal font-mono">${res.role || 'Staff'} &bull; ${res.empId || 'EMP-AGT-0101'}</div>
           </td>
-          <td class="py-3 px-4 text-neutral-400 text-[11px]">${res.resDate}</td>
-          <td class="py-3 px-4 font-semibold text-brand-amber">${res.notice || (res.noticeDays + ' Days')}</td>
-          <td class="py-3 px-4 font-mono font-bold text-amber-300 text-xs">${res.lwd}</td>
-          <td class="py-3 px-4">
+          <td class="py-3.5 px-4 text-neutral-400 text-[11px] font-mono whitespace-nowrap">${res.resDate}</td>
+          <td class="py-3.5 px-4 font-semibold text-brand-amber whitespace-nowrap">${res.notice || (res.noticeDays + ' Days')}</td>
+          <td class="py-3.5 px-4 font-mono font-bold text-amber-300 text-xs whitespace-nowrap">${res.lwd}</td>
+          <td class="py-3.5 px-4 whitespace-nowrap">
             <div class="flex items-center gap-2">
               <div class="w-16 bg-brand-dark rounded-full h-1.5 overflow-hidden border border-brand-border">
                 <div class="bg-brand-amber h-full rounded-full" style="width: ${res.handover ? parseInt(res.handover) || 50 : 50}%"></div>
@@ -12658,13 +12672,13 @@
               <span class="text-[10px] text-neutral-400">${res.handover || 'In Progress'}</span>
             </div>
           </td>
-          <td class="py-3 px-4">
+          <td class="py-3.5 px-4 whitespace-nowrap">
             <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
               ${res.stage || 'Notice Period Active'}
             </span>
           </td>
-          <td class="py-3 px-4 text-right">
-            <button onclick="showToast('Relieving Letter', 'Generated NDC clearance certificate & relieving letter for ${res.name}')" class="px-3 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-[11px] font-semibold text-neutral-300 transition-all flex items-center gap-1 ml-auto">
+          <td class="py-3.5 px-4 text-right sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-l border-brand-border/60 min-w-[170px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
+            <button onclick="showToast('Relieving Letter', 'Generated NDC clearance certificate & relieving letter for ${res.name}')" class="px-3 py-1 rounded-lg bg-brand-surface hover:bg-brand-amber hover:text-neutral-950 border border-brand-border text-[11px] font-semibold text-neutral-300 transition-all flex items-center gap-1 ml-auto shadow-sm">
               <i data-lucide="file-check" class="w-3.5 h-3.5 text-brand-amber"></i>
               <span>Relieving Doc</span>
             </button>
@@ -13047,16 +13061,16 @@
       const tbody = document.getElementById('promotionHistoryTbody');
       if (!tbody) return;
       tbody.innerHTML = appState.promotions.map((pr, idx) => `
-        <tr class="hover:bg-brand-card/40 transition-colors">
-          <td class="py-3 px-4 font-bold text-white">${pr.name}</td>
-          <td class="py-3 px-4 text-neutral-400">${pr.oldDesig}</td>
-          <td class="py-3 px-4 text-brand-amber font-semibold">${pr.newDesig}</td>
-          <td class="py-3 px-4 text-center font-mono text-neutral-300">${pr.effectiveDate || '01 Nov 2026'}</td>
-          <td class="py-3 px-4 text-right font-mono text-neutral-400">&#8377; ${pr.oldCtc.replace(/[^0-9,]/g, '')}</td>
-          <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">&#8377; ${pr.newCtc.replace(/[^0-9,]/g, '')}</td>
-          <td class="py-3 px-4 text-center font-bold text-brand-amber">${pr.inc || pr.hike}</td>
-          <td class="py-3 px-4 text-right">
-            <button onclick="showToast('Promotion Letter', 'Appraisal increment letter generated for ${pr.name}')" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border text-xs text-white hover:text-brand-amber transition-colors">Letter</button>
+        <tr class="hover:bg-brand-card/40 transition-colors group">
+          <td class="py-3.5 px-4 font-bold text-white sticky left-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-r border-brand-border/60 min-w-[220px] whitespace-nowrap shadow-[4px_0_12px_rgba(0,0,0,0.5)]">${pr.name}</td>
+          <td class="py-3.5 px-4 text-neutral-400 whitespace-nowrap">${pr.oldDesig}</td>
+          <td class="py-3.5 px-4 text-brand-amber font-semibold whitespace-nowrap">${pr.newDesig}</td>
+          <td class="py-3.5 px-4 text-center font-mono text-neutral-300 whitespace-nowrap">${pr.effectiveDate || '01 Nov 2026'}</td>
+          <td class="py-3.5 px-4 text-right font-mono text-neutral-400 whitespace-nowrap">&#8377; ${pr.oldCtc.replace(/[^0-9,]/g, '')}</td>
+          <td class="py-3.5 px-4 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">&#8377; ${pr.newCtc.replace(/[^0-9,]/g, '')}</td>
+          <td class="py-3.5 px-4 text-center font-bold text-brand-amber whitespace-nowrap">${pr.inc || pr.hike}</td>
+          <td class="py-3.5 px-4 text-right sticky right-0 z-10 bg-[#0e0e13] group-hover:bg-[#16161f] border-l border-brand-border/60 min-w-[140px] whitespace-nowrap shadow-[-4px_0_12px_rgba(0,0,0,0.5)]">
+            <button onclick="showToast('Promotion Letter', 'Appraisal increment letter generated for ${pr.name}')" class="px-2.5 py-1 rounded-lg bg-brand-surface border border-brand-border text-xs text-white hover:text-brand-amber transition-colors shadow-sm">Letter</button>
           </td>
         </tr>
       `).join('');
