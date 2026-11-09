@@ -867,21 +867,10 @@
                         <span>+ Add Role</span>
                       </button>
                     </div>
-                    <div class="flex items-center gap-2">
-                      <select id="wizardRole" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
-                        <!-- Populated dynamically via renderRoleDropdowns() -->
-                      </select>
-                      <button type="button" onclick="openRoleModal(-1, true)" title="Add Role Level to Master" class="p-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-amber text-brand-amber hover:bg-brand-amber/10 transition-all flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                      </button>
-                    </div>
-                    <div class="text-[10px] text-neutral-500 mt-1 flex items-center justify-between">
-                      <span id="wizardRoleCountLabel">Dynamic RBAC tiers</span>
-                      <button type="button" onclick="showAdminPage('portal-master-management')" class="text-brand-amber hover:underline flex items-center gap-0.5">
-                        <span>Role Masters</span>
-                        <i data-lucide="arrow-up-right" class="w-2.5 h-2.5"></i>
-                      </button>
-                    </div>
+                    <select id="wizardRole" class="w-full px-3 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-xs text-white focus:outline-none focus:border-brand-amber transition-colors">
+                      <!-- Populated dynamically via renderRoleDropdowns() -->
+                    </select>
+                    <div id="wizardRoleCountLabel" class="text-[10px] text-neutral-500 mt-1">Dynamic RBAC tiers</div>
                   </div>
 
                   <!-- Designation Title -->
