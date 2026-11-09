@@ -1667,6 +1667,135 @@
           </div>
 
           <!-- ----------------------------------------- -->
+          <!-- ADMIN PAGE 8: CLIENT SUBSCRIPTION & TRANSACTION AUDIT DETAIL PAGE -->
+          <!-- User requested: "mujhe na e page me open karna hai model me nahi" -->
+          <!-- ----------------------------------------- -->
+          <div id="adminPage-subscription-detail" class="admin-page hidden space-y-6 w-full">
+            <!-- Back Button & Page Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div class="flex items-center gap-3">
+                <button type="button" onclick="showAdminPage('portal-subscriptions')" class="px-3.5 py-2 rounded-xl bg-brand-surface hover:bg-brand-card text-neutral-300 hover:text-white border border-brand-border hover:border-brand-amber flex items-center gap-2 text-xs font-semibold transition-all shadow-sm">
+                  <i data-lucide="arrow-left" class="w-4 h-4 text-brand-amber"></i>
+                  <span>Back to Subscriptions</span>
+                </button>
+                <div class="h-6 w-[1px] bg-brand-border"></div>
+                <div>
+                  <div class="flex items-center gap-2.5">
+                    <h2 id="subDetailPageCompanyName" class="text-xl sm:text-2xl font-bold text-white">Client Company Name</h2>
+                    <span id="subDetailPageStatusBadge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>
+                  </div>
+                  <p id="subDetailPageMeta" class="text-xs text-neutral-400 mt-0.5 font-mono">Subscription ID: SUB-101 &bull; Admin: Aarav Sharma</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="showAdminPage('portal-subscriptions')" class="px-3.5 py-2 rounded-xl bg-brand-dark hover:bg-brand-surface border border-brand-border text-neutral-300 hover:text-white transition-all text-xs font-semibold flex items-center gap-1.5">
+                  <i data-lucide="list" class="w-3.5 h-3.5 text-brand-amber"></i>
+                  <span>Subscriptions List</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Section 1: Current Active Subscription Plan Overview & Seat Capacity Breakdown -->
+            <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border space-y-4 shadow-xl">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-brand-border/60 pb-3">
+                <span class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-2">
+                  <i data-lucide="sparkles" class="w-4 h-4 text-brand-amber"></i>
+                  <span>Current Active Subscription Plan</span>
+                </span>
+                <span id="subDetailPageBillingCycle" class="text-xs font-mono text-neutral-400 bg-brand-dark px-3 py-1 rounded-lg border border-brand-border">Monthly Cycle &bull; Auto-Renew</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
+                <div class="p-4 rounded-xl bg-brand-dark border border-brand-border/80 space-y-1">
+                  <div class="text-[10px] text-neutral-400 uppercase font-semibold">Plan Tier</div>
+                  <div id="subDetailPagePlanName" class="text-base font-extrabold text-white">Enterprise Elite</div>
+                  <div id="subDetailPageBasePrice" class="text-xs text-brand-amber font-mono font-bold">₹12,999 / mo (Base 1-50 emp)</div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-brand-dark border border-brand-border/80 space-y-1">
+                  <div class="text-[10px] text-neutral-400 uppercase font-semibold">Total Employee Capacity</div>
+                  <div id="subDetailPageTotalSeats" class="text-base font-extrabold text-white">42 Employees</div>
+                  <div id="subDetailPageSeatBreakdown" class="text-[11px] text-neutral-400 font-mono">50 Base + 0 Extra Seats</div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-brand-dark border border-brand-border/80 space-y-1">
+                  <div class="text-[10px] text-neutral-400 uppercase font-semibold">Per-Employee Rate</div>
+                  <div id="subDetailPagePerEmpRate" class="text-base font-extrabold text-purple-400">₹180 / extra emp</div>
+                  <div id="subDetailPageExtraAmount" class="text-[11px] text-purple-300 font-mono">No extra charges</div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-brand-dark border border-brand-border/80 space-y-1">
+                  <div class="text-[10px] text-neutral-400 uppercase font-semibold">Next Renewal Date</div>
+                  <div id="subDetailPageRenewalDate" class="text-base font-extrabold text-emerald-400">01 Dec 2026</div>
+                  <div class="text-[11px] text-neutral-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Auto-renewal active</div>
+                </div>
+              </div>
+
+              <!-- Cost Calculation Ribbon -->
+              <div id="subDetailPageCostMath" class="p-3.5 rounded-xl bg-brand-dark/60 border border-brand-border/60 text-xs flex flex-wrap items-center justify-between gap-3 font-mono text-neutral-300">
+                <!-- Injected dynamically -->
+              </div>
+
+              <!-- Enabled Modules List -->
+              <div class="pt-1">
+                <div class="text-xs text-neutral-400 font-semibold mb-2">Enabled HRMS Modules in Current Tier:</div>
+                <div id="subDetailPageModulesList" class="flex flex-wrap gap-2">
+                  <!-- Injected dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Full Transaction & Past Plans Audit History Table -->
+            <div class="space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <i data-lucide="receipt" class="w-4 h-4 text-brand-amber"></i>
+                    <span>Transaction &amp; Invoicing History (Past &amp; Current Plans)</span>
+                  </h4>
+                  <p class="text-xs text-neutral-400 mt-0.5">Complete chronological audit of all subscription purchases, seat expansions and renewals.</p>
+                </div>
+                <span id="subDetailPageTxnCount" class="text-xs font-mono px-3 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300">1 Invoices Recorded</span>
+              </div>
+
+              <div class="rounded-2xl border border-brand-border bg-brand-surface overflow-hidden shadow-xl">
+                <div class="overflow-x-auto payroll-scroll">
+                  <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr class="border-b border-brand-border bg-brand-dark/80 text-neutral-400 uppercase font-mono text-[10px] tracking-wider">
+                        <th class="py-3 px-4 font-semibold">Date &amp; Time</th>
+                        <th class="py-3 px-4 font-semibold">Invoice #</th>
+                        <th class="py-3 px-4 font-semibold">Purchased Plan</th>
+                        <th class="py-3 px-4 font-semibold">Employees</th>
+                        <th class="py-3 px-4 font-semibold">Gateway &amp; Ref ID</th>
+                        <th class="py-3 px-4 font-semibold">Amount Paid</th>
+                        <th class="py-3 px-4 font-semibold">Status</th>
+                        <th class="py-3 px-4 font-semibold text-right">Invoice</th>
+                      </tr>
+                    </thead>
+                    <tbody id="subDetailPageTransactionsTbody" class="divide-y divide-brand-border/60 text-neutral-300">
+                      <!-- Injected dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Action & Security Notice -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-brand-border">
+              <div class="text-xs text-neutral-500 flex items-center gap-1.5">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                <span>PCI-DSS &amp; Razorpay verified transaction ledger &bull; 256-bit SSL encrypted audit trail</span>
+              </div>
+              <button type="button" onclick="showAdminPage('portal-subscriptions')" class="px-5 py-2.5 rounded-xl bg-brand-surface hover:bg-brand-card border border-brand-border text-neutral-300 hover:text-white transition-colors text-xs font-semibold flex items-center justify-center gap-1.5">
+                <i data-lucide="arrow-left" class="w-4 h-4 text-brand-amber"></i>
+                <span>Back to Subscriptions</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ----------------------------------------- -->
           <!-- ADMIN PAGE 6: WEBSITE CMS PAGES -->
           <!-- ----------------------------------------- -->
           <div id="adminPage-cms" class="admin-page hidden space-y-6 w-full">
@@ -1932,115 +2061,7 @@
     </div>
   </div>
 
-  <!-- MODAL 1: CLIENT SUBSCRIPTION AUDIT & HISTORICAL TRANSACTIONS TIMELINE -->
-  <div id="subscriptionDetailModal" class="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-4xl w-full p-6 space-y-6 text-xs shadow-2xl max-h-[92vh] overflow-y-auto payroll-scroll">
-      <div class="flex items-center justify-between border-b border-brand-border pb-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-brand-amber/15 text-brand-amber border border-brand-amber/30 flex items-center justify-center flex-shrink-0">
-            <i data-lucide="crown" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h3 id="subModalCompanyName" class="text-base font-bold text-white">Client Company Name</h3>
-              <span id="subModalStatusBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>
-            </div>
-            <p id="subModalMeta" class="text-[11px] text-neutral-400">Subscription ID: SUB-101 &bull; Admin: Aarav Sharma</p>
-          </div>
-        </div>
-        <button onclick="closeSubscriptionDetailModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
-      </div>
 
-      <!-- Section 1: Current Active Plan Overview & Seat Capacity Breakdown -->
-      <div class="p-4 rounded-xl bg-brand-dark/80 border border-brand-border space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-brand-amber uppercase tracking-wider flex items-center gap-1.5">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-            <span>Current Active Subscription Plan</span>
-          </span>
-          <span id="subModalBillingCycle" class="text-[11px] font-mono text-neutral-400">Monthly Billing</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
-          <div class="p-3 rounded-lg bg-brand-surface border border-brand-border/60">
-            <div class="text-[10px] text-neutral-400 uppercase font-semibold">Plan Tier</div>
-            <div id="subModalPlanName" class="text-sm font-extrabold text-white mt-0.5">Growth Pro</div>
-            <div id="subModalBasePrice" class="text-[11px] text-brand-amber mt-0.5 font-mono">₹5,999 / mo</div>
-          </div>
-
-          <div class="p-3 rounded-lg bg-brand-surface border border-brand-border/60">
-            <div class="text-[10px] text-neutral-400 uppercase font-semibold">Total Employee Capacity</div>
-            <div id="subModalTotalSeats" class="text-sm font-extrabold text-white mt-0.5">35 Employees</div>
-            <div id="subModalSeatBreakdown" class="text-[10px] text-neutral-400 mt-0.5">25 Base + 10 Extra</div>
-          </div>
-
-          <div class="p-3 rounded-lg bg-brand-surface border border-brand-border/60">
-            <div class="text-[10px] text-neutral-400 uppercase font-semibold">Per-Employee Rate</div>
-            <div id="subModalPerEmpRate" class="text-sm font-extrabold text-purple-400 mt-0.5">₹150 / emp</div>
-            <div id="subModalExtraAmount" class="text-[10px] text-purple-300 mt-0.5">+₹1,500 extra cost</div>
-          </div>
-
-          <div class="p-3 rounded-lg bg-brand-surface border border-brand-border/60">
-            <div class="text-[10px] text-neutral-400 uppercase font-semibold">Next Renewal Date</div>
-            <div id="subModalRenewalDate" class="text-sm font-extrabold text-emerald-400 mt-0.5">15 Dec 2026</div>
-            <div class="text-[10px] text-neutral-400 mt-0.5">Auto-renewal active</div>
-          </div>
-        </div>
-
-        <div id="subModalCostMath" class="p-3 rounded-lg bg-brand-surface/40 border border-brand-border/40 text-[11px] flex flex-wrap items-center justify-between gap-2 font-mono text-neutral-300">
-        </div>
-
-        <div>
-          <div class="text-[11px] text-neutral-400 font-semibold mb-1.5">Enabled HRMS Modules in Current Tier:</div>
-          <div id="subModalModulesList" class="flex flex-wrap gap-1.5">
-          </div>
-        </div>
-      </div>
-
-      <!-- Section 2: Full Transaction & Past Plans Timeline Table -->
-      <div class="space-y-3">
-        <div class="flex items-center justify-between">
-          <div>
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-              <i data-lucide="receipt" class="w-3.5 h-3.5 text-brand-amber"></i>
-              <span>Transaction &amp; Invoicing History (Past &amp; Current Plans)</span>
-            </h4>
-            <p class="text-[11px] text-neutral-400">Complete chronological audit of all subscription purchases, seat expansions and renewals.</p>
-          </div>
-          <span id="subModalTxnCount" class="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-dark border border-brand-border text-neutral-300">2 Invoices</span>
-        </div>
-
-        <div class="rounded-xl border border-brand-border bg-brand-dark overflow-hidden">
-          <div class="overflow-x-auto payroll-scroll">
-            <table class="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr class="border-b border-brand-border bg-brand-surface/80 text-neutral-400 uppercase font-mono text-[10px] tracking-wider">
-                  <th class="py-2.5 px-3 font-semibold">Date &amp; Time</th>
-                  <th class="py-2.5 px-3 font-semibold">Invoice #</th>
-                  <th class="py-2.5 px-3 font-semibold">Purchased Plan</th>
-                  <th class="py-2.5 px-3 font-semibold">Employees</th>
-                  <th class="py-2.5 px-3 font-semibold">Gateway &amp; Ref ID</th>
-                  <th class="py-2.5 px-3 font-semibold">Amount Paid</th>
-                  <th class="py-2.5 px-3 font-semibold">Status</th>
-                  <th class="py-2.5 px-3 font-semibold text-right">Invoice</th>
-                </tr>
-              </thead>
-              <tbody id="subModalTransactionsTbody" class="divide-y divide-brand-border/60 text-neutral-300">
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between pt-3 border-t border-brand-border">
-        <div class="text-[11px] text-neutral-500 flex items-center gap-1">
-          <i data-lucide="shield" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span>PCI-DSS &amp; Razorpay verified transaction ledger</span>
-        </div>
-        <button type="button" onclick="closeSubscriptionDetailModal()" class="px-5 py-2 rounded-xl bg-brand-surface border border-brand-border text-neutral-300 hover:text-white transition-colors">Close View</button>
-      </div>
-    </div>
-  </div>
 
   <!-- MODAL 2: CREATE OR EDIT SUBSCRIPTION PLAN TIER -->
   <div id="planEditModal" class="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
@@ -3068,6 +3089,10 @@
         document.getElementById('sideNavSubscriptions').className = "sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-brand-surface text-brand-amber border border-brand-amber/30 font-semibold text-left transition-all";
         breadcrumb.innerText = 'Plans & Subscriptions Management';
         renderSubscriptionsPage();
+      } else if (pageId === 'portal-subscription-detail') {
+        document.getElementById('adminPage-subscription-detail').classList.remove('hidden');
+        document.getElementById('sideNavSubscriptions').className = "sidebar-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-brand-surface text-brand-amber border border-brand-amber/30 font-semibold text-left transition-all";
+        breadcrumb.innerText = 'Plans & Subscriptions / Client Audit';
       } else if (pageId.startsWith('cms-')) {
         document.getElementById('adminPage-cms').classList.remove('hidden');
         
@@ -5073,7 +5098,7 @@
         const hasExtra = extraCount > 0;
 
         return `
-          <tr onclick="openSubscriptionDetailModal('${sub.id}')" class="hover:bg-brand-card/50 transition-colors cursor-pointer group">
+          <tr onclick="openSubscriptionDetailPage('${sub.id}')" class="hover:bg-brand-card/50 transition-colors cursor-pointer group">
             <td class="py-3.5 px-4">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-brand-amber/20 text-brand-amber flex items-center justify-center font-bold text-xs flex-shrink-0">
@@ -5107,7 +5132,7 @@
               </span>
             </td>
             <td class="py-3.5 px-4 text-right whitespace-nowrap" onclick="event.stopPropagation()">
-              <button type="button" onclick="openSubscriptionDetailModal('${sub.id}')" title="Audit Client History & Invoices" class="px-3 py-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white transition-all text-[11px] font-semibold inline-flex items-center gap-1.5">
+              <button type="button" onclick="openSubscriptionDetailPage('${sub.id}')" title="Audit Client History & Invoices" class="px-3 py-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white transition-all text-[11px] font-semibold inline-flex items-center gap-1.5">
                 <i data-lucide="eye" class="w-3.5 h-3.5 text-brand-amber"></i>
                 <span>Audit (${(sub.transactions || []).length})</span>
               </button>
@@ -5325,34 +5350,32 @@
       showToast('Plan Status Updated', `${plan.name} is now ${plan.status}.`);
     }
 
-    function openSubscriptionDetailModal(subId) {
+    function openSubscriptionDetailPage(subId) {
       const sub = subscriptionsMasterList.find(s => s.id === subId);
       if (!sub) return;
 
-      const modal = document.getElementById('subscriptionDetailModal');
+      document.getElementById('subDetailPageCompanyName').innerText = sub.companyName;
+      document.getElementById('subDetailPageMeta').innerText = `ID: ${sub.id} \u2022 Admin: ${sub.adminName} (${sub.adminPhone || sub.adminEmail})`;
+      document.getElementById('subDetailPageStatusBadge').innerText = sub.status || 'Active';
+      document.getElementById('subDetailPageBillingCycle').innerText = `${sub.billingCycle || 'Monthly'} Cycle \u2022 Auto-Renew`;
 
-      document.getElementById('subModalCompanyName').innerText = sub.companyName;
-      document.getElementById('subModalMeta').innerText = `ID: ${sub.id} \u2022 Admin: ${sub.adminName} (${sub.adminPhone || sub.adminEmail})`;
-      document.getElementById('subModalStatusBadge').innerText = sub.status || 'Active';
-      document.getElementById('subModalBillingCycle').innerText = `${sub.billingCycle || 'Monthly'} Cycle \u2022 Auto-Renew`;
-
-      document.getElementById('subModalPlanName').innerText = sub.planName;
-      document.getElementById('subModalBasePrice').innerText = `₹${(sub.basePrice || 0).toLocaleString('en-IN')} / mo (Base 1-${sub.baseIncluded} emp)`;
+      document.getElementById('subDetailPagePlanName').innerText = sub.planName;
+      document.getElementById('subDetailPageBasePrice').innerText = `₹${(sub.basePrice || 0).toLocaleString('en-IN')} / mo (Base 1-${sub.baseIncluded} emp)`;
 
       const extraCount = sub.extraEmployees || (sub.employeeCount > sub.baseIncluded ? sub.employeeCount - sub.baseIncluded : 0);
-      document.getElementById('subModalTotalSeats').innerText = `${sub.employeeCount} Employees`;
-      document.getElementById('subModalSeatBreakdown').innerText = `${sub.baseIncluded} Base + ${extraCount} Extra Seats`;
+      document.getElementById('subDetailPageTotalSeats').innerText = `${sub.employeeCount} Employees`;
+      document.getElementById('subDetailPageSeatBreakdown').innerText = `${sub.baseIncluded} Base + ${extraCount} Extra Seats`;
 
-      document.getElementById('subModalPerEmpRate').innerText = `₹${sub.perEmployeePrice} / extra emp`;
-      document.getElementById('subModalExtraAmount').innerText = extraCount > 0 ? `+₹${(extraCount * sub.perEmployeePrice).toLocaleString('en-IN')} extra charge` : 'No extra charges';
-      document.getElementById('subModalRenewalDate').innerText = sub.renewalDate || '01 Dec 2026';
+      document.getElementById('subDetailPagePerEmpRate').innerText = `₹${sub.perEmployeePrice} / extra emp`;
+      document.getElementById('subDetailPageExtraAmount').innerText = extraCount > 0 ? `+₹${(extraCount * sub.perEmployeePrice).toLocaleString('en-IN')} extra charge` : 'No extra charges';
+      document.getElementById('subDetailPageRenewalDate').innerText = sub.renewalDate || '01 Dec 2026';
 
       // Math calculation ribbon
       const subtotal = (sub.basePrice || 0) + (sub.extraAmount || (extraCount * sub.perEmployeePrice));
       const tax = sub.taxAmount || (subtotal * 0.18);
       const grandTotal = sub.totalAmount || (subtotal + tax);
 
-      document.getElementById('subModalCostMath').innerHTML = `
+      document.getElementById('subDetailPageCostMath').innerHTML = `
         <span>Base Slab Fee: <strong>₹${(sub.basePrice || 0).toLocaleString('en-IN')}</strong></span>
         <span>+ Extra Seats (${extraCount} &times; ₹${sub.perEmployeePrice}): <strong>₹${(extraCount * sub.perEmployeePrice).toLocaleString('en-IN')}</strong></span>
         <span>= Subtotal: <strong>₹${subtotal.toLocaleString('en-IN')}</strong></span>
@@ -5363,40 +5386,40 @@
       // Enabled modules
       const planObj = plansMasterList.find(p => p.id === sub.planId);
       const modules = planObj ? (planObj.modules || []) : ['core_hr', 'attendance', 'payroll'];
-      document.getElementById('subModalModulesList').innerHTML = modules.map(m => {
+      document.getElementById('subDetailPageModulesList').innerHTML = modules.map(m => {
         const modObj = permissionModulesList.find(p => p.id === m);
         const name = modObj ? modObj.name : m;
-        return `<span class="px-2 py-0.5 rounded bg-brand-surface border border-brand-border text-neutral-300 text-[10px] font-semibold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-400"></i>${name}</span>`;
+        return `<span class="px-2.5 py-1 rounded-lg bg-brand-dark border border-brand-border text-neutral-300 text-xs font-semibold flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-400"></i>${name}</span>`;
       }).join('');
 
       // Render Transaction history
       const txns = sub.transactions || [];
-      document.getElementById('subModalTxnCount').innerText = `${txns.length} Invoices Recorded`;
-      const txnTbody = document.getElementById('subModalTransactionsTbody');
+      document.getElementById('subDetailPageTxnCount').innerText = `${txns.length} Invoices Recorded`;
+      const txnTbody = document.getElementById('subDetailPageTransactionsTbody');
 
       if (txns.length === 0) {
-        txnTbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-neutral-500">No payment transactions recorded for this subscriber.</td></tr>`;
+        txnTbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-neutral-500 text-xs">No payment transactions recorded for this subscriber.</td></tr>`;
       } else {
         txnTbody.innerHTML = txns.map(t => `
           <tr class="hover:bg-brand-surface/40 transition-colors">
-            <td class="py-2.5 px-3 font-mono text-[11px] text-neutral-300">${t.date || 'Recent'}</td>
-            <td class="py-2.5 px-3 font-mono font-bold text-brand-amber text-[11px]">${t.invoiceNo || 'INV-2026-X'}</td>
-            <td class="py-2.5 px-3 text-white font-semibold">${t.planName}</td>
-            <td class="py-2.5 px-3 font-mono text-center">${t.employeeCount}</td>
-            <td class="py-2.5 px-3 font-mono text-[10px] text-neutral-400">
-              <div>${t.method || 'Razorpay'}</div>
-              <div class="text-[9px] text-neutral-500">${t.txnId || 'pay_test'}</div>
+            <td class="py-3 px-4 font-mono text-xs text-neutral-300">${t.date || 'Recent'}</td>
+            <td class="py-3 px-4 font-mono font-bold text-brand-amber text-xs">${t.invoiceNo || 'INV-2026-X'}</td>
+            <td class="py-3 px-4 text-white font-semibold">${t.planName}</td>
+            <td class="py-3 px-4 font-mono text-center">${t.employeeCount}</td>
+            <td class="py-3 px-4 font-mono text-xs text-neutral-400">
+              <div class="font-semibold text-neutral-300">${t.method || 'Razorpay'}</div>
+              <div class="text-[10px] text-neutral-500">${t.txnId || 'pay_test'}</div>
             </td>
-            <td class="py-2.5 px-3 font-mono font-bold text-emerald-400">₹${Math.round(t.amount).toLocaleString('en-IN')}</td>
-            <td class="py-2.5 px-3">
-              <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+            <td class="py-3 px-4 font-mono font-bold text-emerald-400">₹${Math.round(t.amount).toLocaleString('en-IN')}</td>
+            <td class="py-3 px-4">
+              <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                 <span>${t.status || 'Paid'}</span>
               </span>
             </td>
-            <td class="py-2.5 px-3 text-right">
-              <button type="button" onclick="viewHistoricalInvoice('${sub.id}', '${t.txnId}')" class="px-2 py-1 rounded bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white transition-colors text-[10px] font-semibold flex items-center gap-1 ml-auto">
-                <i data-lucide="file-text" class="w-3 h-3 text-brand-amber"></i>
+            <td class="py-3 px-4 text-right">
+              <button type="button" onclick="viewHistoricalInvoice('${sub.id}', '${t.txnId}')" class="px-2.5 py-1.5 rounded-lg bg-brand-surface border border-brand-border hover:border-brand-amber text-neutral-300 hover:text-white transition-colors text-xs font-semibold flex items-center gap-1.5 ml-auto shadow-xs">
+                <i data-lucide="file-text" class="w-3.5 h-3.5 text-brand-amber"></i>
                 <span>Invoice</span>
               </button>
             </td>
@@ -5404,12 +5427,17 @@
         `).join('');
       }
 
-      modal.classList.remove('hidden');
+      showAdminPage('portal-subscription-detail');
       lucide.createIcons();
     }
 
+    // Modal alias for backward compatibility
+    function openSubscriptionDetailModal(subId) {
+      openSubscriptionDetailPage(subId);
+    }
+
     function closeSubscriptionDetailModal() {
-      document.getElementById('subscriptionDetailModal').classList.add('hidden');
+      showAdminPage('portal-subscriptions');
     }
 
     function viewHistoricalInvoice(subId, txnId) {
