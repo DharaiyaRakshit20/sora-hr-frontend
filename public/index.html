@@ -44,9 +44,6 @@
   <body class="bg-[#080808] text-[#F7F3EC] antialiased selection:bg-[#D9AD62]/20 selection:text-[#F3D69B] overflow-x-hidden min-h-screen">
     <div id="root"></div>
 
-    <!-- SORA HR DYNAMIC PLANS, TEAM SIZE CALCULATOR & RAZORPAY CHECKOUT -->
-    <div id="soraPlansMount"></div>
-
     <!-- MODAL 1: CHECKOUT & ADMIN REGISTRATION -->
     <div id="soraCheckoutModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-[#121218] border border-[#2b2b36] rounded-2xl max-w-2xl w-full p-6 space-y-5 text-xs text-white shadow-2xl max-h-[92vh] overflow-y-auto">
@@ -437,7 +434,7 @@
           `).join('');
 
           return `
-            <div class="relative rounded-3xl bg-[#121217] border ${isPopular ? 'border-amber-400 shadow-[0_0_40px_rgba(245,158,11,0.2)]' : 'border-[#262630]'} p-7 flex flex-col justify-between space-y-6 transition-all duration-300 hover:scale-[1.02] hover:border-amber-400/80">
+            <div class="relative rounded-3xl bg-[#14141c]/95 border ${isPopular ? 'border-amber-400 shadow-[0_0_40px_rgba(245,158,11,0.25)]' : 'border-[#262630]'} p-7 flex flex-col justify-between space-y-6 transition-all duration-300 hover:scale-[1.02] hover:border-amber-400/80">
               ${isPopular ? `
                 <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 font-black text-[10px] uppercase tracking-widest shadow-lg">
                   ${plan.badge || 'Most Popular'}
@@ -453,7 +450,7 @@
                 </div>
 
                 <!-- Dynamic Computed Price for liveEmployeeCount -->
-                <div class="p-4 rounded-2xl bg-[#09090c] border border-[#262630] space-y-2">
+                <div class="p-4 rounded-2xl bg-[#09090d] border border-[#262630] space-y-2">
                   <div class="flex items-baseline gap-1">
                     <span class="text-3xl font-black text-amber-400 font-mono">₹${Math.round(totalMonthly).toLocaleString('en-IN')}</span>
                     <span class="text-xs text-neutral-400">/ month</span>
@@ -490,47 +487,68 @@
           `;
         }).join('');
 
+        // If #pricing already exists in DOM, just smoothly update the cards & slider text to prevent full rebuild
+        const existingSection = document.getElementById('pricing');
+        const cardsGrid = document.getElementById('soraCardsGrid');
+        if (existingSection && cardsGrid) {
+          cardsGrid.innerHTML = cardsHtml;
+          const disp = document.getElementById('empSliderDisplay');
+          if (disp) disp.innerText = `${liveEmployeeCount} Employees`;
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+          return;
+        }
+
         mount.innerHTML = `
-          <section id="pricing" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#22222a]">
-            <!-- Section Header -->
-            <div class="text-center space-y-3 max-w-3xl mx-auto mb-14">
-              <span class="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1 rounded-full">
-                SaaS Subscription Plans
-              </span>
-              <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                Transparent Plans. <span class="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">Scale as You Grow.</span>
-              </h2>
-              <p class="text-sm text-neutral-400 leading-relaxed">
-                Choose your foundational HRMS plan. Slide your current employee headcount below to view real-time dynamic pricing with our transparent per-employee rate.
-              </p>
-            </div>
+          <section id="pricing" class="relative z-10 py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto my-12 bg-[#0c0c10]/95 backdrop-blur-md border border-[#262630] rounded-3xl shadow-2xl overflow-hidden">
+            <!-- Subtle ambient amber/gold glows inside container -->
+            <div class="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <!-- Interactive Headcount Slider Box -->
-            <div class="max-w-xl mx-auto p-6 rounded-3xl bg-[#121217] border border-amber-500/30 shadow-xl mb-14 text-center space-y-4">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-neutral-300 uppercase tracking-wider">Select Your Team Size:</span>
-                <span class="text-lg font-black text-amber-400 font-mono bg-amber-500/10 px-3 py-1 rounded-xl border border-amber-500/30" id="empSliderDisplay">${liveEmployeeCount} Employees</span>
+            <div class="relative z-10">
+              <!-- Section Header -->
+              <div class="text-center space-y-3 max-w-3xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1 rounded-full inline-flex items-center gap-1.5 shadow-sm">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>SaaS Subscription Plans</span>
+                </span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+                  Transparent Plans. <span class="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">Scale as You Grow.</span>
+                </h2>
+                <p class="text-sm text-neutral-400 leading-relaxed max-w-2xl mx-auto">
+                  Choose your foundational HRMS plan. Slide your current employee headcount below to view real-time dynamic pricing with our transparent per-employee rate.
+                </p>
               </div>
-              <input type="range" id="empSliderInput" min="1" max="150" value="${liveEmployeeCount}" oninput="updateLiveEmployeeCount(this.value)" class="w-full accent-amber-400 cursor-pointer h-2 bg-[#20202a] rounded-lg">
-              <div class="flex justify-between text-[10px] text-neutral-500 font-mono">
-                <span>1 Emp (Solo/Startup)</span>
-                <span>25 Emp</span>
-                <span>50 Emp</span>
-                <span>100 Emp</span>
-                <span>150+ Emp</span>
+
+              <!-- Interactive Headcount Slider Box -->
+              <div class="max-w-xl mx-auto p-6 rounded-3xl bg-[#14141c]/90 border border-amber-500/30 shadow-xl mb-12 text-center space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="users" class="w-4 h-4 text-amber-400"></i>
+                    <span>Select Your Team Size:</span>
+                  </span>
+                  <span class="text-lg font-black text-amber-400 font-mono bg-amber-500/10 px-3.5 py-1 rounded-xl border border-amber-500/30 shadow-xs" id="empSliderDisplay">${liveEmployeeCount} Employees</span>
+                </div>
+                <input type="range" id="empSliderInput" min="1" max="150" value="${liveEmployeeCount}" oninput="updateLiveEmployeeCount(this.value)" class="w-full accent-amber-400 cursor-pointer h-2 bg-[#20202a] rounded-lg">
+                <div class="flex justify-between text-[10px] text-neutral-500 font-mono">
+                  <span>1 Emp (Solo/Startup)</span>
+                  <span>25 Emp</span>
+                  <span>50 Emp</span>
+                  <span>100 Emp</span>
+                  <span>150+ Emp</span>
+                </div>
               </div>
-            </div>
 
-            <!-- Dynamic 3-Column Plan Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-              ${cardsHtml}
-            </div>
+              <!-- Dynamic 3-Column Plan Cards Grid -->
+              <div id="soraCardsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                ${cardsHtml}
+              </div>
 
-            <!-- Trust Badges -->
-            <div class="mt-16 text-center text-xs text-neutral-500 flex flex-wrap items-center justify-center gap-6">
-              <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> Instant Workspace Activation</span>
-              <span class="flex items-center gap-1.5"><i data-lucide="credit-card" class="w-4 h-4 text-amber-400"></i> Razorpay &amp; UPI Verified</span>
-              <span class="flex items-center gap-1.5"><i data-lucide="refresh-cw" class="w-4 h-4 text-cyan-400"></i> Cancel or Scale Seats Anytime</span>
+              <!-- Trust Badges -->
+              <div class="mt-14 pt-8 border-t border-[#1e1e26] text-center text-xs text-neutral-400 flex flex-wrap items-center justify-center gap-8">
+                <span class="flex items-center gap-1.5 font-medium"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> Instant Workspace Activation</span>
+                <span class="flex items-center gap-1.5 font-medium"><i data-lucide="credit-card" class="w-4 h-4 text-amber-400"></i> Razorpay &amp; UPI Verified</span>
+                <span class="flex items-center gap-1.5 font-medium"><i data-lucide="refresh-cw" class="w-4 h-4 text-cyan-400"></i> Cancel or Scale Seats Anytime</span>
+              </div>
             </div>
           </section>
         `;
@@ -540,8 +558,6 @@
 
       function updateLiveEmployeeCount(val) {
         liveEmployeeCount = parseInt(val) || 1;
-        const disp = document.getElementById('empSliderDisplay');
-        if (disp) disp.innerText = `${liveEmployeeCount} Employees`;
         renderWebsitePlansSection();
       }
 
@@ -762,8 +778,48 @@
         }, 1400);
       }
 
-      window.addEventListener('DOMContentLoaded', () => {
+      function ensurePlansMountedAndRendered() {
+        let mount = document.getElementById('soraPlansMount');
+        const whyUs = document.getElementById('why-us') || document.getElementById('contact') || document.querySelector('footer');
+
+        if (!mount) {
+          if (whyUs && whyUs.parentNode) {
+            mount = document.createElement('div');
+            mount.id = 'soraPlansMount';
+            whyUs.parentNode.insertBefore(mount, whyUs);
+          } else {
+            return false;
+          }
+        } else {
+          // If mount exists but is placed after footer or at wrong place, relocate it before whyUs
+          if (whyUs && whyUs.parentNode && mount.parentNode && mount.nextElementSibling !== whyUs && mount !== whyUs) {
+            whyUs.parentNode.insertBefore(mount, whyUs);
+          }
+        }
+
         renderWebsitePlansSection();
+        return true;
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        ensurePlansMountedAndRendered();
+
+        // Watch for React rendering #root
+        const root = document.getElementById('root');
+        if (root) {
+          const observer = new MutationObserver(() => {
+            ensurePlansMountedAndRendered();
+          });
+          observer.observe(root, { childList: true, subtree: true });
+        }
+
+        // Periodic checks during first 3 seconds to guarantee position
+        let checks = 0;
+        const pollTimer = setInterval(() => {
+          checks++;
+          ensurePlansMountedAndRendered();
+          if (checks > 30) clearInterval(pollTimer);
+        }, 100);
       });
     </script>
 </html>
