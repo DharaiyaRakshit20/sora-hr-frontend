@@ -54,8 +54,8 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
   String _errorMessage = '';
   double _loadingProgress = 0.0;
 
-  // Default server address (can be updated via in-app settings if IP changes)
-  String appUrl = 'http://192.168.31.192:8080/user/';
+  // Default server address: 24/7 Live Vercel Cloud URL (works even when PC is off!)
+  String appUrl = 'https://sora-hr-frontend-bco6.vercel.app/user/';
 
   @override
   void initState() {
@@ -86,12 +86,24 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
           onProgress: (progress) {
             setState(() {
               _loadingProgress = progress / 100;
+              // As soon as progress reaches 70%, DOM is interactive — dismiss loading screen
+              if (progress >= 70 && _isLoading) {
+                _isLoading = false;
+              }
             });
           },
           onPageStarted: (url) {
             setState(() {
               _isLoading = true;
               _hasError = false;
+            });
+            // 3.5s safety timeout: Ensure loading screen never stays stuck indefinitely
+            Future.delayed(const Duration(milliseconds: 3500), () {
+              if (mounted && _isLoading && !_hasError) {
+                setState(() {
+                  _isLoading = false;
+                });
+              }
             });
           },
           onPageFinished: (url) {
@@ -154,16 +166,16 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
               children: [
                 ActionChip(
                   backgroundColor: const Color(0xFF22222E),
-                  label: const Text('🏠 Local Wi-Fi', style: TextStyle(color: Color(0xFFF59E0B), fontSize: 11)),
+                  label: const Text('☁️ Vercel Cloud', style: TextStyle(color: Color(0xFF38BDF8), fontSize: 11)),
                   onPressed: () {
-                    textController.text = 'http://192.168.31.192:8080/user/';
+                    textController.text = 'https://sora-hr-frontend-bco6.vercel.app/user/';
                   },
                 ),
                 ActionChip(
                   backgroundColor: const Color(0xFF22222E),
-                  label: const Text('☁️ Vercel Cloud', style: TextStyle(color: Color(0xFF38BDF8), fontSize: 11)),
+                  label: const Text('🏠 Local Wi-Fi', style: TextStyle(color: Color(0xFFF59E0B), fontSize: 11)),
                   onPressed: () {
-                    textController.text = 'https://sora-hr-frontend.vercel.app/user/';
+                    textController.text = 'http://192.168.31.192:8080/user/';
                   },
                 ),
               ],
@@ -175,7 +187,7 @@ class _SoraWebViewScreenState extends State<SoraWebViewScreen> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color(0xFF09090C),
-                hintText: 'http://192.168.31.192:8080/user/',
+                hintText: 'https://sora-hr-frontend-bco6.vercel.app/user/',
                 hintStyle: const TextStyle(color: Colors.grey),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
