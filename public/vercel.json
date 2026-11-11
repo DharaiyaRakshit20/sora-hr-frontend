@@ -1,4 +1,22 @@
 {
   "cleanUrls": true,
-  "trailingSlash": true
+  "trailingSlash": true,
+  "rewrites": [
+    {
+      "source": "/user/(.*)",
+      "destination": "/user/index.html"
+    },
+    {
+      "source": "/admin/(.*)",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/checkout/(.*)",
+      "destination": "/checkout/index.html"
+    },
+    {
+      "source": "/super-admin/(.*)",
+      "destination": "/super-admin/index.html"
+    }
+  ]
 }

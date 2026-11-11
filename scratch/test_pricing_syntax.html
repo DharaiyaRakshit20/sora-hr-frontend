@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+<script>
+// Mock React functions to validate JS syntax of pricing_component
+var C = { useState: function(v) { return [v, function() {}]; } };
+var R = {
+  jsx: function(t, p) { return { t: t, p: p }; },
+  jsxs: function(t, p) { return { t: t, p: p }; }
+};
+</script>
+<script src="pricing_component.js"></script>
+<script>
+console.log("Pricing component loaded successfully! Type of Pr: " + typeof Pr);
+document.write("<h1>Pr defined: " + (typeof Pr === 'function') + "</h1>");
+</script>
+</head>
+<body>
+</body>
+</html>
